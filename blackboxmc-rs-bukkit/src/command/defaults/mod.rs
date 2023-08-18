@@ -554,6 +554,16 @@ impl<'mc> ReloadCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ReloadCommand<'mc> {
@@ -569,6 +579,13 @@ impl<'mc> Into<crate::command::defaults::BukkitCommand<'mc>> for ReloadCommand<'
     fn into(self) -> crate::command::defaults::BukkitCommand<'mc> {
         crate::command::defaults::BukkitCommand::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting ReloadCommand into crate::command::defaults::BukkitCommand")
+    }
+}
+
+pub struct ReloadCommandClass;
+impl blackboxmc_general::JNIProvidesClassName for ReloadCommandClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/defaults/ReloadCommand"
     }
 }
 
@@ -1144,6 +1161,16 @@ impl<'mc> TimingsCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for TimingsCommand<'mc> {
@@ -1159,6 +1186,13 @@ impl<'mc> Into<crate::command::defaults::BukkitCommand<'mc>> for TimingsCommand<
     fn into(self) -> crate::command::defaults::BukkitCommand<'mc> {
         crate::command::defaults::BukkitCommand::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting TimingsCommand into crate::command::defaults::BukkitCommand")
+    }
+}
+
+pub struct TimingsCommandClass;
+impl blackboxmc_general::JNIProvidesClassName for TimingsCommandClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/defaults/TimingsCommand"
     }
 }
 
@@ -1693,6 +1727,16 @@ impl<'mc> BukkitCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for BukkitCommand<'mc> {
@@ -1708,6 +1752,13 @@ impl<'mc> Into<crate::command::Command<'mc>> for BukkitCommand<'mc> {
     fn into(self) -> crate::command::Command<'mc> {
         crate::command::Command::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting BukkitCommand into crate::command::Command")
+    }
+}
+
+pub struct BukkitCommandClass;
+impl blackboxmc_general::JNIProvidesClassName for BukkitCommandClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/defaults/BukkitCommand"
     }
 }
 
@@ -2264,6 +2315,16 @@ impl<'mc> VersionCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for VersionCommand<'mc> {
@@ -2279,6 +2340,13 @@ impl<'mc> Into<crate::command::defaults::BukkitCommand<'mc>> for VersionCommand<
     fn into(self) -> crate::command::defaults::BukkitCommand<'mc> {
         crate::command::defaults::BukkitCommand::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting VersionCommand into crate::command::defaults::BukkitCommand")
+    }
+}
+
+pub struct VersionCommandClass;
+impl blackboxmc_general::JNIProvidesClassName for VersionCommandClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/defaults/VersionCommand"
     }
 }
 
@@ -2824,6 +2892,16 @@ impl<'mc> HelpCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for HelpCommand<'mc> {
@@ -2839,6 +2917,13 @@ impl<'mc> Into<crate::command::defaults::BukkitCommand<'mc>> for HelpCommand<'mc
     fn into(self) -> crate::command::defaults::BukkitCommand<'mc> {
         crate::command::defaults::BukkitCommand::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting HelpCommand into crate::command::defaults::BukkitCommand")
+    }
+}
+
+pub struct HelpCommandClass;
+impl blackboxmc_general::JNIProvidesClassName for HelpCommandClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/defaults/HelpCommand"
     }
 }
 
@@ -3395,6 +3480,16 @@ impl<'mc> PluginsCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PluginsCommand<'mc> {
@@ -3410,5 +3505,12 @@ impl<'mc> Into<crate::command::defaults::BukkitCommand<'mc>> for PluginsCommand<
     fn into(self) -> crate::command::defaults::BukkitCommand<'mc> {
         crate::command::defaults::BukkitCommand::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting PluginsCommand into crate::command::defaults::BukkitCommand")
+    }
+}
+
+pub struct PluginsCommandClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginsCommandClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/defaults/PluginsCommand"
     }
 }

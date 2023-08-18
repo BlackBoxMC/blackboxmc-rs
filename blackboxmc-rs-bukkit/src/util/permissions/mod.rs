@@ -225,6 +225,16 @@ impl<'mc> DefaultPermissions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for DefaultPermissions<'mc> {
@@ -233,6 +243,13 @@ impl<'mc> std::string::ToString for DefaultPermissions<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling DefaultPermissions.toString: {}", err),
         }
+    }
+}
+
+pub struct DefaultPermissionsClass;
+impl blackboxmc_general::JNIProvidesClassName for DefaultPermissionsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/permissions/DefaultPermissions"
     }
 }
 
@@ -389,6 +406,16 @@ impl<'mc> CommandPermissions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for CommandPermissions<'mc> {
@@ -397,6 +424,13 @@ impl<'mc> std::string::ToString for CommandPermissions<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling CommandPermissions.toString: {}", err),
         }
+    }
+}
+
+pub struct CommandPermissionsClass;
+impl blackboxmc_general::JNIProvidesClassName for CommandPermissionsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/permissions/CommandPermissions"
     }
 }
 
@@ -553,6 +587,16 @@ impl<'mc> BroadcastPermissions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for BroadcastPermissions<'mc> {
@@ -561,5 +605,12 @@ impl<'mc> std::string::ToString for BroadcastPermissions<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling BroadcastPermissions.toString: {}", err),
         }
+    }
+}
+
+pub struct BroadcastPermissionsClass;
+impl blackboxmc_general::JNIProvidesClassName for BroadcastPermissionsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/permissions/BroadcastPermissions"
     }
 }

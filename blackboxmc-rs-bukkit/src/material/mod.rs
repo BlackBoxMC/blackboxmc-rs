@@ -303,6 +303,16 @@ impl<'mc> Chest<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Chest<'mc> {
@@ -320,6 +330,14 @@ impl<'mc> Into<crate::material::DirectionalContainer<'mc>> for Chest<'mc> {
             .expect("Error converting Chest into crate::material::DirectionalContainer")
     }
 }
+
+pub struct ChestClass;
+impl blackboxmc_general::JNIProvidesClassName for ChestClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Chest"
+    }
+}
+
 /// Represents a diode/repeater in the on or off state, with a delay and facing in a specific direction.
 pub struct Diode<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -662,6 +680,16 @@ impl<'mc> Diode<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Diode<'mc> {
@@ -691,6 +719,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Diode<'mc> {
             .expect("Error converting Diode into crate::material::MaterialData")
     }
 }
+
+pub struct DiodeClass;
+impl blackboxmc_general::JNIProvidesClassName for DiodeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Diode"
+    }
+}
+
 /// Represents a pumpkin.
 pub struct Pumpkin<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -998,6 +1034,16 @@ impl<'mc> Pumpkin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Pumpkin<'mc> {
@@ -1021,6 +1067,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Pumpkin<'mc> {
             .expect("Error converting Pumpkin into crate::material::MaterialData")
     }
 }
+
+pub struct PumpkinClass;
+impl blackboxmc_general::JNIProvidesClassName for PumpkinClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Pumpkin"
+    }
+}
+
 /// Represents a flower pot.
 pub struct FlowerPot<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1288,6 +1342,16 @@ impl<'mc> FlowerPot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for FlowerPot<'mc> {
@@ -1305,6 +1369,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for FlowerPot<'mc> {
             .expect("Error converting FlowerPot into crate::material::MaterialData")
     }
 }
+
+pub struct FlowerPotClass;
+impl blackboxmc_general::JNIProvidesClassName for FlowerPotClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/FlowerPot"
+    }
+}
+
 /// Represents a powered rail
 pub struct PoweredRail<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1631,6 +1703,16 @@ impl<'mc> PoweredRail<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PoweredRail<'mc> {
@@ -1654,6 +1736,14 @@ impl<'mc> Into<crate::material::ExtendedRails<'mc>> for PoweredRail<'mc> {
             .expect("Error converting PoweredRail into crate::material::ExtendedRails")
     }
 }
+
+pub struct PoweredRailClass;
+impl blackboxmc_general::JNIProvidesClassName for PoweredRailClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/PoweredRail"
+    }
+}
+
 /// Represents the tripwire hook
 pub struct TripwireHook<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2015,6 +2105,16 @@ impl<'mc> TripwireHook<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for TripwireHook<'mc> {
@@ -2039,6 +2139,14 @@ impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for TripwireH
         )
     }
 }
+
+pub struct TripwireHookClass;
+impl blackboxmc_general::JNIProvidesClassName for TripwireHookClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/TripwireHook"
+    }
+}
+
 /// Simple utility class for attachable MaterialData subclasses
 pub struct SimpleAttachableMaterialData<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2348,6 +2456,16 @@ impl<'mc> SimpleAttachableMaterialData<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for SimpleAttachableMaterialData<'mc> {
@@ -2374,6 +2492,13 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for SimpleAttachableMaterialD
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).expect(
             "Error converting SimpleAttachableMaterialData into crate::material::MaterialData",
         )
+    }
+}
+
+pub struct SimpleAttachableMaterialDataClass;
+impl blackboxmc_general::JNIProvidesClassName for SimpleAttachableMaterialDataClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/SimpleAttachableMaterialData"
     }
 }
 
@@ -2437,7 +2562,25 @@ impl<'mc> Openable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct OpenableClass;
+impl blackboxmc_general::JNIProvidesClassName for OpenableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Openable"
+    }
+}
+
 /// MaterialData for torches
 pub struct Torch<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2744,6 +2887,16 @@ impl<'mc> Torch<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Torch<'mc> {
@@ -2761,6 +2914,14 @@ impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for Torch<'mc
             .expect("Error converting Torch into crate::material::SimpleAttachableMaterialData")
     }
 }
+
+pub struct TorchClass;
+impl blackboxmc_general::JNIProvidesClassName for TorchClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Torch"
+    }
+}
+
 /// Represents a comparator in the on or off state, in normal or subtraction mode and facing in a specific direction.
 pub struct Comparator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3117,6 +3278,16 @@ impl<'mc> Comparator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Comparator<'mc> {
@@ -3146,6 +3317,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Comparator<'mc> {
             .expect("Error converting Comparator into crate::material::MaterialData")
     }
 }
+
+pub struct ComparatorClass;
+impl blackboxmc_general::JNIProvidesClassName for ComparatorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Comparator"
+    }
+}
+
 /// Represents a button
 pub struct Button<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3475,6 +3654,16 @@ impl<'mc> Button<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Button<'mc> {
@@ -3498,6 +3687,14 @@ impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for Button<'m
             .expect("Error converting Button into crate::material::SimpleAttachableMaterialData")
     }
 }
+
+pub struct ButtonClass;
+impl blackboxmc_general::JNIProvidesClassName for ButtonClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Button"
+    }
+}
+
 /// Represents the different types of coals.
 pub struct Coal<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3796,6 +3993,16 @@ impl<'mc> Coal<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Coal<'mc> {
@@ -3813,6 +4020,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Coal<'mc> {
             .expect("Error converting Coal into crate::material::MaterialData")
     }
 }
+
+pub struct CoalClass;
+impl blackboxmc_general::JNIProvidesClassName for CoalClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Coal"
+    }
+}
+
 /// An object that can be colored.
 ///
 /// This is a representation of an abstract class.
@@ -3897,7 +4112,25 @@ impl<'mc> Colorable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ColorableClass;
+impl blackboxmc_general::JNIProvidesClassName for ColorableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Colorable"
+    }
+}
+
 /// Represents the different types of Tree block that face a direction.
 pub struct Tree<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4254,6 +4487,16 @@ impl<'mc> Tree<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Tree<'mc> {
@@ -4271,6 +4514,14 @@ impl<'mc> Into<crate::material::Wood<'mc>> for Tree<'mc> {
             .expect("Error converting Tree into crate::material::Wood")
     }
 }
+
+pub struct TreeClass;
+impl blackboxmc_general::JNIProvidesClassName for TreeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Tree"
+    }
+}
+
 /// Material data for the piston base block
 pub struct PistonBaseMaterial<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4583,6 +4834,16 @@ impl<'mc> PistonBaseMaterial<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PistonBaseMaterial<'mc> {
@@ -4612,6 +4873,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for PistonBaseMaterial<'mc> {
             .expect("Error converting PistonBaseMaterial into crate::material::MaterialData")
     }
 }
+
+pub struct PistonBaseMaterialClass;
+impl blackboxmc_general::JNIProvidesClassName for PistonBaseMaterialClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/PistonBaseMaterial"
+    }
+}
+
 /// Represents a trap door
 pub struct TrapDoor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4965,6 +5234,16 @@ impl<'mc> TrapDoor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for TrapDoor<'mc> {
@@ -4988,6 +5267,14 @@ impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for TrapDoor<
             .expect("Error converting TrapDoor into crate::material::SimpleAttachableMaterialData")
     }
 }
+
+pub struct TrapDoorClass;
+impl blackboxmc_general::JNIProvidesClassName for TrapDoorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/TrapDoor"
+    }
+}
+
 /// Represents the different types of crops in different states of growth.
 pub struct Crops<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5286,6 +5573,16 @@ impl<'mc> Crops<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Crops<'mc> {
@@ -5303,6 +5600,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Crops<'mc> {
             .expect("Error converting Crops into crate::material::MaterialData")
     }
 }
+
+pub struct CropsClass;
+impl blackboxmc_general::JNIProvidesClassName for CropsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Crops"
+    }
+}
+
 /// Represents a spawn egg that can be used to spawn mobs
 pub struct SpawnEgg<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5603,6 +5908,16 @@ impl<'mc> SpawnEgg<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for SpawnEgg<'mc> {
@@ -5620,6 +5935,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for SpawnEgg<'mc> {
             .expect("Error converting SpawnEgg into crate::material::MaterialData")
     }
 }
+
+pub struct SpawnEggClass;
+impl blackboxmc_general::JNIProvidesClassName for SpawnEggClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/SpawnEgg"
+    }
+}
+
 /// Represents the different types of monster eggs
 pub struct MonsterEggs<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5930,6 +6253,16 @@ impl<'mc> MonsterEggs<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MonsterEggs<'mc> {
@@ -5947,6 +6280,14 @@ impl<'mc> Into<crate::material::TexturedMaterial<'mc>> for MonsterEggs<'mc> {
             .expect("Error converting MonsterEggs into crate::material::TexturedMaterial")
     }
 }
+
+pub struct MonsterEggsClass;
+impl blackboxmc_general::JNIProvidesClassName for MonsterEggsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/MonsterEggs"
+    }
+}
+
 /// Represents a furnace.
 pub struct Furnace<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6247,6 +6588,16 @@ impl<'mc> Furnace<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Furnace<'mc> {
@@ -6264,6 +6615,14 @@ impl<'mc> Into<crate::material::FurnaceAndDispenser<'mc>> for Furnace<'mc> {
             .expect("Error converting Furnace into crate::material::FurnaceAndDispenser")
     }
 }
+
+pub struct FurnaceClass;
+impl blackboxmc_general::JNIProvidesClassName for FurnaceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Furnace"
+    }
+}
+
 /// Represents minecart rails.
 pub struct Rails<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6565,6 +6924,16 @@ impl<'mc> Rails<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Rails<'mc> {
@@ -6582,6 +6951,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Rails<'mc> {
             .expect("Error converting Rails into crate::material::MaterialData")
     }
 }
+
+pub struct RailsClass;
+impl blackboxmc_general::JNIProvidesClassName for RailsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Rails"
+    }
+}
+
 /// Represents the different types of Tree block that face a direction.
 pub struct Sapling<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6920,6 +7297,16 @@ impl<'mc> Sapling<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Sapling<'mc> {
@@ -6937,6 +7324,14 @@ impl<'mc> Into<crate::material::Wood<'mc>> for Sapling<'mc> {
             .expect("Error converting Sapling into crate::material::Wood")
     }
 }
+
+pub struct SaplingClass;
+impl blackboxmc_general::JNIProvidesClassName for SaplingClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Sapling"
+    }
+}
+
 /// Indicated a Material that may carry or create a Redstone current
 ///
 /// This is a representation of an abstract class.
@@ -6985,7 +7380,25 @@ impl<'mc> Redstone<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct RedstoneClass;
+impl blackboxmc_general::JNIProvidesClassName for RedstoneClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Redstone"
+    }
+}
+
 /// Material data for the piston extension block
 pub struct PistonExtensionMaterial<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7319,6 +7732,16 @@ impl<'mc> PistonExtensionMaterial<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PistonExtensionMaterial<'mc> {
@@ -7342,6 +7765,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for PistonExtensionMaterial<'
             .expect("Error converting PistonExtensionMaterial into crate::material::MaterialData")
     }
 }
+
+pub struct PistonExtensionMaterialClass;
+impl blackboxmc_general::JNIProvidesClassName for PistonExtensionMaterialClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/PistonExtensionMaterial"
+    }
+}
+
 /// Represents a lever
 pub struct Lever<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7671,6 +8102,16 @@ impl<'mc> Lever<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Lever<'mc> {
@@ -7694,6 +8135,14 @@ impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for Lever<'mc
             .expect("Error converting Lever into crate::material::SimpleAttachableMaterialData")
     }
 }
+
+pub struct LeverClass;
+impl blackboxmc_general::JNIProvidesClassName for LeverClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Lever"
+    }
+}
+
 /// Represents a furnace or a dispenser.
 pub struct DirectionalContainer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7974,6 +8423,16 @@ impl<'mc> DirectionalContainer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for DirectionalContainer<'mc> {
@@ -7997,6 +8456,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for DirectionalContainer<'mc>
             .expect("Error converting DirectionalContainer into crate::material::MaterialData")
     }
 }
+
+pub struct DirectionalContainerClass;
+impl blackboxmc_general::JNIProvidesClassName for DirectionalContainerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/DirectionalContainer"
+    }
+}
+
 /// Represents nether wart
 pub struct NetherWarts<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8277,6 +8744,16 @@ impl<'mc> NetherWarts<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for NetherWarts<'mc> {
@@ -8294,6 +8771,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for NetherWarts<'mc> {
             .expect("Error converting NetherWarts into crate::material::MaterialData")
     }
 }
+
+pub struct NetherWartsClass;
+impl blackboxmc_general::JNIProvidesClassName for NetherWartsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/NetherWarts"
+    }
+}
+
 /// Handles specific metadata for certain items or blocks
 pub struct MaterialData<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8529,6 +9014,16 @@ impl<'mc> MaterialData<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MaterialData<'mc> {
@@ -8537,6 +9032,13 @@ impl<'mc> std::string::ToString for MaterialData<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling MaterialData.toString: {}", err),
         }
+    }
+}
+
+pub struct MaterialDataClass;
+impl blackboxmc_general::JNIProvidesClassName for MaterialDataClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/MaterialData"
     }
 }
 
@@ -8838,6 +9340,16 @@ impl<'mc> LongGrass<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for LongGrass<'mc> {
@@ -8855,6 +9367,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for LongGrass<'mc> {
             .expect("Error converting LongGrass into crate::material::MaterialData")
     }
 }
+
+pub struct LongGrassClass;
+impl blackboxmc_general::JNIProvidesClassName for LongGrassClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/LongGrass"
+    }
+}
+
 /// Represents the tripwire
 pub struct Tripwire<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9140,6 +9660,16 @@ impl<'mc> Tripwire<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Tripwire<'mc> {
@@ -9157,6 +9687,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Tripwire<'mc> {
             .expect("Error converting Tripwire into crate::material::MaterialData")
     }
 }
+
+pub struct TripwireClass;
+impl blackboxmc_general::JNIProvidesClassName for TripwireClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Tripwire"
+    }
+}
+
 /// Represents textured materials like steps and smooth bricks
 pub struct TexturedMaterial<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9467,6 +10005,16 @@ impl<'mc> TexturedMaterial<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for TexturedMaterial<'mc> {
@@ -9482,6 +10030,13 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for TexturedMaterial<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting TexturedMaterial into crate::material::MaterialData")
+    }
+}
+
+pub struct TexturedMaterialClass;
+impl blackboxmc_general::JNIProvidesClassName for TexturedMaterialClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/TexturedMaterial"
     }
 }
 
@@ -9534,7 +10089,25 @@ impl<'mc> PressureSensor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PressureSensorClass;
+impl blackboxmc_general::JNIProvidesClassName for PressureSensorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/PressureSensor"
+    }
+}
+
 /// Represents a dispenser.
 pub struct Dispenser<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9835,6 +10408,16 @@ impl<'mc> Dispenser<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Dispenser<'mc> {
@@ -9850,6 +10433,13 @@ impl<'mc> Into<crate::material::FurnaceAndDispenser<'mc>> for Dispenser<'mc> {
     fn into(self) -> crate::material::FurnaceAndDispenser<'mc> {
         crate::material::FurnaceAndDispenser::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Dispenser into crate::material::FurnaceAndDispenser")
+    }
+}
+
+pub struct DispenserClass;
+impl blackboxmc_general::JNIProvidesClassName for DispenserClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Dispenser"
     }
 }
 
@@ -10137,6 +10727,16 @@ impl<'mc> Cake<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Cake<'mc> {
@@ -10154,6 +10754,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Cake<'mc> {
             .expect("Error converting Cake into crate::material::MaterialData")
     }
 }
+
+pub struct CakeClass;
+impl blackboxmc_general::JNIProvidesClassName for CakeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Cake"
+    }
+}
+
 /// Represents a fence gate
 pub struct Gate<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10458,6 +11066,16 @@ impl<'mc> Gate<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Gate<'mc> {
@@ -10487,6 +11105,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Gate<'mc> {
             .expect("Error converting Gate into crate::material::MaterialData")
     }
 }
+
+pub struct GateClass;
+impl blackboxmc_general::JNIProvidesClassName for GateClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Gate"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum CocoaPlantSizeEnum {
     Small,
@@ -10598,7 +11224,25 @@ impl<'mc> CocoaPlantSize<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct CocoaPlantSizeClass;
+impl blackboxmc_general::JNIProvidesClassName for CocoaPlantSizeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/CocoaPlantSize"
+    }
+}
+
 /// Represents the different types of steps.
 pub struct Step<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10932,6 +11576,16 @@ impl<'mc> Step<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Step<'mc> {
@@ -10949,6 +11603,14 @@ impl<'mc> Into<crate::material::TexturedMaterial<'mc>> for Step<'mc> {
             .expect("Error converting Step into crate::material::TexturedMaterial")
     }
 }
+
+pub struct StepClass;
+impl blackboxmc_general::JNIProvidesClassName for StepClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Step"
+    }
+}
+
 /// Represents the different types of smooth bricks.
 pub struct SmoothBrick<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11259,6 +11921,16 @@ impl<'mc> SmoothBrick<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for SmoothBrick<'mc> {
@@ -11276,6 +11948,14 @@ impl<'mc> Into<crate::material::TexturedMaterial<'mc>> for SmoothBrick<'mc> {
             .expect("Error converting SmoothBrick into crate::material::TexturedMaterial")
     }
 }
+
+pub struct SmoothBrickClass;
+impl blackboxmc_general::JNIProvidesClassName for SmoothBrickClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/SmoothBrick"
+    }
+}
+
 /// Represents the different types of leaf block that may be permanent or can decay when too far from a log.
 pub struct Leaves<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11634,6 +12314,16 @@ impl<'mc> Leaves<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Leaves<'mc> {
@@ -11651,6 +12341,14 @@ impl<'mc> Into<crate::material::Wood<'mc>> for Leaves<'mc> {
             .expect("Error converting Leaves into crate::material::Wood")
     }
 }
+
+pub struct LeavesClass;
+impl blackboxmc_general::JNIProvidesClassName for LeavesClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Leaves"
+    }
+}
+
 /// Represents dye
 pub struct Dye<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11934,6 +12632,16 @@ impl<'mc> Dye<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Dye<'mc> {
@@ -11957,6 +12665,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Dye<'mc> {
             .expect("Error converting Dye into crate::material::MaterialData")
     }
 }
+
+pub struct DyeClass;
+impl blackboxmc_general::JNIProvidesClassName for DyeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Dye"
+    }
+}
+
 /// Represents a pressure plate
 pub struct PressurePlate<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12204,6 +12920,16 @@ impl<'mc> PressurePlate<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PressurePlate<'mc> {
@@ -12227,6 +12953,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for PressurePlate<'mc> {
             .expect("Error converting PressurePlate into crate::material::MaterialData")
     }
 }
+
+pub struct PressurePlateClass;
+impl blackboxmc_general::JNIProvidesClassName for PressurePlateClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/PressurePlate"
+    }
+}
+
 /// Represents an observer.
 pub struct Observer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12534,6 +13268,16 @@ impl<'mc> Observer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Observer<'mc> {
@@ -12563,6 +13307,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Observer<'mc> {
             .expect("Error converting Observer into crate::material::MaterialData")
     }
 }
+
+pub struct ObserverClass;
+impl blackboxmc_general::JNIProvidesClassName for ObserverClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Observer"
+    }
+}
+
 /// Represents stairs.
 pub struct Stairs<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12922,6 +13674,16 @@ impl<'mc> Stairs<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Stairs<'mc> {
@@ -12945,6 +13707,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Stairs<'mc> {
             .expect("Error converting Stairs into crate::material::MaterialData")
     }
 }
+
+pub struct StairsClass;
+impl blackboxmc_general::JNIProvidesClassName for StairsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Stairs"
+    }
+}
+
 /// Represents the different types of sandstone.
 pub struct Sandstone<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13243,6 +14013,16 @@ impl<'mc> Sandstone<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Sandstone<'mc> {
@@ -13260,6 +14040,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Sandstone<'mc> {
             .expect("Error converting Sandstone into crate::material::MaterialData")
     }
 }
+
+pub struct SandstoneClass;
+impl blackboxmc_general::JNIProvidesClassName for SandstoneClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Sandstone"
+    }
+}
+
 /// Represents an ender chest
 pub struct EnderChest<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13560,6 +14348,16 @@ impl<'mc> EnderChest<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for EnderChest<'mc> {
@@ -13577,6 +14375,14 @@ impl<'mc> Into<crate::material::DirectionalContainer<'mc>> for EnderChest<'mc> {
             .expect("Error converting EnderChest into crate::material::DirectionalContainer")
     }
 }
+
+pub struct EnderChestClass;
+impl blackboxmc_general::JNIProvidesClassName for EnderChestClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/EnderChest"
+    }
+}
+
 /// Represents a furnace or dispenser, two types of directional containers
 pub struct FurnaceAndDispenser<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13859,6 +14665,16 @@ impl<'mc> FurnaceAndDispenser<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for FurnaceAndDispenser<'mc> {
@@ -13877,6 +14693,14 @@ impl<'mc> Into<crate::material::DirectionalContainer<'mc>> for FurnaceAndDispens
         )
     }
 }
+
+pub struct FurnaceAndDispenserClass;
+impl blackboxmc_general::JNIProvidesClassName for FurnaceAndDispenserClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/FurnaceAndDispenser"
+    }
+}
+
 /// Represents a bed.
 pub struct Bed<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14200,6 +15024,16 @@ impl<'mc> Bed<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Bed<'mc> {
@@ -14223,6 +15057,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Bed<'mc> {
             .expect("Error converting Bed into crate::material::MaterialData")
     }
 }
+
+pub struct BedClass;
+impl blackboxmc_general::JNIProvidesClassName for BedClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Bed"
+    }
+}
+
 /// Represents redstone wire
 pub struct RedstoneWire<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14470,6 +15312,16 @@ impl<'mc> RedstoneWire<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for RedstoneWire<'mc> {
@@ -14493,6 +15345,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for RedstoneWire<'mc> {
             .expect("Error converting RedstoneWire into crate::material::MaterialData")
     }
 }
+
+pub struct RedstoneWireClass;
+impl blackboxmc_general::JNIProvidesClassName for RedstoneWireClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/RedstoneWire"
+    }
+}
+
 /// Represents the different types of wooden steps.
 pub struct WoodenStep<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14796,6 +15656,16 @@ impl<'mc> WoodenStep<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for WoodenStep<'mc> {
@@ -14813,6 +15683,14 @@ impl<'mc> Into<crate::material::Wood<'mc>> for WoodenStep<'mc> {
             .expect("Error converting WoodenStep into crate::material::Wood")
     }
 }
+
+pub struct WoodenStepClass;
+impl blackboxmc_general::JNIProvidesClassName for WoodenStepClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/WoodenStep"
+    }
+}
+
 /// Represents a vine
 pub struct Vine<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15125,6 +16003,16 @@ impl<'mc> Vine<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Vine<'mc> {
@@ -15142,6 +16030,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Vine<'mc> {
             .expect("Error converting Vine into crate::material::MaterialData")
     }
 }
+
+pub struct VineClass;
+impl blackboxmc_general::JNIProvidesClassName for VineClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Vine"
+    }
+}
+
 /// Represents wood blocks of different species.
 pub struct Wood<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15442,6 +16338,16 @@ impl<'mc> Wood<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Wood<'mc> {
@@ -15457,6 +16363,13 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Wood<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Wood into crate::material::MaterialData")
+    }
+}
+
+pub struct WoodClass;
+impl blackboxmc_general::JNIProvidesClassName for WoodClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Wood"
     }
 }
 
@@ -15772,6 +16685,16 @@ impl<'mc> Banner<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Banner<'mc> {
@@ -15795,6 +16718,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Banner<'mc> {
             .expect("Error converting Banner into crate::material::MaterialData")
     }
 }
+
+pub struct BannerClass;
+impl blackboxmc_general::JNIProvidesClassName for BannerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Banner"
+    }
+}
+
 /// Represents a huge mushroom block with certain combinations of faces set to cap, pores or stem.
 pub struct Mushroom<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16146,6 +17077,16 @@ impl<'mc> Mushroom<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Mushroom<'mc> {
@@ -16163,6 +17104,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Mushroom<'mc> {
             .expect("Error converting Mushroom into crate::material::MaterialData")
     }
 }
+
+pub struct MushroomClass;
+impl blackboxmc_general::JNIProvidesClassName for MushroomClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Mushroom"
+    }
+}
+
 /// Represents a redstone torch
 pub struct RedstoneTorch<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16478,6 +17427,16 @@ impl<'mc> RedstoneTorch<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for RedstoneTorch<'mc> {
@@ -16501,6 +17460,14 @@ impl<'mc> Into<crate::material::Torch<'mc>> for RedstoneTorch<'mc> {
             .expect("Error converting RedstoneTorch into crate::material::Torch")
     }
 }
+
+pub struct RedstoneTorchClass;
+impl blackboxmc_general::JNIProvidesClassName for RedstoneTorchClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/RedstoneTorch"
+    }
+}
+
 /// Represents the cocoa plant
 pub struct CocoaPlant<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16618,6 +17585,23 @@ impl<'mc> CocoaPlantCocoaPlantSize<'mc> {
             CocoaPlantCocoaPlantSize::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct CocoaPlantCocoaPlantSizeClass;
+impl blackboxmc_general::JNIProvidesClassName for CocoaPlantCocoaPlantSizeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/CocoaPlant$CocoaPlantSize"
     }
 }
 
@@ -16963,6 +17947,16 @@ impl<'mc> CocoaPlant<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for CocoaPlant<'mc> {
@@ -16992,6 +17986,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for CocoaPlant<'mc> {
             .expect("Error converting CocoaPlant into crate::material::MaterialData")
     }
 }
+
+pub struct CocoaPlantClass;
+impl blackboxmc_general::JNIProvidesClassName for CocoaPlantClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/CocoaPlant"
+    }
+}
+
 /// Represents a door. This class was previously deprecated, but has been retrofitted to work with modern doors. Some methods are undefined dependant on <code>isTopHalf()</code> due to Minecraft's internal representation of doors.
 pub struct Door<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -17437,6 +18439,16 @@ impl<'mc> Door<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Door<'mc> {
@@ -17464,6 +18476,13 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Door<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Door into crate::material::MaterialData")
+    }
+}
+
+pub struct DoorClass;
+impl blackboxmc_general::JNIProvidesClassName for DoorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Door"
     }
 }
 
@@ -17547,7 +18566,25 @@ impl<'mc> Directional<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct DirectionalClass;
+impl blackboxmc_general::JNIProvidesClassName for DirectionalClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Directional"
+    }
+}
+
 /// This is the superclass for the <a href="DetectorRail.html" title="class in org.bukkit.material"><code>DetectorRail</code></a> and <a href="PoweredRail.html" title="class in org.bukkit.material"><code>PoweredRail</code></a> classes
 pub struct ExtendedRails<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -17849,6 +18886,16 @@ impl<'mc> ExtendedRails<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ExtendedRails<'mc> {
@@ -17866,6 +18913,14 @@ impl<'mc> Into<crate::material::Rails<'mc>> for ExtendedRails<'mc> {
             .expect("Error converting ExtendedRails into crate::material::Rails")
     }
 }
+
+pub struct ExtendedRailsClass;
+impl blackboxmc_general::JNIProvidesClassName for ExtendedRailsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/ExtendedRails"
+    }
+}
+
 /// Represents a cauldron
 pub struct Cauldron<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -18120,6 +19175,16 @@ impl<'mc> Cauldron<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Cauldron<'mc> {
@@ -18137,6 +19202,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Cauldron<'mc> {
             .expect("Error converting Cauldron into crate::material::MaterialData")
     }
 }
+
+pub struct CauldronClass;
+impl blackboxmc_general::JNIProvidesClassName for CauldronClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Cauldron"
+    }
+}
+
 /// Represents Ladder data
 pub struct Ladder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -18443,6 +19516,16 @@ impl<'mc> Ladder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Ladder<'mc> {
@@ -18460,6 +19543,14 @@ impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for Ladder<'m
             .expect("Error converting Ladder into crate::material::SimpleAttachableMaterialData")
     }
 }
+
+pub struct LadderClass;
+impl blackboxmc_general::JNIProvidesClassName for LadderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Ladder"
+    }
+}
+
 /// Represents a command block
 pub struct Command<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -18719,6 +19810,16 @@ impl<'mc> Command<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Command<'mc> {
@@ -18742,6 +19843,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Command<'mc> {
             .expect("Error converting Command into crate::material::MaterialData")
     }
 }
+
+pub struct CommandClass;
+impl blackboxmc_general::JNIProvidesClassName for CommandClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Command"
+    }
+}
+
 /// Represents a detector rail
 pub struct DetectorRail<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19067,6 +20176,16 @@ impl<'mc> DetectorRail<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for DetectorRail<'mc> {
@@ -19090,6 +20209,14 @@ impl<'mc> Into<crate::material::ExtendedRails<'mc>> for DetectorRail<'mc> {
             .expect("Error converting DetectorRail into crate::material::ExtendedRails")
     }
 }
+
+pub struct DetectorRailClass;
+impl blackboxmc_general::JNIProvidesClassName for DetectorRailClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/DetectorRail"
+    }
+}
+
 /// Represents a hopper in an active or deactivated state and facing in a specific direction.
 pub struct Hopper<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19426,6 +20553,16 @@ impl<'mc> Hopper<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Hopper<'mc> {
@@ -19455,6 +20592,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Hopper<'mc> {
             .expect("Error converting Hopper into crate::material::MaterialData")
     }
 }
+
+pub struct HopperClass;
+impl blackboxmc_general::JNIProvidesClassName for HopperClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Hopper"
+    }
+}
+
 /// Represents a skull.
 pub struct Skull<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19753,6 +20898,16 @@ impl<'mc> Skull<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Skull<'mc> {
@@ -19776,6 +20931,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Skull<'mc> {
             .expect("Error converting Skull into crate::material::MaterialData")
     }
 }
+
+pub struct SkullClass;
+impl blackboxmc_general::JNIProvidesClassName for SkullClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Skull"
+    }
+}
+
 /// MaterialData for signs
 pub struct Sign<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20089,6 +21252,16 @@ impl<'mc> Sign<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Sign<'mc> {
@@ -20112,6 +21285,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Sign<'mc> {
             .expect("Error converting Sign into crate::material::MaterialData")
     }
 }
+
+pub struct SignClass;
+impl blackboxmc_general::JNIProvidesClassName for SignClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Sign"
+    }
+}
+
 /// Represents a Wool/Cloth block
 pub struct Wool<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20415,6 +21596,16 @@ impl<'mc> Wool<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Wool<'mc> {
@@ -20438,6 +21629,14 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Wool<'mc> {
             .expect("Error converting Wool into crate::material::MaterialData")
     }
 }
+
+pub struct WoolClass;
+impl blackboxmc_general::JNIProvidesClassName for WoolClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Wool"
+    }
+}
+
 /// Indicates that a block can be attached to another block
 ///
 /// This is a representation of an abstract class.
@@ -20545,6 +21744,16 @@ impl<'mc> Attachable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::material::Directional<'mc>> for Attachable<'mc> {
     fn into(self) -> crate::material::Directional<'mc> {
@@ -20552,4 +21761,12 @@ impl<'mc> Into<crate::material::Directional<'mc>> for Attachable<'mc> {
             .expect("Error converting Attachable into crate::material::Directional")
     }
 }
+
+pub struct AttachableClass;
+impl blackboxmc_general::JNIProvidesClassName for AttachableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/material/Attachable"
+    }
+}
+
 pub mod types;

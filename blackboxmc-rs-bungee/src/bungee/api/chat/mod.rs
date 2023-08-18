@@ -732,6 +732,16 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for TextComponent<'mc> {
@@ -749,6 +759,14 @@ impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for TextComponent<'
             .expect("Error converting TextComponent into crate::bungee::api::chat::BaseComponent")
     }
 }
+
+pub struct TextComponentClass;
+impl blackboxmc_general::JNIProvidesClassName for TextComponentClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/TextComponent"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum FormatRetentionEnum {
     None,
@@ -863,6 +881,23 @@ impl<'mc> FormatRetention<'mc> {
             FormatRetention::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct FormatRetentionClass;
+impl blackboxmc_general::JNIProvidesClassName for FormatRetentionClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/FormatRetention"
     }
 }
 
@@ -985,6 +1020,23 @@ impl<'mc> HoverEventAction<'mc> {
             HoverEventAction::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct HoverEventActionClass;
+impl blackboxmc_general::JNIProvidesClassName for HoverEventActionClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/HoverEvent$Action"
     }
 }
 
@@ -1199,6 +1251,16 @@ impl<'mc> HoverEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for HoverEvent<'mc> {
@@ -1207,6 +1269,13 @@ impl<'mc> std::string::ToString for HoverEvent<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling HoverEvent.toString: {}", err),
         }
+    }
+}
+
+pub struct HoverEventClass;
+impl blackboxmc_general::JNIProvidesClassName for HoverEventClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/HoverEvent"
     }
 }
 
@@ -1887,6 +1956,16 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for BaseComponent<'mc> {
@@ -1895,6 +1974,13 @@ impl<'mc> std::string::ToString for BaseComponent<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling BaseComponent.toString: {}", err),
         }
+    }
+}
+
+pub struct BaseComponentClass;
+impl blackboxmc_general::JNIProvidesClassName for BaseComponentClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/BaseComponent"
     }
 }
 
@@ -2614,6 +2700,16 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for SelectorComponent<'mc> {
@@ -2630,6 +2726,13 @@ impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for SelectorCompone
         crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), self.1).expect(
             "Error converting SelectorComponent into crate::bungee::api::chat::BaseComponent",
         )
+    }
+}
+
+pub struct SelectorComponentClass;
+impl blackboxmc_general::JNIProvidesClassName for SelectorComponentClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/SelectorComponent"
     }
 }
 
@@ -3420,6 +3523,16 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ScoreComponent<'mc> {
@@ -3435,6 +3548,13 @@ impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for ScoreComponent<
     fn into(self) -> crate::bungee::api::chat::BaseComponent<'mc> {
         crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting ScoreComponent into crate::bungee::api::chat::BaseComponent")
+    }
+}
+
+pub struct ScoreComponentClass;
+impl blackboxmc_general::JNIProvidesClassName for ScoreComponentClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/ScoreComponent"
     }
 }
 
@@ -3565,6 +3685,23 @@ impl<'mc> ClickEventAction<'mc> {
             ClickEventAction::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct ClickEventActionClass;
+impl blackboxmc_general::JNIProvidesClassName for ClickEventActionClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/ClickEvent$Action"
     }
 }
 
@@ -3755,6 +3892,16 @@ impl<'mc> ClickEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ClickEvent<'mc> {
@@ -3763,6 +3910,13 @@ impl<'mc> std::string::ToString for ClickEvent<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ClickEvent.toString: {}", err),
         }
+    }
+}
+
+pub struct ClickEventClass;
+impl blackboxmc_general::JNIProvidesClassName for ClickEventClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/ClickEvent"
     }
 }
 
@@ -3804,7 +3958,24 @@ impl<'mc> JNIInstantiatable<'mc> for Keybinds<'mc> {
     }
 }
 
-impl<'mc> Keybinds<'mc> {}
+impl<'mc> Keybinds<'mc> {
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct KeybindsClass;
+impl blackboxmc_general::JNIProvidesClassName for KeybindsClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/Keybinds"
+    }
+}
 
 pub struct ItemTagSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3999,6 +4170,16 @@ impl<'mc> ItemTagSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ItemTagSerializer<'mc> {
@@ -4013,6 +4194,13 @@ impl<'mc> std::string::ToString for ItemTagSerializer<'mc> {
 impl<'mc> Into<jni::objects::JObject<'mc>> for ItemTagSerializer<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
+    }
+}
+
+pub struct ItemTagSerializerClass;
+impl blackboxmc_general::JNIProvidesClassName for ItemTagSerializerClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/ItemTag$Serializer"
     }
 }
 
@@ -4818,6 +5006,16 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for TranslatableComponent<'mc> {
@@ -4834,6 +5032,13 @@ impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for TranslatableCom
         crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), self.1).expect(
             "Error converting TranslatableComponent into crate::bungee::api::chat::BaseComponent",
         )
+    }
+}
+
+pub struct TranslatableComponentClass;
+impl blackboxmc_general::JNIProvidesClassName for TranslatableComponentClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/TranslatableComponent"
     }
 }
 
@@ -4905,6 +5110,23 @@ impl<'mc> ComponentBuilderJoiner<'mc> {
         crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct ComponentBuilderJoinerClass;
+impl blackboxmc_general::JNIProvidesClassName for ComponentBuilderJoinerClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/ComponentBuilder$Joiner"
     }
 }
 
@@ -5069,6 +5291,16 @@ impl<'mc> ItemTag<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ItemTag<'mc> {
@@ -5077,6 +5309,13 @@ impl<'mc> std::string::ToString for ItemTag<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ItemTag.toString: {}", err),
         }
+    }
+}
+
+pub struct ItemTagClass;
+impl blackboxmc_general::JNIProvidesClassName for ItemTagClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/ItemTag"
     }
 }
 
@@ -5797,6 +6036,16 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for KeybindComponent<'mc> {
@@ -5813,6 +6062,13 @@ impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for KeybindComponen
         crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), self.1).expect(
             "Error converting KeybindComponent into crate::bungee::api::chat::BaseComponent",
         )
+    }
+}
+
+pub struct KeybindComponentClass;
+impl blackboxmc_general::JNIProvidesClassName for KeybindComponentClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/KeybindComponent"
     }
 }
 
@@ -5940,6 +6196,23 @@ impl<'mc> ComponentBuilderFormatRetention<'mc> {
             ComponentBuilderFormatRetention::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct ComponentBuilderFormatRetentionClass;
+impl blackboxmc_general::JNIProvidesClassName for ComponentBuilderFormatRetentionClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/ComponentBuilder$FormatRetention"
     }
 }
 
@@ -6560,6 +6833,16 @@ impl<'mc> ComponentBuilder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ComponentBuilder<'mc> {
@@ -6568,6 +6851,13 @@ impl<'mc> std::string::ToString for ComponentBuilder<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ComponentBuilder.toString: {}", err),
         }
+    }
+}
+
+pub struct ComponentBuilderClass;
+impl blackboxmc_general::JNIProvidesClassName for ComponentBuilderClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/chat/ComponentBuilder"
     }
 }
 

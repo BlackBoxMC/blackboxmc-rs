@@ -115,7 +115,25 @@ impl<'mc> CookingBookCategory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct CookingBookCategoryClass;
+impl blackboxmc_general::JNIProvidesClassName for CookingBookCategoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/recipe/CookingBookCategory"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum CraftingBookCategoryEnum {
     Building,
@@ -231,5 +249,22 @@ impl<'mc> CraftingBookCategory<'mc> {
             CraftingBookCategory::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct CraftingBookCategoryClass;
+impl blackboxmc_general::JNIProvidesClassName for CraftingBookCategoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/recipe/CraftingBookCategory"
     }
 }

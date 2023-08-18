@@ -172,7 +172,25 @@ impl<'mc> PlayerTextures<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PlayerTexturesClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerTexturesClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/profile/PlayerTextures"
+    }
+}
+
 /// The different Minecraft skin models.
 #[derive(PartialEq, Eq)]
 pub enum PlayerTexturesSkinModelEnum {
@@ -283,7 +301,25 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PlayerTexturesSkinModelClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerTexturesSkinModelClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/profile/PlayerTextures$SkinModel"
+    }
+}
+
 /// A player profile.
 /// <p>A player profile always provides a unique id, a non-empty name, or both. Its unique id and name are immutable, but other properties (such as its textures) can be altered.</p>
 /// <p>New profiles can be created via <a href="../Server.html#createPlayerProfile(java.util.UUID,java.lang.String)"><code>Server.createPlayerProfile(UUID, String)</code></a>.</p>
@@ -415,6 +451,16 @@ impl<'mc> PlayerProfile<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
     for PlayerProfile<'mc>
@@ -423,6 +469,14 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting PlayerProfile into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
+
+pub struct PlayerProfileClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerProfileClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/profile/PlayerProfile"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum SkinModelEnum {
     Classic,
@@ -527,5 +581,22 @@ impl<'mc> SkinModel<'mc> {
             SkinModel::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct SkinModelClass;
+impl blackboxmc_general::JNIProvidesClassName for SkinModelClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/profile/SkinModel"
     }
 }

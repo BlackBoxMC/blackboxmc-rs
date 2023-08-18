@@ -303,6 +303,16 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for SimplexNoiseGenerator<'mc> {
@@ -321,6 +331,14 @@ impl<'mc> Into<crate::util::noise::PerlinNoiseGenerator<'mc>> for SimplexNoiseGe
         )
     }
 }
+
+pub struct SimplexNoiseGeneratorClass;
+impl blackboxmc_general::JNIProvidesClassName for SimplexNoiseGeneratorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/noise/SimplexNoiseGenerator"
+    }
+}
+
 /// Generates noise using the "classic" perlin generator
 pub struct PerlinNoiseGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -617,6 +635,16 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PerlinNoiseGenerator<'mc> {
@@ -634,6 +662,14 @@ impl<'mc> Into<crate::util::noise::NoiseGenerator<'mc>> for PerlinNoiseGenerator
             .expect("Error converting PerlinNoiseGenerator into crate::util::noise::NoiseGenerator")
     }
 }
+
+pub struct PerlinNoiseGeneratorClass;
+impl blackboxmc_general::JNIProvidesClassName for PerlinNoiseGeneratorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/noise/PerlinNoiseGenerator"
+    }
+}
+
 /// Creates simplex noise through unbiased octaves
 pub struct SimplexOctaveGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -961,6 +997,16 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for SimplexOctaveGenerator<'mc> {
@@ -979,6 +1025,14 @@ impl<'mc> Into<crate::util::noise::OctaveGenerator<'mc>> for SimplexOctaveGenera
         )
     }
 }
+
+pub struct SimplexOctaveGeneratorClass;
+impl blackboxmc_general::JNIProvidesClassName for SimplexOctaveGeneratorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/noise/SimplexOctaveGenerator"
+    }
+}
+
 /// Creates noise using unbiased octaves
 pub struct OctaveGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1233,6 +1287,16 @@ impl<'mc> OctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for OctaveGenerator<'mc> {
@@ -1241,6 +1305,13 @@ impl<'mc> std::string::ToString for OctaveGenerator<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling OctaveGenerator.toString: {}", err),
         }
+    }
+}
+
+pub struct OctaveGeneratorClass;
+impl blackboxmc_general::JNIProvidesClassName for OctaveGeneratorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/noise/OctaveGenerator"
     }
 }
 
@@ -1541,6 +1612,16 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PerlinOctaveGenerator<'mc> {
@@ -1559,6 +1640,14 @@ impl<'mc> Into<crate::util::noise::OctaveGenerator<'mc>> for PerlinOctaveGenerat
         )
     }
 }
+
+pub struct PerlinOctaveGeneratorClass;
+impl blackboxmc_general::JNIProvidesClassName for PerlinOctaveGeneratorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/noise/PerlinOctaveGenerator"
+    }
+}
+
 /// Base class for all noise generators
 pub struct NoiseGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1781,6 +1870,16 @@ impl<'mc> NoiseGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for NoiseGenerator<'mc> {
@@ -1789,5 +1888,12 @@ impl<'mc> std::string::ToString for NoiseGenerator<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling NoiseGenerator.toString: {}", err),
         }
+    }
+}
+
+pub struct NoiseGeneratorClass;
+impl blackboxmc_general::JNIProvidesClassName for NoiseGeneratorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/noise/NoiseGenerator"
     }
 }

@@ -118,6 +118,16 @@ impl<'mc> LootTable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::Keyed<'mc>> for LootTable<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
@@ -125,6 +135,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for LootTable<'mc> {
             .expect("Error converting LootTable into crate::Keyed")
     }
 }
+
+pub struct LootTableClass;
+impl blackboxmc_general::JNIProvidesClassName for LootTableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/loot/LootTable"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum LootTablesLootTablesEnum {
     Empty,
@@ -931,7 +949,25 @@ impl<'mc> LootTablesLootTables<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct LootTablesLootTablesClass;
+impl blackboxmc_general::JNIProvidesClassName for LootTablesLootTablesClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/loot/LootTables$LootTables"
+    }
+}
+
 /// Represents a <a title="interface in org.bukkit.block" href="../block/Container.html"><code>Container</code></a> or a <a href="../entity/Mob.html" title="interface in org.bukkit.entity"><code>Mob</code></a> that can have a loot table.
 ///
 /// Container loot will only generate upon opening, and only when the container is <i>first</i> opened.
@@ -1032,7 +1068,25 @@ impl<'mc> Lootable<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct LootableClass;
+impl blackboxmc_general::JNIProvidesClassName for LootableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/loot/Lootable"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum LootTablesEnum {
     Empty,
@@ -1782,7 +1836,25 @@ impl<'mc> LootTables<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct LootTablesClass;
+impl blackboxmc_general::JNIProvidesClassName for LootTablesClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/loot/LootTables"
+    }
+}
+
 /// Represents additional information a <a title="interface in org.bukkit.loot" href="LootTable.html"><code>LootTable</code></a> can use to modify it's generated loot.
 pub struct LootContext<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2012,6 +2084,16 @@ impl<'mc> LootContextBuilder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for LootContextBuilder<'mc> {
@@ -2020,6 +2102,13 @@ impl<'mc> std::string::ToString for LootContextBuilder<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling LootContextBuilder.toString: {}", err),
         }
+    }
+}
+
+pub struct LootContextBuilderClass;
+impl blackboxmc_general::JNIProvidesClassName for LootContextBuilderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/loot/LootContext$Builder"
     }
 }
 
@@ -2211,6 +2300,16 @@ impl<'mc> LootContext<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for LootContext<'mc> {
@@ -2219,5 +2318,12 @@ impl<'mc> std::string::ToString for LootContext<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling LootContext.toString: {}", err),
         }
+    }
+}
+
+pub struct LootContextClass;
+impl blackboxmc_general::JNIProvidesClassName for LootContextClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/loot/LootContext"
     }
 }

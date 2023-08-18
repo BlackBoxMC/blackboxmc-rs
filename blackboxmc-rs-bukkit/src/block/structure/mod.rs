@@ -120,7 +120,25 @@ impl<'mc> StructureRotation<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct StructureRotationClass;
+impl blackboxmc_general::JNIProvidesClassName for StructureRotationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/structure/StructureRotation"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum UsageModeEnum {
     Save,
@@ -234,7 +252,25 @@ impl<'mc> UsageMode<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct UsageModeClass;
+impl blackboxmc_general::JNIProvidesClassName for UsageModeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/structure/UsageMode"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum MirrorEnum {
     None,
@@ -343,5 +379,22 @@ impl<'mc> Mirror<'mc> {
             Mirror::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct MirrorClass;
+impl blackboxmc_general::JNIProvidesClassName for MirrorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/structure/Mirror"
     }
 }

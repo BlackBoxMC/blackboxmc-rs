@@ -199,6 +199,16 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for SelectorComponentSerializer<'mc> {
@@ -223,6 +233,13 @@ impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
 {
     fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc> {
         crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).expect("Error converting SelectorComponentSerializer into crate::bungee::chat::BaseComponentSerializer")
+    }
+}
+
+pub struct SelectorComponentSerializerClass;
+impl blackboxmc_general::JNIProvidesClassName for SelectorComponentSerializerClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/chat/SelectorComponentSerializer"
     }
 }
 
@@ -420,6 +437,16 @@ impl<'mc> TextComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for TextComponentSerializer<'mc> {
@@ -439,6 +466,13 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for TextComponentSerializer<'mc> {
 impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>> for TextComponentSerializer<'mc> {
     fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc> {
         crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).expect("Error converting TextComponentSerializer into crate::bungee::chat::BaseComponentSerializer")
+    }
+}
+
+pub struct TextComponentSerializerClass;
+impl blackboxmc_general::JNIProvidesClassName for TextComponentSerializerClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/chat/TextComponentSerializer"
     }
 }
 
@@ -584,6 +618,16 @@ impl<'mc> BaseComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for BaseComponentSerializer<'mc> {
@@ -592,6 +636,13 @@ impl<'mc> std::string::ToString for BaseComponentSerializer<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling BaseComponentSerializer.toString: {}", err),
         }
+    }
+}
+
+pub struct BaseComponentSerializerClass;
+impl blackboxmc_general::JNIProvidesClassName for BaseComponentSerializerClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/chat/BaseComponentSerializer"
     }
 }
 
@@ -790,6 +841,16 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ScoreComponentSerializer<'mc> {
@@ -811,6 +872,13 @@ impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
 {
     fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc> {
         crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).expect("Error converting ScoreComponentSerializer into crate::bungee::chat::BaseComponentSerializer")
+    }
+}
+
+pub struct ScoreComponentSerializerClass;
+impl blackboxmc_general::JNIProvidesClassName for ScoreComponentSerializerClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/chat/ScoreComponentSerializer"
     }
 }
 
@@ -1009,6 +1077,16 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for TranslatableComponentSerializer<'mc> {
@@ -1033,6 +1111,13 @@ impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
 {
     fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc> {
         crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).expect("Error converting TranslatableComponentSerializer into crate::bungee::chat::BaseComponentSerializer")
+    }
+}
+
+pub struct TranslatableComponentSerializerClass;
+impl blackboxmc_general::JNIProvidesClassName for TranslatableComponentSerializerClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/chat/TranslatableComponentSerializer"
     }
 }
 
@@ -1231,6 +1316,16 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for KeybindComponentSerializer<'mc> {
@@ -1252,6 +1347,13 @@ impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
 {
     fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc> {
         crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).expect("Error converting KeybindComponentSerializer into crate::bungee::chat::BaseComponentSerializer")
+    }
+}
+
+pub struct KeybindComponentSerializerClass;
+impl blackboxmc_general::JNIProvidesClassName for KeybindComponentSerializerClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/chat/KeybindComponentSerializer"
     }
 }
 
@@ -1403,6 +1505,16 @@ impl<'mc> TranslationRegistry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for TranslationRegistry<'mc> {
@@ -1411,6 +1523,13 @@ impl<'mc> std::string::ToString for TranslationRegistry<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling TranslationRegistry.toString: {}", err),
         }
+    }
+}
+
+pub struct TranslationRegistryClass;
+impl blackboxmc_general::JNIProvidesClassName for TranslationRegistryClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/chat/TranslationRegistry"
     }
 }
 
@@ -1613,9 +1732,26 @@ impl<'mc> ComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<jni::objects::JObject<'mc>> for ComponentSerializer<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
+    }
+}
+
+pub struct ComponentSerializerClass;
+impl blackboxmc_general::JNIProvidesClassName for ComponentSerializerClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/chat/ComponentSerializer"
     }
 }

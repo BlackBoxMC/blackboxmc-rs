@@ -254,6 +254,16 @@ impl<'mc> JavaPluginLoader<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaPluginLoader<'mc> {
@@ -271,6 +281,14 @@ impl<'mc> Into<crate::plugin::PluginLoader<'mc>> for JavaPluginLoader<'mc> {
             .expect("Error converting JavaPluginLoader into crate::plugin::PluginLoader")
     }
 }
+
+pub struct JavaPluginLoaderClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaPluginLoaderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/java/JavaPluginLoader"
+    }
+}
+
 /// Represents a Java plugin and its main class. It contains fundamental methods and fields for a plugin to be loaded and work properly. This is an indirect implementation of <a href="../Plugin.html" title="interface in org.bukkit.plugin"><code>Plugin</code></a>.
 pub struct JavaPlugin<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -816,6 +834,16 @@ impl<'mc> JavaPlugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaPlugin<'mc> {
@@ -831,5 +859,12 @@ impl<'mc> Into<crate::plugin::PluginBase<'mc>> for JavaPlugin<'mc> {
     fn into(self) -> crate::plugin::PluginBase<'mc> {
         crate::plugin::PluginBase::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting JavaPlugin into crate::plugin::PluginBase")
+    }
+}
+
+pub struct JavaPluginClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaPluginClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/java/JavaPlugin"
     }
 }

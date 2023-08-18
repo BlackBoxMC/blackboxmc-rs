@@ -276,6 +276,16 @@ impl<'mc> ConfigurationSerialization<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ConfigurationSerialization<'mc> {
@@ -284,6 +294,13 @@ impl<'mc> std::string::ToString for ConfigurationSerialization<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ConfigurationSerialization.toString: {}", err),
         }
+    }
+}
+
+pub struct ConfigurationSerializationClass;
+impl blackboxmc_general::JNIProvidesClassName for ConfigurationSerializationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/configuration/serialization/ConfigurationSerialization"
     }
 }
 
@@ -362,7 +379,25 @@ impl<'mc> ConfigurationSerializable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ConfigurationSerializableClass;
+impl blackboxmc_general::JNIProvidesClassName for ConfigurationSerializableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/configuration/serialization/ConfigurationSerializable"
+    }
+}
+
 /// Represents an "alias" that a <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> may be stored as. If this is not present on a <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> class, it will use the fully qualified name of the class.
 /// <p>This value will be stored in the configuration so that the configuration deserialization can determine what type it is.</p>
 /// <p>Using this annotation on any other class than a <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> will have no effect.</p>
@@ -470,6 +505,16 @@ impl<'mc> SerializableAs<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for SerializableAs<'mc> {
@@ -478,6 +523,13 @@ impl<'mc> std::string::ToString for SerializableAs<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling SerializableAs.toString: {}", err),
         }
+    }
+}
+
+pub struct SerializableAsClass;
+impl blackboxmc_general::JNIProvidesClassName for SerializableAsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/configuration/serialization/SerializableAs"
     }
 }
 
@@ -583,6 +635,16 @@ impl<'mc> DelegateDeserialization<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for DelegateDeserialization<'mc> {
@@ -591,5 +653,12 @@ impl<'mc> std::string::ToString for DelegateDeserialization<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling DelegateDeserialization.toString: {}", err),
         }
+    }
+}
+
+pub struct DelegateDeserializationClass;
+impl blackboxmc_general::JNIProvidesClassName for DelegateDeserializationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/configuration/serialization/DelegateDeserialization"
     }
 }

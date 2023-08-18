@@ -114,6 +114,23 @@ impl<'mc> ChatMessageType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct ChatMessageTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for ChatMessageTypeClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/ChatMessageType"
+    }
 }
 
 pub struct ChatColor<'mc>(
@@ -387,6 +404,16 @@ impl<'mc> ChatColor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ChatColor<'mc> {
@@ -395,6 +422,13 @@ impl<'mc> std::string::ToString for ChatColor<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ChatColor.toString: {}", err),
         }
+    }
+}
+
+pub struct ChatColorClass;
+impl blackboxmc_general::JNIProvidesClassName for ChatColorClass {
+    fn class_name(&self) -> &str {
+        "net/md_5/bungee/api/ChatColor"
     }
 }
 

@@ -404,6 +404,16 @@ impl<'mc> EnchantItemEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for EnchantItemEvent<'mc> {
@@ -428,6 +438,14 @@ impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for EnchantItemEven
         )
     }
 }
+
+pub struct EnchantItemEventClass;
+impl blackboxmc_general::JNIProvidesClassName for EnchantItemEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/enchantment/EnchantItemEvent"
+    }
+}
+
 /// Called when an ItemStack is inserted in an enchantment table - can be called multiple times
 pub struct PrepareItemEnchantEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -756,6 +774,16 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PrepareItemEnchantEvent<'mc> {
@@ -778,5 +806,12 @@ impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for PrepareItemEnch
         crate::event::inventory::InventoryEvent::from_raw(&self.jni_ref(), self.1).expect(
             "Error converting PrepareItemEnchantEvent into crate::event::inventory::InventoryEvent",
         )
+    }
+}
+
+pub struct PrepareItemEnchantEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PrepareItemEnchantEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/enchantment/PrepareItemEnchantEvent"
     }
 }

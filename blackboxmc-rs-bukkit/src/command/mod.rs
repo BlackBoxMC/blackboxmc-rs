@@ -192,6 +192,16 @@ impl<'mc> CommandSenderSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for CommandSenderSpigot<'mc> {
@@ -200,6 +210,13 @@ impl<'mc> std::string::ToString for CommandSenderSpigot<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling CommandSenderSpigot.toString: {}", err),
         }
+    }
+}
+
+pub struct CommandSenderSpigotClass;
+impl blackboxmc_general::JNIProvidesClassName for CommandSenderSpigotClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/CommandSender$Spigot"
     }
 }
 
@@ -470,12 +487,29 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::command::CommandSender<'mc>> for RemoteConsoleCommandSender<'mc> {
     fn into(self) -> crate::command::CommandSender<'mc> {
         crate::command::CommandSender::from_raw(&self.jni_ref(), self.1).expect(
             "Error converting RemoteConsoleCommandSender into crate::command::CommandSender",
         )
+    }
+}
+
+pub struct RemoteConsoleCommandSenderClass;
+impl blackboxmc_general::JNIProvidesClassName for RemoteConsoleCommandSenderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/RemoteConsoleCommandSender"
     }
 }
 
@@ -801,6 +835,16 @@ impl<'mc> SimpleCommandMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for SimpleCommandMap<'mc> {
@@ -816,6 +860,13 @@ impl<'mc> Into<crate::command::CommandMap<'mc>> for SimpleCommandMap<'mc> {
     fn into(self) -> crate::command::CommandMap<'mc> {
         crate::command::CommandMap::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting SimpleCommandMap into crate::command::CommandMap")
+    }
+}
+
+pub struct SimpleCommandMapClass;
+impl blackboxmc_general::JNIProvidesClassName for SimpleCommandMapClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/SimpleCommandMap"
     }
 }
 
@@ -1373,6 +1424,16 @@ impl<'mc> FormattedCommandAlias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for FormattedCommandAlias<'mc> {
@@ -1390,6 +1451,14 @@ impl<'mc> Into<crate::command::Command<'mc>> for FormattedCommandAlias<'mc> {
             .expect("Error converting FormattedCommandAlias into crate::command::Command")
     }
 }
+
+pub struct FormattedCommandAliasClass;
+impl blackboxmc_general::JNIProvidesClassName for FormattedCommandAliasClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/FormattedCommandAlias"
+    }
+}
+
 /// Represents a class which can suggest tab completions for commands.
 ///
 /// This is a representation of an abstract class.
@@ -1483,7 +1552,25 @@ impl<'mc> TabCompleter<'mc> {
         }
         Ok(new_vec)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct TabCompleterClass;
+impl blackboxmc_general::JNIProvidesClassName for TabCompleterClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/TabCompleter"
+    }
+}
+
 /// Represents a class which contains a single method for executing commands
 ///
 /// This is a representation of an abstract class.
@@ -1566,6 +1653,23 @@ impl<'mc> CommandExecutor<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct CommandExecutorClass;
+impl blackboxmc_general::JNIProvidesClassName for CommandExecutorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/CommandExecutor"
     }
 }
 
@@ -1936,6 +2040,16 @@ impl<'mc> ConsoleCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::command::CommandSender<'mc>> for ConsoleCommandSender<'mc> {
     fn into(self) -> crate::command::CommandSender<'mc> {
@@ -1949,6 +2063,14 @@ impl<'mc> Into<crate::conversations::Conversable<'mc>> for ConsoleCommandSender<
             .expect("Error converting ConsoleCommandSender into crate::conversations::Conversable")
     }
 }
+
+pub struct ConsoleCommandSenderClass;
+impl blackboxmc_general::JNIProvidesClassName for ConsoleCommandSenderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/ConsoleCommandSender"
+    }
+}
+
 /// This interface is used by the help system to group commands into sub-indexes based on the <a href="../plugin/Plugin.html" title="interface in org.bukkit.plugin"><code>Plugin</code></a> they are a part of. Custom command implementations will need to implement this interface to have a sub-index automatically generated on the plugin's behalf.
 ///
 /// This is a representation of an abstract class.
@@ -2003,7 +2125,25 @@ impl<'mc> PluginIdentifiableCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PluginIdentifiableCommandClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginIdentifiableCommandClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/PluginIdentifiableCommand"
+    }
+}
+
 /// Represents a Command, which executes various tasks upon user input
 pub struct Command<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2536,6 +2676,16 @@ impl<'mc> Command<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Command<'mc> {
@@ -2544,6 +2694,13 @@ impl<'mc> std::string::ToString for Command<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling Command.toString: {}", err),
         }
+    }
+}
+
+pub struct CommandClass;
+impl blackboxmc_general::JNIProvidesClassName for CommandClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/Command"
     }
 }
 
@@ -3101,6 +3258,16 @@ impl<'mc> MultipleCommandAlias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MultipleCommandAlias<'mc> {
@@ -3116,6 +3283,13 @@ impl<'mc> Into<crate::command::Command<'mc>> for MultipleCommandAlias<'mc> {
     fn into(self) -> crate::command::Command<'mc> {
         crate::command::Command::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting MultipleCommandAlias into crate::command::Command")
+    }
+}
+
+pub struct MultipleCommandAliasClass;
+impl blackboxmc_general::JNIProvidesClassName for MultipleCommandAliasClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/MultipleCommandAlias"
     }
 }
 
@@ -3288,6 +3462,16 @@ impl<'mc> PluginCommandYamlParser<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PluginCommandYamlParser<'mc> {
@@ -3296,6 +3480,13 @@ impl<'mc> std::string::ToString for PluginCommandYamlParser<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling PluginCommandYamlParser.toString: {}", err),
         }
+    }
+}
+
+pub struct PluginCommandYamlParserClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginCommandYamlParserClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/PluginCommandYamlParser"
     }
 }
 
@@ -3586,6 +3777,16 @@ impl<'mc> ProxiedCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::command::CommandSender<'mc>> for ProxiedCommandSender<'mc> {
     fn into(self) -> crate::command::CommandSender<'mc> {
@@ -3593,6 +3794,14 @@ impl<'mc> Into<crate::command::CommandSender<'mc>> for ProxiedCommandSender<'mc>
             .expect("Error converting ProxiedCommandSender into crate::command::CommandSender")
     }
 }
+
+pub struct ProxiedCommandSenderClass;
+impl blackboxmc_general::JNIProvidesClassName for ProxiedCommandSenderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/ProxiedCommandSender"
+    }
+}
+
 /// This class is provided as a convenience to implement both TabCompleter and CommandExecutor.
 ///
 /// This is a representation of an abstract class.
@@ -3717,6 +3926,16 @@ impl<'mc> TabExecutor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::command::TabCompleter<'mc>> for TabExecutor<'mc> {
     fn into(self) -> crate::command::TabCompleter<'mc> {
@@ -3728,6 +3947,13 @@ impl<'mc> Into<crate::command::CommandExecutor<'mc>> for TabExecutor<'mc> {
     fn into(self) -> crate::command::CommandExecutor<'mc> {
         crate::command::CommandExecutor::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting TabExecutor into crate::command::CommandExecutor")
+    }
+}
+
+pub struct TabExecutorClass;
+impl blackboxmc_general::JNIProvidesClassName for TabExecutorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/TabExecutor"
     }
 }
 
@@ -3994,11 +4220,28 @@ impl<'mc> CommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::permissions::Permissible<'mc>> for CommandSender<'mc> {
     fn into(self) -> crate::permissions::Permissible<'mc> {
         crate::permissions::Permissible::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting CommandSender into crate::permissions::Permissible")
+    }
+}
+
+pub struct CommandSenderClass;
+impl blackboxmc_general::JNIProvidesClassName for CommandSenderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/CommandSender"
     }
 }
 
@@ -4172,7 +4415,25 @@ impl<'mc> CommandMap<'mc> {
         }
         Ok(new_vec)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct CommandMapClass;
+impl blackboxmc_general::JNIProvidesClassName for CommandMapClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/CommandMap"
+    }
+}
+
 /// Represents a <a title="class in org.bukkit.command" href="Command.html"><code>Command</code></a> belonging to a plugin
 pub struct PluginCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4782,6 +5043,16 @@ impl<'mc> PluginCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PluginCommand<'mc> {
@@ -4803,6 +5074,13 @@ impl<'mc> Into<crate::command::Command<'mc>> for PluginCommand<'mc> {
     fn into(self) -> crate::command::Command<'mc> {
         crate::command::Command::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting PluginCommand into crate::command::Command")
+    }
+}
+
+pub struct PluginCommandClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginCommandClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/PluginCommand"
     }
 }
 
@@ -5082,6 +5360,16 @@ impl<'mc> BlockCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::command::CommandSender<'mc>> for BlockCommandSender<'mc> {
     fn into(self) -> crate::command::CommandSender<'mc> {
@@ -5089,4 +5377,12 @@ impl<'mc> Into<crate::command::CommandSender<'mc>> for BlockCommandSender<'mc> {
             .expect("Error converting BlockCommandSender into crate::command::CommandSender")
     }
 }
+
+pub struct BlockCommandSenderClass;
+impl blackboxmc_general::JNIProvidesClassName for BlockCommandSenderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/command/BlockCommandSender"
+    }
+}
+
 pub mod defaults;

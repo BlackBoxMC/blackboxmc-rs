@@ -240,6 +240,16 @@ impl<'mc> MapCursorCollection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MapCursorCollection<'mc> {
@@ -248,6 +258,13 @@ impl<'mc> std::string::ToString for MapCursorCollection<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling MapCursorCollection.toString: {}", err),
         }
+    }
+}
+
+pub struct MapCursorCollectionClass;
+impl blackboxmc_general::JNIProvidesClassName for MapCursorCollectionClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/map/MapCursorCollection"
     }
 }
 
@@ -380,7 +397,25 @@ impl<'mc> MapViewScale<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct MapViewScaleClass;
+impl blackboxmc_general::JNIProvidesClassName for MapViewScaleClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/map/MapView$Scale"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum ScaleEnum {
     Closest,
@@ -498,7 +533,25 @@ impl<'mc> Scale<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ScaleClass;
+impl blackboxmc_general::JNIProvidesClassName for ScaleClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/map/Scale"
+    }
+}
+
 /// Represents the built-in Minecraft font.
 pub struct MinecraftFont<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -722,6 +775,16 @@ impl<'mc> MinecraftFont<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MinecraftFont<'mc> {
@@ -739,6 +802,14 @@ impl<'mc> Into<crate::map::MapFont<'mc>> for MinecraftFont<'mc> {
             .expect("Error converting MinecraftFont into crate::map::MapFont")
     }
 }
+
+pub struct MinecraftFontClass;
+impl blackboxmc_general::JNIProvidesClassName for MinecraftFontClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/map/MinecraftFont"
+    }
+}
+
 /// Represents a cursor on a map.
 pub struct MapCursor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -994,6 +1065,23 @@ impl<'mc> MapCursorType<'mc> {
             crate::map::MapCursorType::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct MapCursorTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for MapCursorTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/map/MapCursor$Type"
     }
 }
 
@@ -1348,6 +1436,16 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MapCursor<'mc> {
@@ -1356,6 +1454,13 @@ impl<'mc> std::string::ToString for MapCursor<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling MapCursor.toString: {}", err),
         }
+    }
+}
+
+pub struct MapCursorClass;
+impl blackboxmc_general::JNIProvidesClassName for MapCursorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/map/MapCursor"
     }
 }
 
@@ -1548,6 +1653,16 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MapFontCharacterSprite<'mc> {
@@ -1556,6 +1671,13 @@ impl<'mc> std::string::ToString for MapFontCharacterSprite<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling MapFontCharacterSprite.toString: {}", err),
         }
+    }
+}
+
+pub struct MapFontCharacterSpriteClass;
+impl blackboxmc_general::JNIProvidesClassName for MapFontCharacterSpriteClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/map/MapFont$CharacterSprite"
     }
 }
 
@@ -1852,7 +1974,25 @@ impl<'mc> MapCanvas<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct MapCanvasClass;
+impl blackboxmc_general::JNIProvidesClassName for MapCanvasClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/map/MapCanvas"
+    }
+}
+
 /// Represents a renderer for a map.
 pub struct MapRenderer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2069,6 +2209,16 @@ impl<'mc> MapRenderer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MapRenderer<'mc> {
@@ -2077,6 +2227,13 @@ impl<'mc> std::string::ToString for MapRenderer<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling MapRenderer.toString: {}", err),
         }
+    }
+}
+
+pub struct MapRendererClass;
+impl blackboxmc_general::JNIProvidesClassName for MapRendererClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/map/MapRenderer"
     }
 }
 
@@ -2378,7 +2535,25 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct MapViewClass;
+impl blackboxmc_general::JNIProvidesClassName for MapViewClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/map/MapView"
+    }
+}
+
 /// Represents a bitmap font drawable to a map.
 pub struct MapFont<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2602,6 +2777,16 @@ impl<'mc> MapFont<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MapFont<'mc> {
@@ -2610,6 +2795,13 @@ impl<'mc> std::string::ToString for MapFont<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling MapFont.toString: {}", err),
         }
+    }
+}
+
+pub struct MapFontClass;
+impl blackboxmc_general::JNIProvidesClassName for MapFontClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/map/MapFont"
     }
 }
 
@@ -2668,6 +2860,23 @@ impl<'mc> MapPaletteMapColorCache<'mc> {
             .call_method(&self.jni_object(), "isCached", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct MapPaletteMapColorCacheClass;
+impl blackboxmc_general::JNIProvidesClassName for MapPaletteMapColorCacheClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/map/MapPalette$MapColorCache"
     }
 }
 
@@ -2902,6 +3111,16 @@ impl<'mc> MapPalette<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MapPalette<'mc> {
@@ -2910,5 +3129,12 @@ impl<'mc> std::string::ToString for MapPalette<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling MapPalette.toString: {}", err),
         }
+    }
+}
+
+pub struct MapPaletteClass;
+impl blackboxmc_general::JNIProvidesClassName for MapPaletteClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/map/MapPalette"
     }
 }

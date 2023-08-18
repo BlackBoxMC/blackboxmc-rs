@@ -978,6 +978,16 @@ impl<'mc> JavaPattern<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaPattern<'mc> {
@@ -986,5 +996,12 @@ impl<'mc> std::string::ToString for JavaPattern<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling JavaPattern.toString: {}", err),
         }
+    }
+}
+
+pub struct JavaPatternClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaPatternClass {
+    fn class_name(&self) -> &str {
+        "java/util/regex/Pattern"
     }
 }

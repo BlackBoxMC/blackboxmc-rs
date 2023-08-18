@@ -108,7 +108,25 @@ impl<'mc> Side<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct SideClass;
+impl blackboxmc_general::JNIProvidesClassName for SideClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/sign/Side"
+    }
+}
+
 /// Represents a side of a sign.
 ///
 /// This is a representation of an abstract class.
@@ -259,10 +277,27 @@ impl<'mc> SignSide<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::material::Colorable<'mc>> for SignSide<'mc> {
     fn into(self) -> crate::material::Colorable<'mc> {
         crate::material::Colorable::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting SignSide into crate::material::Colorable")
+    }
+}
+
+pub struct SignSideClass;
+impl blackboxmc_general::JNIProvidesClassName for SignSideClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/sign/SignSide"
     }
 }

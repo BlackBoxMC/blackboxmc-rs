@@ -92,7 +92,6 @@ def library_name_format(crate_name,library):
 def library_name_format_to_crate(libname):
     reg = re.search("\/src\/(.*)",libname)
     if reg is not None:
-        print("WHAT",reg)
         return "crate::"+reg.group(1)
     else:
         return "crate"
@@ -743,7 +742,6 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                     crate_name = ".".join(parts)
 
                 if crate_name == "":
-                    print(type_name_original)
                     usage_unsafe = True
                 else:
                     if (library_name_format(crate_name,library) == library_name_format("java.util",library)) or (library_name_format(crate_name,library) == library_name_format("java.lang",library)):
@@ -877,6 +875,16 @@ def gen_to_string_func(name, static):
         }
         """
 
+def gen_instance_of_func(mod_path):
+    impl_signature = []
+    impl_signature.append("""
+    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    }
+    """)
+    for impl in impl_signature:
+        file_cache[mod_path].append(impl)
 
 def gen_jniraw_impl(name, is_enum, mod_path, full_name):
     impl_signature = []
@@ -1252,7 +1260,6 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         else:
             comment_raw = ""
         if "annotations" in method["method"]:
-            print("COMMENT",comment_raw)
             i = parse_annotations(method["method"]["annotations"],comment_raw)
             impl_signature_canidate = i[0]
             nullable = i[1]
@@ -1455,6 +1462,8 @@ def parse_classes(library, val, classes):
             has_to_string = grp["has_to_string"]
             has_to_string_is_static = grp["has_to_string_is_static"]
 
+        gen_instance_of_func( mod_path)
+
         file_cache[mod_path].append("}")
 
         if has_to_string:
@@ -1480,6 +1489,8 @@ def parse_classes(library, val, classes):
             grp = parse_methods(library,name,val["methods"],mod_path,False,True,True,[],False,full_name)
             has_to_string = grp["has_to_string"]
             has_to_string_is_static = grp["has_to_string_is_static"]
+
+        gen_instance_of_func( mod_path)
 
         file_cache[mod_path].append("}")
 
@@ -1513,11 +1524,12 @@ def parse_classes(library, val, classes):
             has_to_string = grp["has_to_string"]
             has_to_string_is_static = grp["has_to_string_is_static"]
 
+        gen_instance_of_func( mod_path)
+
         file_cache[mod_path].append("}")
 
         if has_to_string:
             file_cache[mod_path].append(gen_to_string_func(name,has_to_string_is_static))
-
 
     if not val["isEnum"]:
         if "interfaces" in val:
@@ -1526,6 +1538,17 @@ def parse_classes(library, val, classes):
         if "superClass" in val:
             super_class = val["superClass"]
             parse_into_impl(super_class,name,mod_path)
+    
+    # make a blank, "Class" struct that can be passed as a function.
+    file_cache[mod_path].append("""
+        pub struct """+name+"""Class;
+        impl blackboxmc_general::JNIProvidesClassName for """+name+"""Class {
+            fn class_name(&self) -> &str {
+                \""""+val["packageName"].replace(".","/")+"/"+val["name"]+"""\"
+            }
+        }
+    """)
+
 
 def parse_into_impl(val,name,mod_path):
     if val["packageName"].startswith("java"):
@@ -1696,8 +1719,6 @@ for library in libraries:
 
     file_cache = {}
 
-
-    print("PATH:",root)
 
     if root not in filled_once:
         mod_rs_folder_populate(root)

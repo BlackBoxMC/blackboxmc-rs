@@ -61,7 +61,25 @@ impl<'mc> PersistentDataHolder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PersistentDataHolderClass;
+impl blackboxmc_general::JNIProvidesClassName for PersistentDataHolderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/persistence/PersistentDataHolder"
+    }
+}
+
 /// A default implementation that simply exists to pass on the retrieved or inserted value to the next layer.
 /// <p>This implementation does not add any kind of logic, but is used to provide default implementations for the primitive types.</p>
 pub struct PersistentDataTypePrimitivePersistentDataType<'mc>(
@@ -263,6 +281,16 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PersistentDataTypePrimitivePersistentDataType<'mc> {
@@ -274,6 +302,15 @@ impl<'mc> std::string::ToString for PersistentDataTypePrimitivePersistentDataTyp
                 err
             ),
         }
+    }
+}
+
+pub struct PersistentDataTypePrimitivePersistentDataTypeClass;
+impl blackboxmc_general::JNIProvidesClassName
+    for PersistentDataTypePrimitivePersistentDataTypeClass
+{
+    fn class_name(&self) -> &str {
+        "org/bukkit/persistence/PersistentDataType$PrimitivePersistentDataType"
     }
 }
 
@@ -336,7 +373,25 @@ impl<'mc> PersistentDataAdapterContext<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PersistentDataAdapterContextClass;
+impl blackboxmc_general::JNIProvidesClassName for PersistentDataAdapterContextClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/persistence/PersistentDataAdapterContext"
+    }
+}
+
 /// This class represents an enum with a generic content type. It defines the types a custom tag can have.
 /// <p>This interface can be used to create your own custom <a title="interface in org.bukkit.persistence" href="PersistentDataType.html"><code>PersistentDataType</code></a> with different complex types. This may be useful for the likes of a UUIDTagType:</p>
 /// <pre> <code>
@@ -482,7 +537,25 @@ impl<'mc> PersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PersistentDataTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for PersistentDataTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/persistence/PersistentDataType"
+    }
+}
+
 /// A convenience implementation to convert between Byte and Boolean as there is no native implementation for booleans.
 ///
 /// Any byte value not equal to 0 is considered to be true.
@@ -704,6 +777,16 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PersistentDataTypeBooleanPersistentDataType<'mc> {
@@ -715,6 +798,13 @@ impl<'mc> std::string::ToString for PersistentDataTypeBooleanPersistentDataType<
                 err
             ),
         }
+    }
+}
+
+pub struct PersistentDataTypeBooleanPersistentDataTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for PersistentDataTypeBooleanPersistentDataTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/persistence/PersistentDataType$BooleanPersistentDataType"
     }
 }
 
@@ -923,5 +1013,22 @@ impl<'mc> PersistentDataContainer<'mc> {
         crate::persistence::PersistentDataAdapterContext::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PersistentDataContainerClass;
+impl blackboxmc_general::JNIProvidesClassName for PersistentDataContainerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/persistence/PersistentDataContainer"
     }
 }

@@ -210,6 +210,16 @@ impl<'mc> NumericPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for NumericPrompt<'mc> {
@@ -227,6 +237,14 @@ impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for NumericPrompt<'m
             .expect("Error converting NumericPrompt into crate::conversations::ValidatingPrompt")
     }
 }
+
+pub struct NumericPromptClass;
+impl blackboxmc_general::JNIProvidesClassName for NumericPromptClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/NumericPrompt"
+    }
+}
+
 /// A ConversationPrefix implementation prepends all output from the conversation to the player. The ConversationPrefix can be used to display the plugin name or conversation status as the conversation evolves.
 ///
 /// This is a representation of an abstract class.
@@ -303,7 +321,25 @@ impl<'mc> ConversationPrefix<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ConversationPrefixClass;
+impl blackboxmc_general::JNIProvidesClassName for ConversationPrefixClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/ConversationPrefix"
+    }
+}
+
 /// A ConversationFactory is responsible for creating a <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a> from a predefined template. A ConversationFactory is typically created when a plugin is instantiated and builds a Conversation each time a user initiates a conversation with the plugin. Each Conversation maintains its own state and calls back as needed into the plugin.
 /// <p>The ConversationFactory implements a fluid API, allowing parameters to be set as an extension to the constructor.</p>
 pub struct ConversationFactory<'mc>(
@@ -677,6 +713,16 @@ impl<'mc> ConversationFactory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ConversationFactory<'mc> {
@@ -685,6 +731,13 @@ impl<'mc> std::string::ToString for ConversationFactory<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ConversationFactory.toString: {}", err),
         }
+    }
+}
+
+pub struct ConversationFactoryClass;
+impl blackboxmc_general::JNIProvidesClassName for ConversationFactoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/ConversationFactory"
     }
 }
 
@@ -904,6 +957,16 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for InactivityConversationCanceller<'mc> {
@@ -925,6 +988,14 @@ impl<'mc> Into<crate::conversations::ConversationCanceller<'mc>>
         crate::conversations::ConversationCanceller::from_raw(&self.jni_ref(), self.1).expect("Error converting InactivityConversationCanceller into crate::conversations::ConversationCanceller")
     }
 }
+
+pub struct InactivityConversationCancellerClass;
+impl blackboxmc_general::JNIProvidesClassName for InactivityConversationCancellerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/InactivityConversationCanceller"
+    }
+}
+
 /// An ExactMatchConversationCanceller cancels a conversation if the user enters an exact input string
 pub struct ExactMatchConversationCanceller<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1136,6 +1207,16 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ExactMatchConversationCanceller<'mc> {
@@ -1157,6 +1238,14 @@ impl<'mc> Into<crate::conversations::ConversationCanceller<'mc>>
         crate::conversations::ConversationCanceller::from_raw(&self.jni_ref(), self.1).expect("Error converting ExactMatchConversationCanceller into crate::conversations::ConversationCanceller")
     }
 }
+
+pub struct ExactMatchConversationCancellerClass;
+impl blackboxmc_general::JNIProvidesClassName for ExactMatchConversationCancellerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/ExactMatchConversationCanceller"
+    }
+}
+
 /// The Conversable interface is used to indicate objects that can have conversations.
 ///
 /// This is a representation of an abstract class.
@@ -1298,7 +1387,25 @@ impl<'mc> Conversable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ConversableClass;
+impl blackboxmc_general::JNIProvidesClassName for ConversableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/Conversable"
+    }
+}
+
 /// The Conversation class is responsible for tracking the current state of a conversation, displaying prompts to the user, and dispatching the user's response to the appropriate place. Conversation objects are not typically instantiated directly. Instead a <a title="class in org.bukkit.conversations" href="ConversationFactory.html"><code>ConversationFactory</code></a> is used to construct identical conversations on demand.
 /// <p>Conversation flow consists of a directed graph of <a title="interface in org.bukkit.conversations" href="Prompt.html"><code>Prompt</code></a> objects. Each time a prompt gets input from the user, it must return the next prompt in the graph. Since each Prompt chooses the next Prompt, complex conversation trees can be implemented where the nature of the player's response directs the flow of the conversation.</p>
 /// <p>Each conversation has a <a href="ConversationPrefix.html" title="interface in org.bukkit.conversations"><code>ConversationPrefix</code></a> that prepends all output from the conversation to the player. The ConversationPrefix can be used to display the plugin name or conversation status as the conversation evolves.</p>
@@ -1425,6 +1532,23 @@ impl<'mc> ConversationConversationState<'mc> {
             ConversationConversationState::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct ConversationConversationStateClass;
+impl blackboxmc_general::JNIProvidesClassName for ConversationConversationStateClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/Conversation$ConversationState"
     }
 }
 
@@ -1808,6 +1932,16 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Conversation<'mc> {
@@ -1816,6 +1950,13 @@ impl<'mc> std::string::ToString for Conversation<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling Conversation.toString: {}", err),
         }
+    }
+}
+
+pub struct ConversationClass;
+impl blackboxmc_general::JNIProvidesClassName for ConversationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/Conversation"
     }
 }
 
@@ -1881,6 +2022,16 @@ impl<'mc> ConversationAbandonedListener<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<blackboxmc_java::util::JavaEventListener<'mc>>
     for ConversationAbandonedListener<'mc>
@@ -1889,6 +2040,14 @@ impl<'mc> Into<blackboxmc_java::util::JavaEventListener<'mc>>
         blackboxmc_java::util::JavaEventListener::from_raw(&self.jni_ref(), self.1).expect("Error converting ConversationAbandonedListener into blackboxmc_java::util::JavaEventListener")
     }
 }
+
+pub struct ConversationAbandonedListenerClass;
+impl blackboxmc_general::JNIProvidesClassName for ConversationAbandonedListenerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/ConversationAbandonedListener"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum ConversationStateEnum {
     Unstarted,
@@ -2001,7 +2160,25 @@ impl<'mc> ConversationState<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ConversationStateClass;
+impl blackboxmc_general::JNIProvidesClassName for ConversationStateClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/ConversationState"
+    }
+}
+
 /// ValidatingPrompt is the base class for any prompt that requires validation. ValidatingPrompt will keep replaying the prompt text until the user enters a valid response.
 pub struct ValidatingPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2211,6 +2388,16 @@ impl<'mc> ValidatingPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ValidatingPrompt<'mc> {
@@ -2228,6 +2415,14 @@ impl<'mc> Into<crate::conversations::Prompt<'mc>> for ValidatingPrompt<'mc> {
             .expect("Error converting ValidatingPrompt into crate::conversations::Prompt")
     }
 }
+
+pub struct ValidatingPromptClass;
+impl blackboxmc_general::JNIProvidesClassName for ValidatingPromptClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/ValidatingPrompt"
+    }
+}
+
 /// RegexPrompt is the base class for any prompt that requires an input validated by a regular expression.
 pub struct RegexPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2443,6 +2638,16 @@ impl<'mc> RegexPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for RegexPrompt<'mc> {
@@ -2460,6 +2665,14 @@ impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for RegexPrompt<'mc>
             .expect("Error converting RegexPrompt into crate::conversations::ValidatingPrompt")
     }
 }
+
+pub struct RegexPromptClass;
+impl blackboxmc_general::JNIProvidesClassName for RegexPromptClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/RegexPrompt"
+    }
+}
+
 /// The ManuallyAbandonedConversationCanceller is only used as part of a <a title="class in org.bukkit.conversations" href="ConversationAbandonedEvent.html"><code>ConversationAbandonedEvent</code></a> to indicate that the conversation was manually abandoned by programmatically calling the abandon() method on it.
 pub struct ManuallyAbandonedConversationCanceller<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2663,6 +2876,16 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ManuallyAbandonedConversationCanceller<'mc> {
@@ -2684,6 +2907,14 @@ impl<'mc> Into<crate::conversations::ConversationCanceller<'mc>>
         crate::conversations::ConversationCanceller::from_raw(&self.jni_ref(), self.1).expect("Error converting ManuallyAbandonedConversationCanceller into crate::conversations::ConversationCanceller")
     }
 }
+
+pub struct ManuallyAbandonedConversationCancellerClass;
+impl blackboxmc_general::JNIProvidesClassName for ManuallyAbandonedConversationCancellerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/ManuallyAbandonedConversationCanceller"
+    }
+}
+
 /// StringPrompt is the base class for any prompt that accepts an arbitrary string from the user.
 pub struct StringPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2891,6 +3122,16 @@ impl<'mc> StringPrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for StringPrompt<'mc> {
@@ -2908,6 +3149,14 @@ impl<'mc> Into<crate::conversations::Prompt<'mc>> for StringPrompt<'mc> {
             .expect("Error converting StringPrompt into crate::conversations::Prompt")
     }
 }
+
+pub struct StringPromptClass;
+impl blackboxmc_general::JNIProvidesClassName for StringPromptClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/StringPrompt"
+    }
+}
+
 /// PluginNameConversationPrefix is a <a href="ConversationPrefix.html" title="interface in org.bukkit.conversations"><code>ConversationPrefix</code></a> implementation that displays the plugin name in front of conversation output.
 pub struct PluginNameConversationPrefix<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3101,6 +3350,16 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PluginNameConversationPrefix<'mc> {
@@ -3122,6 +3381,14 @@ impl<'mc> Into<crate::conversations::ConversationPrefix<'mc>>
         crate::conversations::ConversationPrefix::from_raw(&self.jni_ref(), self.1).expect("Error converting PluginNameConversationPrefix into crate::conversations::ConversationPrefix")
     }
 }
+
+pub struct PluginNameConversationPrefixClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginNameConversationPrefixClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/PluginNameConversationPrefix"
+    }
+}
+
 /// A ConversationCanceller is a class that cancels an active <a title="class in org.bukkit.conversations" href="Conversation.html"><code>Conversation</code></a>. A Conversation can have more than one ConversationCanceller.
 ///
 /// This is a representation of an abstract class.
@@ -3236,7 +3503,25 @@ impl<'mc> ConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ConversationCancellerClass;
+impl blackboxmc_general::JNIProvidesClassName for ConversationCancellerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/ConversationCanceller"
+    }
+}
+
 /// FixedSetPrompt is the base class for any prompt that requires a fixed set response from the user.
 pub struct FixedSetPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3447,6 +3732,16 @@ impl<'mc> FixedSetPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for FixedSetPrompt<'mc> {
@@ -3464,6 +3759,14 @@ impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for FixedSetPrompt<'
             .expect("Error converting FixedSetPrompt into crate::conversations::ValidatingPrompt")
     }
 }
+
+pub struct FixedSetPromptClass;
+impl blackboxmc_general::JNIProvidesClassName for FixedSetPromptClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/FixedSetPrompt"
+    }
+}
+
 /// NullConversationPrefix is a <a href="ConversationPrefix.html" title="interface in org.bukkit.conversations"><code>ConversationPrefix</code></a> implementation that displays nothing in front of conversation output.
 pub struct NullConversationPrefix<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3630,6 +3933,16 @@ impl<'mc> NullConversationPrefix<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for NullConversationPrefix<'mc> {
@@ -3648,6 +3961,14 @@ impl<'mc> Into<crate::conversations::ConversationPrefix<'mc>> for NullConversati
         )
     }
 }
+
+pub struct NullConversationPrefixClass;
+impl blackboxmc_general::JNIProvidesClassName for NullConversationPrefixClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/NullConversationPrefix"
+    }
+}
+
 /// A Prompt is the main constituent of a <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a>. Each prompt displays text to the user and optionally waits for a user's response. Prompts are chained together into a directed graph that represents the conversation flow. To halt a conversation, END_OF_CONVERSATION is returned in liu of another Prompt object.
 ///
 /// This is a representation of an abstract class.
@@ -3766,7 +4087,25 @@ impl<'mc> Prompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PromptClass;
+impl blackboxmc_general::JNIProvidesClassName for PromptClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/Prompt"
+    }
+}
+
 /// ConversationAbandonedEvent contains information about an abandoned conversation.
 pub struct ConversationAbandonedEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3976,6 +4315,16 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ConversationAbandonedEvent<'mc> {
@@ -3984,6 +4333,13 @@ impl<'mc> std::string::ToString for ConversationAbandonedEvent<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ConversationAbandonedEvent.toString: {}", err),
         }
+    }
+}
+
+pub struct ConversationAbandonedEventClass;
+impl blackboxmc_general::JNIProvidesClassName for ConversationAbandonedEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/ConversationAbandonedEvent"
     }
 }
 
@@ -4228,6 +4584,16 @@ impl<'mc> ConversationContext<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ConversationContext<'mc> {
@@ -4236,6 +4602,13 @@ impl<'mc> std::string::ToString for ConversationContext<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ConversationContext.toString: {}", err),
         }
+    }
+}
+
+pub struct ConversationContextClass;
+impl blackboxmc_general::JNIProvidesClassName for ConversationContextClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/ConversationContext"
     }
 }
 
@@ -4456,6 +4829,16 @@ impl<'mc> PlayerNamePrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerNamePrompt<'mc> {
@@ -4473,6 +4856,14 @@ impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for PlayerNamePrompt
             .expect("Error converting PlayerNamePrompt into crate::conversations::ValidatingPrompt")
     }
 }
+
+pub struct PlayerNamePromptClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerNamePromptClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/PlayerNamePrompt"
+    }
+}
+
 /// BooleanPrompt is the base class for any prompt that requires a boolean response from the user.
 pub struct BooleanPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4680,6 +5071,16 @@ impl<'mc> BooleanPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for BooleanPrompt<'mc> {
@@ -4697,6 +5098,14 @@ impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for BooleanPrompt<'m
             .expect("Error converting BooleanPrompt into crate::conversations::ValidatingPrompt")
     }
 }
+
+pub struct BooleanPromptClass;
+impl blackboxmc_general::JNIProvidesClassName for BooleanPromptClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/BooleanPrompt"
+    }
+}
+
 /// MessagePrompt is the base class for any prompt that only displays a message to the user and requires no input.
 pub struct MessagePrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4904,6 +5313,16 @@ impl<'mc> MessagePrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MessagePrompt<'mc> {
@@ -4919,5 +5338,12 @@ impl<'mc> Into<crate::conversations::Prompt<'mc>> for MessagePrompt<'mc> {
     fn into(self) -> crate::conversations::Prompt<'mc> {
         crate::conversations::Prompt::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting MessagePrompt into crate::conversations::Prompt")
+    }
+}
+
+pub struct MessagePromptClass;
+impl blackboxmc_general::JNIProvidesClassName for MessagePromptClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/conversations/MessagePrompt"
     }
 }

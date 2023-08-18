@@ -272,6 +272,16 @@ impl<'mc> HandlerList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for HandlerList<'mc> {
@@ -280,6 +290,13 @@ impl<'mc> std::string::ToString for HandlerList<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling HandlerList.toString: {}", err),
         }
+    }
+}
+
+pub struct HandlerListClass;
+impl blackboxmc_general::JNIProvidesClassName for HandlerListClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/HandlerList"
     }
 }
 
@@ -322,7 +339,25 @@ impl<'mc> JNIInstantiatable<'mc> for Listener<'mc> {
     }
 }
 
-impl<'mc> Listener<'mc> {}
+impl<'mc> Listener<'mc> {
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct ListenerClass;
+impl blackboxmc_general::JNIProvidesClassName for ListenerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/Listener"
+    }
+}
+
 /// A type characterizing events that may be cancelled by a plugin or the server.
 ///
 /// This is a representation of an abstract class.
@@ -384,7 +419,25 @@ impl<'mc> Cancellable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct CancellableClass;
+impl blackboxmc_general::JNIProvidesClassName for CancellableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/Cancellable"
+    }
+}
+
 /// An annotation to mark methods as being event handler methods
 ///
 /// This is a representation of an abstract class.
@@ -505,6 +558,16 @@ impl<'mc> EventHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for EventHandler<'mc> {
@@ -513,6 +576,13 @@ impl<'mc> std::string::ToString for EventHandler<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling EventHandler.toString: {}", err),
         }
+    }
+}
+
+pub struct EventHandlerClass;
+impl blackboxmc_general::JNIProvidesClassName for EventHandlerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/EventHandler"
     }
 }
 
@@ -629,6 +699,23 @@ impl<'mc> EventResult<'mc> {
             EventResult::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct EventResultClass;
+impl blackboxmc_general::JNIProvidesClassName for EventResultClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/Event$Result"
     }
 }
 
@@ -806,6 +893,16 @@ impl<'mc> Event<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Event<'mc> {
@@ -814,6 +911,13 @@ impl<'mc> std::string::ToString for Event<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling Event.toString: {}", err),
         }
+    }
+}
+
+pub struct EventClass;
+impl blackboxmc_general::JNIProvidesClassName for EventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/Event"
     }
 }
 
@@ -938,7 +1042,25 @@ impl<'mc> EventPriority<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct EventPriorityClass;
+impl blackboxmc_general::JNIProvidesClassName for EventPriorityClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/EventPriority"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum SpigotResultEnum {
     Deny,
@@ -1048,7 +1170,25 @@ impl<'mc> SpigotResult<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct SpigotResultClass;
+impl blackboxmc_general::JNIProvidesClassName for SpigotResultClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/SpigotResult"
+    }
+}
+
 pub mod block;
 pub mod enchantment;
 pub mod entity;

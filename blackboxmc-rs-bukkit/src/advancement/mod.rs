@@ -171,7 +171,25 @@ impl<'mc> AdvancementProgress<'mc> {
         }
         Ok(new_vec)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct AdvancementProgressClass;
+impl blackboxmc_general::JNIProvidesClassName for AdvancementProgressClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/advancement/AdvancementProgress"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum AdvancementDisplayTypeEnum {
     Task,
@@ -285,7 +303,25 @@ impl<'mc> AdvancementDisplayType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct AdvancementDisplayTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for AdvancementDisplayTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/advancement/AdvancementDisplayType"
+    }
+}
+
 /// Holds information about how the advancement is displayed by the game.
 ///
 /// This is a representation of an abstract class.
@@ -438,7 +474,25 @@ impl<'mc> AdvancementDisplay<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct AdvancementDisplayClass;
+impl blackboxmc_general::JNIProvidesClassName for AdvancementDisplayClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/advancement/AdvancementDisplay"
+    }
+}
+
 /// Represents an advancement that may be awarded to a player. This class is not reference safe as the underlying advancement may be reloaded.
 ///
 /// This is a representation of an abstract class.
@@ -528,10 +582,27 @@ impl<'mc> Advancement<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::Keyed<'mc>> for Advancement<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Advancement into crate::Keyed")
+    }
+}
+
+pub struct AdvancementClass;
+impl blackboxmc_general::JNIProvidesClassName for AdvancementClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/advancement/Advancement"
     }
 }

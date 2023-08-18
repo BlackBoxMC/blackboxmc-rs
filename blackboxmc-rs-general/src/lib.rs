@@ -1045,3 +1045,8 @@ pub trait JNIInstantiatableEnum<'mc> {
     where
         Self: Sized;
 }
+
+/// Trait for anything that can provide a class name.
+pub trait JNIProvidesClassName {
+    fn class_name(&self) -> &str;
+}

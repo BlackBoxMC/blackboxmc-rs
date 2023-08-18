@@ -455,6 +455,16 @@ impl<'mc> CartographyInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for CartographyInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -462,6 +472,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for CartographyInventory<'mc> {
             .expect("Error converting CartographyInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct CartographyInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for CartographyInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/CartographyInventory"
+    }
+}
+
 /// Represents some type of crafting recipe.
 ///
 /// This is a representation of an abstract class.
@@ -512,7 +530,25 @@ impl<'mc> Recipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct RecipeClass;
+impl blackboxmc_general::JNIProvidesClassName for RecipeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/Recipe"
+    }
+}
+
 /// Represents a Stonecutting recipe.
 pub struct StonecuttingRecipe<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -790,6 +826,16 @@ impl<'mc> StonecuttingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for StonecuttingRecipe<'mc> {
@@ -813,6 +859,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for StonecuttingRecipe<'mc> {
             .expect("Error converting StonecuttingRecipe into crate::Keyed")
     }
 }
+
+pub struct StonecuttingRecipeClass;
+impl blackboxmc_general::JNIProvidesClassName for StonecuttingRecipeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/StonecuttingRecipe"
+    }
+}
+
 /// Represents a furnace recipe.
 pub struct FurnaceRecipe<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1237,6 +1291,16 @@ impl<'mc> FurnaceRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for FurnaceRecipe<'mc> {
@@ -1254,6 +1318,14 @@ impl<'mc> Into<crate::inventory::CookingRecipe<'mc>> for FurnaceRecipe<'mc> {
             .expect("Error converting FurnaceRecipe into crate::inventory::CookingRecipe")
     }
 }
+
+pub struct FurnaceRecipeClass;
+impl blackboxmc_general::JNIProvidesClassName for FurnaceRecipeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/FurnaceRecipe"
+    }
+}
+
 /// An interface to the inventory of a Horse.
 ///
 /// This is a representation of an abstract class.
@@ -1776,6 +1848,16 @@ impl<'mc> HorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::AbstractHorseInventory<'mc>> for HorseInventory<'mc> {
     fn into(self) -> crate::inventory::AbstractHorseInventory<'mc> {
@@ -1783,6 +1865,14 @@ impl<'mc> Into<crate::inventory::AbstractHorseInventory<'mc>> for HorseInventory
             .expect("Error converting HorseInventory into crate::inventory::AbstractHorseInventory")
     }
 }
+
+pub struct HorseInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for HorseInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/HorseInventory"
+    }
+}
+
 /// Represents a complex recipe which has imperative server-defined behavior, eg armor dyeing. Note: Since a complex recipe has dynamic outputs, <a href="Recipe.html#getResult()"><code>Recipe.getResult()</code></a> will sometimes return an AIR ItemStack.
 ///
 /// This is a representation of an abstract class.
@@ -1844,6 +1934,16 @@ impl<'mc> ComplexRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Recipe<'mc>> for ComplexRecipe<'mc> {
     fn into(self) -> crate::inventory::Recipe<'mc> {
@@ -1857,6 +1957,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for ComplexRecipe<'mc> {
             .expect("Error converting ComplexRecipe into crate::Keyed")
     }
 }
+
+pub struct ComplexRecipeClass;
+impl blackboxmc_general::JNIProvidesClassName for ComplexRecipeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/ComplexRecipe"
+    }
+}
+
 /// Interface to the inventory of a Double Chest.
 ///
 /// This is a representation of an abstract class.
@@ -2337,6 +2445,16 @@ impl<'mc> DoubleChestInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for DoubleChestInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -2344,6 +2462,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for DoubleChestInventory<'mc> {
             .expect("Error converting DoubleChestInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct DoubleChestInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for DoubleChestInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/DoubleChestInventory"
+    }
+}
+
 /// Represents a block inventory holder - either a BlockState, or a regular Block.
 ///
 /// This is a representation of an abstract class.
@@ -2409,6 +2535,16 @@ impl<'mc> BlockInventoryHolder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::InventoryHolder<'mc>> for BlockInventoryHolder<'mc> {
     fn into(self) -> crate::inventory::InventoryHolder<'mc> {
@@ -2416,6 +2552,14 @@ impl<'mc> Into<crate::inventory::InventoryHolder<'mc>> for BlockInventoryHolder<
             .expect("Error converting BlockInventoryHolder into crate::inventory::InventoryHolder")
     }
 }
+
+pub struct BlockInventoryHolderClass;
+impl blackboxmc_general::JNIProvidesClassName for BlockInventoryHolderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/BlockInventoryHolder"
+    }
+}
+
 /// Interface to the inventory of a Jukebox.
 ///
 /// This is a representation of an abstract class.
@@ -2903,6 +3047,16 @@ impl<'mc> JukeboxInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for JukeboxInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -2910,6 +3064,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for JukeboxInventory<'mc> {
             .expect("Error converting JukeboxInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct JukeboxInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for JukeboxInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/JukeboxInventory"
+    }
+}
+
 /// Represents a smithing recipe.
 pub struct SmithingRecipe<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3124,6 +3286,16 @@ impl<'mc> SmithingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for SmithingRecipe<'mc> {
@@ -3147,6 +3319,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for SmithingRecipe<'mc> {
             .expect("Error converting SmithingRecipe into crate::Keyed")
     }
 }
+
+pub struct SmithingRecipeClass;
+impl blackboxmc_general::JNIProvidesClassName for SmithingRecipeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/SmithingRecipe"
+    }
+}
+
 /// Represents a shaped or shapeless crafting recipe.
 pub struct CraftingRecipe<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3372,6 +3552,16 @@ impl<'mc> CraftingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for CraftingRecipe<'mc> {
@@ -3395,6 +3585,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for CraftingRecipe<'mc> {
             .expect("Error converting CraftingRecipe into crate::Keyed")
     }
 }
+
+pub struct CraftingRecipeClass;
+impl blackboxmc_general::JNIProvidesClassName for CraftingRecipeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/CraftingRecipe"
+    }
+}
+
 /// Represents a view linking two inventories and a single player (whose inventory may or may not be one of the two).
 /// <p>Note: If you implement this interface but fail to satisfy the expected contracts of certain methods, there's no guarantee that the game will work as it should.</p>
 pub struct InventoryView<'mc>(
@@ -3629,6 +3827,23 @@ impl<'mc> InventoryViewProperty<'mc> {
             crate::event::inventory::InventoryType::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct InventoryViewPropertyClass;
+impl blackboxmc_general::JNIProvidesClassName for InventoryViewPropertyClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/InventoryView$Property"
     }
 }
 
@@ -4071,6 +4286,16 @@ impl<'mc> InventoryView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for InventoryView<'mc> {
@@ -4079,6 +4304,13 @@ impl<'mc> std::string::ToString for InventoryView<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling InventoryView.toString: {}", err),
         }
+    }
+}
+
+pub struct InventoryViewClass;
+impl blackboxmc_general::JNIProvidesClassName for InventoryViewClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/InventoryView"
     }
 }
 
@@ -4456,6 +4688,16 @@ impl<'mc> CampfireRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for CampfireRecipe<'mc> {
@@ -4473,6 +4715,14 @@ impl<'mc> Into<crate::inventory::CookingRecipe<'mc>> for CampfireRecipe<'mc> {
             .expect("Error converting CampfireRecipe into crate::inventory::CookingRecipe")
     }
 }
+
+pub struct CampfireRecipeClass;
+impl blackboxmc_general::JNIProvidesClassName for CampfireRecipeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/CampfireRecipe"
+    }
+}
+
 /// Represents a stack of items.
 /// <p><b>IMPORTANT: An <i>Item</i>Stack is only designed to contain <i>items</i>. Do not use this class to encapsulate Materials for which <a href="../Material.html#isItem()"><code>Material.isItem()</code></a> returns false.</b></p>
 pub struct ItemStack<'mc>(
@@ -5043,6 +5293,16 @@ impl<'mc> ItemStack<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ItemStack<'mc> {
@@ -5067,6 +5327,14 @@ impl<'mc> Into<crate::Translatable<'mc>> for ItemStack<'mc> {
             .expect("Error converting ItemStack into crate::Translatable")
     }
 }
+
+pub struct ItemStackClass;
+impl blackboxmc_general::JNIProvidesClassName for ItemStackClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/ItemStack"
+    }
+}
+
 /// Represents a choice of multiple matching Materials.
 pub struct RecipeChoiceMaterialChoice<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5380,6 +5648,16 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for RecipeChoiceMaterialChoice<'mc> {
@@ -5388,6 +5666,13 @@ impl<'mc> std::string::ToString for RecipeChoiceMaterialChoice<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling RecipeChoiceMaterialChoice.toString: {}", err),
         }
+    }
+}
+
+pub struct RecipeChoiceMaterialChoiceClass;
+impl blackboxmc_general::JNIProvidesClassName for RecipeChoiceMaterialChoiceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/RecipeChoice$MaterialChoice"
     }
 }
 
@@ -5520,7 +5805,25 @@ impl<'mc> ItemFlag<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ItemFlagClass;
+impl blackboxmc_general::JNIProvidesClassName for ItemFlagClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/ItemFlag"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum MainHandEnum {
     Left,
@@ -5626,7 +5929,25 @@ impl<'mc> MainHand<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct MainHandClass;
+impl blackboxmc_general::JNIProvidesClassName for MainHandClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/MainHand"
+    }
+}
+
 /// Interface to the various inventories. Behavior relating to <a href="../Material.html#AIR"><code>Material.AIR</code></a> is unspecified.
 ///
 /// <b>Note that whilst <a href="#iterator()"><code>iterator()</code></a> deals with the entire inventory, add / contains / remove methods deal only with the storage contents.</b>
@@ -6088,7 +6409,25 @@ impl<'mc> Inventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct InventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for InventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/Inventory"
+    }
+}
+
 /// Represents a choice that will be valid only one of the stacks is exactly matched (aside from stack size).
 ///
 /// <b>Only valid for shaped recipes</b>
@@ -6376,6 +6715,16 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for RecipeChoiceExactChoice<'mc> {
@@ -6384,6 +6733,13 @@ impl<'mc> std::string::ToString for RecipeChoiceExactChoice<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling RecipeChoiceExactChoice.toString: {}", err),
         }
+    }
+}
+
+pub struct RecipeChoiceExactChoiceClass;
+impl blackboxmc_general::JNIProvidesClassName for RecipeChoiceExactChoiceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/RecipeChoice$ExactChoice"
     }
 }
 
@@ -6841,6 +7197,16 @@ impl<'mc> LecternInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for LecternInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -6848,6 +7214,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for LecternInventory<'mc> {
             .expect("Error converting LecternInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct LecternInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for LecternInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/LecternInventory"
+    }
+}
+
 /// Interface to the inventory of a Brewing Stand.
 ///
 /// This is a representation of an abstract class.
@@ -7372,6 +7746,16 @@ impl<'mc> BrewerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for BrewerInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -7379,6 +7763,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for BrewerInventory<'mc> {
             .expect("Error converting BrewerInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct BrewerInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for BrewerInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/BrewerInventory"
+    }
+}
+
 /// Interface to the inventory of a Loom.
 ///
 /// This is a representation of an abstract class.
@@ -7829,6 +8221,16 @@ impl<'mc> LoomInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for LoomInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -7836,6 +8238,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for LoomInventory<'mc> {
             .expect("Error converting LoomInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct LoomInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for LoomInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/LoomInventory"
+    }
+}
+
 /// Represents a shaped (ie normal) crafting recipe.
 pub struct ShapedRecipe<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8162,6 +8572,16 @@ impl<'mc> ShapedRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ShapedRecipe<'mc> {
@@ -8179,6 +8599,14 @@ impl<'mc> Into<crate::inventory::CraftingRecipe<'mc>> for ShapedRecipe<'mc> {
             .expect("Error converting ShapedRecipe into crate::inventory::CraftingRecipe")
     }
 }
+
+pub struct ShapedRecipeClass;
+impl blackboxmc_general::JNIProvidesClassName for ShapedRecipeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/ShapedRecipe"
+    }
+}
+
 /// Represents a smithing transform recipe.
 pub struct SmithingTransformRecipe<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8411,6 +8839,16 @@ impl<'mc> SmithingTransformRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for SmithingTransformRecipe<'mc> {
@@ -8429,6 +8867,14 @@ impl<'mc> Into<crate::inventory::SmithingRecipe<'mc>> for SmithingTransformRecip
         )
     }
 }
+
+pub struct SmithingTransformRecipeClass;
+impl blackboxmc_general::JNIProvidesClassName for SmithingTransformRecipeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/SmithingTransformRecipe"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum EquipmentSlotEnum {
     Hand,
@@ -8550,7 +8996,25 @@ impl<'mc> EquipmentSlot<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct EquipmentSlotClass;
+impl blackboxmc_general::JNIProvidesClassName for EquipmentSlotClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/EquipmentSlot"
+    }
+}
+
 /// Represents a merchant. A merchant is a special type of inventory which can facilitate custom trades between items.
 ///
 /// This is a representation of an abstract class.
@@ -8687,7 +9151,25 @@ impl<'mc> Merchant<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct MerchantClass;
+impl blackboxmc_general::JNIProvidesClassName for MerchantClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/Merchant"
+    }
+}
+
 /// An instance of the ItemFactory can be obtained with <a href="../Server.html#getItemFactory()"><code>Server.getItemFactory()</code></a>.
 /// <p>The ItemFactory is solely responsible for creating item meta containers to apply on item stacks.</p>
 ///
@@ -8936,7 +9418,25 @@ impl<'mc> ItemFactory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ItemFactoryClass;
+impl blackboxmc_general::JNIProvidesClassName for ItemFactoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/ItemFactory"
+    }
+}
+
 /// An interface to a creatures inventory
 ///
 /// This is a representation of an abstract class.
@@ -9543,7 +10043,25 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct EntityEquipmentClass;
+impl blackboxmc_general::JNIProvidesClassName for EntityEquipmentClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/EntityEquipment"
+    }
+}
+
 /// Interface to the inventory of a chiseled bookshelf.
 ///
 /// This is a representation of an abstract class.
@@ -10000,6 +10518,16 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for ChiseledBookshelfInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -10007,6 +10535,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for ChiseledBookshelfInventory<
             .expect("Error converting ChiseledBookshelfInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct ChiseledBookshelfInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for ChiseledBookshelfInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/ChiseledBookshelfInventory"
+    }
+}
+
 /// Represents a shapeless recipe, where the arrangement of the ingredients on the crafting grid does not matter.
 pub struct ShapelessRecipe<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10460,6 +10996,16 @@ impl<'mc> ShapelessRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ShapelessRecipe<'mc> {
@@ -10477,6 +11023,14 @@ impl<'mc> Into<crate::inventory::CraftingRecipe<'mc>> for ShapelessRecipe<'mc> {
             .expect("Error converting ShapelessRecipe into crate::inventory::CraftingRecipe")
     }
 }
+
+pub struct ShapelessRecipeClass;
+impl blackboxmc_general::JNIProvidesClassName for ShapelessRecipeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/ShapelessRecipe"
+    }
+}
+
 /// Interface to the inventory of an Anvil.
 ///
 /// This is a representation of an abstract class.
@@ -11019,6 +11573,16 @@ impl<'mc> AnvilInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for AnvilInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -11026,6 +11590,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for AnvilInventory<'mc> {
             .expect("Error converting AnvilInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct AnvilInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for AnvilInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/AnvilInventory"
+    }
+}
+
 /// Represents a potential item match within a recipe. All choices within a recipe must be satisfied for it to be craftable. <b>This class is not legal for implementation by plugins!</b>
 ///
 /// This is a representation of an abstract class.
@@ -11166,12 +11738,29 @@ impl<'mc> RecipeChoice<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<blackboxmc_java::util::function::JavaPredicate<'mc>> for RecipeChoice<'mc> {
     fn into(self) -> blackboxmc_java::util::function::JavaPredicate<'mc> {
         blackboxmc_java::util::function::JavaPredicate::from_raw(&self.jni_ref(), self.1).expect(
             "Error converting RecipeChoice into blackboxmc_java::util::function::JavaPredicate",
         )
+    }
+}
+
+pub struct RecipeChoiceClass;
+impl blackboxmc_general::JNIProvidesClassName for RecipeChoiceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/RecipeChoice"
     }
 }
 
@@ -11228,7 +11817,25 @@ impl<'mc> InventoryHolder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct InventoryHolderClass;
+impl blackboxmc_general::JNIProvidesClassName for InventoryHolderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/InventoryHolder"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum PropertyEnum {
     BrewTime,
@@ -11410,7 +12017,25 @@ impl<'mc> Property<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PropertyClass;
+impl blackboxmc_general::JNIProvidesClassName for PropertyClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/Property"
+    }
+}
+
 /// Interface to the inventory of an Enchantment Table.
 ///
 /// This is a representation of an abstract class.
@@ -11900,6 +12525,16 @@ impl<'mc> EnchantingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for EnchantingInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -11907,6 +12542,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for EnchantingInventory<'mc> {
             .expect("Error converting EnchantingInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct EnchantingInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for EnchantingInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/EnchantingInventory"
+    }
+}
+
 /// Represents a campfire recipe.
 pub struct BlastingRecipe<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12281,6 +12924,16 @@ impl<'mc> BlastingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for BlastingRecipe<'mc> {
@@ -12298,6 +12951,14 @@ impl<'mc> Into<crate::inventory::CookingRecipe<'mc>> for BlastingRecipe<'mc> {
             .expect("Error converting BlastingRecipe into crate::inventory::CookingRecipe")
     }
 }
+
+pub struct BlastingRecipeClass;
+impl blackboxmc_general::JNIProvidesClassName for BlastingRecipeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/BlastingRecipe"
+    }
+}
+
 /// Represents a campfire recipe.
 pub struct SmokingRecipe<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12670,6 +13331,16 @@ impl<'mc> SmokingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for SmokingRecipe<'mc> {
@@ -12687,6 +13358,14 @@ impl<'mc> Into<crate::inventory::CookingRecipe<'mc>> for SmokingRecipe<'mc> {
             .expect("Error converting SmokingRecipe into crate::inventory::CookingRecipe")
     }
 }
+
+pub struct SmokingRecipeClass;
+impl blackboxmc_general::JNIProvidesClassName for SmokingRecipeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/SmokingRecipe"
+    }
+}
+
 /// Interface to the crafting inventories
 ///
 /// This is a representation of an abstract class.
@@ -13197,6 +13876,16 @@ impl<'mc> CraftingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for CraftingInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -13204,6 +13893,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for CraftingInventory<'mc> {
             .expect("Error converting CraftingInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct CraftingInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for CraftingInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/CraftingInventory"
+    }
+}
+
 /// Represents a merchant's trade.
 /// <p>Trades can take one or two ingredients, and provide one result. The ingredients' ItemStack amounts are respected in the trade.</p>
 /// <p>A trade has a maximum number of uses. A <a href="../entity/Villager.html" title="interface in org.bukkit.entity"><code>Villager</code></a> may periodically replenish its trades by resetting the <a href="#getUses()"><code>uses</code></a> of its merchant recipes to <code>0</code>, allowing them to be used again.</p>
@@ -13662,6 +14359,16 @@ impl<'mc> MerchantRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MerchantRecipe<'mc> {
@@ -13679,6 +14386,14 @@ impl<'mc> Into<crate::inventory::Recipe<'mc>> for MerchantRecipe<'mc> {
             .expect("Error converting MerchantRecipe into crate::inventory::Recipe")
     }
 }
+
+pub struct MerchantRecipeClass;
+impl blackboxmc_general::JNIProvidesClassName for MerchantRecipeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/MerchantRecipe"
+    }
+}
+
 /// Represents a trading inventory between a player and a merchant.
 ///
 /// The holder of this Inventory is the owning Villager, or null if the player is trading with a merchant created by a plugin.
@@ -14176,6 +14891,16 @@ impl<'mc> MerchantInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for MerchantInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -14183,6 +14908,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for MerchantInventory<'mc> {
             .expect("Error converting MerchantInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct MerchantInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for MerchantInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/MerchantInventory"
+    }
+}
+
 /// An interface to the inventory of a <a title="interface in org.bukkit.entity" href="../entity/Llama.html"><code>Llama</code></a>.
 ///
 /// This is a representation of an abstract class.
@@ -14705,6 +15438,16 @@ impl<'mc> LlamaInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::AbstractHorseInventory<'mc>> for LlamaInventory<'mc> {
     fn into(self) -> crate::inventory::AbstractHorseInventory<'mc> {
@@ -14712,6 +15455,14 @@ impl<'mc> Into<crate::inventory::AbstractHorseInventory<'mc>> for LlamaInventory
             .expect("Error converting LlamaInventory into crate::inventory::AbstractHorseInventory")
     }
 }
+
+pub struct LlamaInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for LlamaInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/LlamaInventory"
+    }
+}
+
 /// Interface to the inventory of a Grindstone.
 ///
 /// This is a representation of an abstract class.
@@ -15164,6 +15915,16 @@ impl<'mc> GrindstoneInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for GrindstoneInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -15171,6 +15932,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for GrindstoneInventory<'mc> {
             .expect("Error converting GrindstoneInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct GrindstoneInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for GrindstoneInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/GrindstoneInventory"
+    }
+}
+
 /// Represents a cooking recipe.
 pub struct CookingRecipe<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15543,6 +16312,16 @@ impl<'mc> CookingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for CookingRecipe<'mc> {
@@ -15566,6 +16345,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for CookingRecipe<'mc> {
             .expect("Error converting CookingRecipe into crate::Keyed")
     }
 }
+
+pub struct CookingRecipeClass;
+impl blackboxmc_general::JNIProvidesClassName for CookingRecipeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/CookingRecipe"
+    }
+}
+
 /// Interface to the inventory of a Stonecutter.
 ///
 /// This is a representation of an abstract class.
@@ -16018,6 +16805,16 @@ impl<'mc> StonecutterInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for StonecutterInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -16025,6 +16822,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for StonecutterInventory<'mc> {
             .expect("Error converting StonecutterInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct StonecutterInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for StonecutterInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/StonecutterInventory"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum CreativeCategoryEnum {
     BuildingBlocks,
@@ -16160,7 +16965,25 @@ impl<'mc> CreativeCategory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct CreativeCategoryClass;
+impl blackboxmc_general::JNIProvidesClassName for CreativeCategoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/CreativeCategory"
+    }
+}
+
 /// Interface to the inventory of a Smithing table.
 ///
 /// This is a representation of an abstract class.
@@ -16659,6 +17482,16 @@ impl<'mc> SmithingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for SmithingInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -16666,6 +17499,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for SmithingInventory<'mc> {
             .expect("Error converting SmithingInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct SmithingInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for SmithingInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/SmithingInventory"
+    }
+}
+
 /// Interface to the inventory of a Player, including the four armor slots and any extra slots.
 ///
 /// This is a representation of an abstract class.
@@ -17396,6 +18237,16 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for PlayerInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -17403,6 +18254,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for PlayerInventory<'mc> {
             .expect("Error converting PlayerInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct PlayerInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/PlayerInventory"
+    }
+}
+
 /// Interface to the inventory of a Furnace.
 ///
 /// This is a representation of an abstract class.
@@ -17956,6 +18815,16 @@ impl<'mc> FurnaceInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for FurnaceInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -17963,6 +18832,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for FurnaceInventory<'mc> {
             .expect("Error converting FurnaceInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct FurnaceInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for FurnaceInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/FurnaceInventory"
+    }
+}
+
 /// An interface to the inventory of an <a href="../entity/AbstractHorse.html" title="interface in org.bukkit.entity"><code>AbstractHorse</code></a>.
 ///
 /// This is a representation of an abstract class.
@@ -18452,6 +19329,16 @@ impl<'mc> AbstractHorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for AbstractHorseInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -18459,6 +19346,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for AbstractHorseInventory<'mc>
             .expect("Error converting AbstractHorseInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct AbstractHorseInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for AbstractHorseInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/AbstractHorseInventory"
+    }
+}
+
 /// Interface to the inventory of a Beacon.
 ///
 /// This is a representation of an abstract class.
@@ -18913,6 +19808,16 @@ impl<'mc> BeaconInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for BeaconInventory<'mc> {
     fn into(self) -> crate::inventory::Inventory<'mc> {
@@ -18920,6 +19825,14 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for BeaconInventory<'mc> {
             .expect("Error converting BeaconInventory into crate::inventory::Inventory")
     }
 }
+
+pub struct BeaconInventoryClass;
+impl blackboxmc_general::JNIProvidesClassName for BeaconInventoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/BeaconInventory"
+    }
+}
+
 /// Represents a smithing trim recipe.
 pub struct SmithingTrimRecipe<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19145,6 +20058,16 @@ impl<'mc> SmithingTrimRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for SmithingTrimRecipe<'mc> {
@@ -19168,5 +20091,13 @@ impl<'mc> Into<crate::inventory::SmithingRecipe<'mc>> for SmithingTrimRecipe<'mc
             .expect("Error converting SmithingTrimRecipe into crate::inventory::SmithingRecipe")
     }
 }
+
+pub struct SmithingTrimRecipeClass;
+impl blackboxmc_general::JNIProvidesClassName for SmithingTrimRecipeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/SmithingTrimRecipe"
+    }
+}
+
 pub mod meta;
 pub mod recipe;

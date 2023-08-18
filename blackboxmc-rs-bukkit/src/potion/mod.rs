@@ -335,6 +335,16 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PotionEffectTypeWrapper<'mc> {
@@ -350,6 +360,13 @@ impl<'mc> Into<crate::potion::PotionEffectType<'mc>> for PotionEffectTypeWrapper
     fn into(self) -> crate::potion::PotionEffectType<'mc> {
         crate::potion::PotionEffectType::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting PotionEffectTypeWrapper into crate::potion::PotionEffectType")
+    }
+}
+
+pub struct PotionEffectTypeWrapperClass;
+impl blackboxmc_general::JNIProvidesClassName for PotionEffectTypeWrapperClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/potion/PotionEffectTypeWrapper"
     }
 }
 
@@ -553,6 +570,16 @@ impl<'mc> PotionData<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PotionData<'mc> {
@@ -561,6 +588,13 @@ impl<'mc> std::string::ToString for PotionData<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling PotionData.toString: {}", err),
         }
+    }
+}
+
+pub struct PotionDataClass;
+impl blackboxmc_general::JNIProvidesClassName for PotionDataClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/potion/PotionData"
     }
 }
 
@@ -1016,6 +1050,16 @@ impl<'mc> Potion<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Potion<'mc> {
@@ -1024,6 +1068,13 @@ impl<'mc> std::string::ToString for Potion<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling Potion.toString: {}", err),
         }
+    }
+}
+
+pub struct PotionClass;
+impl blackboxmc_general::JNIProvidesClassName for PotionClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/potion/Potion"
     }
 }
 
@@ -1334,6 +1385,16 @@ impl<'mc> PotionEffect<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PotionEffect<'mc> {
@@ -1352,6 +1413,14 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting PotionEffect into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
+
+pub struct PotionEffectClass;
+impl blackboxmc_general::JNIProvidesClassName for PotionEffectClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/potion/PotionEffect"
+    }
+}
+
 /// Represents a type of potion and its effect on an entity.
 pub struct PotionEffectType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1670,6 +1739,16 @@ impl<'mc> PotionEffectType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PotionEffectType<'mc> {
@@ -1687,6 +1766,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for PotionEffectType<'mc> {
             .expect("Error converting PotionEffectType into crate::Keyed")
     }
 }
+
+pub struct PotionEffectTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for PotionEffectTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/potion/PotionEffectType"
+    }
+}
+
 /// Represents a brewer that can create <a title="class in org.bukkit.potion" href="PotionEffect.html"><code>PotionEffect</code></a>s.
 ///
 /// This is a representation of an abstract class.
@@ -1813,7 +1900,25 @@ impl<'mc> PotionBrewer<'mc> {
         }
         Ok(new_vec)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PotionBrewerClass;
+impl blackboxmc_general::JNIProvidesClassName for PotionBrewerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/potion/PotionBrewer"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum PotionTypeEnum {
     Uncraftable,
@@ -1994,5 +2099,22 @@ impl<'mc> PotionType<'mc> {
             PotionType::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PotionTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for PotionTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/potion/PotionType"
     }
 }

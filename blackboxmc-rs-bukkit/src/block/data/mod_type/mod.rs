@@ -469,6 +469,16 @@ impl<'mc> PistonHead<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::mod_type::TechnicalPiston<'mc>> for PistonHead<'mc> {
     fn into(self) -> crate::block::data::mod_type::TechnicalPiston<'mc> {
@@ -477,6 +487,14 @@ impl<'mc> Into<crate::block::data::mod_type::TechnicalPiston<'mc>> for PistonHea
         )
     }
 }
+
+pub struct PistonHeadClass;
+impl blackboxmc_general::JNIProvidesClassName for PistonHeadClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/PistonHead"
+    }
+}
+
 /// 'type' represents which part of a double chest this block is, or if it is a single chest.
 ///
 /// This is a representation of an abstract class.
@@ -942,6 +960,16 @@ impl<'mc> Chest<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Chest<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -953,6 +981,13 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Chest<'mc> {
     fn into(self) -> crate::block::data::Waterlogged<'mc> {
         crate::block::data::Waterlogged::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Chest into crate::block::data::Waterlogged")
+    }
+}
+
+pub struct ChestClass;
+impl blackboxmc_general::JNIProvidesClassName for ChestClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Chest"
     }
 }
 
@@ -1388,6 +1423,16 @@ impl<'mc> GlassPane<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::MultipleFacing<'mc>> for GlassPane<'mc> {
     fn into(self) -> crate::block::data::MultipleFacing<'mc> {
@@ -1399,6 +1444,13 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for GlassPane<'mc> {
     fn into(self) -> crate::block::data::Waterlogged<'mc> {
         crate::block::data::Waterlogged::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting GlassPane into crate::block::data::Waterlogged")
+    }
+}
+
+pub struct GlassPaneClass;
+impl blackboxmc_general::JNIProvidesClassName for GlassPaneClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/GlassPane"
     }
 }
 
@@ -1844,6 +1896,16 @@ impl<'mc> TripwireHook<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Attachable<'mc>> for TripwireHook<'mc> {
     fn into(self) -> crate::block::data::Attachable<'mc> {
@@ -1861,6 +1923,13 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for TripwireHook<'mc> {
     fn into(self) -> crate::block::data::Powerable<'mc> {
         crate::block::data::Powerable::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting TripwireHook into crate::block::data::Powerable")
+    }
+}
+
+pub struct TripwireHookClass;
+impl blackboxmc_general::JNIProvidesClassName for TripwireHookClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/TripwireHook"
     }
 }
 
@@ -2284,6 +2353,16 @@ impl<'mc> PitcherCrop<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Ageable<'mc>> for PitcherCrop<'mc> {
     fn into(self) -> crate::block::data::Ageable<'mc> {
@@ -2297,6 +2376,14 @@ impl<'mc> Into<crate::block::data::Bisected<'mc>> for PitcherCrop<'mc> {
             .expect("Error converting PitcherCrop into crate::block::data::Bisected")
     }
 }
+
+pub struct PitcherCropClass;
+impl blackboxmc_general::JNIProvidesClassName for PitcherCropClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/PitcherCrop"
+    }
+}
+
 /// 'has_book' is a quick flag to check whether this lectern has a book inside it.
 ///
 /// This is a representation of an abstract class.
@@ -2727,6 +2814,16 @@ impl<'mc> Lectern<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Lectern<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -2740,6 +2837,14 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Lectern<'mc> {
             .expect("Error converting Lectern into crate::block::data::Powerable")
     }
 }
+
+pub struct LecternClass;
+impl blackboxmc_general::JNIProvidesClassName for LecternClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Lectern"
+    }
+}
+
 /// 'inverted' denotes whether this daylight detector is in the inverted mode, i.e. activates in the absence of light rather than presence."
 ///
 /// This is a representation of an abstract class.
@@ -3142,6 +3247,16 @@ impl<'mc> DaylightDetector<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::AnaloguePowerable<'mc>> for DaylightDetector<'mc> {
     fn into(self) -> crate::block::data::AnaloguePowerable<'mc> {
@@ -3149,6 +3264,14 @@ impl<'mc> Into<crate::block::data::AnaloguePowerable<'mc>> for DaylightDetector<
             .expect("Error converting DaylightDetector into crate::block::data::AnaloguePowerable")
     }
 }
+
+pub struct DaylightDetectorClass;
+impl blackboxmc_general::JNIProvidesClassName for DaylightDetectorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/DaylightDetector"
+    }
+}
+
 /// 'mode' represents the different modes in which this structure block may operate.
 ///
 /// This is a representation of an abstract class.
@@ -3542,6 +3665,16 @@ impl<'mc> StructureBlock<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for StructureBlock<'mc> {
     fn into(self) -> crate::block::data::BlockData<'mc> {
@@ -3549,6 +3682,14 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for StructureBlock<'mc> {
             .expect("Error converting StructureBlock into crate::block::data::BlockData")
     }
 }
+
+pub struct StructureBlockClass;
+impl blackboxmc_general::JNIProvidesClassName for StructureBlockClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/StructureBlock"
+    }
+}
+
 /// 'flower_amount' represents the number of petals.
 ///
 /// This is a representation of an abstract class.
@@ -3982,6 +4123,16 @@ impl<'mc> PinkPetals<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for PinkPetals<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -3989,6 +4140,14 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for PinkPetals<'mc> {
             .expect("Error converting PinkPetals into crate::block::data::Directional")
     }
 }
+
+pub struct PinkPetalsClass;
+impl blackboxmc_general::JNIProvidesClassName for PinkPetalsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/PinkPetals"
+    }
+}
+
 /// 'extended' denotes whether the piston head is currently extended or not.
 ///
 /// This is a representation of an abstract class.
@@ -4410,6 +4569,16 @@ impl<'mc> Piston<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Piston<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -4417,6 +4586,14 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for Piston<'mc> {
             .expect("Error converting Piston into crate::block::data::Directional")
     }
 }
+
+pub struct PistonClass;
+impl blackboxmc_general::JNIProvidesClassName for PistonClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Piston"
+    }
+}
+
 /// 'unstable' indicates whether this TNT will explode on punching.
 ///
 /// This is a representation of an abstract class.
@@ -4785,11 +4962,28 @@ impl<'mc> TNT<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for TNT<'mc> {
     fn into(self) -> crate::block::data::BlockData<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting TNT into crate::block::data::BlockData")
+    }
+}
+
+pub struct TNTClass;
+impl blackboxmc_general::JNIProvidesClassName for TNTClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/TNT"
     }
 }
 
@@ -5225,6 +5419,16 @@ impl<'mc> Fence<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::MultipleFacing<'mc>> for Fence<'mc> {
     fn into(self) -> crate::block::data::MultipleFacing<'mc> {
@@ -5238,6 +5442,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Fence<'mc> {
             .expect("Error converting Fence into crate::block::data::Waterlogged")
     }
 }
+
+pub struct FenceClass;
+impl blackboxmc_general::JNIProvidesClassName for FenceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Fence"
+    }
+}
+
 /// The tilt of a leaf.
 #[derive(PartialEq, Eq)]
 pub enum BigDripleafTiltEnum {
@@ -5355,7 +5567,25 @@ impl<'mc> BigDripleafTilt<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BigDripleafTiltClass;
+impl blackboxmc_general::JNIProvidesClassName for BigDripleafTiltClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/BigDripleaf$Tilt"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum HingeEnum {
     Left,
@@ -5461,7 +5691,25 @@ impl<'mc> Hinge<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct HingeClass;
+impl blackboxmc_general::JNIProvidesClassName for HingeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Hinge"
+    }
+}
+
 /// The different heights a face of a wall may have.
 #[derive(PartialEq, Eq)]
 pub enum WallHeightEnum {
@@ -5572,7 +5820,25 @@ impl<'mc> WallHeight<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct WallHeightClass;
+impl blackboxmc_general::JNIProvidesClassName for WallHeightClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Wall$Height"
+    }
+}
+
 /// 'bloom' indicates whether the sculk catalyst is actively spreading the sculk or not.
 ///
 /// This is a representation of an abstract class.
@@ -5941,6 +6207,16 @@ impl<'mc> SculkCatalyst<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for SculkCatalyst<'mc> {
     fn into(self) -> crate::block::data::BlockData<'mc> {
@@ -5948,6 +6224,14 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for SculkCatalyst<'mc> {
             .expect("Error converting SculkCatalyst into crate::block::data::BlockData")
     }
 }
+
+pub struct SculkCatalystClass;
+impl blackboxmc_general::JNIProvidesClassName for SculkCatalystClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/SculkCatalyst"
+    }
+}
+
 /// The directions the Jigsaw can be oriented.
 #[derive(PartialEq, Eq)]
 pub enum JigsawOrientationEnum {
@@ -6097,7 +6381,25 @@ impl<'mc> JigsawOrientation<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JigsawOrientationClass;
+impl blackboxmc_general::JNIProvidesClassName for JigsawOrientationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Jigsaw$Orientation"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum OrientationEnum {
     DownEast,
@@ -6242,6 +6544,23 @@ impl<'mc> Orientation<'mc> {
             Orientation::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct OrientationClass;
+impl blackboxmc_general::JNIProvidesClassName for OrientationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Orientation"
     }
 }
 
@@ -6665,6 +6984,16 @@ impl<'mc> Furnace<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Furnace<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -6678,6 +7007,14 @@ impl<'mc> Into<crate::block::data::Lightable<'mc>> for Furnace<'mc> {
             .expect("Error converting Furnace into crate::block::data::Lightable")
     }
 }
+
+pub struct FurnaceClass;
+impl blackboxmc_general::JNIProvidesClassName for FurnaceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Furnace"
+    }
+}
+
 /// 'stage' represents the growth stage of a sapling.
 ///
 /// When the sapling reaches <a href="#getMaximumStage()"><code>getMaximumStage()</code></a> it will attempt to grow into a tree as the next stage.
@@ -7057,6 +7394,16 @@ impl<'mc> Sapling<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for Sapling<'mc> {
     fn into(self) -> crate::block::data::BlockData<'mc> {
@@ -7064,6 +7411,14 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Sapling<'mc> {
             .expect("Error converting Sapling into crate::block::data::BlockData")
     }
 }
+
+pub struct SaplingClass;
+impl blackboxmc_general::JNIProvidesClassName for SaplingClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Sapling"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum ThicknessEnum {
     TipMerge,
@@ -7181,7 +7536,25 @@ impl<'mc> Thickness<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ThicknessClass;
+impl blackboxmc_general::JNIProvidesClassName for ThicknessClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Thickness"
+    }
+}
+
 /// The Phase of the sensor.
 #[derive(PartialEq, Eq)]
 pub enum SculkSensorPhaseEnum {
@@ -7294,6 +7667,23 @@ impl<'mc> SculkSensorPhase<'mc> {
             SculkSensorPhase::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct SculkSensorPhaseClass;
+impl blackboxmc_general::JNIProvidesClassName for SculkSensorPhaseClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/SculkSensor$Phase"
     }
 }
 
@@ -7720,6 +8110,16 @@ impl<'mc> WallHangingSign<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for WallHangingSign<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -7733,6 +8133,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for WallHangingSign<'mc> {
             .expect("Error converting WallHangingSign into crate::block::data::Waterlogged")
     }
 }
+
+pub struct WallHangingSignClass;
+impl blackboxmc_general::JNIProvidesClassName for WallHangingSignClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/WallHangingSign"
+    }
+}
+
 /// 'type' represents the type of piston which this (technical) block corresponds to.
 ///
 /// This is a representation of an abstract class.
@@ -8180,11 +8588,28 @@ impl<'mc> TechnicalPiston<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for TechnicalPiston<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
         crate::block::data::Directional::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting TechnicalPiston into crate::block::data::Directional")
+    }
+}
+
+pub struct TechnicalPistonClass;
+impl blackboxmc_general::JNIProvidesClassName for TechnicalPistonClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/TechnicalPiston"
     }
 }
 
@@ -8699,6 +9124,16 @@ impl<'mc> Switch<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Switch<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -8718,6 +9153,14 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Switch<'mc> {
             .expect("Error converting Switch into crate::block::data::Powerable")
     }
 }
+
+pub struct SwitchClass;
+impl blackboxmc_general::JNIProvidesClassName for SwitchClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Switch"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum PartEnum {
     Head,
@@ -8823,7 +9266,25 @@ impl<'mc> Part<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PartClass;
+impl blackboxmc_general::JNIProvidesClassName for PartClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Part"
+    }
+}
+
 /// 'drag' indicates whether a force will be applied on entities moving through this block.
 ///
 /// This is a representation of an abstract class.
@@ -9192,6 +9653,16 @@ impl<'mc> BubbleColumn<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for BubbleColumn<'mc> {
     fn into(self) -> crate::block::data::BlockData<'mc> {
@@ -9199,6 +9670,14 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for BubbleColumn<'mc> {
             .expect("Error converting BubbleColumn into crate::block::data::BlockData")
     }
 }
+
+pub struct BubbleColumnClass;
+impl blackboxmc_general::JNIProvidesClassName for BubbleColumnClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/BubbleColumn"
+    }
+}
+
 /// 'attachment' denotes how the bell is attached to its block.
 ///
 /// This is a representation of an abstract class.
@@ -9664,6 +10143,16 @@ impl<'mc> Bell<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Bell<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -9677,6 +10166,14 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Bell<'mc> {
             .expect("Error converting Bell into crate::block::data::Powerable")
     }
 }
+
+pub struct BellClass;
+impl blackboxmc_general::JNIProvidesClassName for BellClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Bell"
+    }
+}
+
 /// 'leaves' represents the size of the leaves on this bamboo block.
 ///
 /// This is a representation of an abstract class.
@@ -10129,6 +10626,16 @@ impl<'mc> Bamboo<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Ageable<'mc>> for Bamboo<'mc> {
     fn into(self) -> crate::block::data::Ageable<'mc> {
@@ -10142,6 +10649,14 @@ impl<'mc> Into<crate::block::data::mod_type::Sapling<'mc>> for Bamboo<'mc> {
             .expect("Error converting Bamboo into crate::block::data::mod_type::Sapling")
     }
 }
+
+pub struct BambooClass;
+impl blackboxmc_general::JNIProvidesClassName for BambooClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Bamboo"
+    }
+}
+
 /// 'orientation' is the direction the block is facing.
 ///
 /// This is a representation of an abstract class.
@@ -10533,11 +11048,28 @@ impl<'mc> Jigsaw<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for Jigsaw<'mc> {
     fn into(self) -> crate::block::data::BlockData<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Jigsaw into crate::block::data::BlockData")
+    }
+}
+
+pub struct JigsawClass;
+impl blackboxmc_general::JNIProvidesClassName for JigsawClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Jigsaw"
     }
 }
 
@@ -10961,6 +11493,16 @@ impl<'mc> Chain<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Orientable<'mc>> for Chain<'mc> {
     fn into(self) -> crate::block::data::Orientable<'mc> {
@@ -10972,6 +11514,13 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Chain<'mc> {
     fn into(self) -> crate::block::data::Waterlogged<'mc> {
         crate::block::data::Waterlogged::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Chain into crate::block::data::Waterlogged")
+    }
+}
+
+pub struct ChainClass;
+impl blackboxmc_general::JNIProvidesClassName for ChainClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Chain"
     }
 }
 
@@ -11364,6 +11913,16 @@ impl<'mc> Lantern<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Hangable<'mc>> for Lantern<'mc> {
     fn into(self) -> crate::block::data::Hangable<'mc> {
@@ -11377,6 +11936,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Lantern<'mc> {
             .expect("Error converting Lantern into crate::block::data::Waterlogged")
     }
 }
+
+pub struct LanternClass;
+impl blackboxmc_general::JNIProvidesClassName for LanternClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Lantern"
+    }
+}
+
 /// Similar to <a href="../Powerable.html" title="interface in org.bukkit.block.data"><code>Powerable</code></a>, 'triggered' indicates whether or not the dispenser is currently activated.
 ///
 /// This is a representation of an abstract class.
@@ -11798,6 +12365,16 @@ impl<'mc> Dispenser<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Dispenser<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -11805,6 +12382,14 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for Dispenser<'mc> {
             .expect("Error converting Dispenser into crate::block::data::Directional")
     }
 }
+
+pub struct DispenserClass;
+impl blackboxmc_general::JNIProvidesClassName for DispenserClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Dispenser"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum ShapeEnum {
     Straight,
@@ -11922,7 +12507,25 @@ impl<'mc> Shape<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ShapeClass;
+impl blackboxmc_general::JNIProvidesClassName for ShapeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Shape"
+    }
+}
+
 /// Operating mode of a structure block.
 #[derive(PartialEq, Eq)]
 pub enum StructureBlockModeEnum {
@@ -12040,7 +12643,25 @@ impl<'mc> StructureBlockMode<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct StructureBlockModeClass;
+impl blackboxmc_general::JNIProvidesClassName for StructureBlockModeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/StructureBlock$Mode"
+    }
+}
+
 /// 'charges' represents the amount of times the anchor may still be used.
 ///
 /// This is a representation of an abstract class.
@@ -12421,6 +13042,16 @@ impl<'mc> RespawnAnchor<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for RespawnAnchor<'mc> {
     fn into(self) -> crate::block::data::BlockData<'mc> {
@@ -12428,6 +13059,14 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for RespawnAnchor<'mc> {
             .expect("Error converting RespawnAnchor into crate::block::data::BlockData")
     }
 }
+
+pub struct RespawnAnchorClass;
+impl blackboxmc_general::JNIProvidesClassName for RespawnAnchorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/RespawnAnchor"
+    }
+}
+
 /// 'bites' represents the amount of bites which have been taken from this slice of cake.
 ///
 /// A value of 0 indicates that the cake has not been eaten, whilst a value of <a href="#getMaximumBites()"><code>getMaximumBites()</code></a> indicates that it is all gone :(
@@ -12807,6 +13446,16 @@ impl<'mc> Cake<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for Cake<'mc> {
     fn into(self) -> crate::block::data::BlockData<'mc> {
@@ -12814,6 +13463,14 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Cake<'mc> {
             .expect("Error converting Cake into crate::block::data::BlockData")
     }
 }
+
+pub struct CakeClass;
+impl blackboxmc_general::JNIProvidesClassName for CakeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Cake"
+    }
+}
+
 /// 'eye' denotes whether this end portal frame has been activated by having an eye of ender placed in it.
 ///
 /// This is a representation of an abstract class.
@@ -13237,11 +13894,28 @@ impl<'mc> EndPortalFrame<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for EndPortalFrame<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
         crate::block::data::Directional::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting EndPortalFrame into crate::block::data::Directional")
+    }
+}
+
+pub struct EndPortalFrameClass;
+impl blackboxmc_general::JNIProvidesClassName for EndPortalFrameClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/EndPortalFrame"
     }
 }
 
@@ -13665,6 +14339,16 @@ impl<'mc> DecoratedPot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for DecoratedPot<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -13676,6 +14360,13 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for DecoratedPot<'mc> {
     fn into(self) -> crate::block::data::Waterlogged<'mc> {
         crate::block::data::Waterlogged::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting DecoratedPot into crate::block::data::Waterlogged")
+    }
+}
+
+pub struct DecoratedPotClass;
+impl blackboxmc_general::JNIProvidesClassName for DecoratedPotClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/DecoratedPot"
     }
 }
 
@@ -14111,6 +14802,16 @@ impl<'mc> GlowLichen<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::MultipleFacing<'mc>> for GlowLichen<'mc> {
     fn into(self) -> crate::block::data::MultipleFacing<'mc> {
@@ -14124,6 +14825,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for GlowLichen<'mc> {
             .expect("Error converting GlowLichen into crate::block::data::Waterlogged")
     }
 }
+
+pub struct GlowLichenClass;
+impl blackboxmc_general::JNIProvidesClassName for GlowLichenClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/GlowLichen"
+    }
+}
+
 /// The mode in which a comparator will operate in.
 #[derive(PartialEq, Eq)]
 pub enum ComparatorModeEnum {
@@ -14232,6 +14941,23 @@ impl<'mc> ComparatorMode<'mc> {
             ComparatorMode::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct ComparatorModeClass;
+impl blackboxmc_general::JNIProvidesClassName for ComparatorModeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Comparator$Mode"
     }
 }
 
@@ -14655,6 +15381,16 @@ impl<'mc> Observer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Observer<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -14668,6 +15404,14 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Observer<'mc> {
             .expect("Error converting Observer into crate::block::data::Powerable")
     }
 }
+
+pub struct ObserverClass;
+impl blackboxmc_general::JNIProvidesClassName for ObserverClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Observer"
+    }
+}
+
 /// What the bell is attached to.
 #[derive(PartialEq, Eq)]
 pub enum BellAttachmentEnum {
@@ -14785,7 +15529,25 @@ impl<'mc> BellAttachment<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BellAttachmentClass;
+impl blackboxmc_general::JNIProvidesClassName for BellAttachmentClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Bell$Attachment"
+    }
+}
+
 /// 'shape' represents the texture and bounding box shape of these stairs.
 ///
 /// This is a representation of an abstract class.
@@ -15295,6 +16057,16 @@ impl<'mc> Stairs<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Bisected<'mc>> for Stairs<'mc> {
     fn into(self) -> crate::block::data::Bisected<'mc> {
@@ -15314,6 +16086,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Stairs<'mc> {
             .expect("Error converting Stairs into crate::block::data::Waterlogged")
     }
 }
+
+pub struct StairsClass;
+impl blackboxmc_general::JNIProvidesClassName for StairsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Stairs"
+    }
+}
+
 /// The hinge of a door.
 #[derive(PartialEq, Eq)]
 pub enum DoorHingeEnum {
@@ -15419,6 +16199,23 @@ impl<'mc> DoorHinge<'mc> {
             DoorHinge::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct DoorHingeClass;
+impl blackboxmc_general::JNIProvidesClassName for DoorHingeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Door$Hinge"
     }
 }
 
@@ -15922,6 +16719,16 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for CalibratedSculkSensor<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -15936,6 +16743,14 @@ impl<'mc> Into<crate::block::data::mod_type::SculkSensor<'mc>> for CalibratedScu
         )
     }
 }
+
+pub struct CalibratedSculkSensorClass;
+impl blackboxmc_general::JNIProvidesClassName for CalibratedSculkSensorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/CalibratedSculkSensor"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum FaceEnum {
     Floor,
@@ -16044,6 +16859,23 @@ impl<'mc> Face<'mc> {
             Face::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct FaceClass;
+impl blackboxmc_general::JNIProvidesClassName for FaceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Face"
     }
 }
 
@@ -16467,6 +17299,16 @@ impl<'mc> EnderChest<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for EnderChest<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -16480,6 +17322,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for EnderChest<'mc> {
             .expect("Error converting EnderChest into crate::block::data::Waterlogged")
     }
 }
+
+pub struct EnderChestClass;
+impl blackboxmc_general::JNIProvidesClassName for EnderChestClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/EnderChest"
+    }
+}
+
 /// Similar to <a href="../Bisected.html" title="interface in org.bukkit.block.data"><code>Bisected</code></a>, 'part' denotes which half of the bed this block corresponds to.
 ///
 /// 'occupied' property is a quick flag to check if a player is currently sleeping in this bed block.
@@ -16934,6 +17784,16 @@ impl<'mc> Bed<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Bed<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -16941,6 +17801,14 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for Bed<'mc> {
             .expect("Error converting Bed into crate::block::data::Directional")
     }
 }
+
+pub struct BedClass;
+impl blackboxmc_general::JNIProvidesClassName for BedClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Bed"
+    }
+}
+
 /// Type of this chest block.
 ///
 /// NB: Left and right are relative to the chest itself, i.e opposite to what a player placing the appropriate block would see.
@@ -17052,6 +17920,23 @@ impl<'mc> ChestType<'mc> {
             ChestType::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct ChestTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for ChestTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Chest$Type"
     }
 }
 
@@ -17478,6 +18363,16 @@ impl<'mc> AmethystCluster<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for AmethystCluster<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -17491,6 +18386,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for AmethystCluster<'mc> {
             .expect("Error converting AmethystCluster into crate::block::data::Waterlogged")
     }
 }
+
+pub struct AmethystClusterClass;
+impl blackboxmc_general::JNIProvidesClassName for AmethystClusterClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/AmethystCluster"
+    }
+}
+
 /// 'instrument' is the type of sound made when this note block is activated.
 ///
 /// 'note' is the specified tuned pitch that the instrument will be played in.
@@ -17935,6 +18838,16 @@ impl<'mc> NoteBlock<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Powerable<'mc>> for NoteBlock<'mc> {
     fn into(self) -> crate::block::data::Powerable<'mc> {
@@ -17942,6 +18855,14 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for NoteBlock<'mc> {
             .expect("Error converting NoteBlock into crate::block::data::Powerable")
     }
 }
+
+pub struct NoteBlockClass;
+impl blackboxmc_general::JNIProvidesClassName for NoteBlockClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/NoteBlock"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum ConnectionEnum {
     Up,
@@ -18050,6 +18971,23 @@ impl<'mc> Connection<'mc> {
             Connection::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct ConnectionClass;
+impl blackboxmc_general::JNIProvidesClassName for ConnectionClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Connection"
     }
 }
 
@@ -18507,6 +19445,16 @@ impl<'mc> MangrovePropagule<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Ageable<'mc>> for MangrovePropagule<'mc> {
     fn into(self) -> crate::block::data::Ageable<'mc> {
@@ -18532,6 +19480,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for MangrovePropagule<'mc> 
             .expect("Error converting MangrovePropagule into crate::block::data::Waterlogged")
     }
 }
+
+pub struct MangrovePropaguleClass;
+impl blackboxmc_general::JNIProvidesClassName for MangrovePropaguleClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/MangrovePropagule"
+    }
+}
+
 /// 'sculk_sensor_phase' indicates the current operational phase of the sensor.
 ///
 /// This is a representation of an abstract class.
@@ -18976,6 +19932,16 @@ impl<'mc> SculkSensor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::AnaloguePowerable<'mc>> for SculkSensor<'mc> {
     fn into(self) -> crate::block::data::AnaloguePowerable<'mc> {
@@ -18989,6 +19955,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for SculkSensor<'mc> {
             .expect("Error converting SculkSensor into crate::block::data::Waterlogged")
     }
 }
+
+pub struct SculkSensorClass;
+impl blackboxmc_general::JNIProvidesClassName for SculkSensorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/SculkSensor"
+    }
+}
+
 /// 'tilt' indicates how far the leaf is tilted.
 ///
 /// This is a representation of an abstract class.
@@ -19455,11 +20429,28 @@ impl<'mc> BigDripleaf<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::mod_type::Dripleaf<'mc>> for BigDripleaf<'mc> {
     fn into(self) -> crate::block::data::mod_type::Dripleaf<'mc> {
         crate::block::data::mod_type::Dripleaf::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting BigDripleaf into crate::block::data::mod_type::Dripleaf")
+    }
+}
+
+pub struct BigDripleafClass;
+impl blackboxmc_general::JNIProvidesClassName for BigDripleafClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/BigDripleaf"
     }
 }
 
@@ -19883,6 +20874,16 @@ impl<'mc> Ladder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Ladder<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -19896,6 +20897,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Ladder<'mc> {
             .expect("Error converting Ladder into crate::block::data::Waterlogged")
     }
 }
+
+pub struct LadderClass;
+impl blackboxmc_general::JNIProvidesClassName for LadderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Ladder"
+    }
+}
+
 /// 'bottom' indicates whether the scaffolding is floating or not.
 ///
 /// 'distance' indicates the distance from a scaffolding block placed above a 'bottom' scaffold.
@@ -20324,6 +21333,16 @@ impl<'mc> Scaffolding<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Scaffolding<'mc> {
     fn into(self) -> crate::block::data::Waterlogged<'mc> {
@@ -20331,6 +21350,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Scaffolding<'mc> {
             .expect("Error converting Scaffolding into crate::block::data::Waterlogged")
     }
 }
+
+pub struct ScaffoldingClass;
+impl blackboxmc_general::JNIProvidesClassName for ScaffoldingClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Scaffolding"
+    }
+}
+
 /// Interface to the 'has_bottle_0', 'has_bottle_1', 'has_bottle_2' flags on a brewing stand which indicate which bottles are rendered on the outside.
 ///
 /// Stand may have 0, 1... <a href="#getMaximumBottles()"><code>getMaximumBottles()</code></a>-1 bottles.
@@ -20735,6 +21762,16 @@ impl<'mc> BrewingStand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for BrewingStand<'mc> {
     fn into(self) -> crate::block::data::BlockData<'mc> {
@@ -20742,6 +21779,14 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for BrewingStand<'mc> {
             .expect("Error converting BrewingStand into crate::block::data::BlockData")
     }
 }
+
+pub struct BrewingStandClass;
+impl blackboxmc_general::JNIProvidesClassName for BrewingStandClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/BrewingStand"
+    }
+}
+
 /// md_5's mixtape.
 ///
 /// This is a representation of an abstract class.
@@ -21184,6 +22229,16 @@ impl<'mc> Fire<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Ageable<'mc>> for Fire<'mc> {
     fn into(self) -> crate::block::data::Ageable<'mc> {
@@ -21197,6 +22252,14 @@ impl<'mc> Into<crate::block::data::MultipleFacing<'mc>> for Fire<'mc> {
             .expect("Error converting Fire into crate::block::data::MultipleFacing")
     }
 }
+
+pub struct FireClass;
+impl blackboxmc_general::JNIProvidesClassName for FireClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Fire"
+    }
+}
+
 /// Similar to <a href="../Powerable.html" title="interface in org.bukkit.block.data"><code>Powerable</code></a>, 'enabled' indicates whether or not the hopper is currently activated.
 ///
 /// Unlike most other blocks, a hopper is only enabled when it is <b>not</b> receiving any power.
@@ -21620,6 +22683,16 @@ impl<'mc> Hopper<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Hopper<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -21627,6 +22700,14 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for Hopper<'mc> {
             .expect("Error converting Hopper into crate::block::data::Directional")
     }
 }
+
+pub struct HopperClass;
+impl blackboxmc_general::JNIProvidesClassName for HopperClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Hopper"
+    }
+}
+
 /// 'delay' is the propagation delay of a repeater, i.e. how many ticks before it will be activated from a current change and propagate it to the next block.
 ///
 /// Delay may not be lower than <a href="#getMinimumDelay()"><code>getMinimumDelay()</code></a> or higher than <a href="#getMaximumDelay()"><code>getMaximumDelay()</code></a>.
@@ -22116,6 +23197,16 @@ impl<'mc> Repeater<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Repeater<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -22129,6 +23220,14 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Repeater<'mc> {
             .expect("Error converting Repeater into crate::block::data::Powerable")
     }
 }
+
+pub struct RepeaterClass;
+impl blackboxmc_general::JNIProvidesClassName for RepeaterClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Repeater"
+    }
+}
+
 /// 'type' represents what state the slab is in - either top, bottom, or a double slab occupying the full block.
 ///
 /// This is a representation of an abstract class.
@@ -22541,6 +23640,16 @@ impl<'mc> Slab<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Slab<'mc> {
     fn into(self) -> crate::block::data::Waterlogged<'mc> {
@@ -22548,6 +23657,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Slab<'mc> {
             .expect("Error converting Slab into crate::block::data::Waterlogged")
     }
 }
+
+pub struct SlabClass;
+impl blackboxmc_general::JNIProvidesClassName for SlabClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Slab"
+    }
+}
+
 /// 'layers' represents the amount of layers of snow which are present in this block.
 ///
 /// May not be lower than <a href="#getMinimumLayers()"><code>getMinimumLayers()</code></a> or higher than <a href="#getMaximumLayers()"><code>getMaximumLayers()</code></a>.
@@ -22942,6 +24059,16 @@ impl<'mc> Snow<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for Snow<'mc> {
     fn into(self) -> crate::block::data::BlockData<'mc> {
@@ -22949,6 +24076,14 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Snow<'mc> {
             .expect("Error converting Snow into crate::block::data::BlockData")
     }
 }
+
+pub struct SnowClass;
+impl blackboxmc_general::JNIProvidesClassName for SnowClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Snow"
+    }
+}
+
 /// The way in which a redstone wire can connect to an adjacent block face.
 #[derive(PartialEq, Eq)]
 pub enum RedstoneWireConnectionEnum {
@@ -23063,7 +24198,25 @@ impl<'mc> RedstoneWireConnection<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct RedstoneWireConnectionClass;
+impl blackboxmc_general::JNIProvidesClassName for RedstoneWireConnectionClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/RedstoneWire$Connection"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum AttachmentEnum {
     Floor,
@@ -23176,6 +24329,23 @@ impl<'mc> Attachment<'mc> {
             Attachment::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct AttachmentClass;
+impl blackboxmc_general::JNIProvidesClassName for AttachmentClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Attachment"
     }
 }
 
@@ -23608,6 +24778,16 @@ impl<'mc> Cocoa<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Ageable<'mc>> for Cocoa<'mc> {
     fn into(self) -> crate::block::data::Ageable<'mc> {
@@ -23621,6 +24801,14 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for Cocoa<'mc> {
             .expect("Error converting Cocoa into crate::block::data::Directional")
     }
 }
+
+pub struct CocoaClass;
+impl blackboxmc_general::JNIProvidesClassName for CocoaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Cocoa"
+    }
+}
+
 /// 'mode' indicates what mode this comparator will operate in.
 ///
 /// This is a representation of an abstract class.
@@ -24086,6 +25274,16 @@ impl<'mc> Comparator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Comparator<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -24099,6 +25297,14 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Comparator<'mc> {
             .expect("Error converting Comparator into crate::block::data::Powerable")
     }
 }
+
+pub struct ComparatorClass;
+impl blackboxmc_general::JNIProvidesClassName for ComparatorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Comparator"
+    }
+}
+
 /// A type of minecart rail which interacts with redstone in one way or another.
 ///
 /// This is a representation of an abstract class.
@@ -24544,6 +25750,16 @@ impl<'mc> RedstoneRail<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Powerable<'mc>> for RedstoneRail<'mc> {
     fn into(self) -> crate::block::data::Powerable<'mc> {
@@ -24557,6 +25773,14 @@ impl<'mc> Into<crate::block::data::Rail<'mc>> for RedstoneRail<'mc> {
             .expect("Error converting RedstoneRail into crate::block::data::Rail")
     }
 }
+
+pub struct RedstoneRailClass;
+impl blackboxmc_general::JNIProvidesClassName for RedstoneRailClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/RedstoneRail"
+    }
+}
+
 /// 'berries' indicates whether the block has berries.
 ///
 /// This is a representation of an abstract class.
@@ -24927,11 +26151,28 @@ impl<'mc> CaveVinesPlant<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for CaveVinesPlant<'mc> {
     fn into(self) -> crate::block::data::BlockData<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting CaveVinesPlant into crate::block::data::BlockData")
+    }
+}
+
+pub struct CaveVinesPlantClass;
+impl blackboxmc_general::JNIProvidesClassName for CaveVinesPlantClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/CaveVinesPlant"
     }
 }
 
@@ -25333,6 +26574,16 @@ impl<'mc> Light<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Levelled<'mc>> for Light<'mc> {
     fn into(self) -> crate::block::data::Levelled<'mc> {
@@ -25344,6 +26595,13 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Light<'mc> {
     fn into(self) -> crate::block::data::Waterlogged<'mc> {
         crate::block::data::Waterlogged::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Light into crate::block::data::Waterlogged")
+    }
+}
+
+pub struct LightClass;
+impl blackboxmc_general::JNIProvidesClassName for LightClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Light"
     }
 }
 
@@ -25811,6 +27069,16 @@ impl<'mc> SmallDripleaf<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::mod_type::Dripleaf<'mc>> for SmallDripleaf<'mc> {
     fn into(self) -> crate::block::data::mod_type::Dripleaf<'mc> {
@@ -25822,6 +27090,13 @@ impl<'mc> Into<crate::block::data::Bisected<'mc>> for SmallDripleaf<'mc> {
     fn into(self) -> crate::block::data::Bisected<'mc> {
         crate::block::data::Bisected::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting SmallDripleaf into crate::block::data::Bisected")
+    }
+}
+
+pub struct SmallDripleafClass;
+impl blackboxmc_general::JNIProvidesClassName for SmallDripleafClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/SmallDripleaf"
     }
 }
 
@@ -26333,6 +27608,16 @@ impl<'mc> TrapDoor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Bisected<'mc>> for TrapDoor<'mc> {
     fn into(self) -> crate::block::data::Bisected<'mc> {
@@ -26362,6 +27647,13 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for TrapDoor<'mc> {
     fn into(self) -> crate::block::data::Waterlogged<'mc> {
         crate::block::data::Waterlogged::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting TrapDoor into crate::block::data::Waterlogged")
+    }
+}
+
+pub struct TrapDoorClass;
+impl blackboxmc_general::JNIProvidesClassName for TrapDoorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/TrapDoor"
     }
 }
 
@@ -26808,6 +28100,16 @@ impl<'mc> Grindstone<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Grindstone<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -26821,6 +28123,14 @@ impl<'mc> Into<crate::block::data::FaceAttachable<'mc>> for Grindstone<'mc> {
             .expect("Error converting Grindstone into crate::block::data::FaceAttachable")
     }
 }
+
+pub struct GrindstoneClass;
+impl blackboxmc_general::JNIProvidesClassName for GrindstoneClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Grindstone"
+    }
+}
+
 /// Represents the thickness of the dripstone, corresponding to its position within a multi-block dripstone formation.
 #[derive(PartialEq, Eq)]
 pub enum PointedDripstoneThicknessEnum {
@@ -26945,7 +28255,25 @@ impl<'mc> PointedDripstoneThickness<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PointedDripstoneThicknessClass;
+impl blackboxmc_general::JNIProvidesClassName for PointedDripstoneThicknessClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/PointedDripstone$Thickness"
+    }
+}
+
 /// 'honey_level' represents the amount of honey stored in the hive.
 ///
 /// This is a representation of an abstract class.
@@ -27379,11 +28707,28 @@ impl<'mc> Beehive<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Beehive<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
         crate::block::data::Directional::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Beehive into crate::block::data::Directional")
+    }
+}
+
+pub struct BeehiveClass;
+impl blackboxmc_general::JNIProvidesClassName for BeehiveClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Beehive"
     }
 }
 
@@ -27807,6 +29152,16 @@ impl<'mc> CoralWallFan<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for CoralWallFan<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -27818,6 +29173,13 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for CoralWallFan<'mc> {
     fn into(self) -> crate::block::data::Waterlogged<'mc> {
         crate::block::data::Waterlogged::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting CoralWallFan into crate::block::data::Waterlogged")
+    }
+}
+
+pub struct CoralWallFanClass;
+impl blackboxmc_general::JNIProvidesClassName for CoralWallFanClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/CoralWallFan"
     }
 }
 
@@ -28253,6 +29615,16 @@ impl<'mc> SculkVein<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::MultipleFacing<'mc>> for SculkVein<'mc> {
     fn into(self) -> crate::block::data::MultipleFacing<'mc> {
@@ -28266,6 +29638,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for SculkVein<'mc> {
             .expect("Error converting SculkVein into crate::block::data::Waterlogged")
     }
 }
+
+pub struct SculkVeinClass;
+impl blackboxmc_general::JNIProvidesClassName for SculkVeinClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/SculkVein"
+    }
+}
+
 /// The type of the slab.
 #[derive(PartialEq, Eq)]
 pub enum SlabTypeEnum {
@@ -28376,7 +29756,25 @@ impl<'mc> SlabType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct SlabTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for SlabTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Slab$Type"
+    }
+}
+
 /// 'disarmed' denotes that the tripwire was broken with shears and will not subsequently produce a current when destroyed.
 ///
 /// This is a representation of an abstract class.
@@ -28854,6 +30252,16 @@ impl<'mc> Tripwire<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Attachable<'mc>> for Tripwire<'mc> {
     fn into(self) -> crate::block::data::Attachable<'mc> {
@@ -28873,6 +30281,14 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Tripwire<'mc> {
             .expect("Error converting Tripwire into crate::block::data::Powerable")
     }
 }
+
+pub struct TripwireClass;
+impl blackboxmc_general::JNIProvidesClassName for TripwireClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Tripwire"
+    }
+}
+
 /// This class encompasses the 'north', 'east', 'south', 'west', height flags which are used to set the height of a wall. 'up' denotes whether the well has a center post.
 ///
 /// This is a representation of an abstract class.
@@ -29323,6 +30739,16 @@ impl<'mc> Wall<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Wall<'mc> {
     fn into(self) -> crate::block::data::Waterlogged<'mc> {
@@ -29330,6 +30756,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Wall<'mc> {
             .expect("Error converting Wall into crate::block::data::Waterlogged")
     }
 }
+
+pub struct WallClass;
+impl blackboxmc_general::JNIProvidesClassName for WallClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Wall"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum PhaseEnum {
     Inactive,
@@ -29439,7 +30873,25 @@ impl<'mc> Phase<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PhaseClass;
+impl blackboxmc_general::JNIProvidesClassName for PhaseClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Phase"
+    }
+}
+
 /// The shape of a stair block - used for constructing corners.
 #[derive(PartialEq, Eq)]
 pub enum StairsShapeEnum {
@@ -29558,7 +31010,25 @@ impl<'mc> StairsShape<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct StairsShapeClass;
+impl blackboxmc_general::JNIProvidesClassName for StairsShapeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Stairs$Shape"
+    }
+}
+
 /// The 'moisture' level of farmland indicates how close it is to a water source (if any).
 ///
 /// A higher moisture level leads, to faster growth of crops on this block, but cannot be higher than <a href="#getMaximumMoisture()"><code>getMaximumMoisture()</code></a>.
@@ -29941,6 +31411,16 @@ impl<'mc> Farmland<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for Farmland<'mc> {
     fn into(self) -> crate::block::data::BlockData<'mc> {
@@ -29948,6 +31428,14 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Farmland<'mc> {
             .expect("Error converting Farmland into crate::block::data::BlockData")
     }
 }
+
+pub struct FarmlandClass;
+impl blackboxmc_general::JNIProvidesClassName for FarmlandClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Farmland"
+    }
+}
+
 /// 'in_wall" indicates if the fence gate is attached to a wall, and if true the texture is lowered by a small amount to blend in better.
 ///
 /// This is a representation of an abstract class.
@@ -30413,6 +31901,16 @@ impl<'mc> Gate<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Gate<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -30432,6 +31930,14 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Gate<'mc> {
             .expect("Error converting Gate into crate::block::data::Powerable")
     }
 }
+
+pub struct GateClass;
+impl blackboxmc_general::JNIProvidesClassName for GateClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Gate"
+    }
+}
+
 /// The face to which a switch type block is stuck.
 #[derive(PartialEq, Eq)]
 pub enum SwitchFaceEnum {
@@ -30542,7 +32048,25 @@ impl<'mc> SwitchFace<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct SwitchFaceClass;
+impl blackboxmc_general::JNIProvidesClassName for SwitchFaceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Switch$Face"
+    }
+}
+
 /// 'can_summon' indicates whether the sculk shrieker can summon the warden.
 /// <p>'shrieking' indicated whether the sculk shrieker is shrieking or not.</p>
 ///
@@ -30956,6 +32480,16 @@ impl<'mc> SculkShrieker<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for SculkShrieker<'mc> {
     fn into(self) -> crate::block::data::Waterlogged<'mc> {
@@ -30963,6 +32497,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for SculkShrieker<'mc> {
             .expect("Error converting SculkShrieker into crate::block::data::Waterlogged")
     }
 }
+
+pub struct SculkShriekerClass;
+impl blackboxmc_general::JNIProvidesClassName for SculkShriekerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/SculkShrieker"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum LeavesEnum {
     None,
@@ -31072,7 +32614,25 @@ impl<'mc> Leaves<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct LeavesClass;
+impl blackboxmc_general::JNIProvidesClassName for LeavesClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Leaves"
+    }
+}
+
 /// 'signal_fire' denotes whether the fire is extra smokey due to having a hay bale placed beneath it.
 ///
 /// This is a representation of an abstract class.
@@ -31538,6 +33098,16 @@ impl<'mc> Campfire<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Campfire<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -31555,6 +33125,13 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Campfire<'mc> {
     fn into(self) -> crate::block::data::Waterlogged<'mc> {
         crate::block::data::Waterlogged::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Campfire into crate::block::data::Waterlogged")
+    }
+}
+
+pub struct CampfireClass;
+impl blackboxmc_general::JNIProvidesClassName for CampfireClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Campfire"
     }
 }
 
@@ -31978,6 +33555,16 @@ impl<'mc> Dripleaf<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Dripleaf<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -31991,6 +33578,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Dripleaf<'mc> {
             .expect("Error converting Dripleaf into crate::block::data::Waterlogged")
     }
 }
+
+pub struct DripleafClass;
+impl blackboxmc_general::JNIProvidesClassName for DripleafClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Dripleaf"
+    }
+}
+
 /// 'pickles' indicates the number of pickles in this block.
 ///
 /// This is a representation of an abstract class.
@@ -32405,11 +34000,28 @@ impl<'mc> SeaPickle<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for SeaPickle<'mc> {
     fn into(self) -> crate::block::data::Waterlogged<'mc> {
         crate::block::data::Waterlogged::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting SeaPickle into crate::block::data::Waterlogged")
+    }
+}
+
+pub struct SeaPickleClass;
+impl blackboxmc_general::JNIProvidesClassName for SeaPickleClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/SeaPickle"
     }
 }
 
@@ -32836,6 +34448,16 @@ impl<'mc> RedstoneWallTorch<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for RedstoneWallTorch<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -32849,6 +34471,14 @@ impl<'mc> Into<crate::block::data::Lightable<'mc>> for RedstoneWallTorch<'mc> {
             .expect("Error converting RedstoneWallTorch into crate::block::data::Lightable")
     }
 }
+
+pub struct RedstoneWallTorchClass;
+impl blackboxmc_general::JNIProvidesClassName for RedstoneWallTorchClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/RedstoneWallTorch"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum HeightEnum {
     None,
@@ -32958,7 +34588,25 @@ impl<'mc> Height<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct HeightClass;
+impl blackboxmc_general::JNIProvidesClassName for HeightClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Height"
+    }
+}
+
 /// Horizontal half of a bed.
 #[derive(PartialEq, Eq)]
 pub enum BedPartEnum {
@@ -33064,6 +34712,23 @@ impl<'mc> BedPart<'mc> {
             BedPart::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct BedPartClass;
+impl blackboxmc_general::JNIProvidesClassName for BedPartClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Bed$Part"
     }
 }
 
@@ -33487,6 +35152,16 @@ impl<'mc> WallSign<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for WallSign<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -33500,6 +35175,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for WallSign<'mc> {
             .expect("Error converting WallSign into crate::block::data::Waterlogged")
     }
 }
+
+pub struct WallSignClass;
+impl blackboxmc_general::JNIProvidesClassName for WallSignClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/WallSign"
+    }
+}
+
 /// 'north', 'east', 'south', 'west' represent the types of connections this redstone wire has to adjacent blocks.
 ///
 /// This is a representation of an abstract class.
@@ -33953,6 +35636,16 @@ impl<'mc> RedstoneWire<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::AnaloguePowerable<'mc>> for RedstoneWire<'mc> {
     fn into(self) -> crate::block::data::AnaloguePowerable<'mc> {
@@ -33960,6 +35653,14 @@ impl<'mc> Into<crate::block::data::AnaloguePowerable<'mc>> for RedstoneWire<'mc>
             .expect("Error converting RedstoneWire into crate::block::data::AnaloguePowerable")
     }
 }
+
+pub struct RedstoneWireClass;
+impl blackboxmc_general::JNIProvidesClassName for RedstoneWireClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/RedstoneWire"
+    }
+}
+
 /// 'has_record' is a quick flag to check whether this jukebox has a record inside it.
 ///
 /// This is a representation of an abstract class.
@@ -34315,6 +36016,16 @@ impl<'mc> Jukebox<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for Jukebox<'mc> {
     fn into(self) -> crate::block::data::BlockData<'mc> {
@@ -34322,6 +36033,14 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Jukebox<'mc> {
             .expect("Error converting Jukebox into crate::block::data::BlockData")
     }
 }
+
+pub struct JukeboxClass;
+impl blackboxmc_general::JNIProvidesClassName for JukeboxClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Jukebox"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum ModeEnum {
     Compare,
@@ -34426,6 +36145,23 @@ impl<'mc> Mode<'mc> {
             Mode::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct ModeClass;
+impl blackboxmc_general::JNIProvidesClassName for ModeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Mode"
     }
 }
 
@@ -34849,6 +36585,16 @@ impl<'mc> Barrel<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Barrel<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -34862,6 +36608,14 @@ impl<'mc> Into<crate::block::data::Openable<'mc>> for Barrel<'mc> {
             .expect("Error converting Barrel into crate::block::data::Openable")
     }
 }
+
+pub struct BarrelClass;
+impl blackboxmc_general::JNIProvidesClassName for BarrelClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Barrel"
+    }
+}
+
 /// 'conditional' denotes whether this command block is conditional or not, i.e. will only execute if the preceeding command block also executed successfully.
 ///
 /// This is a representation of an abstract class.
@@ -35283,6 +37037,16 @@ impl<'mc> CommandBlock<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for CommandBlock<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -35290,6 +37054,14 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for CommandBlock<'mc> {
             .expect("Error converting CommandBlock into crate::block::data::Directional")
     }
 }
+
+pub struct CommandBlockClass;
+impl blackboxmc_general::JNIProvidesClassName for CommandBlockClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/CommandBlock"
+    }
+}
+
 /// 'hinge' indicates which hinge this door is attached to and will rotate around when opened.
 ///
 /// This is a representation of an abstract class.
@@ -35821,6 +37593,16 @@ impl<'mc> Door<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Bisected<'mc>> for Door<'mc> {
     fn into(self) -> crate::block::data::Bisected<'mc> {
@@ -35846,6 +37628,14 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Door<'mc> {
             .expect("Error converting Door into crate::block::data::Powerable")
     }
 }
+
+pub struct DoorClass;
+impl blackboxmc_general::JNIProvidesClassName for DoorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Door"
+    }
+}
+
 /// Interface to the 'slot_0_occupied', 'slow_1_occupied' ... 'slot_5_occupied' flags on a bookshelf which indicate which slots are occupied rendered on the outside.
 ///
 /// Block may have 0, 1... <a href="#getMaximumOccupiedSlots()"><code>getMaximumOccupiedSlots()</code></a>-1 occupied slots.
@@ -36313,11 +38103,28 @@ impl<'mc> ChiseledBookshelf<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for ChiseledBookshelf<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
         crate::block::data::Directional::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting ChiseledBookshelf into crate::block::data::Directional")
+    }
+}
+
+pub struct ChiseledBookshelfClass;
+impl blackboxmc_general::JNIProvidesClassName for ChiseledBookshelfClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/ChiseledBookshelf"
     }
 }
 
@@ -36752,6 +38559,16 @@ impl<'mc> HangingSign<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Attachable<'mc>> for HangingSign<'mc> {
     fn into(self) -> crate::block::data::Attachable<'mc> {
@@ -36771,6 +38588,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for HangingSign<'mc> {
             .expect("Error converting HangingSign into crate::block::data::Waterlogged")
     }
 }
+
+pub struct HangingSignClass;
+impl blackboxmc_general::JNIProvidesClassName for HangingSignClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/HangingSign"
+    }
+}
+
 /// 'candles' represents the number of candles which are present.
 ///
 /// This is a representation of an abstract class.
@@ -37195,6 +39020,16 @@ impl<'mc> Candle<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Lightable<'mc>> for Candle<'mc> {
     fn into(self) -> crate::block::data::Lightable<'mc> {
@@ -37208,6 +39043,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Candle<'mc> {
             .expect("Error converting Candle into crate::block::data::Waterlogged")
     }
 }
+
+pub struct CandleClass;
+impl blackboxmc_general::JNIProvidesClassName for CandleClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Candle"
+    }
+}
+
 /// 'thickness' represents the dripstone thickness.
 ///
 /// 'vertical_direction' represents the dripstone orientation.
@@ -37693,11 +39536,28 @@ impl<'mc> PointedDripstone<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for PointedDripstone<'mc> {
     fn into(self) -> crate::block::data::Waterlogged<'mc> {
         crate::block::data::Waterlogged::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting PointedDripstone into crate::block::data::Waterlogged")
+    }
+}
+
+pub struct PointedDripstoneClass;
+impl blackboxmc_general::JNIProvidesClassName for PointedDripstoneClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/PointedDripstone"
     }
 }
 
@@ -38143,6 +40003,16 @@ impl<'mc> LightningRod<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for LightningRod<'mc> {
     fn into(self) -> crate::block::data::Directional<'mc> {
@@ -38162,6 +40032,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for LightningRod<'mc> {
             .expect("Error converting LightningRod into crate::block::data::Waterlogged")
     }
 }
+
+pub struct LightningRodClass;
+impl blackboxmc_general::JNIProvidesClassName for LightningRodClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/LightningRod"
+    }
+}
+
 /// Different piston variants.
 #[derive(PartialEq, Eq)]
 pub enum TechnicalPistonTypeEnum {
@@ -38270,6 +40148,23 @@ impl<'mc> TechnicalPistonType<'mc> {
             TechnicalPistonType::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct TechnicalPistonTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for TechnicalPistonTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/TechnicalPiston$Type"
     }
 }
 
@@ -38682,6 +40577,16 @@ impl<'mc> Sign<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Rotatable<'mc>> for Sign<'mc> {
     fn into(self) -> crate::block::data::Rotatable<'mc> {
@@ -38695,6 +40600,14 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Sign<'mc> {
             .expect("Error converting Sign into crate::block::data::Waterlogged")
     }
 }
+
+pub struct SignClass;
+impl blackboxmc_general::JNIProvidesClassName for SignClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Sign"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum TiltEnum {
     None,
@@ -38808,7 +40721,25 @@ impl<'mc> Tilt<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct TiltClass;
+impl blackboxmc_general::JNIProvidesClassName for TiltClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Tilt"
+    }
+}
+
 /// Bamboo leaf size.
 #[derive(PartialEq, Eq)]
 pub enum BambooLeavesEnum {
@@ -38918,6 +40849,23 @@ impl<'mc> BambooLeaves<'mc> {
             BambooLeaves::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct BambooLeavesClass;
+impl blackboxmc_general::JNIProvidesClassName for BambooLeavesClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/Bamboo$Leaves"
     }
 }
 
@@ -39319,6 +41267,16 @@ impl<'mc> CaveVines<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Ageable<'mc>> for CaveVines<'mc> {
     fn into(self) -> crate::block::data::Ageable<'mc> {
@@ -39332,6 +41290,14 @@ impl<'mc> Into<crate::block::data::mod_type::CaveVinesPlant<'mc>> for CaveVines<
             .expect("Error converting CaveVines into crate::block::data::mod_type::CaveVinesPlant")
     }
 }
+
+pub struct CaveVinesClass;
+impl blackboxmc_general::JNIProvidesClassName for CaveVinesClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/CaveVines"
+    }
+}
+
 /// 'eggs' is the number of eggs which appear in this block.
 ///
 /// This is a representation of an abstract class.
@@ -39749,10 +41715,27 @@ impl<'mc> TurtleEgg<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::data::Hatchable<'mc>> for TurtleEgg<'mc> {
     fn into(self) -> crate::block::data::Hatchable<'mc> {
         crate::block::data::Hatchable::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting TurtleEgg into crate::block::data::Hatchable")
+    }
+}
+
+pub struct TurtleEggClass;
+impl blackboxmc_general::JNIProvidesClassName for TurtleEggClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/data/type/TurtleEgg"
     }
 }

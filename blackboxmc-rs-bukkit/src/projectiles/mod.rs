@@ -71,6 +71,23 @@ impl<'mc> ProjectileSource<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct ProjectileSourceClass;
+impl blackboxmc_general::JNIProvidesClassName for ProjectileSourceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/projectiles/ProjectileSource"
+    }
 }
 
 ///
@@ -153,11 +170,28 @@ impl<'mc> BlockProjectileSource<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::projectiles::ProjectileSource<'mc>> for BlockProjectileSource<'mc> {
     fn into(self) -> crate::projectiles::ProjectileSource<'mc> {
         crate::projectiles::ProjectileSource::from_raw(&self.jni_ref(), self.1).expect(
             "Error converting BlockProjectileSource into crate::projectiles::ProjectileSource",
         )
+    }
+}
+
+pub struct BlockProjectileSourceClass;
+impl blackboxmc_general::JNIProvidesClassName for BlockProjectileSourceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/projectiles/BlockProjectileSource"
     }
 }

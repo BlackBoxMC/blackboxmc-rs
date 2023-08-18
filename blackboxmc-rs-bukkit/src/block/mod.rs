@@ -597,6 +597,16 @@ impl<'mc> Chest<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for Chest<'mc> {
     fn into(self) -> crate::block::Container<'mc> {
@@ -616,6 +626,14 @@ impl<'mc> Into<crate::block::Lidded<'mc>> for Chest<'mc> {
             .expect("Error converting Chest into crate::block::Lidded")
     }
 }
+
+pub struct ChestClass;
+impl blackboxmc_general::JNIProvidesClassName for ChestClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Chest"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum BlockFaceEnum {
     North,
@@ -789,7 +807,25 @@ impl<'mc> BlockFace<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BlockFaceClass;
+impl blackboxmc_general::JNIProvidesClassName for BlockFaceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/BlockFace"
+    }
+}
+
 /// Represents a captured state of a (possibly inverted) daylight detector.
 ///
 /// This is a representation of an abstract class.
@@ -1192,6 +1228,16 @@ impl<'mc> DaylightDetector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for DaylightDetector<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -1199,6 +1245,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for DaylightDetector<'mc> {
             .expect("Error converting DaylightDetector into crate::block::TileState")
     }
 }
+
+pub struct DaylightDetectorClass;
+impl blackboxmc_general::JNIProvidesClassName for DaylightDetectorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/DaylightDetector"
+    }
+}
+
 /// Represents a block (usually a container) that may be locked. When a lock is active an item with a name corresponding to the key will be required to open this block.
 ///
 /// This is a representation of an abstract class.
@@ -1275,7 +1329,25 @@ impl<'mc> Lockable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct LockableClass;
+impl blackboxmc_general::JNIProvidesClassName for LockableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Lockable"
+    }
+}
+
 /// Represents a captured state of a lectern.
 ///
 /// This is a representation of an abstract class.
@@ -1729,6 +1801,16 @@ impl<'mc> Lectern<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Lectern<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -1742,6 +1824,14 @@ impl<'mc> Into<crate::inventory::BlockInventoryHolder<'mc>> for Lectern<'mc> {
             .expect("Error converting Lectern into crate::inventory::BlockInventoryHolder")
     }
 }
+
+pub struct LecternClass;
+impl blackboxmc_general::JNIProvidesClassName for LecternClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Lectern"
+    }
+}
+
 /// Represents a captured state of a creature spawner.
 ///
 /// This is a representation of an abstract class.
@@ -2402,6 +2492,16 @@ impl<'mc> CreatureSpawner<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for CreatureSpawner<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -2409,6 +2509,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for CreatureSpawner<'mc> {
             .expect("Error converting CreatureSpawner into crate::block::TileState")
     }
 }
+
+pub struct CreatureSpawnerClass;
+impl blackboxmc_general::JNIProvidesClassName for CreatureSpawnerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/CreatureSpawner"
+    }
+}
+
 /// Represents a captured state of an on / off comparator.
 ///
 /// This is a representation of an abstract class.
@@ -2809,6 +2917,16 @@ impl<'mc> Comparator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Comparator<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -2816,6 +2934,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for Comparator<'mc> {
             .expect("Error converting Comparator into crate::block::TileState")
     }
 }
+
+pub struct ComparatorClass;
+impl blackboxmc_general::JNIProvidesClassName for ComparatorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Comparator"
+    }
+}
+
 /// Represents a captured state of a container block.
 ///
 /// This is a representation of an abstract class.
@@ -3319,6 +3445,16 @@ impl<'mc> Container<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Container<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -3344,6 +3480,14 @@ impl<'mc> Into<crate::Nameable<'mc>> for Container<'mc> {
             .expect("Error converting Container into crate::Nameable")
     }
 }
+
+pub struct ContainerClass;
+impl blackboxmc_general::JNIProvidesClassName for ContainerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Container"
+    }
+}
+
 /// Represents a captured state of an end gateway.
 ///
 /// This is a representation of an abstract class.
@@ -3824,6 +3968,16 @@ impl<'mc> EndGateway<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for EndGateway<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -3831,6 +3985,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for EndGateway<'mc> {
             .expect("Error converting EndGateway into crate::block::TileState")
     }
 }
+
+pub struct EndGatewayClass;
+impl blackboxmc_general::JNIProvidesClassName for EndGatewayClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/EndGateway"
+    }
+}
+
 /// Represents a captured state of a blast furnace.
 ///
 /// This is a representation of an abstract class.
@@ -4420,6 +4582,16 @@ impl<'mc> BlastFurnace<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::Furnace<'mc>> for BlastFurnace<'mc> {
     fn into(self) -> crate::block::Furnace<'mc> {
@@ -4427,6 +4599,14 @@ impl<'mc> Into<crate::block::Furnace<'mc>> for BlastFurnace<'mc> {
             .expect("Error converting BlastFurnace into crate::block::Furnace")
     }
 }
+
+pub struct BlastFurnaceClass;
+impl blackboxmc_general::JNIProvidesClassName for BlastFurnaceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/BlastFurnace"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum PistonMoveReactionEnum {
     VariantMove,
@@ -4546,6 +4726,23 @@ impl<'mc> PistonMoveReaction<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PistonMoveReactionClass;
+impl blackboxmc_general::JNIProvidesClassName for PistonMoveReactionClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/PistonMoveReaction"
+    }
 }
 
 ///
@@ -4604,7 +4801,25 @@ impl<'mc> Lidded<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct LiddedClass;
+impl blackboxmc_general::JNIProvidesClassName for LiddedClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Lidded"
+    }
+}
+
 /// Represents a captured state of an enchanting table.
 ///
 /// This is a representation of an abstract class.
@@ -5042,6 +5257,16 @@ impl<'mc> EnchantingTable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for EnchantingTable<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -5055,6 +5280,14 @@ impl<'mc> Into<crate::Nameable<'mc>> for EnchantingTable<'mc> {
             .expect("Error converting EnchantingTable into crate::Nameable")
     }
 }
+
+pub struct EnchantingTableClass;
+impl blackboxmc_general::JNIProvidesClassName for EnchantingTableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/EnchantingTable"
+    }
+}
+
 /// Represents a captured state of a ShulkerBox.
 ///
 /// This is a representation of an abstract class.
@@ -5660,6 +5893,16 @@ impl<'mc> ShulkerBox<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for ShulkerBox<'mc> {
     fn into(self) -> crate::block::Container<'mc> {
@@ -5679,6 +5922,14 @@ impl<'mc> Into<crate::block::Lidded<'mc>> for ShulkerBox<'mc> {
             .expect("Error converting ShulkerBox into crate::block::Lidded")
     }
 }
+
+pub struct ShulkerBoxClass;
+impl blackboxmc_general::JNIProvidesClassName for ShulkerBoxClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/ShulkerBox"
+    }
+}
+
 /// Represents a captured state of a block which stores entities.
 ///
 /// This is a representation of an abstract class.
@@ -6157,6 +6408,16 @@ impl<'mc> EntityBlockStorage<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for EntityBlockStorage<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -6164,6 +6425,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for EntityBlockStorage<'mc> {
             .expect("Error converting EntityBlockStorage into crate::block::TileState")
     }
 }
+
+pub struct EntityBlockStorageClass;
+impl blackboxmc_general::JNIProvidesClassName for EntityBlockStorageClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/EntityBlockStorage"
+    }
+}
+
 /// Represents a captured state of a bee hive.
 ///
 /// This is a representation of an abstract class.
@@ -6681,6 +6950,16 @@ impl<'mc> Beehive<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::EntityBlockStorage<'mc>> for Beehive<'mc> {
     fn into(self) -> crate::block::EntityBlockStorage<'mc> {
@@ -6688,6 +6967,14 @@ impl<'mc> Into<crate::block::EntityBlockStorage<'mc>> for Beehive<'mc> {
             .expect("Error converting Beehive into crate::block::EntityBlockStorage")
     }
 }
+
+pub struct BeehiveClass;
+impl blackboxmc_general::JNIProvidesClassName for BeehiveClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Beehive"
+    }
+}
+
 /// A side on a decorated pot. Sides are relative to the facing state of a <a href="data/type/DecoratedPot.html" title="interface in org.bukkit.block.data.type"><code>DecoratedPot</code></a>.
 #[derive(PartialEq, Eq)]
 pub enum DecoratedPotSideEnum {
@@ -6804,7 +7091,25 @@ impl<'mc> DecoratedPotSide<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct DecoratedPotSideClass;
+impl blackboxmc_general::JNIProvidesClassName for DecoratedPotSideClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/DecoratedPot$Side"
+    }
+}
+
 /// Represents a captured state of a sculk catalyst.
 ///
 /// This is a representation of an abstract class.
@@ -7205,6 +7510,16 @@ impl<'mc> SculkCatalyst<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for SculkCatalyst<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -7212,6 +7527,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for SculkCatalyst<'mc> {
             .expect("Error converting SculkCatalyst into crate::block::TileState")
     }
 }
+
+pub struct SculkCatalystClass;
+impl blackboxmc_general::JNIProvidesClassName for SculkCatalystClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/SculkCatalyst"
+    }
+}
+
 /// Represents a captured state of a furnace.
 ///
 /// This is a representation of an abstract class.
@@ -7801,6 +8124,16 @@ impl<'mc> Furnace<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for Furnace<'mc> {
     fn into(self) -> crate::block::Container<'mc> {
@@ -7808,6 +8141,14 @@ impl<'mc> Into<crate::block::Container<'mc>> for Furnace<'mc> {
             .expect("Error converting Furnace into crate::block::Container")
     }
 }
+
+pub struct FurnaceClass;
+impl blackboxmc_general::JNIProvidesClassName for FurnaceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Furnace"
+    }
+}
+
 /// Represents a captured state of a dropper.
 ///
 /// This is a representation of an abstract class.
@@ -8377,6 +8718,16 @@ impl<'mc> Dropper<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for Dropper<'mc> {
     fn into(self) -> crate::block::Container<'mc> {
@@ -8390,6 +8741,14 @@ impl<'mc> Into<crate::loot::Lootable<'mc>> for Dropper<'mc> {
             .expect("Error converting Dropper into crate::loot::Lootable")
     }
 }
+
+pub struct DropperClass;
+impl blackboxmc_general::JNIProvidesClassName for DropperClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Dropper"
+    }
+}
+
 /// Represents a captured state of suspicious sand.
 ///
 /// This is a representation of an abstract class.
@@ -8878,6 +9237,16 @@ impl<'mc> SuspiciousSand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::BrushableBlock<'mc>> for SuspiciousSand<'mc> {
     fn into(self) -> crate::block::BrushableBlock<'mc> {
@@ -8885,6 +9254,14 @@ impl<'mc> Into<crate::block::BrushableBlock<'mc>> for SuspiciousSand<'mc> {
             .expect("Error converting SuspiciousSand into crate::block::BrushableBlock")
     }
 }
+
+pub struct SuspiciousSandClass;
+impl blackboxmc_general::JNIProvidesClassName for SuspiciousSandClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/SuspiciousSand"
+    }
+}
+
 /// Represents a captured state of a conduit.
 ///
 /// This is a representation of an abstract class.
@@ -9285,6 +9662,16 @@ impl<'mc> Conduit<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Conduit<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -9292,6 +9679,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for Conduit<'mc> {
             .expect("Error converting Conduit into crate::block::TileState")
     }
 }
+
+pub struct ConduitClass;
+impl blackboxmc_general::JNIProvidesClassName for ConduitClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Conduit"
+    }
+}
+
 /// Represents a captured state of a beacon.
 ///
 /// This is a representation of an abstract class.
@@ -9870,6 +10265,16 @@ impl<'mc> Beacon<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Beacon<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -9889,6 +10294,14 @@ impl<'mc> Into<crate::Nameable<'mc>> for Beacon<'mc> {
             .expect("Error converting Beacon into crate::Nameable")
     }
 }
+
+pub struct BeaconClass;
+impl blackboxmc_general::JNIProvidesClassName for BeaconClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Beacon"
+    }
+}
+
 /// Represents a block. This is a live object, and only one Block may exist for any given location in a world. The state of the block may change concurrently to your own handling of it; use block.getState() to get a snapshot state of a block which will not be modified.
 ///
 /// Note that parts of this class which require access to the world at large (i.e. lighting and power) may not be able to be safely accessed during world generation when used in cases like BlockPhysicsEvent!!!!
@@ -10694,6 +11107,16 @@ impl<'mc> Block<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::metadata::Metadatable<'mc>> for Block<'mc> {
     fn into(self) -> crate::metadata::Metadatable<'mc> {
@@ -10707,6 +11130,14 @@ impl<'mc> Into<crate::Translatable<'mc>> for Block<'mc> {
             .expect("Error converting Block into crate::Translatable")
     }
 }
+
+pub struct BlockClass;
+impl blackboxmc_general::JNIProvidesClassName for BlockClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Block"
+    }
+}
+
 /// Represents a captured state of Bell.
 ///
 /// This is a representation of an abstract class.
@@ -11175,6 +11606,16 @@ impl<'mc> Bell<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Bell<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -11182,6 +11623,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for Bell<'mc> {
             .expect("Error converting Bell into crate::block::TileState")
     }
 }
+
+pub struct BellClass;
+impl blackboxmc_general::JNIProvidesClassName for BellClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Bell"
+    }
+}
+
 /// Represents a captured state of a jigsaw.
 ///
 /// This is a representation of an abstract class.
@@ -11582,6 +12031,16 @@ impl<'mc> Jigsaw<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Jigsaw<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -11589,6 +12048,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for Jigsaw<'mc> {
             .expect("Error converting Jigsaw into crate::block::TileState")
     }
 }
+
+pub struct JigsawClass;
+impl blackboxmc_general::JNIProvidesClassName for JigsawClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Jigsaw"
+    }
+}
+
 /// Represents a captured state of a dispenser.
 ///
 /// This is a representation of an abstract class.
@@ -12179,6 +12646,16 @@ impl<'mc> Dispenser<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for Dispenser<'mc> {
     fn into(self) -> crate::block::Container<'mc> {
@@ -12198,6 +12675,14 @@ impl<'mc> Into<crate::loot::Lootable<'mc>> for Dispenser<'mc> {
             .expect("Error converting Dispenser into crate::loot::Lootable")
     }
 }
+
+pub struct DispenserClass;
+impl blackboxmc_general::JNIProvidesClassName for DispenserClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Dispenser"
+    }
+}
+
 /// Represents a captured state of suspicious sand or gravel.
 ///
 /// This is a representation of an abstract class.
@@ -12686,6 +13171,16 @@ impl<'mc> BrushableBlock<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::loot::Lootable<'mc>> for BrushableBlock<'mc> {
     fn into(self) -> crate::loot::Lootable<'mc> {
@@ -12699,6 +13194,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for BrushableBlock<'mc> {
             .expect("Error converting BrushableBlock into crate::block::TileState")
     }
 }
+
+pub struct BrushableBlockClass;
+impl blackboxmc_general::JNIProvidesClassName for BrushableBlockClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/BrushableBlock"
+    }
+}
+
 /// Represents a captured state of a sculk shrieker.
 ///
 /// This is a representation of an abstract class.
@@ -13121,6 +13624,16 @@ impl<'mc> SculkShrieker<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for SculkShrieker<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -13128,6 +13641,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for SculkShrieker<'mc> {
             .expect("Error converting SculkShrieker into crate::block::TileState")
     }
 }
+
+pub struct SculkShriekerClass;
+impl blackboxmc_general::JNIProvidesClassName for SculkShriekerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/SculkShrieker"
+    }
+}
+
 /// Represents a captured state of a decorated pot.
 ///
 /// This is a representation of an abstract class.
@@ -13633,6 +14154,16 @@ impl<'mc> DecoratedPot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for DecoratedPot<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -13640,6 +14171,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for DecoratedPot<'mc> {
             .expect("Error converting DecoratedPot into crate::block::TileState")
     }
 }
+
+pub struct DecoratedPotClass;
+impl blackboxmc_general::JNIProvidesClassName for DecoratedPotClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/DecoratedPot"
+    }
+}
+
 /// Represents a captured state of a campfire.
 ///
 /// This is a representation of an abstract class.
@@ -14160,6 +14699,16 @@ impl<'mc> Campfire<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Campfire<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -14167,6 +14716,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for Campfire<'mc> {
             .expect("Error converting Campfire into crate::block::TileState")
     }
 }
+
+pub struct CampfireClass;
+impl blackboxmc_general::JNIProvidesClassName for CampfireClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Campfire"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum BiomeEnum {
     Ocean,
@@ -14524,7 +15081,25 @@ impl<'mc> Biome<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BiomeClass;
+impl blackboxmc_general::JNIProvidesClassName for BiomeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Biome"
+    }
+}
+
 /// Represents a captured state of a smoker.
 ///
 /// This is a representation of an abstract class.
@@ -15114,6 +15689,16 @@ impl<'mc> Smoker<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::Furnace<'mc>> for Smoker<'mc> {
     fn into(self) -> crate::block::Furnace<'mc> {
@@ -15121,6 +15706,14 @@ impl<'mc> Into<crate::block::Furnace<'mc>> for Smoker<'mc> {
             .expect("Error converting Smoker into crate::block::Furnace")
     }
 }
+
+pub struct SmokerClass;
+impl blackboxmc_general::JNIProvidesClassName for SmokerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Smoker"
+    }
+}
+
 /// Represents a captured state of a calibrated sculk sensor
 ///
 /// This is a representation of an abstract class.
@@ -15552,6 +16145,16 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::SculkSensor<'mc>> for CalibratedSculkSensor<'mc> {
     fn into(self) -> crate::block::SculkSensor<'mc> {
@@ -15559,6 +16162,14 @@ impl<'mc> Into<crate::block::SculkSensor<'mc>> for CalibratedSculkSensor<'mc> {
             .expect("Error converting CalibratedSculkSensor into crate::block::SculkSensor")
     }
 }
+
+pub struct CalibratedSculkSensorClass;
+impl blackboxmc_general::JNIProvidesClassName for CalibratedSculkSensorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/CalibratedSculkSensor"
+    }
+}
+
 /// Represents a structure block that can save and load blocks from a file. They can only be used by OPs, and are not obtainable in survival.
 ///
 /// This is a representation of an abstract class.
@@ -16345,6 +16956,16 @@ impl<'mc> Structure<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Structure<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -16352,6 +16973,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for Structure<'mc> {
             .expect("Error converting Structure into crate::block::TileState")
     }
 }
+
+pub struct StructureClass;
+impl blackboxmc_general::JNIProvidesClassName for StructureClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Structure"
+    }
+}
+
 /// Represents a captured state of an ender chest.
 ///
 /// This is a representation of an abstract class.
@@ -16770,6 +17399,16 @@ impl<'mc> EnderChest<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::Lidded<'mc>> for EnderChest<'mc> {
     fn into(self) -> crate::block::Lidded<'mc> {
@@ -16783,6 +17422,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for EnderChest<'mc> {
             .expect("Error converting EnderChest into crate::block::TileState")
     }
 }
+
+pub struct EnderChestClass;
+impl blackboxmc_general::JNIProvidesClassName for EnderChestClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/EnderChest"
+    }
+}
+
 /// Represents a captured state of a bed.
 ///
 /// This is a representation of an abstract class.
@@ -17228,6 +17875,16 @@ impl<'mc> Bed<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Bed<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -17241,6 +17898,14 @@ impl<'mc> Into<crate::material::Colorable<'mc>> for Bed<'mc> {
             .expect("Error converting Bed into crate::material::Colorable")
     }
 }
+
+pub struct BedClass;
+impl blackboxmc_general::JNIProvidesClassName for BedClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Bed"
+    }
+}
+
 /// Represents a captured state of a jukebox.
 ///
 /// This is a representation of an abstract class.
@@ -17796,6 +18461,16 @@ impl<'mc> Jukebox<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Jukebox<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -17809,6 +18484,14 @@ impl<'mc> Into<crate::inventory::BlockInventoryHolder<'mc>> for Jukebox<'mc> {
             .expect("Error converting Jukebox into crate::inventory::BlockInventoryHolder")
     }
 }
+
+pub struct JukeboxClass;
+impl blackboxmc_general::JNIProvidesClassName for JukeboxClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Jukebox"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum BiomeBiomeEnum {
     Ocean,
@@ -18166,7 +18849,25 @@ impl<'mc> BiomeBiome<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BiomeBiomeClass;
+impl blackboxmc_general::JNIProvidesClassName for BiomeBiomeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Biome$Biome"
+    }
+}
+
 /// Represents a captured state of a banner.
 ///
 /// This is a representation of an abstract class.
@@ -18724,6 +19425,16 @@ impl<'mc> Banner<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Banner<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -18731,6 +19442,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for Banner<'mc> {
             .expect("Error converting Banner into crate::block::TileState")
     }
 }
+
+pub struct BannerClass;
+impl blackboxmc_general::JNIProvidesClassName for BannerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Banner"
+    }
+}
+
 /// Represents a captured state of a Barrel.
 ///
 /// This is a representation of an abstract class.
@@ -19309,6 +20028,16 @@ impl<'mc> Barrel<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for Barrel<'mc> {
     fn into(self) -> crate::block::Container<'mc> {
@@ -19328,6 +20057,14 @@ impl<'mc> Into<crate::block::Lidded<'mc>> for Barrel<'mc> {
             .expect("Error converting Barrel into crate::block::Lidded")
     }
 }
+
+pub struct BarrelClass;
+impl blackboxmc_general::JNIProvidesClassName for BarrelClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Barrel"
+    }
+}
+
 /// Represents a captured state of a command block.
 ///
 /// This is a representation of an abstract class.
@@ -19784,6 +20521,16 @@ impl<'mc> CommandBlock<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for CommandBlock<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -19791,6 +20538,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for CommandBlock<'mc> {
             .expect("Error converting CommandBlock into crate::block::TileState")
     }
 }
+
+pub struct CommandBlockClass;
+impl blackboxmc_general::JNIProvidesClassName for CommandBlockClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/CommandBlock"
+    }
+}
+
 /// Represents a captured state of a sculk sensor
 ///
 /// This is a representation of an abstract class.
@@ -20219,6 +20974,16 @@ impl<'mc> SculkSensor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for SculkSensor<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -20226,6 +20991,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for SculkSensor<'mc> {
             .expect("Error converting SculkSensor into crate::block::TileState")
     }
 }
+
+pub struct SculkSensorClass;
+impl blackboxmc_general::JNIProvidesClassName for SculkSensorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/SculkSensor"
+    }
+}
+
 /// Represents a captured state of a hanging sign.
 ///
 /// This is a representation of an abstract class.
@@ -20802,6 +21575,16 @@ impl<'mc> HangingSign<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::Sign<'mc>> for HangingSign<'mc> {
     fn into(self) -> crate::block::Sign<'mc> {
@@ -20809,6 +21592,14 @@ impl<'mc> Into<crate::block::Sign<'mc>> for HangingSign<'mc> {
             .expect("Error converting HangingSign into crate::block::Sign")
     }
 }
+
+pub struct HangingSignClass;
+impl blackboxmc_general::JNIProvidesClassName for HangingSignClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/HangingSign"
+    }
+}
+
 /// Represents a captured state of a chiseled bookshelf.
 ///
 /// This is a representation of an abstract class.
@@ -21287,6 +22078,16 @@ impl<'mc> ChiseledBookshelf<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for ChiseledBookshelf<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -21301,6 +22102,14 @@ impl<'mc> Into<crate::inventory::BlockInventoryHolder<'mc>> for ChiseledBookshel
         )
     }
 }
+
+pub struct ChiseledBookshelfClass;
+impl blackboxmc_general::JNIProvidesClassName for ChiseledBookshelfClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/ChiseledBookshelf"
+    }
+}
+
 /// Represents a block state that also hosts a tile entity at the given location. This interface alone is merely a marker that does not provide any data. Data about the tile entities is provided by the respective interface for each tile entity type. After modifying the data provided by a TileState, <a href="BlockState.html#update()"><code>BlockState.update()</code></a> needs to be called to store the data.
 ///
 /// This is a representation of an abstract class.
@@ -21701,6 +22510,16 @@ impl<'mc> TileState<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::BlockState<'mc>> for TileState<'mc> {
     fn into(self) -> crate::block::BlockState<'mc> {
@@ -21714,6 +22533,14 @@ impl<'mc> Into<crate::persistence::PersistentDataHolder<'mc>> for TileState<'mc>
             .expect("Error converting TileState into crate::persistence::PersistentDataHolder")
     }
 }
+
+pub struct TileStateClass;
+impl blackboxmc_general::JNIProvidesClassName for TileStateClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/TileState"
+    }
+}
+
 /// Represents a captured state of a block, which will not change automatically.
 /// <p>Unlike Block, which only one object can exist per coordinate, BlockState can exist multiple times for any given Block. Note that another plugin may change the state of the block and you will not know, or they may change the block to another type entirely, causing your BlockState to become invalid.</p>
 ///
@@ -22103,6 +22930,16 @@ impl<'mc> BlockState<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::metadata::Metadatable<'mc>> for BlockState<'mc> {
     fn into(self) -> crate::metadata::Metadatable<'mc> {
@@ -22110,6 +22947,14 @@ impl<'mc> Into<crate::metadata::Metadatable<'mc>> for BlockState<'mc> {
             .expect("Error converting BlockState into crate::metadata::Metadatable")
     }
 }
+
+pub struct BlockStateClass;
+impl blackboxmc_general::JNIProvidesClassName for BlockStateClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/BlockState"
+    }
+}
+
 /// Represents a captured state of a brewing stand.
 ///
 /// This is a representation of an abstract class.
@@ -22661,6 +23506,16 @@ impl<'mc> BrewingStand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for BrewingStand<'mc> {
     fn into(self) -> crate::block::Container<'mc> {
@@ -22668,6 +23523,14 @@ impl<'mc> Into<crate::block::Container<'mc>> for BrewingStand<'mc> {
             .expect("Error converting BrewingStand into crate::block::Container")
     }
 }
+
+pub struct BrewingStandClass;
+impl blackboxmc_general::JNIProvidesClassName for BrewingStandClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/BrewingStand"
+    }
+}
+
 /// Represents a captured state of a skull block.
 ///
 /// This is a representation of an abstract class.
@@ -23302,6 +24165,16 @@ impl<'mc> Skull<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Skull<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -23309,6 +24182,14 @@ impl<'mc> Into<crate::block::TileState<'mc>> for Skull<'mc> {
             .expect("Error converting Skull into crate::block::TileState")
     }
 }
+
+pub struct SkullClass;
+impl blackboxmc_general::JNIProvidesClassName for SkullClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Skull"
+    }
+}
+
 /// Represents a captured state of a hopper.
 ///
 /// This is a representation of an abstract class.
@@ -23869,6 +24750,16 @@ impl<'mc> Hopper<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for Hopper<'mc> {
     fn into(self) -> crate::block::Container<'mc> {
@@ -23882,6 +24773,14 @@ impl<'mc> Into<crate::loot::Lootable<'mc>> for Hopper<'mc> {
             .expect("Error converting Hopper into crate::loot::Lootable")
     }
 }
+
+pub struct HopperClass;
+impl blackboxmc_general::JNIProvidesClassName for HopperClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Hopper"
+    }
+}
+
 /// Represents a captured state of either a SignPost or a WallSign.
 ///
 /// This is a representation of an abstract class.
@@ -24458,6 +25357,16 @@ impl<'mc> Sign<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Sign<'mc> {
     fn into(self) -> crate::block::TileState<'mc> {
@@ -24471,6 +25380,14 @@ impl<'mc> Into<crate::material::Colorable<'mc>> for Sign<'mc> {
             .expect("Error converting Sign into crate::material::Colorable")
     }
 }
+
+pub struct SignClass;
+impl blackboxmc_general::JNIProvidesClassName for SignClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/Sign"
+    }
+}
+
 /// Represents a double chest.
 pub struct DoubleChest<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24706,6 +25623,16 @@ impl<'mc> DoubleChest<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for DoubleChest<'mc> {
@@ -24723,6 +25650,14 @@ impl<'mc> Into<crate::inventory::InventoryHolder<'mc>> for DoubleChest<'mc> {
             .expect("Error converting DoubleChest into crate::inventory::InventoryHolder")
     }
 }
+
+pub struct DoubleChestClass;
+impl blackboxmc_general::JNIProvidesClassName for DoubleChestClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/DoubleChest"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum BlockSupportEnum {
     Full,
@@ -24832,7 +25767,25 @@ impl<'mc> BlockSupport<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BlockSupportClass;
+impl blackboxmc_general::JNIProvidesClassName for BlockSupportClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/BlockSupport"
+    }
+}
+
 pub mod banner;
 pub mod data;
 pub mod sign;

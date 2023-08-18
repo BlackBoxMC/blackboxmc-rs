@@ -136,7 +136,25 @@ impl<'mc> ItemTagType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ItemTagTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for ItemTagTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/tags/ItemTagType"
+    }
+}
+
 /// This interface represents the context in which the <a href="ItemTagType.html" title="interface in org.bukkit.inventory.meta.tags"><code>ItemTagType</code></a> can serialize and deserialize the passed values.
 ///
 /// This is a representation of an abstract class.
@@ -194,7 +212,25 @@ impl<'mc> ItemTagAdapterContext<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ItemTagAdapterContextClass;
+impl blackboxmc_general::JNIProvidesClassName for ItemTagAdapterContextClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/tags/ItemTagAdapterContext"
+    }
+}
+
 /// A default implementation that simply exists to pass on the retrieved or inserted value to the next layer. This implementation does not add any kind of logic, but is used to provide default implementations for the primitive types.
 pub struct ItemTagTypePrimitiveTagType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -396,6 +432,16 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ItemTagTypePrimitiveTagType<'mc> {
@@ -407,6 +453,13 @@ impl<'mc> std::string::ToString for ItemTagTypePrimitiveTagType<'mc> {
                 err
             ),
         }
+    }
+}
+
+pub struct ItemTagTypePrimitiveTagTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for ItemTagTypePrimitiveTagTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/tags/ItemTagType$PrimitiveTagType"
     }
 }
 
@@ -578,5 +631,22 @@ impl<'mc> CustomItemTagContainer<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct CustomItemTagContainerClass;
+impl blackboxmc_general::JNIProvidesClassName for CustomItemTagContainerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/tags/CustomItemTagContainer"
     }
 }

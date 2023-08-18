@@ -116,7 +116,25 @@ impl<'mc> DataPackCompatibility<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct DataPackCompatibilityClass;
+impl blackboxmc_general::JNIProvidesClassName for DataPackCompatibilityClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/packs/DataPack$Compatibility"
+    }
+}
+
 /// Represents a data pack.
 ///
 /// This is a representation of an abstract class.
@@ -289,6 +307,16 @@ impl<'mc> DataPack<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::Keyed<'mc>> for DataPack<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
@@ -296,6 +324,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for DataPack<'mc> {
             .expect("Error converting DataPack into crate::Keyed")
     }
 }
+
+pub struct DataPackClass;
+impl blackboxmc_general::JNIProvidesClassName for DataPackClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/packs/DataPack"
+    }
+}
+
 /// Manager of data packs.
 ///
 /// This is a representation of an abstract class.
@@ -453,7 +489,25 @@ impl<'mc> DataPackManager<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct DataPackManagerClass;
+impl blackboxmc_general::JNIProvidesClassName for DataPackManagerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/packs/DataPackManager"
+    }
+}
+
 /// Represent the source of a data pack.
 #[derive(PartialEq, Eq)]
 pub enum DataPackSourceEnum {
@@ -574,7 +628,25 @@ impl<'mc> DataPackSource<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct DataPackSourceClass;
+impl blackboxmc_general::JNIProvidesClassName for DataPackSourceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/packs/DataPack$Source"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum CompatibilityEnum {
     New,
@@ -684,7 +756,25 @@ impl<'mc> Compatibility<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct CompatibilityClass;
+impl blackboxmc_general::JNIProvidesClassName for CompatibilityClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/packs/Compatibility"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum SourceEnum {
     Default,
@@ -801,5 +891,22 @@ impl<'mc> Source<'mc> {
             Source::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct SourceClass;
+impl blackboxmc_general::JNIProvidesClassName for SourceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/packs/Source"
     }
 }

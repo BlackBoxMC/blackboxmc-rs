@@ -112,7 +112,25 @@ impl<'mc> WarningState<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct WarningStateClass;
+impl blackboxmc_general::JNIProvidesClassName for WarningStateClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/WarningState"
+    }
+}
+
 /// Represents a server implementation.
 ///
 /// This is a representation of an abstract class.
@@ -2375,11 +2393,28 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::plugin::messaging::PluginMessageRecipient<'mc>> for Server<'mc> {
     fn into(self) -> crate::plugin::messaging::PluginMessageRecipient<'mc> {
         crate::plugin::messaging::PluginMessageRecipient::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Server into crate::plugin::messaging::PluginMessageRecipient")
+    }
+}
+
+pub struct ServerClass;
+impl blackboxmc_general::JNIProvidesClassName for ServerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Server"
     }
 }
 
@@ -2563,6 +2598,16 @@ impl<'mc> ServerSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ServerSpigot<'mc> {
@@ -2571,6 +2616,13 @@ impl<'mc> std::string::ToString for ServerSpigot<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ServerSpigot.toString: {}", err),
         }
+    }
+}
+
+pub struct ServerSpigotClass;
+impl blackboxmc_general::JNIProvidesClassName for ServerSpigotClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Server$Spigot"
     }
 }
 
@@ -2687,7 +2739,25 @@ impl<'mc> Difficulty<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct DifficultyClass;
+impl blackboxmc_general::JNIProvidesClassName for DifficultyClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Difficulty"
+    }
+}
+
 /// This represents a Feature Flag for a World.
 ///
 /// This is a representation of an abstract class.
@@ -2738,6 +2808,16 @@ impl<'mc> FeatureFlag<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::Keyed<'mc>> for FeatureFlag<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
@@ -2745,6 +2825,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for FeatureFlag<'mc> {
             .expect("Error converting FeatureFlag into crate::Keyed")
     }
 }
+
+pub struct FeatureFlagClass;
+impl blackboxmc_general::JNIProvidesClassName for FeatureFlagClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/FeatureFlag"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum TreeSpeciesEnum {
     Generic,
@@ -2866,7 +2954,25 @@ impl<'mc> TreeSpecies<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct TreeSpeciesClass;
+impl blackboxmc_general::JNIProvidesClassName for TreeSpeciesClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/TreeSpecies"
+    }
+}
+
 /// Represents a raid event.
 ///
 /// This is a representation of an abstract class.
@@ -3051,7 +3157,25 @@ impl<'mc> Raid<'mc> {
         }
         Ok(new_vec)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct RaidClass;
+impl blackboxmc_general::JNIProvidesClassName for RaidClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Raid"
+    }
+}
+
 /// This interface provides value conversions that may be specific to a runtime, or have arbitrary meaning (read: magic values).
 /// <p>Their existence and behavior is not guaranteed across future versions. They may be poorly named, throw exceptions, have misleading parameters, or any other bad programming practice.</p>
 ///
@@ -3478,7 +3602,25 @@ impl<'mc> UnsafeValues<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct UnsafeValuesClass;
+impl blackboxmc_general::JNIProvidesClassName for UnsafeValuesClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/UnsafeValues"
+    }
+}
+
 /// Represents a world, which may contain entities, chunks and blocks
 ///
 /// This is a representation of an abstract class.
@@ -6816,6 +6958,16 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::RegionAccessor<'mc>> for World<'mc> {
     fn into(self) -> crate::RegionAccessor<'mc> {
@@ -6853,6 +7005,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for World<'mc> {
             .expect("Error converting World into crate::Keyed")
     }
 }
+
+pub struct WorldClass;
+impl blackboxmc_general::JNIProvidesClassName for WorldClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/World"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum FluidCollisionModeEnum {
     Never,
@@ -6964,7 +7124,25 @@ impl<'mc> FluidCollisionMode<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct FluidCollisionModeClass;
+impl blackboxmc_general::JNIProvidesClassName for FluidCollisionModeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/FluidCollisionMode"
+    }
+}
+
 /// Represents a block, entity, or other object that may receive a custom name.
 ///
 /// This is a representation of an abstract class.
@@ -7039,7 +7217,25 @@ impl<'mc> Nameable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct NameableClass;
+impl blackboxmc_general::JNIProvidesClassName for NameableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Nameable"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum ParticleEnum {
     ExplosionNormal,
@@ -7434,6 +7630,16 @@ impl<'mc> ParticleDustOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ParticleDustOptions<'mc> {
@@ -7442,6 +7648,13 @@ impl<'mc> std::string::ToString for ParticleDustOptions<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ParticleDustOptions.toString: {}", err),
         }
+    }
+}
+
+pub struct ParticleDustOptionsClass;
+impl blackboxmc_general::JNIProvidesClassName for ParticleDustOptionsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Particle$DustOptions"
     }
 }
 
@@ -7628,6 +7841,16 @@ impl<'mc> ParticleDustTransition<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ParticleDustTransition<'mc> {
@@ -7643,6 +7866,13 @@ impl<'mc> Into<crate::ParticleDustOptions<'mc>> for ParticleDustTransition<'mc> 
     fn into(self) -> crate::ParticleDustOptions<'mc> {
         crate::ParticleDustOptions::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting ParticleDustTransition into crate::ParticleDustOptions")
+    }
+}
+
+pub struct ParticleDustTransitionClass;
+impl blackboxmc_general::JNIProvidesClassName for ParticleDustTransitionClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Particle$DustTransition"
     }
 }
 
@@ -7919,7 +8149,25 @@ impl<'mc> Particle<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ParticleClass;
+impl blackboxmc_general::JNIProvidesClassName for ParticleClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Particle"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum EntityEffectEnum {
     ArrowParticles,
@@ -8190,7 +8438,25 @@ impl<'mc> EntityEffect<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct EntityEffectClass;
+impl blackboxmc_general::JNIProvidesClassName for EntityEffectClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/EntityEffect"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum GrassSpeciesEnum {
     Dead,
@@ -8300,7 +8566,25 @@ impl<'mc> GrassSpecies<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct GrassSpeciesClass;
+impl blackboxmc_general::JNIProvidesClassName for GrassSpeciesClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/GrassSpecies"
+    }
+}
+
 /// This annotation indicates a method (and sometimes constructor) will chain its internal operations.
 /// <p>This is solely meant for identifying methods that don't need to be overridden / handled manually.</p>
 ///
@@ -8389,6 +8673,16 @@ impl<'mc> Utility<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Utility<'mc> {
@@ -8397,6 +8691,13 @@ impl<'mc> std::string::ToString for Utility<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling Utility.toString: {}", err),
         }
+    }
+}
+
+pub struct UtilityClass;
+impl blackboxmc_general::JNIProvidesClassName for UtilityClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Utility"
     }
 }
 
@@ -8617,7 +8918,25 @@ impl<'mc> ArtArt<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ArtArtClass;
+impl blackboxmc_general::JNIProvidesClassName for ArtArtClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Art$Art"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum WorldTypeEnum {
     Normal,
@@ -8731,7 +9050,25 @@ impl<'mc> WorldType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct WorldTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for WorldTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/WorldType"
+    }
+}
+
 /// Represents a generic Mojang game event.
 pub struct GameEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8910,6 +9247,16 @@ impl<'mc> GameEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for GameEvent<'mc> {
@@ -8927,6 +9274,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for GameEvent<'mc> {
             .expect("Error converting GameEvent into crate::Keyed")
     }
 }
+
+pub struct GameEventClass;
+impl blackboxmc_general::JNIProvidesClassName for GameEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/GameEvent"
+    }
+}
+
 /// Represents a reference to a player identity and the data belonging to a player that is stored on the disk and can, thus, be retrieved without the player needing to be online.
 ///
 /// This is a representation of an abstract class.
@@ -9324,6 +9679,16 @@ impl<'mc> OfflinePlayer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::permissions::ServerOperator<'mc>> for OfflinePlayer<'mc> {
     fn into(self) -> crate::permissions::ServerOperator<'mc> {
@@ -9342,6 +9707,13 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
 {
     fn into(self) -> crate::configuration::serialization::ConfigurationSerializable<'mc> {
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting OfflinePlayer into crate::configuration::serialization::ConfigurationSerializable")
+    }
+}
+
+pub struct OfflinePlayerClass;
+impl blackboxmc_general::JNIProvidesClassName for OfflinePlayerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/OfflinePlayer"
     }
 }
 
@@ -9533,6 +9905,16 @@ impl<'mc> WorldSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for WorldSpigot<'mc> {
@@ -9541,6 +9923,13 @@ impl<'mc> std::string::ToString for WorldSpigot<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling WorldSpigot.toString: {}", err),
         }
+    }
+}
+
+pub struct WorldSpigotClass;
+impl blackboxmc_general::JNIProvidesClassName for WorldSpigotClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/World$Spigot"
     }
 }
 
@@ -9657,7 +10046,25 @@ impl<'mc> FluidFluid<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct FluidFluidClass;
+impl blackboxmc_general::JNIProvidesClassName for FluidFluidClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Fluid$Fluid"
+    }
+}
+
 /// This represents the states that server verbose for warnings may be.
 #[derive(PartialEq, Eq)]
 pub enum WarningWarningStateEnum {
@@ -9821,7 +10228,25 @@ impl<'mc> WarningWarningState<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct WarningWarningStateClass;
+impl blackboxmc_general::JNIProvidesClassName for WarningWarningStateClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Warning$WarningState"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum SoundCategoryEnum {
     Master,
@@ -9959,7 +10384,25 @@ impl<'mc> SoundCategory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct SoundCategoryClass;
+impl blackboxmc_general::JNIProvidesClassName for SoundCategoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/SoundCategory"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum HeightMapEnum {
     MotionBlocking,
@@ -10081,7 +10524,25 @@ impl<'mc> HeightMap<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct HeightMapClass;
+impl blackboxmc_general::JNIProvidesClassName for HeightMapClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/HeightMap"
+    }
+}
+
 /// A container for a color palette. This class is immutable; the set methods return a new color. The color names listed as fields are HTML4 standards, but subject to change.
 pub struct Color<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10491,6 +10952,16 @@ impl<'mc> Color<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Color<'mc> {
@@ -10507,6 +10978,14 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting Color into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
+
+pub struct ColorClass;
+impl blackboxmc_general::JNIProvidesClassName for ColorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Color"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum FluidEnum {
     Water,
@@ -10620,7 +11099,25 @@ impl<'mc> Fluid<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct FluidClass;
+impl blackboxmc_general::JNIProvidesClassName for FluidClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Fluid"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum CropStateEnum {
     Seeded,
@@ -10750,7 +11247,25 @@ impl<'mc> CropState<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct CropStateClass;
+impl blackboxmc_general::JNIProvidesClassName for CropStateClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/CropState"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum NetherWartsStateEnum {
     Seeded,
@@ -10866,7 +11381,25 @@ impl<'mc> NetherWartsState<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct NetherWartsStateClass;
+impl blackboxmc_general::JNIProvidesClassName for NetherWartsStateClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/NetherWartsState"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum SoundEnum {
     AmbientBasaltDeltasAdditions,
@@ -17336,7 +17869,25 @@ impl<'mc> Sound<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct SoundClass;
+impl blackboxmc_general::JNIProvidesClassName for SoundClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Sound"
+    }
+}
+
 /// Represents a chunk of blocks. If the chunk is not yet fully generated and data is requested from the chunk, then the chunk will only be generated as far as it needs to provide the requested data.
 ///
 /// This is a representation of an abstract class.
@@ -17686,6 +18237,16 @@ impl<'mc> Chunk<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::persistence::PersistentDataHolder<'mc>> for Chunk<'mc> {
     fn into(self) -> crate::persistence::PersistentDataHolder<'mc> {
@@ -17693,6 +18254,14 @@ impl<'mc> Into<crate::persistence::PersistentDataHolder<'mc>> for Chunk<'mc> {
             .expect("Error converting Chunk into crate::persistence::PersistentDataHolder")
     }
 }
+
+pub struct ChunkClass;
+impl blackboxmc_general::JNIProvidesClassName for ChunkClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Chunk"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum DyeColorEnum {
     White,
@@ -17854,7 +18423,25 @@ impl<'mc> DyeColor<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct DyeColorClass;
+impl blackboxmc_general::JNIProvidesClassName for DyeColorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/DyeColor"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum LoadLevelEnum {
     Inaccessible,
@@ -17971,6 +18558,23 @@ impl<'mc> LoadLevel<'mc> {
             LoadLevel::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct LoadLevelClass;
+impl blackboxmc_general::JNIProvidesClassName for LoadLevelClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/LoadLevel"
     }
 }
 
@@ -18146,6 +18750,16 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for VibrationDestinationBlockDestination<'mc> {
@@ -18157,6 +18771,13 @@ impl<'mc> std::string::ToString for VibrationDestinationBlockDestination<'mc> {
                 err
             ),
         }
+    }
+}
+
+pub struct VibrationDestinationBlockDestinationClass;
+impl blackboxmc_general::JNIProvidesClassName for VibrationDestinationBlockDestinationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Vibration$Destination$BlockDestination"
     }
 }
 
@@ -18273,7 +18894,25 @@ impl<'mc> GameMode<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct GameModeClass;
+impl blackboxmc_general::JNIProvidesClassName for GameModeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/GameMode"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum ToneEnum {
     G,
@@ -18399,6 +19038,23 @@ impl<'mc> Tone<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct ToneClass;
+impl blackboxmc_general::JNIProvidesClassName for ToneClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Tone"
+    }
 }
 
 ///
@@ -18441,7 +19097,25 @@ impl<'mc> JNIInstantiatable<'mc> for VibrationDestination<'mc> {
     }
 }
 
-impl<'mc> VibrationDestination<'mc> {}
+impl<'mc> VibrationDestination<'mc> {
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct VibrationDestinationClass;
+impl blackboxmc_general::JNIProvidesClassName for VibrationDestinationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Vibration$Destination"
+    }
+}
+
 /// A note class to store a specific note.
 pub struct Note<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -18637,6 +19311,23 @@ impl<'mc> NoteTone<'mc> {
                 .call_method(&self.jni_object(), "isSharpable", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct NoteToneClass;
+impl blackboxmc_general::JNIProvidesClassName for NoteToneClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Note$Tone"
     }
 }
 
@@ -18944,6 +19635,16 @@ impl<'mc> Note<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Note<'mc> {
@@ -18952,6 +19653,13 @@ impl<'mc> std::string::ToString for Note<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling Note.toString: {}", err),
         }
+    }
+}
+
+pub struct NoteClass;
+impl blackboxmc_general::JNIProvidesClassName for NoteClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Note"
     }
 }
 
@@ -19068,7 +19776,25 @@ impl<'mc> Environment<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct EnvironmentClass;
+impl blackboxmc_general::JNIProvidesClassName for EnvironmentClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Environment"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum EffectEnum {
     Click2,
@@ -19349,6 +20075,23 @@ impl<'mc> EffectType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct EffectTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for EffectTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Effect$Type"
+    }
 }
 
 impl<'mc> JNIRaw<'mc> for Effect<'mc> {
@@ -19564,7 +20307,25 @@ impl<'mc> Effect<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct EffectClass;
+impl blackboxmc_general::JNIProvidesClassName for EffectClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Effect"
+    }
+}
+
 /// A single entry from a ban list. This may represent either a player ban or an IP ban.
 /// <p>Ban entries include the following properties:</p>
 /// <table border="1">
@@ -19808,7 +20569,25 @@ impl<'mc> BanEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BanEntryClass;
+impl blackboxmc_general::JNIProvidesClassName for BanEntryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/BanEntry"
+    }
+}
+
 /// Represents the Bukkit core, for version and Server singleton handling
 pub struct Bukkit<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22186,6 +22965,16 @@ impl<'mc> Bukkit<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Bukkit<'mc> {
@@ -22194,6 +22983,13 @@ impl<'mc> std::string::ToString for Bukkit<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling Bukkit.toString: {}", err),
         }
+    }
+}
+
+pub struct BukkitClass;
+impl blackboxmc_general::JNIProvidesClassName for BukkitClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Bukkit"
     }
 }
 
@@ -22383,6 +23179,16 @@ impl<'mc> ChatColor<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ChatColor<'mc> {
@@ -22391,6 +23197,13 @@ impl<'mc> std::string::ToString for ChatColor<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ChatColor.toString: {}", err),
         }
+    }
+}
+
+pub struct ChatColorClass;
+impl blackboxmc_general::JNIProvidesClassName for ChatColorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/ChatColor"
     }
 }
 
@@ -22589,7 +23402,25 @@ impl<'mc> BanList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BanListClass;
+impl blackboxmc_general::JNIProvidesClassName for BanListClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/BanList"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum PortalTypeEnum {
     Nether,
@@ -22699,7 +23530,25 @@ impl<'mc> PortalType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PortalTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for PortalTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/PortalType"
+    }
+}
+
 /// Represents a ban-type that a <a title="interface in org.bukkit" href="BanList.html"><code>BanList</code></a> may track.
 #[derive(PartialEq, Eq)]
 pub enum BanListTypeEnum {
@@ -22810,7 +23659,25 @@ impl<'mc> BanListType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BanListTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for BanListTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/BanList$Type"
+    }
+}
+
 /// This designates the warning state for a specific item.
 /// <p>When the server settings dictate 'default' warnings, warnings are printed if the <a href="#value()"><code>value()</code></a> is true.</p>
 ///
@@ -22921,6 +23788,16 @@ impl<'mc> Warning<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Warning<'mc> {
@@ -22929,6 +23806,13 @@ impl<'mc> std::string::ToString for Warning<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling Warning.toString: {}", err),
         }
+    }
+}
+
+pub struct WarningClass;
+impl blackboxmc_general::JNIProvidesClassName for WarningClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Warning"
     }
 }
 
@@ -23422,6 +24306,16 @@ impl<'mc> WorldCreator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for WorldCreator<'mc> {
@@ -23430,6 +24324,13 @@ impl<'mc> std::string::ToString for WorldCreator<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling WorldCreator.toString: {}", err),
         }
+    }
+}
+
+pub struct WorldCreatorClass;
+impl blackboxmc_general::JNIProvidesClassName for WorldCreatorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/WorldCreator"
     }
 }
 
@@ -23650,7 +24551,25 @@ impl<'mc> Art<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ArtClass;
+impl blackboxmc_general::JNIProvidesClassName for ArtClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Art"
+    }
+}
+
 /// Represents a group of sounds for blocks that are played when various actions happen (ie stepping, breaking, hitting, etc).
 ///
 /// This is a representation of an abstract class.
@@ -23828,7 +24747,25 @@ impl<'mc> SoundGroup<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct SoundGroupClass;
+impl blackboxmc_general::JNIProvidesClassName for SoundGroupClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/SoundGroup"
+    }
+}
+
 /// GameRules dictate certain behavior within Minecraft itself
 ///
 /// For more information please visit the <a href="https://minecraft.gamepedia.com/Commands/gamerule">Minecraft Wiki</a>
@@ -24002,6 +24939,16 @@ impl<'mc> GameRule<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for GameRule<'mc> {
@@ -24010,6 +24957,13 @@ impl<'mc> std::string::ToString for GameRule<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling GameRule.toString: {}", err),
         }
+    }
+}
+
+pub struct GameRuleClass;
+impl blackboxmc_general::JNIProvidesClassName for GameRuleClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/GameRule"
     }
 }
 
@@ -24360,6 +25314,23 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct ChunkSnapshotClass;
+impl blackboxmc_general::JNIProvidesClassName for ChunkSnapshotClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/ChunkSnapshot"
+    }
 }
 
 pub struct MusicInstrument<'mc>(
@@ -24541,6 +25512,16 @@ impl<'mc> MusicInstrument<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MusicInstrument<'mc> {
@@ -24558,6 +25539,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for MusicInstrument<'mc> {
             .expect("Error converting MusicInstrument into crate::Keyed")
     }
 }
+
+pub struct MusicInstrumentClass;
+impl blackboxmc_general::JNIProvidesClassName for MusicInstrumentClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/MusicInstrument"
+    }
+}
+
 /// Represents an object with a text representation that can be translated by the Minecraft client.
 ///
 /// This is a representation of an abstract class.
@@ -24613,7 +25602,25 @@ impl<'mc> Translatable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct TranslatableClass;
+impl blackboxmc_general::JNIProvidesClassName for TranslatableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Translatable"
+    }
+}
+
 /// Represents a single firework effect.
 pub struct FireworkEffect<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24861,6 +25868,16 @@ impl<'mc> FireworkEffectBuilder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for FireworkEffectBuilder<'mc> {
@@ -24869,6 +25886,13 @@ impl<'mc> std::string::ToString for FireworkEffectBuilder<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling FireworkEffectBuilder.toString: {}", err),
         }
+    }
+}
+
+pub struct FireworkEffectBuilderClass;
+impl blackboxmc_general::JNIProvidesClassName for FireworkEffectBuilderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/FireworkEffect$Builder"
     }
 }
 
@@ -24990,6 +26014,23 @@ impl<'mc> FireworkEffectType<'mc> {
             FireworkEffectType::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct FireworkEffectTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for FireworkEffectTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/FireworkEffect$Type"
     }
 }
 
@@ -25243,6 +26284,16 @@ impl<'mc> FireworkEffect<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for FireworkEffect<'mc> {
@@ -25261,6 +26312,14 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting FireworkEffect into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
+
+pub struct FireworkEffectClass;
+impl blackboxmc_general::JNIProvidesClassName for FireworkEffectClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/FireworkEffect"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum RaidStatusEnum {
     Ongoing,
@@ -25374,7 +26433,25 @@ impl<'mc> RaidStatus<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct RaidStatusClass;
+impl blackboxmc_general::JNIProvidesClassName for RaidStatusClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/RaidStatus"
+    }
+}
+
 /// Indicates that the annotated element (class, method, field, etc.) is part of a <a href="https://minecraft.fandom.com/wiki/Experimental_Gameplay">minecraft experimental feature</a> and is subject to changes by Mojang.
 /// <p><b>Note:</b> Elements marked with this annotation require the use of a datapack or otherwise non-standard feature to be enabled on the server.</p>
 ///
@@ -25466,6 +26543,16 @@ impl<'mc> MinecraftExperimental<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MinecraftExperimental<'mc> {
@@ -25474,6 +26561,13 @@ impl<'mc> std::string::ToString for MinecraftExperimental<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling MinecraftExperimental.toString: {}", err),
         }
+    }
+}
+
+pub struct MinecraftExperimentalClass;
+impl blackboxmc_general::JNIProvidesClassName for MinecraftExperimentalClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/MinecraftExperimental"
     }
 }
 
@@ -25527,7 +26621,25 @@ impl<'mc> Keyed<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct KeyedClass;
+impl blackboxmc_general::JNIProvidesClassName for KeyedClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Keyed"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum SoundSoundEnum {
     AmbientBasaltDeltasAdditions,
@@ -32630,7 +33742,25 @@ impl<'mc> SoundSound<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct SoundSoundClass;
+impl blackboxmc_general::JNIProvidesClassName for SoundSoundClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Sound$Sound"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum StatisticEnum {
     DamageDealt,
@@ -32937,6 +34067,23 @@ impl<'mc> StatisticType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct StatisticTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for StatisticTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Statistic$Type"
+    }
 }
 
 impl<'mc> JNIRaw<'mc> for Statistic<'mc> {
@@ -33178,7 +34325,25 @@ impl<'mc> Statistic<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct StatisticClass;
+impl blackboxmc_general::JNIProvidesClassName for StatisticClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Statistic"
+    }
+}
+
 /// Represents a String based key which consists of two components - a namespace and a key. Namespaces may only contain lowercase alphanumeric characters, periods, underscores, and hyphens.
 /// <p>Keys may only contain lowercase alphanumeric characters, periods, underscores, hyphens, and forward slashes.</p>
 pub struct NamespacedKey<'mc>(
@@ -33423,6 +34588,16 @@ impl<'mc> NamespacedKey<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for NamespacedKey<'mc> {
@@ -33431,6 +34606,13 @@ impl<'mc> std::string::ToString for NamespacedKey<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling NamespacedKey.toString: {}", err),
         }
+    }
+}
+
+pub struct NamespacedKeyClass;
+impl blackboxmc_general::JNIProvidesClassName for NamespacedKeyClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/NamespacedKey"
     }
 }
 
@@ -33958,7 +35140,25 @@ impl<'mc> RegionAccessor<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct RegionAccessorClass;
+impl blackboxmc_general::JNIProvidesClassName for RegionAccessorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/RegionAccessor"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum WeatherTypeEnum {
     Downfall,
@@ -34063,6 +35263,23 @@ impl<'mc> WeatherType<'mc> {
             WeatherType::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct WeatherTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for WeatherTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/WeatherType"
     }
 }
 
@@ -34297,7 +35514,25 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct WorldBorderClass;
+impl blackboxmc_general::JNIProvidesClassName for WorldBorderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/WorldBorder"
+    }
+}
+
 /// An enum to specify the load level of a chunk.
 #[derive(PartialEq, Eq)]
 pub enum ChunkLoadLevelEnum {
@@ -34418,7 +35653,25 @@ impl<'mc> ChunkLoadLevel<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ChunkLoadLevelClass;
+impl blackboxmc_general::JNIProvidesClassName for ChunkLoadLevelClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Chunk$LoadLevel"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum SandstoneTypeEnum {
     Cracked,
@@ -34528,7 +35781,25 @@ impl<'mc> SandstoneType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct SandstoneTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for SandstoneTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/SandstoneType"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum AxisEnum {
     X,
@@ -34638,7 +35909,25 @@ impl<'mc> Axis<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct AxisClass;
+impl blackboxmc_general::JNIProvidesClassName for AxisClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Axis"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum TreeTypeEnum {
     Tree,
@@ -34828,7 +36117,25 @@ impl<'mc> TreeType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct TreeTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for TreeTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/TreeType"
+    }
+}
+
 /// Represents a vibration from a Skulk sensor.
 pub struct Vibration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -35019,6 +36326,16 @@ impl<'mc> Vibration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Vibration<'mc> {
@@ -35027,6 +36344,13 @@ impl<'mc> std::string::ToString for Vibration<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling Vibration.toString: {}", err),
         }
+    }
+}
+
+pub struct VibrationClass;
+impl blackboxmc_general::JNIProvidesClassName for VibrationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Vibration"
     }
 }
 
@@ -35232,6 +36556,16 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for RegistrySimpleRegistry<'mc> {
@@ -35240,6 +36574,13 @@ impl<'mc> std::string::ToString for RegistrySimpleRegistry<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling RegistrySimpleRegistry.toString: {}", err),
         }
+    }
+}
+
+pub struct RegistrySimpleRegistryClass;
+impl blackboxmc_general::JNIProvidesClassName for RegistrySimpleRegistryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Registry$SimpleRegistry"
     }
 }
 
@@ -43448,7 +44789,25 @@ impl<'mc> Material<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct MaterialClass;
+impl blackboxmc_general::JNIProvidesClassName for MaterialClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Material"
+    }
+}
+
 /// Represents a registry of Bukkit objects that may be retrieved by <a href="NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>.
 ///
 /// This is a representation of an abstract class.
@@ -43559,7 +44918,25 @@ impl<'mc> Registry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct RegistryClass;
+impl blackboxmc_general::JNIProvidesClassName for RegistryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Registry"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum RotationEnum {
     None,
@@ -43688,6 +45065,23 @@ impl<'mc> Rotation<'mc> {
             Rotation::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct RotationClass;
+impl blackboxmc_general::JNIProvidesClassName for RotationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Rotation"
     }
 }
 
@@ -43852,6 +45246,16 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for VibrationDestinationEntityDestination<'mc> {
@@ -43863,6 +45267,13 @@ impl<'mc> std::string::ToString for VibrationDestinationEntityDestination<'mc> {
                 err
             ),
         }
+    }
+}
+
+pub struct VibrationDestinationEntityDestinationClass;
+impl blackboxmc_general::JNIProvidesClassName for VibrationDestinationEntityDestinationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Vibration$Destination$EntityDestination"
     }
 }
 
@@ -44338,7 +45749,25 @@ impl<'mc> StatisticStatistic<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct StatisticStatisticClass;
+impl blackboxmc_general::JNIProvidesClassName for StatisticStatisticClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Statistic$Statistic"
+    }
+}
+
 /// Annotation for types, whose nullability is not well defined, so <a class="external-link" href="https://javadoc.io/doc/org.jetbrains/annotations-java5/24.0.1/org/jetbrains/annotations/NotNull.html" title="class or interface in org.jetbrains.annotations"><code>NotNull</code></a> nor <a class="external-link" href="https://javadoc.io/doc/org.jetbrains/annotations-java5/24.0.1/org/jetbrains/annotations/Nullable.html" title="class or interface in org.jetbrains.annotations"><code>Nullable</code></a> is applicable. For example when interface defines a method, whose nullability depends on the implementation.
 ///
 /// This is a representation of an abstract class.
@@ -44441,6 +45870,16 @@ impl<'mc> UndefinedNullability<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for UndefinedNullability<'mc> {
@@ -44449,6 +45888,13 @@ impl<'mc> std::string::ToString for UndefinedNullability<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling UndefinedNullability.toString: {}", err),
         }
+    }
+}
+
+pub struct UndefinedNullabilityClass;
+impl blackboxmc_general::JNIProvidesClassName for UndefinedNullabilityClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/UndefinedNullability"
     }
 }
 
@@ -44557,7 +46003,25 @@ impl<'mc> CoalType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct CoalTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for CoalTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/CoalType"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum MaterialMaterialEnum {
     Air,
@@ -53289,7 +54753,25 @@ impl<'mc> MaterialMaterial<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct MaterialMaterialClass;
+impl blackboxmc_general::JNIProvidesClassName for MaterialMaterialClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Material$Material"
+    }
+}
+
 /// Represents various map environment types that a world may be
 #[derive(PartialEq, Eq)]
 pub enum WorldEnvironmentEnum {
@@ -53450,7 +54932,25 @@ impl<'mc> WorldEnvironment<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct WorldEnvironmentClass;
+impl blackboxmc_general::JNIProvidesClassName for WorldEnvironmentClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/World$Environment"
+    }
+}
+
 /// A delegate for handling block changes. This serves as a direct interface between generation algorithms in the server implementation and utilizing code.
 ///
 /// This is a representation of an abstract class.
@@ -53581,7 +55081,25 @@ impl<'mc> BlockChangeDelegate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BlockChangeDelegateClass;
+impl blackboxmc_general::JNIProvidesClassName for BlockChangeDelegateClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/BlockChangeDelegate"
+    }
+}
+
 /// This class handles the creation and storage of all structure types for Bukkit. Structure Types are the different kinds of structures that can be generated during world/chunk generation. These include Villages, Mineshafts, Mansions, etc.
 ///
 /// The registration of new <a title="class in org.bukkit" href="StructureType.html"><code>StructureType</code></a>s is case-sensitive.
@@ -53777,6 +55295,16 @@ impl<'mc> StructureType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for StructureType<'mc> {
@@ -53794,6 +55322,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for StructureType<'mc> {
             .expect("Error converting StructureType into crate::Keyed")
     }
 }
+
+pub struct StructureTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for StructureTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/StructureType"
+    }
+}
+
 /// Represents the status of a <a href="Raid.html" title="interface in org.bukkit"><code>Raid</code></a>.
 #[derive(PartialEq, Eq)]
 pub enum RaidRaidStatusEnum {
@@ -53910,7 +55446,25 @@ impl<'mc> RaidRaidStatus<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct RaidRaidStatusClass;
+impl blackboxmc_general::JNIProvidesClassName for RaidRaidStatusClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Raid$RaidStatus"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum InstrumentEnum {
     Piano,
@@ -54100,7 +55654,25 @@ impl<'mc> Instrument<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct InstrumentClass;
+impl blackboxmc_general::JNIProvidesClassName for InstrumentClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Instrument"
+    }
+}
+
 /// Represents a tag that may be defined by the server or a resource pack to group like things together. Note that whilst all tags defined within this interface must be present in implementations, their existence is not guaranteed across future versions.
 ///
 /// This is a representation of an abstract class.
@@ -54182,6 +55754,16 @@ impl<'mc> Tag<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::Keyed<'mc>> for Tag<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
@@ -54189,6 +55771,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for Tag<'mc> {
             .expect("Error converting Tag into crate::Keyed")
     }
 }
+
+pub struct TagClass;
+impl blackboxmc_general::JNIProvidesClassName for TagClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Tag"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum SkullTypeEnum {
     Skeleton,
@@ -54314,7 +55904,25 @@ impl<'mc> SkullType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct SkullTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for SkullTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/SkullType"
+    }
+}
+
 /// Represents a 3-dimensional position in a world.
 ///
 /// No constraints are placed on any angular values other than that they be specified in degrees. This means that negative angles or angles of greater magnitude than 360 are valid, but may be normalized to any other equivalent representation by the implementation.
@@ -55032,6 +56640,16 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Location<'mc> {
@@ -55050,6 +56668,14 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting Location into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
+
+pub struct LocationClass;
+impl blackboxmc_general::JNIProvidesClassName for LocationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/Location"
+    }
+}
+
 pub mod advancement;
 pub mod attribute;
 pub mod ban;

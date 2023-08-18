@@ -183,6 +183,16 @@ impl<'mc> ArmorTrim<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ArmorTrim<'mc> {
@@ -191,6 +201,13 @@ impl<'mc> std::string::ToString for ArmorTrim<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ArmorTrim.toString: {}", err),
         }
+    }
+}
+
+pub struct ArmorTrimClass;
+impl blackboxmc_general::JNIProvidesClassName for ArmorTrimClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/trim/ArmorTrim"
     }
 }
 
@@ -245,6 +262,16 @@ impl<'mc> TrimMaterial<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::Keyed<'mc>> for TrimMaterial<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
@@ -252,6 +279,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for TrimMaterial<'mc> {
             .expect("Error converting TrimMaterial into crate::Keyed")
     }
 }
+
+pub struct TrimMaterialClass;
+impl blackboxmc_general::JNIProvidesClassName for TrimMaterialClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/trim/TrimMaterial"
+    }
+}
+
 /// Represents a pattern that may be used in an <a href="ArmorTrim.html" title="class in org.bukkit.inventory.meta.trim"><code>ArmorTrim</code></a>.
 ///
 /// This is a representation of an abstract class.
@@ -303,10 +338,27 @@ impl<'mc> TrimPattern<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::Keyed<'mc>> for TrimPattern<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting TrimPattern into crate::Keyed")
+    }
+}
+
+pub struct TrimPatternClass;
+impl blackboxmc_general::JNIProvidesClassName for TrimPatternClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/trim/TrimPattern"
     }
 }

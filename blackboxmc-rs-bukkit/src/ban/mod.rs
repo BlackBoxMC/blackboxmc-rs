@@ -200,6 +200,16 @@ impl<'mc> ProfileBanList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::BanList<'mc>> for ProfileBanList<'mc> {
     fn into(self) -> crate::BanList<'mc> {
@@ -207,6 +217,14 @@ impl<'mc> Into<crate::BanList<'mc>> for ProfileBanList<'mc> {
             .expect("Error converting ProfileBanList into crate::BanList")
     }
 }
+
+pub struct ProfileBanListClass;
+impl blackboxmc_general::JNIProvidesClassName for ProfileBanListClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/ban/ProfileBanList"
+    }
+}
+
 /// A <a href="../BanList.html" title="interface in org.bukkit"><code>BanList</code></a> targeting IP bans.
 ///
 /// This is a representation of an abstract class.
@@ -402,10 +420,27 @@ impl<'mc> IpBanList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::BanList<'mc>> for IpBanList<'mc> {
     fn into(self) -> crate::BanList<'mc> {
         crate::BanList::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting IpBanList into crate::BanList")
+    }
+}
+
+pub struct IpBanListClass;
+impl blackboxmc_general::JNIProvidesClassName for IpBanListClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/ban/IpBanList"
     }
 }

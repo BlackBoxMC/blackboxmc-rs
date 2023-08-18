@@ -198,6 +198,16 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MemoryConfigurationOptions<'mc> {
@@ -216,6 +226,14 @@ impl<'mc> Into<crate::configuration::ConfigurationOptions<'mc>>
         crate::configuration::ConfigurationOptions::from_raw(&self.jni_ref(), self.1).expect("Error converting MemoryConfigurationOptions into crate::configuration::ConfigurationOptions")
     }
 }
+
+pub struct MemoryConfigurationOptionsClass;
+impl blackboxmc_general::JNIProvidesClassName for MemoryConfigurationOptionsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/configuration/MemoryConfigurationOptions"
+    }
+}
+
 /// A type of <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a> that is stored in memory.
 pub struct MemorySection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1287,6 +1305,16 @@ impl<'mc> MemorySection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MemorySection<'mc> {
@@ -1305,6 +1333,14 @@ impl<'mc> Into<crate::configuration::ConfigurationSection<'mc>> for MemorySectio
         )
     }
 }
+
+pub struct MemorySectionClass;
+impl blackboxmc_general::JNIProvidesClassName for MemorySectionClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/configuration/MemorySection"
+    }
+}
+
 /// Represents a source of configurable options and settings
 ///
 /// This is a representation of an abstract class.
@@ -2312,6 +2348,16 @@ impl<'mc> Configuration<'mc> {
         }
         Ok(new_vec)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::configuration::ConfigurationSection<'mc>> for Configuration<'mc> {
     fn into(self) -> crate::configuration::ConfigurationSection<'mc> {
@@ -2320,6 +2366,14 @@ impl<'mc> Into<crate::configuration::ConfigurationSection<'mc>> for Configuratio
         )
     }
 }
+
+pub struct ConfigurationClass;
+impl blackboxmc_general::JNIProvidesClassName for ConfigurationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/configuration/Configuration"
+    }
+}
+
 /// This is a <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> implementation that does not save or load from any source, and stores all values in memory only. This is useful for temporary Configurations for providing defaults.
 pub struct MemoryConfiguration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3479,6 +3533,16 @@ impl<'mc> MemoryConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MemoryConfiguration<'mc> {
@@ -3502,6 +3566,14 @@ impl<'mc> Into<crate::configuration::MemorySection<'mc>> for MemoryConfiguration
             .expect("Error converting MemoryConfiguration into crate::configuration::MemorySection")
     }
 }
+
+pub struct MemoryConfigurationClass;
+impl blackboxmc_general::JNIProvidesClassName for MemoryConfigurationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/configuration/MemoryConfiguration"
+    }
+}
+
 /// Various settings for controlling the input and output of a <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a>
 pub struct ConfigurationOptions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3690,6 +3762,16 @@ impl<'mc> ConfigurationOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ConfigurationOptions<'mc> {
@@ -3698,6 +3780,13 @@ impl<'mc> std::string::ToString for ConfigurationOptions<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ConfigurationOptions.toString: {}", err),
         }
+    }
+}
+
+pub struct ConfigurationOptionsClass;
+impl blackboxmc_general::JNIProvidesClassName for ConfigurationOptionsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/configuration/ConfigurationOptions"
     }
 }
 
@@ -4648,6 +4737,24 @@ impl<'mc> ConfigurationSection<'mc> {
         }
         Ok(new_vec)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ConfigurationSectionClass;
+impl blackboxmc_general::JNIProvidesClassName for ConfigurationSectionClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/configuration/ConfigurationSection"
+    }
+}
+
 pub mod file;
 pub mod serialization;

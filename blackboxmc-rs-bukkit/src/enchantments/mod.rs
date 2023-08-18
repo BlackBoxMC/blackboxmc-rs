@@ -373,6 +373,16 @@ impl<'mc> EnchantmentWrapper<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for EnchantmentWrapper<'mc> {
@@ -390,6 +400,14 @@ impl<'mc> Into<crate::enchantments::Enchantment<'mc>> for EnchantmentWrapper<'mc
             .expect("Error converting EnchantmentWrapper into crate::enchantments::Enchantment")
     }
 }
+
+pub struct EnchantmentWrapperClass;
+impl blackboxmc_general::JNIProvidesClassName for EnchantmentWrapperClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/enchantments/EnchantmentWrapper"
+    }
+}
+
 /// A class for the available enchantment offers in the enchantment table.
 pub struct EnchantmentOffer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -625,6 +643,16 @@ impl<'mc> EnchantmentOffer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for EnchantmentOffer<'mc> {
@@ -633,6 +661,13 @@ impl<'mc> std::string::ToString for EnchantmentOffer<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling EnchantmentOffer.toString: {}", err),
         }
+    }
+}
+
+pub struct EnchantmentOfferClass;
+impl blackboxmc_general::JNIProvidesClassName for EnchantmentOfferClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/enchantments/EnchantmentOffer"
     }
 }
 
@@ -815,7 +850,25 @@ impl<'mc> EnchantmentTarget<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct EnchantmentTargetClass;
+impl blackboxmc_general::JNIProvidesClassName for EnchantmentTargetClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/enchantments/EnchantmentTarget"
+    }
+}
+
 /// The various type of enchantments that may be added to armour or weapons
 pub struct Enchantment<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1170,6 +1223,16 @@ impl<'mc> Enchantment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Enchantment<'mc> {
@@ -1185,5 +1248,12 @@ impl<'mc> Into<crate::Keyed<'mc>> for Enchantment<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Enchantment into crate::Keyed")
+    }
+}
+
+pub struct EnchantmentClass;
+impl blackboxmc_general::JNIProvidesClassName for EnchantmentClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/enchantments/Enchantment"
     }
 }

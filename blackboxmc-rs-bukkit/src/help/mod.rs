@@ -253,6 +253,16 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for HelpTopicComparatorTopicNameComparator<'mc> {
@@ -272,6 +282,13 @@ impl<'mc> Into<blackboxmc_java::util::JavaComparator<'mc>>
 {
     fn into(self) -> blackboxmc_java::util::JavaComparator<'mc> {
         blackboxmc_java::util::JavaComparator::from_raw(&self.jni_ref(), self.1).expect("Error converting HelpTopicComparatorTopicNameComparator into blackboxmc_java::util::JavaComparator")
+    }
+}
+
+pub struct HelpTopicComparatorTopicNameComparatorClass;
+impl blackboxmc_general::JNIProvidesClassName for HelpTopicComparatorTopicNameComparatorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/help/HelpTopicComparator$TopicNameComparator"
     }
 }
 
@@ -551,6 +568,16 @@ impl<'mc> HelpTopicComparator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for HelpTopicComparator<'mc> {
@@ -569,6 +596,14 @@ impl<'mc> Into<blackboxmc_java::util::JavaComparator<'mc>> for HelpTopicComparat
         )
     }
 }
+
+pub struct HelpTopicComparatorClass;
+impl blackboxmc_general::JNIProvidesClassName for HelpTopicComparatorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/help/HelpTopicComparator"
+    }
+}
+
 /// A HelpTopicFactory is used to create custom <a title="class in org.bukkit.help" href="HelpTopic.html"><code>HelpTopic</code></a> objects from commands that inherit from a common base class or have executors that inherit from a common base class. You can use a custom HelpTopic to change the way all the commands in your plugin display in the help. If your plugin implements a complex permissions system, a custom help topic may also be appropriate.
 /// <p>To automatically bind your plugin's commands to your custom HelpTopic implementation, first make sure all your commands or executors derive from a custom base class (it doesn't have to do anything). Next implement a custom HelpTopicFactory that accepts your custom command base class and instantiates an instance of your custom HelpTopic from it. Finally, register your HelpTopicFactory against your command base class using the <a href="HelpMap.html#registerHelpTopicFactory(java.lang.Class,org.bukkit.help.HelpTopicFactory)"><code>HelpMap.registerHelpTopicFactory(Class, HelpTopicFactory)</code></a> method.</p>
 /// <p>As the help system iterates over all registered commands to make help topics, it first checks to see if there is a HelpTopicFactory registered for the command's base class. If so, the factory is used to make a help topic rather than a generic help topic. If no factory is found for the command's base class and the command derives from <a href="../command/PluginCommand.html" title="class in org.bukkit.command"><code>PluginCommand</code></a>, then the type of the command's executor is inspected looking for a registered HelpTopicFactory. Finally, if no factory is found, a generic help topic is created for the command.</p>
@@ -643,7 +678,25 @@ impl<'mc> HelpTopicFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct HelpTopicFactoryClass;
+impl blackboxmc_general::JNIProvidesClassName for HelpTopicFactoryClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/help/HelpTopicFactory"
+    }
+}
+
 /// HelpTopic implementations are displayed to the user when the user uses the /help command.
 /// <p>Custom implementations of this class can work at two levels. A simple implementation only needs to set the value of <code>name</code>, <code> shortText</code>, and <code>fullText</code> in the constructor. This base class will take care of the rest.</p>
 /// <p>Complex implementations can be created by overriding the behavior of all the methods in this class.</p>
@@ -901,6 +954,16 @@ impl<'mc> HelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for HelpTopic<'mc> {
@@ -909,6 +972,13 @@ impl<'mc> std::string::ToString for HelpTopic<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling HelpTopic.toString: {}", err),
         }
+    }
+}
+
+pub struct HelpTopicClass;
+impl blackboxmc_general::JNIProvidesClassName for HelpTopicClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/help/HelpTopic"
     }
 }
 
@@ -1069,7 +1139,25 @@ impl<'mc> HelpMap<'mc> {
         }
         Ok(new_vec)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct HelpMapClass;
+impl blackboxmc_general::JNIProvidesClassName for HelpMapClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/help/HelpMap"
+    }
+}
+
 /// This help topic generates a list of other help topics. This class is useful for adding your own index help topics. To enforce a particular order, use a sorted collection.
 /// <p>If a preamble is provided to the constructor, that text will be displayed before the first item in the index.</p>
 pub struct IndexHelpTopic<'mc>(
@@ -1307,6 +1395,16 @@ impl<'mc> IndexHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for IndexHelpTopic<'mc> {
@@ -1324,6 +1422,14 @@ impl<'mc> Into<crate::help::HelpTopic<'mc>> for IndexHelpTopic<'mc> {
             .expect("Error converting IndexHelpTopic into crate::help::HelpTopic")
     }
 }
+
+pub struct IndexHelpTopicClass;
+impl blackboxmc_general::JNIProvidesClassName for IndexHelpTopicClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/help/IndexHelpTopic"
+    }
+}
+
 /// Lacking an alternative, the help system will create instances of GenericCommandHelpTopic for each command in the server's CommandMap. You can use this class as a base class for custom help topics, or as an example for how to write your own.
 pub struct GenericCommandHelpTopic<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1580,6 +1686,16 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for GenericCommandHelpTopic<'mc> {
@@ -1595,5 +1711,12 @@ impl<'mc> Into<crate::help::HelpTopic<'mc>> for GenericCommandHelpTopic<'mc> {
     fn into(self) -> crate::help::HelpTopic<'mc> {
         crate::help::HelpTopic::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting GenericCommandHelpTopic into crate::help::HelpTopic")
+    }
+}
+
+pub struct GenericCommandHelpTopicClass;
+impl blackboxmc_general::JNIProvidesClassName for GenericCommandHelpTopicClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/help/GenericCommandHelpTopic"
     }
 }

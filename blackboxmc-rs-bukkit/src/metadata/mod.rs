@@ -174,6 +174,23 @@ impl<'mc> MetadataStore<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct MetadataStoreClass;
+impl blackboxmc_general::JNIProvidesClassName for MetadataStoreClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/metadata/MetadataStore"
+    }
 }
 
 ///
@@ -336,7 +353,25 @@ impl<'mc> MetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct MetadataValueClass;
+impl blackboxmc_general::JNIProvidesClassName for MetadataValueClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/metadata/MetadataValue"
+    }
+}
+
 /// This interface is implemented by all objects that can provide metadata about themselves.
 ///
 /// This is a representation of an abstract class.
@@ -471,6 +506,23 @@ impl<'mc> Metadatable<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct MetadatableClass;
+impl blackboxmc_general::JNIProvidesClassName for MetadatableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/metadata/Metadatable"
     }
 }
 
@@ -743,6 +795,16 @@ impl<'mc> MetadataStoreBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MetadataStoreBase<'mc> {
@@ -751,6 +813,13 @@ impl<'mc> std::string::ToString for MetadataStoreBase<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling MetadataStoreBase.toString: {}", err),
         }
+    }
+}
+
+pub struct MetadataStoreBaseClass;
+impl blackboxmc_general::JNIProvidesClassName for MetadataStoreBaseClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/metadata/MetadataStoreBase"
     }
 }
 
@@ -879,6 +948,23 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
             LazyMetadataValueCacheStrategy::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct LazyMetadataValueCacheStrategyClass;
+impl blackboxmc_general::JNIProvidesClassName for LazyMetadataValueCacheStrategyClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/metadata/LazyMetadataValue$CacheStrategy"
     }
 }
 
@@ -1117,6 +1203,16 @@ impl<'mc> LazyMetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for LazyMetadataValue<'mc> {
@@ -1134,6 +1230,14 @@ impl<'mc> Into<crate::metadata::MetadataValueAdapter<'mc>> for LazyMetadataValue
             .expect("Error converting LazyMetadataValue into crate::metadata::MetadataValueAdapter")
     }
 }
+
+pub struct LazyMetadataValueClass;
+impl blackboxmc_general::JNIProvidesClassName for LazyMetadataValueClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/metadata/LazyMetadataValue"
+    }
+}
+
 /// A FixedMetadataValue is a special case metadata item that contains the same value forever after initialization. Invalidating a FixedMetadataValue has no effect.
 /// <p>This class extends LazyMetadataValue for historical reasons, even though it overrides all the implementation methods. it is possible that in the future that the inheritance hierarchy may change.</p>
 pub struct FixedMetadataValue<'mc>(
@@ -1400,6 +1504,16 @@ impl<'mc> FixedMetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for FixedMetadataValue<'mc> {
@@ -1417,6 +1531,14 @@ impl<'mc> Into<crate::metadata::LazyMetadataValue<'mc>> for FixedMetadataValue<'
             .expect("Error converting FixedMetadataValue into crate::metadata::LazyMetadataValue")
     }
 }
+
+pub struct FixedMetadataValueClass;
+impl blackboxmc_general::JNIProvidesClassName for FixedMetadataValueClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/metadata/FixedMetadataValue"
+    }
+}
+
 /// Optional base class for facilitating MetadataValue implementations.
 /// <p>This provides all the conversion functions for MetadataValue so that writing an implementation of MetadataValue is as simple as implementing value() and invalidate().</p>
 pub struct MetadataValueAdapter<'mc>(
@@ -1659,6 +1781,16 @@ impl<'mc> MetadataValueAdapter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MetadataValueAdapter<'mc> {
@@ -1676,6 +1808,14 @@ impl<'mc> Into<crate::metadata::MetadataValue<'mc>> for MetadataValueAdapter<'mc
             .expect("Error converting MetadataValueAdapter into crate::metadata::MetadataValue")
     }
 }
+
+pub struct MetadataValueAdapterClass;
+impl blackboxmc_general::JNIProvidesClassName for MetadataValueAdapterClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/metadata/MetadataValueAdapter"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum CacheStrategyEnum {
     CacheAfterFirstEval,
@@ -1784,5 +1924,22 @@ impl<'mc> CacheStrategy<'mc> {
             CacheStrategy::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct CacheStrategyClass;
+impl blackboxmc_general::JNIProvidesClassName for CacheStrategyClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/metadata/CacheStrategy"
     }
 }

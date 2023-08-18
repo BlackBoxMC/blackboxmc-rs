@@ -120,7 +120,25 @@ impl<'mc> BarStyle<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BarStyleClass;
+impl blackboxmc_general::JNIProvidesClassName for BarStyleClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/boss/BarStyle"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum BarColorEnum {
     Pink,
@@ -246,7 +264,25 @@ impl<'mc> BarColor<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BarColorClass;
+impl blackboxmc_general::JNIProvidesClassName for BarColorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/boss/BarColor"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum BarFlagEnum {
     DarkenSky,
@@ -356,7 +392,25 @@ impl<'mc> BarFlag<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BarFlagClass;
+impl blackboxmc_general::JNIProvidesClassName for BarFlagClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/boss/BarFlag"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum RespawnPhaseEnum {
     Start,
@@ -481,7 +535,25 @@ impl<'mc> RespawnPhase<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct RespawnPhaseClass;
+impl blackboxmc_general::JNIProvidesClassName for RespawnPhaseClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/boss/RespawnPhase"
+    }
+}
+
 /// Represents a custom <a title="interface in org.bukkit.boss" href="BossBar.html"><code>BossBar</code></a> that has a <a href="../NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>
 ///
 /// This is a representation of an abstract class.
@@ -827,6 +899,16 @@ impl<'mc> KeyedBossBar<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::boss::BossBar<'mc>> for KeyedBossBar<'mc> {
     fn into(self) -> crate::boss::BossBar<'mc> {
@@ -838,6 +920,13 @@ impl<'mc> Into<crate::Keyed<'mc>> for KeyedBossBar<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting KeyedBossBar into crate::Keyed")
+    }
+}
+
+pub struct KeyedBossBarClass;
+impl blackboxmc_general::JNIProvidesClassName for KeyedBossBarClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/boss/KeyedBossBar"
     }
 }
 
@@ -1174,7 +1263,25 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BossBarClass;
+impl blackboxmc_general::JNIProvidesClassName for BossBarClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/boss/BossBar"
+    }
+}
+
 /// Represents a dragon battle state for a world with an end environment.
 ///
 /// This is a representation of an abstract class.
@@ -1345,7 +1452,25 @@ impl<'mc> DragonBattle<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct DragonBattleClass;
+impl blackboxmc_general::JNIProvidesClassName for DragonBattleClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/boss/DragonBattle"
+    }
+}
+
 /// Represents a phase in the dragon respawn process.
 #[derive(PartialEq, Eq)]
 pub enum DragonBattleRespawnPhaseEnum {
@@ -1477,5 +1602,22 @@ impl<'mc> DragonBattleRespawnPhase<'mc> {
             DragonBattleRespawnPhase::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct DragonBattleRespawnPhaseClass;
+impl blackboxmc_general::JNIProvidesClassName for DragonBattleRespawnPhaseClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/boss/DragonBattle$RespawnPhase"
     }
 }

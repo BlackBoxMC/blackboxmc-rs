@@ -268,6 +268,16 @@ impl<'mc> RemoteServerCommandEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for RemoteServerCommandEvent<'mc> {
@@ -284,6 +294,14 @@ impl<'mc> Into<crate::event::server::ServerCommandEvent<'mc>> for RemoteServerCo
         crate::event::server::ServerCommandEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting RemoteServerCommandEvent into crate::event::server::ServerCommandEvent")
     }
 }
+
+pub struct RemoteServerCommandEventClass;
+impl blackboxmc_general::JNIProvidesClassName for RemoteServerCommandEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/RemoteServerCommandEvent"
+    }
+}
+
 /// Called when a plugin is enabled.
 pub struct PluginEnableEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -489,6 +507,16 @@ impl<'mc> PluginEnableEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PluginEnableEvent<'mc> {
@@ -506,6 +534,14 @@ impl<'mc> Into<crate::event::server::PluginEvent<'mc>> for PluginEnableEvent<'mc
             .expect("Error converting PluginEnableEvent into crate::event::server::PluginEvent")
     }
 }
+
+pub struct PluginEnableEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginEnableEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/PluginEnableEvent"
+    }
+}
+
 /// This event is called when a command is run by a non-player. It is called early in the command handling process, and modifications in this event (via <a href="#setCommand(java.lang.String)"><code>setCommand(String)</code></a>) will be shown in the behavior.
 /// <p>Many plugins will have <b>no use for this event</b>, and you should attempt to avoid using it if it is not necessary.</p>
 /// <p>Some examples of valid uses for this event are:</p>
@@ -784,6 +820,16 @@ impl<'mc> ServerCommandEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ServerCommandEvent<'mc> {
@@ -807,6 +853,14 @@ impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for ServerCommandEvent<'m
             .expect("Error converting ServerCommandEvent into crate::event::server::ServerEvent")
     }
 }
+
+pub struct ServerCommandEventClass;
+impl blackboxmc_general::JNIProvidesClassName for ServerCommandEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/ServerCommandEvent"
+    }
+}
+
 /// This event is called when a service is unregistered.
 /// <p>Warning: The order in which register and unregister events are called should not be relied upon.</p>
 pub struct ServiceUnregisterEvent<'mc>(
@@ -1017,6 +1071,16 @@ impl<'mc> ServiceUnregisterEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ServiceUnregisterEvent<'mc> {
@@ -1035,6 +1099,14 @@ impl<'mc> Into<crate::event::server::ServiceEvent<'mc>> for ServiceUnregisterEve
         )
     }
 }
+
+pub struct ServiceUnregisterEventClass;
+impl blackboxmc_general::JNIProvidesClassName for ServiceUnregisterEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/ServiceUnregisterEvent"
+    }
+}
+
 /// Event triggered for server broadcast messages such as from <a href="../../Server.html#broadcast(java.lang.String,java.lang.String)"><code>Server.broadcast(String, String)</code></a>. <b>This event behaves similarly to <a href="../player/AsyncPlayerChatEvent.html" title="class in org.bukkit.event.player"><code>AsyncPlayerChatEvent</code></a> in that it should be async if fired from an async thread. Please see that event for further information.</b>
 pub struct BroadcastMessageEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1308,6 +1380,16 @@ impl<'mc> BroadcastMessageEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for BroadcastMessageEvent<'mc> {
@@ -1331,6 +1413,14 @@ impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for BroadcastMessageEvent
             .expect("Error converting BroadcastMessageEvent into crate::event::server::ServerEvent")
     }
 }
+
+pub struct BroadcastMessageEventClass;
+impl blackboxmc_general::JNIProvidesClassName for BroadcastMessageEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/BroadcastMessageEvent"
+    }
+}
+
 /// Miscellaneous server events
 pub struct ServerEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1511,6 +1601,16 @@ impl<'mc> ServerEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ServerEvent<'mc> {
@@ -1528,6 +1628,14 @@ impl<'mc> Into<crate::event::Event<'mc>> for ServerEvent<'mc> {
             .expect("Error converting ServerEvent into crate::event::Event")
     }
 }
+
+pub struct ServerEventClass;
+impl blackboxmc_general::JNIProvidesClassName for ServerEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/ServerEvent"
+    }
+}
+
 /// Called when a <a title="interface in org.bukkit.command" href="../../command/CommandSender.html"><code>CommandSender</code></a> of any description (ie: player or console) attempts to tab complete.
 ///
 /// Note that due to client changes, if the sender is a Player, this event will only begin to fire once command arguments are specified, not commands themselves. Plugins wishing to remove commands from tab completion are advised to ensure the client does not have permission for the relevant commands, or use <a title="class in org.bukkit.event.player" href="../player/PlayerCommandSendEvent.html"><code>PlayerCommandSendEvent</code></a>.
@@ -1773,6 +1881,16 @@ impl<'mc> TabCompleteEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for TabCompleteEvent<'mc> {
@@ -1796,6 +1914,14 @@ impl<'mc> Into<crate::event::Event<'mc>> for TabCompleteEvent<'mc> {
             .expect("Error converting TabCompleteEvent into crate::event::Event")
     }
 }
+
+pub struct TabCompleteEventClass;
+impl blackboxmc_general::JNIProvidesClassName for TabCompleteEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/TabCompleteEvent"
+    }
+}
+
 /// Called when a plugin is disabled.
 pub struct PluginDisableEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2002,6 +2128,16 @@ impl<'mc> PluginDisableEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PluginDisableEvent<'mc> {
@@ -2019,6 +2155,14 @@ impl<'mc> Into<crate::event::server::PluginEvent<'mc>> for PluginDisableEvent<'m
             .expect("Error converting PluginDisableEvent into crate::event::server::PluginEvent")
     }
 }
+
+pub struct PluginDisableEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginDisableEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/PluginDisableEvent"
+    }
+}
+
 /// Called when a map is initialized.
 pub struct MapInitializeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2225,6 +2369,16 @@ impl<'mc> MapInitializeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MapInitializeEvent<'mc> {
@@ -2242,6 +2396,14 @@ impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for MapInitializeEvent<'m
             .expect("Error converting MapInitializeEvent into crate::event::server::ServerEvent")
     }
 }
+
+pub struct MapInitializeEventClass;
+impl blackboxmc_general::JNIProvidesClassName for MapInitializeEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/MapInitializeEvent"
+    }
+}
+
 /// An event relating to a registered service. This is called in a <a title="interface in org.bukkit.plugin" href="../../plugin/ServicesManager.html"><code>ServicesManager</code></a>
 pub struct ServiceEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2435,6 +2597,16 @@ impl<'mc> ServiceEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ServiceEvent<'mc> {
@@ -2452,6 +2624,14 @@ impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for ServiceEvent<'mc> {
             .expect("Error converting ServiceEvent into crate::event::server::ServerEvent")
     }
 }
+
+pub struct ServiceEventClass;
+impl blackboxmc_general::JNIProvidesClassName for ServiceEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/ServiceEvent"
+    }
+}
+
 /// This event is called when either the server startup or reload has completed.
 pub struct ServerLoadEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2565,6 +2745,23 @@ impl<'mc> ServerLoadEventLoadType<'mc> {
             ServerLoadEventLoadType::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct ServerLoadEventLoadTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for ServerLoadEventLoadTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/ServerLoadEvent$LoadType"
     }
 }
 
@@ -2783,6 +2980,16 @@ impl<'mc> ServerLoadEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ServerLoadEvent<'mc> {
@@ -2800,6 +3007,14 @@ impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for ServerLoadEvent<'mc> 
             .expect("Error converting ServerLoadEvent into crate::event::server::ServerEvent")
     }
 }
+
+pub struct ServerLoadEventClass;
+impl blackboxmc_general::JNIProvidesClassName for ServerLoadEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/ServerLoadEvent"
+    }
+}
+
 /// This event is called when a service is registered.
 /// <p>Warning: The order in which register and unregister events are called should not be relied upon.</p>
 pub struct ServiceRegisterEvent<'mc>(
@@ -3009,6 +3224,16 @@ impl<'mc> ServiceRegisterEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ServiceRegisterEvent<'mc> {
@@ -3026,6 +3251,14 @@ impl<'mc> Into<crate::event::server::ServiceEvent<'mc>> for ServiceRegisterEvent
             .expect("Error converting ServiceRegisterEvent into crate::event::server::ServiceEvent")
     }
 }
+
+pub struct ServiceRegisterEventClass;
+impl blackboxmc_general::JNIProvidesClassName for ServiceRegisterEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/ServiceRegisterEvent"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum LoadTypeEnum {
     Startup,
@@ -3131,7 +3364,25 @@ impl<'mc> LoadType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct LoadTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for LoadTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/LoadType"
+    }
+}
+
 /// Used for plugin enable and disable events
 pub struct PluginEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3323,6 +3574,16 @@ impl<'mc> PluginEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PluginEvent<'mc> {
@@ -3340,6 +3601,14 @@ impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for PluginEvent<'mc> {
             .expect("Error converting PluginEvent into crate::event::server::ServerEvent")
     }
 }
+
+pub struct PluginEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/PluginEvent"
+    }
+}
+
 /// Called when a server list ping is coming in. Displayed players can be checked and removed by <a href="#iterator()"><code>iterating</code></a> over this event.
 ///
 /// <b>Note:</b> The players in <a href="#iterator()"><code>iterator()</code></a> will not be shown in the server info if <a href="../../Bukkit.html#getHideOnlinePlayers()"><code>Bukkit.getHideOnlinePlayers()</code></a> is true.
@@ -3701,6 +3970,16 @@ impl<'mc> ServerListPingEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ServerListPingEvent<'mc> {
@@ -3716,5 +3995,12 @@ impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for ServerListPingEvent<'
     fn into(self) -> crate::event::server::ServerEvent<'mc> {
         crate::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting ServerListPingEvent into crate::event::server::ServerEvent")
+    }
+}
+
+pub struct ServerListPingEventClass;
+impl blackboxmc_general::JNIProvidesClassName for ServerListPingEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/server/ServerListPingEvent"
     }
 }

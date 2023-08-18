@@ -264,6 +264,23 @@ impl<'mc> PatternType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PatternTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for PatternTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/banner/PatternType"
+    }
 }
 
 pub struct Pattern<'mc>(
@@ -486,6 +503,16 @@ impl<'mc> Pattern<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Pattern<'mc> {
@@ -502,5 +529,12 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
 {
     fn into(self) -> crate::configuration::serialization::ConfigurationSerializable<'mc> {
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting Pattern into crate::configuration::serialization::ConfigurationSerializable")
+    }
+}
+
+pub struct PatternClass;
+impl blackboxmc_general::JNIProvidesClassName for PatternClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/block/banner/Pattern"
     }
 }

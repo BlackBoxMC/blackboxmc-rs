@@ -766,7 +766,25 @@ impl<'mc> JavaInteger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaIntegerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaIntegerClass {
+    fn class_name(&self) -> &str {
+        "java/lang/Integer"
+    }
+}
+
 /// The <code>Float</code> class wraps a value of primitive type
 /// <code>float</code> in an object. An object of type
 /// <code>Float</code> contains a single field whose type is
@@ -1279,7 +1297,25 @@ impl<'mc> JavaFloat<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaFloatClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaFloatClass {
+    fn class_name(&self) -> &str {
+        "java/lang/Float"
+    }
+}
+
 /// The <code>Character</code> class wraps a value of the primitive
 /// type <code>char</code> in an object. An object of class
 /// <code>Character</code> contains a single field whose type is
@@ -2473,7 +2509,25 @@ impl<'mc> JavaCharacter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaCharacterClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaCharacterClass {
+    fn class_name(&self) -> &str {
+        "java/lang/Character"
+    }
+}
+
 /// The <code>Byte</code> class wraps a value of primitive type <code>byte</code>
 /// in an object.An object of type <code>Byte</code> contains a single
 /// field whose type is <code>byte</code>.
@@ -2851,7 +2905,25 @@ impl<'mc> JavaByte<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaByteClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaByteClass {
+    fn class_name(&self) -> &str {
+        "java/lang/Byte"
+    }
+}
+
 /// The <code>Long</code> class wraps a value of the primitive type <code>long</code> in an object. An object of type <code>Long</code> contains a
 /// single field whose type is <code>long</code>.
 /// <p> In addition, this class provides several methods for converting
@@ -3600,7 +3672,25 @@ impl<'mc> JavaLong<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaLongClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaLongClass {
+    fn class_name(&self) -> &str {
+        "java/lang/Long"
+    }
+}
+
 /// The <code>String</code> class represents character strings. All
 /// string literals in Java programs, such as <code>"abc"</code>, are
 /// implemented as instances of this class.
@@ -4638,6 +4728,16 @@ impl<'mc> JavaString<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaString<'mc> {
@@ -4646,6 +4746,13 @@ impl<'mc> std::string::ToString for JavaString<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling JavaString.toString: {}", err),
         }
+    }
+}
+
+pub struct JavaStringClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaStringClass {
+    fn class_name(&self) -> &str {
+        "java/lang/String"
     }
 }
 
@@ -4990,7 +5097,25 @@ impl<'mc> JavaBoolean<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaBooleanClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaBooleanClass {
+    fn class_name(&self) -> &str {
+        "java/lang/Boolean"
+    }
+}
+
 /// The <code>Double</code> class wraps a value of the primitive type
 /// <code>double</code> in an object. An object of type
 /// <code>Double</code> contains a single field whose type is
@@ -5487,7 +5612,25 @@ impl<'mc> JavaDouble<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaDoubleClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaDoubleClass {
+    fn class_name(&self) -> &str {
+        "java/lang/Double"
+    }
+}
+
 /// The <code>Short</code> class wraps a value of primitive type <code>short</code> in an object.An object of type <code>Short</code> contains a
 /// single field whose type is <code>short</code>.
 /// <p>In addition, this class provides several methods for converting
@@ -5882,5 +6025,22 @@ impl<'mc> JavaShort<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct JavaShortClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaShortClass {
+    fn class_name(&self) -> &str {
+        "java/lang/Short"
     }
 }

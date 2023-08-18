@@ -107,7 +107,25 @@ impl<'mc> PluginAwarenessFlags<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PluginAwarenessFlagsClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginAwarenessFlagsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/PluginAwareness$Flags"
+    }
+}
+
 /// This type is the runtime-container for the information in the plugin.yml. All plugins must have a respective plugin.yml. For plugins written in java using the standard plugin loader, this file must be in the root of the jar file.
 /// <p>When Bukkit loads a plugin, it needs to know some basic information about it. It reads this information from a YAML file, 'plugin.yml'. This file consists of a set of attributes, each defined on a new line and with no indentation.</p>
 /// <p>Every (almost* every) method corresponds with a specific entry in the plugin.yml. These are the <b>required</b> entries for every plugin.yml:</p>
@@ -868,6 +886,16 @@ impl<'mc> PluginDescriptionFile<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PluginDescriptionFile<'mc> {
@@ -876,6 +904,13 @@ impl<'mc> std::string::ToString for PluginDescriptionFile<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling PluginDescriptionFile.toString: {}", err),
         }
+    }
+}
+
+pub struct PluginDescriptionFileClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginDescriptionFileClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/PluginDescriptionFile"
     }
 }
 
@@ -986,7 +1021,25 @@ impl<'mc> PluginLoadOrder<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PluginLoadOrderClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginLoadOrderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/PluginLoadOrder"
+    }
+}
+
 /// A registered service provider.
 pub struct RegisteredServiceProvider<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1212,6 +1265,16 @@ impl<'mc> RegisteredServiceProvider<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for RegisteredServiceProvider<'mc> {
@@ -1220,6 +1283,13 @@ impl<'mc> std::string::ToString for RegisteredServiceProvider<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling RegisteredServiceProvider.toString: {}", err),
         }
+    }
+}
+
+pub struct RegisteredServiceProviderClass;
+impl blackboxmc_general::JNIProvidesClassName for RegisteredServiceProviderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/RegisteredServiceProvider"
     }
 }
 
@@ -1325,7 +1395,25 @@ impl<'mc> Flags<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct FlagsClass;
+impl blackboxmc_general::JNIProvidesClassName for FlagsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/Flags"
+    }
+}
+
 /// Represents various priorities of a provider.
 pub struct ServicePriority<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1365,7 +1453,25 @@ impl<'mc> JNIInstantiatable<'mc> for ServicePriority<'mc> {
     }
 }
 
-impl<'mc> ServicePriority<'mc> {}
+impl<'mc> ServicePriority<'mc> {
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct ServicePriorityClass;
+impl blackboxmc_general::JNIProvidesClassName for ServicePriorityClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/ServicePriority"
+    }
+}
+
 /// Represents a concept that a plugin is aware of.
 /// <p>The internal representation may be singleton, or be a parameterized instance, but must be immutable.</p>
 ///
@@ -1408,7 +1514,25 @@ impl<'mc> JNIInstantiatable<'mc> for PluginAwareness<'mc> {
     }
 }
 
-impl<'mc> PluginAwareness<'mc> {}
+impl<'mc> PluginAwareness<'mc> {
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PluginAwarenessClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginAwarenessClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/PluginAwareness"
+    }
+}
+
 /// Handles all plugin management from the Server
 ///
 /// This is a representation of an abstract class.
@@ -1914,7 +2038,25 @@ impl<'mc> PluginManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PluginManagerClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginManagerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/PluginManager"
+    }
+}
+
 /// Represents a base <a href="Plugin.html" title="interface in org.bukkit.plugin"><code>Plugin</code></a>
 /// <p>Extend this class if your plugin is not a <a href="java/JavaPlugin.html" title="class in org.bukkit.plugin.java"><code>JavaPlugin</code></a></p>
 pub struct PluginBase<'mc>(
@@ -2412,6 +2554,16 @@ impl<'mc> PluginBase<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PluginBase<'mc> {
@@ -2429,6 +2581,14 @@ impl<'mc> Into<crate::plugin::Plugin<'mc>> for PluginBase<'mc> {
             .expect("Error converting PluginBase into crate::plugin::Plugin")
     }
 }
+
+pub struct PluginBaseClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginBaseClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/PluginBase"
+    }
+}
+
 /// Interface which defines the class for event call backs to plugins
 ///
 /// This is a representation of an abstract class.
@@ -2493,7 +2653,25 @@ impl<'mc> EventExecutor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct EventExecutorClass;
+impl blackboxmc_general::JNIProvidesClassName for EventExecutorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/EventExecutor"
+    }
+}
+
 /// Manages services and service providers. Services are an interface specifying a list of methods that a provider must implement. Providers are implementations of these services. A provider can be queried from the services manager in order to use a service (if one is available). If multiple plugins register a service, then the service with the highest priority takes precedence.
 ///
 /// This is a representation of an abstract class.
@@ -2706,7 +2884,25 @@ impl<'mc> ServicesManager<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ServicesManagerClass;
+impl blackboxmc_general::JNIProvidesClassName for ServicesManagerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/ServicesManager"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum FlagsFlagsEnum {
     #[deprecated]
@@ -2809,7 +3005,25 @@ impl<'mc> FlagsFlags<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct FlagsFlagsClass;
+impl blackboxmc_general::JNIProvidesClassName for FlagsFlagsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/Flags$Flags"
+    }
+}
+
 /// Extends RegisteredListener to include timing information
 pub struct TimedRegisteredListener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3108,6 +3322,16 @@ impl<'mc> TimedRegisteredListener<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for TimedRegisteredListener<'mc> {
@@ -3126,6 +3350,14 @@ impl<'mc> Into<crate::plugin::RegisteredListener<'mc>> for TimedRegisteredListen
         )
     }
 }
+
+pub struct TimedRegisteredListenerClass;
+impl blackboxmc_general::JNIProvidesClassName for TimedRegisteredListenerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/TimedRegisteredListener"
+    }
+}
+
 /// Represents a plugin loader, which handles direct access to specific types of plugins
 ///
 /// This is a representation of an abstract class.
@@ -3276,7 +3508,25 @@ impl<'mc> PluginLoader<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PluginLoaderClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginLoaderClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/PluginLoader"
+    }
+}
+
 /// Stores relevant information for plugin listeners
 pub struct RegisteredListener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3522,6 +3772,16 @@ impl<'mc> RegisteredListener<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for RegisteredListener<'mc> {
@@ -3530,6 +3790,13 @@ impl<'mc> std::string::ToString for RegisteredListener<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling RegisteredListener.toString: {}", err),
         }
+    }
+}
+
+pub struct RegisteredListenerClass;
+impl blackboxmc_general::JNIProvidesClassName for RegisteredListenerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/RegisteredListener"
     }
 }
 
@@ -3966,6 +4233,16 @@ impl<'mc> Plugin<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::command::TabExecutor<'mc>> for Plugin<'mc> {
     fn into(self) -> crate::command::TabExecutor<'mc> {
@@ -3973,5 +4250,13 @@ impl<'mc> Into<crate::command::TabExecutor<'mc>> for Plugin<'mc> {
             .expect("Error converting Plugin into crate::command::TabExecutor")
     }
 }
+
+pub struct PluginClass;
+impl blackboxmc_general::JNIProvidesClassName for PluginClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/plugin/Plugin"
+    }
+}
+
 pub mod java;
 pub mod messaging;

@@ -67,6 +67,23 @@ impl<'mc> Palette<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PaletteClass;
+impl blackboxmc_general::JNIProvidesClassName for PaletteClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/structure/Palette"
+    }
 }
 
 ///
@@ -389,7 +406,25 @@ impl<'mc> StructureManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct StructureManagerClass;
+impl blackboxmc_general::JNIProvidesClassName for StructureManagerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/structure/StructureManager"
+    }
+}
+
 /// Represents a structure.
 /// <p>A structure is a mutable template of captured blocks and entities that can be copied back into the world. The <a href="StructureManager.html" title="interface in org.bukkit.structure"><code>StructureManager</code></a>, retrieved via <a href="../Server.html#getStructureManager()"><code>Server.getStructureManager()</code></a>, allows you to create new structures, load existing structures, and save structures.</p>
 /// <p>In order for a structure to be usable by structure blocks, it needs to be null <a href="StructureManager.html#registerStructure(org.bukkit.NamespacedKey,org.bukkit.structure.Structure)"><code>registered</code></a> with the <a href="StructureManager.html" title="interface in org.bukkit.structure"><code>StructureManager</code></a>, or located in the primary world folder, a DataPack, or the server's own default resources, so that the StructureManager can find it.</p>
@@ -596,10 +631,27 @@ impl<'mc> Structure<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::persistence::PersistentDataHolder<'mc>> for Structure<'mc> {
     fn into(self) -> crate::persistence::PersistentDataHolder<'mc> {
         crate::persistence::PersistentDataHolder::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Structure into crate::persistence::PersistentDataHolder")
+    }
+}
+
+pub struct StructureClass;
+impl blackboxmc_general::JNIProvidesClassName for StructureClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/structure/Structure"
     }
 }

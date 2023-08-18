@@ -215,6 +215,16 @@ impl<'mc> VehicleUpdateEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for VehicleUpdateEvent<'mc> {
@@ -232,6 +242,14 @@ impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleUpdateEvent<
             .expect("Error converting VehicleUpdateEvent into crate::event::vehicle::VehicleEvent")
     }
 }
+
+pub struct VehicleUpdateEventClass;
+impl blackboxmc_general::JNIProvidesClassName for VehicleUpdateEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/vehicle/VehicleUpdateEvent"
+    }
+}
+
 /// Raised when an entity enters a vehicle.
 pub struct VehicleEnterEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -485,6 +503,16 @@ impl<'mc> VehicleEnterEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for VehicleEnterEvent<'mc> {
@@ -508,6 +536,14 @@ impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleEnterEvent<'
             .expect("Error converting VehicleEnterEvent into crate::event::vehicle::VehicleEvent")
     }
 }
+
+pub struct VehicleEnterEventClass;
+impl blackboxmc_general::JNIProvidesClassName for VehicleEnterEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/vehicle/VehicleEnterEvent"
+    }
+}
+
 /// Raised when a vehicle collides with an entity.
 pub struct VehicleEntityCollisionEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -813,6 +849,16 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for VehicleEntityCollisionEvent<'mc> {
@@ -840,6 +886,14 @@ impl<'mc> Into<crate::event::vehicle::VehicleCollisionEvent<'mc>>
         crate::event::vehicle::VehicleCollisionEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting VehicleEntityCollisionEvent into crate::event::vehicle::VehicleCollisionEvent")
     }
 }
+
+pub struct VehicleEntityCollisionEventClass;
+impl blackboxmc_general::JNIProvidesClassName for VehicleEntityCollisionEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/vehicle/VehicleEntityCollisionEvent"
+    }
+}
+
 /// Raised when a living entity exits a vehicle.
 pub struct VehicleExitEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1092,6 +1146,16 @@ impl<'mc> VehicleExitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for VehicleExitEvent<'mc> {
@@ -1115,6 +1179,14 @@ impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleExitEvent<'m
             .expect("Error converting VehicleExitEvent into crate::event::vehicle::VehicleEvent")
     }
 }
+
+pub struct VehicleExitEventClass;
+impl blackboxmc_general::JNIProvidesClassName for VehicleExitEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/vehicle/VehicleExitEvent"
+    }
+}
+
 /// Raised when a vehicle collides.
 pub struct VehicleCollisionEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1316,6 +1388,16 @@ impl<'mc> VehicleCollisionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for VehicleCollisionEvent<'mc> {
@@ -1334,6 +1416,14 @@ impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleCollisionEve
         )
     }
 }
+
+pub struct VehicleCollisionEventClass;
+impl blackboxmc_general::JNIProvidesClassName for VehicleCollisionEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/vehicle/VehicleCollisionEvent"
+    }
+}
+
 /// Raised when a vehicle collides with a block.
 pub struct VehicleBlockCollisionEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1566,6 +1656,16 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for VehicleBlockCollisionEvent<'mc> {
@@ -1584,6 +1684,14 @@ impl<'mc> Into<crate::event::vehicle::VehicleCollisionEvent<'mc>>
         crate::event::vehicle::VehicleCollisionEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting VehicleBlockCollisionEvent into crate::event::vehicle::VehicleCollisionEvent")
     }
 }
+
+pub struct VehicleBlockCollisionEventClass;
+impl blackboxmc_general::JNIProvidesClassName for VehicleBlockCollisionEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/vehicle/VehicleBlockCollisionEvent"
+    }
+}
+
 /// Raised when a vehicle is created.
 pub struct VehicleCreateEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1819,6 +1927,16 @@ impl<'mc> VehicleCreateEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for VehicleCreateEvent<'mc> {
@@ -1842,6 +1960,14 @@ impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleCreateEvent<
             .expect("Error converting VehicleCreateEvent into crate::event::vehicle::VehicleEvent")
     }
 }
+
+pub struct VehicleCreateEventClass;
+impl blackboxmc_general::JNIProvidesClassName for VehicleCreateEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/vehicle/VehicleCreateEvent"
+    }
+}
+
 /// Raised when a vehicle moves.
 pub struct VehicleMoveEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2092,6 +2218,16 @@ impl<'mc> VehicleMoveEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for VehicleMoveEvent<'mc> {
@@ -2109,6 +2245,14 @@ impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleMoveEvent<'m
             .expect("Error converting VehicleMoveEvent into crate::event::vehicle::VehicleEvent")
     }
 }
+
+pub struct VehicleMoveEventClass;
+impl blackboxmc_general::JNIProvidesClassName for VehicleMoveEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/vehicle/VehicleMoveEvent"
+    }
+}
+
 /// Raised when a vehicle is destroyed, which could be caused by either a player or the environment. This is not raised if the boat is simply 'removed' due to other means.
 pub struct VehicleDestroyEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2368,6 +2512,16 @@ impl<'mc> VehicleDestroyEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for VehicleDestroyEvent<'mc> {
@@ -2391,6 +2545,14 @@ impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleDestroyEvent
             .expect("Error converting VehicleDestroyEvent into crate::event::vehicle::VehicleEvent")
     }
 }
+
+pub struct VehicleDestroyEventClass;
+impl blackboxmc_general::JNIProvidesClassName for VehicleDestroyEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/vehicle/VehicleDestroyEvent"
+    }
+}
+
 /// Raised when a vehicle receives damage.
 pub struct VehicleDamageEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2675,6 +2837,16 @@ impl<'mc> VehicleDamageEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for VehicleDamageEvent<'mc> {
@@ -2698,6 +2870,14 @@ impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleDamageEvent<
             .expect("Error converting VehicleDamageEvent into crate::event::vehicle::VehicleEvent")
     }
 }
+
+pub struct VehicleDamageEventClass;
+impl blackboxmc_general::JNIProvidesClassName for VehicleDamageEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/vehicle/VehicleDamageEvent"
+    }
+}
+
 /// Represents a vehicle-related event.
 pub struct VehicleEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2895,6 +3075,16 @@ impl<'mc> VehicleEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for VehicleEvent<'mc> {
@@ -2910,5 +3100,12 @@ impl<'mc> Into<crate::event::Event<'mc>> for VehicleEvent<'mc> {
     fn into(self) -> crate::event::Event<'mc> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting VehicleEvent into crate::event::Event")
+    }
+}
+
+pub struct VehicleEventClass;
+impl blackboxmc_general::JNIProvidesClassName for VehicleEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/vehicle/VehicleEvent"
     }
 }

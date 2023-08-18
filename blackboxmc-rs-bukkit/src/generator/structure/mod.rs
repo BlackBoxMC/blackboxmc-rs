@@ -154,6 +154,16 @@ impl<'mc> StructureType<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for StructureType<'mc> {
@@ -171,6 +181,14 @@ impl<'mc> Into<crate::Keyed<'mc>> for StructureType<'mc> {
             .expect("Error converting StructureType into crate::Keyed")
     }
 }
+
+pub struct StructureTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for StructureTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/generator/structure/StructureType"
+    }
+}
+
 /// Represent a Structure from the world. Listed structures are present in the default server. Depending on the server there might be additional structures present (for example structures added by data packs), which can be received via <a href="../../Registry.html#STRUCTURE"><code>Registry.STRUCTURE</code></a>.
 pub struct Structure<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -337,6 +355,16 @@ impl<'mc> Structure<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Structure<'mc> {
@@ -352,5 +380,12 @@ impl<'mc> Into<crate::Keyed<'mc>> for Structure<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Structure into crate::Keyed")
+    }
+}
+
+pub struct StructureClass;
+impl blackboxmc_general::JNIProvidesClassName for StructureClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/generator/structure/Structure"
     }
 }

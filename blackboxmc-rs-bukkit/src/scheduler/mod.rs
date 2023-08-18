@@ -93,7 +93,25 @@ impl<'mc> BukkitTask<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BukkitTaskClass;
+impl blackboxmc_general::JNIProvidesClassName for BukkitTaskClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scheduler/BukkitTask"
+    }
+}
+
 /// Represents a worker thread for the scheduler. This gives information about the Thread object for the task, owner of the task and the taskId.
 /// <p>Workers are used to execute async tasks.</p>
 ///
@@ -157,6 +175,23 @@ impl<'mc> BukkitWorker<'mc> {
             .call_method(&self.jni_object(), "getTaskId", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct BukkitWorkerClass;
+impl blackboxmc_general::JNIProvidesClassName for BukkitWorkerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scheduler/BukkitWorker"
     }
 }
 
@@ -340,7 +375,25 @@ impl<'mc> BukkitScheduler<'mc> {
         }
         Ok(new_vec)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct BukkitSchedulerClass;
+impl blackboxmc_general::JNIProvidesClassName for BukkitSchedulerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scheduler/BukkitScheduler"
+    }
+}
+
 /// This class is provided as an easy way to handle scheduling tasks.
 pub struct BukkitRunnable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -674,6 +727,16 @@ impl<'mc> BukkitRunnable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for BukkitRunnable<'mc> {
@@ -682,5 +745,12 @@ impl<'mc> std::string::ToString for BukkitRunnable<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling BukkitRunnable.toString: {}", err),
         }
+    }
+}
+
+pub struct BukkitRunnableClass;
+impl blackboxmc_general::JNIProvidesClassName for BukkitRunnableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scheduler/BukkitRunnable"
     }
 }

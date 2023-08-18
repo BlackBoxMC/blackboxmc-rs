@@ -136,6 +136,16 @@ impl<'mc> JavaErrorManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaErrorManager<'mc> {
@@ -144,6 +154,13 @@ impl<'mc> std::string::ToString for JavaErrorManager<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling JavaErrorManager.toString: {}", err),
         }
+    }
+}
+
+pub struct JavaErrorManagerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaErrorManagerClass {
+    fn class_name(&self) -> &str {
+        "java/util/logging/ErrorManager"
     }
 }
 
@@ -369,6 +386,16 @@ impl<'mc> JavaXMLFormatter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaXMLFormatter<'mc> {
@@ -386,6 +413,14 @@ impl<'mc> Into<crate::util::logging::JavaFormatter<'mc>> for JavaXMLFormatter<'m
             .expect("Error converting JavaXMLFormatter into crate::util::logging::JavaFormatter")
     }
 }
+
+pub struct JavaXMLFormatterClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaXMLFormatterClass {
+    fn class_name(&self) -> &str {
+        "java/util/logging/XMLFormatter"
+    }
+}
+
 /// A Formatter provides support for formatting LogRecords.
 /// <p>Typically each logging Handler will have a Formatter associated with it. The Formatter takes a LogRecord and converts it to a string.</p>
 /// <p>Some formatters (such as the XMLFormatter) need to wrap head and tail strings around a set of formatted records. The getHeader and getTail methods can be used to obtain these strings.</p>
@@ -595,6 +630,16 @@ impl<'mc> JavaFormatter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaFormatter<'mc> {
@@ -603,6 +648,13 @@ impl<'mc> std::string::ToString for JavaFormatter<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling JavaFormatter.toString: {}", err),
         }
+    }
+}
+
+pub struct JavaFormatterClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaFormatterClass {
+    fn class_name(&self) -> &str {
+        "java/util/logging/Formatter"
     }
 }
 
@@ -981,6 +1033,16 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaSocketHandler<'mc> {
@@ -999,6 +1061,14 @@ impl<'mc> Into<crate::util::logging::JavaStreamHandler<'mc>> for JavaSocketHandl
         )
     }
 }
+
+pub struct JavaSocketHandlerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaSocketHandlerClass {
+    fn class_name(&self) -> &str {
+        "java/util/logging/SocketHandler"
+    }
+}
+
 /// Print a brief summary of the <code>LogRecord</code> in a human readable format. The summary will typically be 1 or 2 lines.
 /// <p><a name="formatting"> <b>Configuration:</b></a> The <code>SimpleFormatter</code> is initialized with the <a href="../Formatter.html#syntax">format string</a> specified in the <code>java.util.logging.SimpleFormatter.format</code> property to <a href="../../../java/util/logging/SimpleFormatter.html#format">format</a> the log messages. This property can be defined in the <a href="../../../java/util/logging/LogManager.html#getProperty-java.lang.String-">logging properties</a> configuration file or as a system property. If this property is set in both the logging properties and system properties, the format string specified in the system property will be used. If this property is not defined or the given format string is <a title="class in java.util" href="../../../java/util/IllegalFormatException.html">illegal</a>, the default format is implementation-specific.</p>
 pub struct JavaSimpleFormatter<'mc>(
@@ -1220,6 +1290,16 @@ impl<'mc> JavaSimpleFormatter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaSimpleFormatter<'mc> {
@@ -1237,6 +1317,14 @@ impl<'mc> Into<crate::util::logging::JavaFormatter<'mc>> for JavaSimpleFormatter
             .expect("Error converting JavaSimpleFormatter into crate::util::logging::JavaFormatter")
     }
 }
+
+pub struct JavaSimpleFormatterClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaSimpleFormatterClass {
+    fn class_name(&self) -> &str {
+        "java/util/logging/SimpleFormatter"
+    }
+}
+
 /// A <tt>Handler</tt> object takes log messages from a <tt>Logger</tt> and exports them. It might for example, write them to a console or write them to a file, or send them to a network logging service, or forward them to an OS log, or whatever.
 /// <p>A <tt>Handler</tt> can be disabled by doing a <tt>setLevel(Level.OFF)</tt> and can be re-enabled by doing a <tt>setLevel</tt> with an appropriate level.</p>
 /// <p><tt>Handler</tt> classes typically use <tt>LogManager</tt> properties to set default values for the <tt>Handler</tt>'s <tt>Filter</tt>, <tt>Formatter</tt>, and <tt>Level</tt>. See the specific documentation for each concrete <tt>Handler</tt> class.</p>
@@ -1564,6 +1652,16 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaHandler<'mc> {
@@ -1572,6 +1670,13 @@ impl<'mc> std::string::ToString for JavaHandler<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling JavaHandler.toString: {}", err),
         }
+    }
+}
+
+pub struct JavaHandlerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaHandlerClass {
+    fn class_name(&self) -> &str {
+        "java/util/logging/Handler"
     }
 }
 
@@ -2003,6 +2108,16 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaMemoryHandler<'mc> {
@@ -2020,6 +2135,14 @@ impl<'mc> Into<crate::util::logging::JavaHandler<'mc>> for JavaMemoryHandler<'mc
             .expect("Error converting JavaMemoryHandler into crate::util::logging::JavaHandler")
     }
 }
+
+pub struct JavaMemoryHandlerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaMemoryHandlerClass {
+    fn class_name(&self) -> &str {
+        "java/util/logging/MemoryHandler"
+    }
+}
+
 /// A Logger object is used to log messages for a specific system or application component. Loggers are normally named, using a hierarchical dot-separated namespace. Logger names can be arbitrary strings, but they should normally be based on the package name or class name of the logged component, such as java.net or javax.swing. In addition it is possible to create "anonymous" Loggers that are not stored in the Logger namespace.
 /// <p>Logger objects may be obtained by calls on one of the getLogger factory methods. These will either create a new Logger or return a suitable existing Logger. It is important to note that the Logger returned by one of the <code>getLogger</code> factory methods may be garbage collected at any time if a strong reference to the Logger is not kept.</p>
 /// <p>Logging messages will be forwarded to registered Handler objects, which can forward the messages to a variety of destinations, including consoles, files, OS logs, etc.</p>
@@ -2660,6 +2783,16 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaLogger<'mc> {
@@ -2668,6 +2801,13 @@ impl<'mc> std::string::ToString for JavaLogger<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling JavaLogger.toString: {}", err),
         }
+    }
+}
+
+pub struct JavaLoggerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaLoggerClass {
+    fn class_name(&self) -> &str {
+        "java/util/logging/Logger"
     }
 }
 
@@ -3027,6 +3167,16 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaConsoleHandler<'mc> {
@@ -3045,6 +3195,14 @@ impl<'mc> Into<crate::util::logging::JavaStreamHandler<'mc>> for JavaConsoleHand
         )
     }
 }
+
+pub struct JavaConsoleHandlerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaConsoleHandlerClass {
+    fn class_name(&self) -> &str {
+        "java/util/logging/ConsoleHandler"
+    }
+}
+
 /// The permission which the SecurityManager will check when code that is running with a SecurityManager calls one of the logging control methods (such as Logger.setLevel).
 /// <p>Currently there is only one named LoggingPermission. This is "control" and it grants the ability to control the logging configuration, for example by adding or removing Handlers, by adding or removing Filters, or by changing logging levels.</p>
 /// <p>Programmers do not normally create LoggingPermission objects directly. Instead they are created by the security policy code based on reading the security policy file.</p>
@@ -3267,6 +3425,16 @@ impl<'mc> JavaLoggingPermission<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaLoggingPermission<'mc> {
@@ -3275,6 +3443,13 @@ impl<'mc> std::string::ToString for JavaLoggingPermission<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling JavaLoggingPermission.toString: {}", err),
         }
+    }
+}
+
+pub struct JavaLoggingPermissionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaLoggingPermissionClass {
+    fn class_name(&self) -> &str {
+        "java/util/logging/LoggingPermission"
     }
 }
 
@@ -3336,7 +3511,25 @@ impl<'mc> JavaFilter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaFilterClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaFilterClass {
+    fn class_name(&self) -> &str {
+        "java/util/logging/Filter"
+    }
+}
+
 /// LogRecord objects are used to pass logging requests between the logging framework and individual log Handlers.
 /// <p>When a LogRecord is passed into the logging framework it logically belongs to the framework and should no longer be used or updated by the client application.</p>
 /// <p>Note that if the client application has not specified an explicit source method name and source class name, then the LogRecord class will infer them automatically when they are first accessed (due to a call on getSourceMethodName or getSourceClassName) by analyzing the call stack. Therefore, if a logging Handler wants to pass off a LogRecord to another thread, or to transmit it over RMI, and if it wishes to subsequently obtain method name or class name information it should call one of getSourceClassName or getSourceMethodName to force the values to be filled in.</p>
@@ -3815,6 +4008,16 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaLogRecord<'mc> {
@@ -3823,6 +4026,13 @@ impl<'mc> std::string::ToString for JavaLogRecord<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling JavaLogRecord.toString: {}", err),
         }
+    }
+}
+
+pub struct JavaLogRecordClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaLogRecordClass {
+    fn class_name(&self) -> &str {
+        "java/util/logging/LogRecord"
     }
 }
 
@@ -4200,6 +4410,16 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaStreamHandler<'mc> {
@@ -4217,6 +4437,14 @@ impl<'mc> Into<crate::util::logging::JavaHandler<'mc>> for JavaStreamHandler<'mc
             .expect("Error converting JavaStreamHandler into crate::util::logging::JavaHandler")
     }
 }
+
+pub struct JavaStreamHandlerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaStreamHandlerClass {
+    fn class_name(&self) -> &str {
+        "java/util/logging/StreamHandler"
+    }
+}
+
 /// The Level class defines a set of standard logging levels that can be used to control logging output. The logging Level objects are ordered and are specified by ordered integers. Enabling logging at a given level also enables logging at all higher levels.
 /// <p>Clients should normally use the predefined Level constants such as Level.SEVERE.</p>
 /// <p>The levels in descending order are:</p>
@@ -4423,6 +4651,16 @@ impl<'mc> JavaLevel<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaLevel<'mc> {
@@ -4431,5 +4669,12 @@ impl<'mc> std::string::ToString for JavaLevel<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling JavaLevel.toString: {}", err),
         }
+    }
+}
+
+pub struct JavaLevelClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaLevelClass {
+    fn class_name(&self) -> &str {
+        "java/util/logging/Level"
     }
 }

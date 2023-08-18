@@ -236,6 +236,12 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
+
+    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    }
+    
 }
 
         impl<'mc> std::string::ToString for Item<'mc> {
@@ -258,6 +264,14 @@ crate::bungee::api::chat::hover::content::Content::from_raw(&self.jni_ref(), sel
 
    }
 }
+
+        pub struct ItemClass;
+        impl blackboxmc_general::JNIProvidesClassName for ItemClass {
+            fn class_name(&self) -> &str {
+                "net/md_5/bungee/api/chat/hover/content/Item"
+            }
+        }
+    
 
 pub struct Entity<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 
@@ -491,6 +505,12 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
+
+    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    }
+    
 }
 
         impl<'mc> std::string::ToString for Entity<'mc> {
@@ -513,6 +533,14 @@ crate::bungee::api::chat::hover::content::Content::from_raw(&self.jni_ref(), sel
 
    }
 }
+
+        pub struct EntityClass;
+        impl blackboxmc_general::JNIProvidesClassName for EntityClass {
+            fn class_name(&self) -> &str {
+                "net/md_5/bungee/api/chat/hover/content/Entity"
+            }
+        }
+    
 
 pub struct ItemSerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 
@@ -699,6 +727,12 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
+
+    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    }
+    
 }
 
         impl<'mc> std::string::ToString for ItemSerializer<'mc> {
@@ -720,6 +754,14 @@ fn into(self) -> jni::objects::JObject<'mc> {
 self.1
    }
 }
+
+        pub struct ItemSerializerClass;
+        impl blackboxmc_general::JNIProvidesClassName for ItemSerializerClass {
+            fn class_name(&self) -> &str {
+                "net/md_5/bungee/api/chat/hover/content/ItemSerializer"
+            }
+        }
+    
 
 pub struct TextSerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 
@@ -906,6 +948,12 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
+
+    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    }
+    
 }
 
         impl<'mc> std::string::ToString for TextSerializer<'mc> {
@@ -927,6 +975,14 @@ fn into(self) -> jni::objects::JObject<'mc> {
 self.1
    }
 }
+
+        pub struct TextSerializerClass;
+        impl blackboxmc_general::JNIProvidesClassName for TextSerializerClass {
+            fn class_name(&self) -> &str {
+                "net/md_5/bungee/api/chat/hover/content/TextSerializer"
+            }
+        }
+    
 
 pub struct Content<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 
@@ -1092,6 +1148,12 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
+
+    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    }
+    
 }
 
         impl<'mc> std::string::ToString for Content<'mc> {
@@ -1106,6 +1168,14 @@ Ok(
             }
         }
         
+
+        pub struct ContentClass;
+        impl blackboxmc_general::JNIProvidesClassName for ContentClass {
+            fn class_name(&self) -> &str {
+                "net/md_5/bungee/api/chat/hover/content/Content"
+            }
+        }
+    
 
 pub struct Text<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 
@@ -1287,6 +1357,12 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
+
+    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    }
+    
 }
 
         impl<'mc> std::string::ToString for Text<'mc> {
@@ -1309,6 +1385,14 @@ crate::bungee::api::chat::hover::content::Content::from_raw(&self.jni_ref(), sel
 
    }
 }
+
+        pub struct TextClass;
+        impl blackboxmc_general::JNIProvidesClassName for TextClass {
+            fn class_name(&self) -> &str {
+                "net/md_5/bungee/api/chat/hover/content/Text"
+            }
+        }
+    
 
 pub struct EntitySerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 
@@ -1495,6 +1579,12 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
+
+    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    }
+    
 }
 
         impl<'mc> std::string::ToString for EntitySerializer<'mc> {
@@ -1516,3 +1606,11 @@ fn into(self) -> jni::objects::JObject<'mc> {
 self.1
    }
 }
+
+        pub struct EntitySerializerClass;
+        impl blackboxmc_general::JNIProvidesClassName for EntitySerializerClass {
+            fn class_name(&self) -> &str {
+                "net/md_5/bungee/api/chat/hover/content/EntitySerializer"
+            }
+        }
+    

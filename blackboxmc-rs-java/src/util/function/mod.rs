@@ -55,7 +55,25 @@ impl<'mc> JavaIntSupplier<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaIntSupplierClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaIntSupplierClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/IntSupplier"
+    }
+}
+
 /// Represents a function that accepts a double-valued argument and produces a long-valued result. This is the <code>double</code>-to-<code>long</code> primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleToLongFunction.html#applyAsLong-double-"><code>applyAsLong(double)</code></a>.</p>
 ///
@@ -112,7 +130,25 @@ impl<'mc> JavaDoubleToLongFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaDoubleToLongFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaDoubleToLongFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/DoubleToLongFunction"
+    }
+}
+
 /// Represents an operation on a single <code>int</code>-valued operand that produces an <code>int</code>-valued result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/UnaryOperator.html"><code>UnaryOperator</code></a> for <code>int</code>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntUnaryOperator.html#applyAsInt-int-"><code>applyAsInt(int)</code></a>.</p>
 ///
@@ -224,7 +260,25 @@ impl<'mc> JavaIntUnaryOperator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaIntUnaryOperatorClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaIntUnaryOperatorClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/IntUnaryOperator"
+    }
+}
+
 /// Represents a function that accepts an int-valued argument and produces a double-valued result. This is the <code>int</code>-to-<code>double</code> primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntToDoubleFunction.html#applyAsDouble-int-"><code>applyAsDouble(int)</code></a>.</p>
 ///
@@ -281,7 +335,25 @@ impl<'mc> JavaIntToDoubleFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaIntToDoubleFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaIntToDoubleFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/IntToDoubleFunction"
+    }
+}
+
 /// Represents an operation that accepts an object-valued and a <code>double</code>-valued argument, and returns no result. This is the <code>(reference, double)</code> specialization of <a href="../../../java/util/function/BiConsumer.html" title="interface in java.util.function"><code>BiConsumer</code></a>. Unlike most other functional interfaces, <code>ObjDoubleConsumer</code> is expected to operate via side-effects.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ObjDoubleConsumer.html#accept-T-double-"><code>accept(Object, double)</code></a>.</p>
 ///
@@ -346,7 +418,25 @@ impl<'mc> JavaObjDoubleConsumer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaObjDoubleConsumerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaObjDoubleConsumerClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/ObjDoubleConsumer"
+    }
+}
+
 /// Represents a predicate (boolean-valued function) of one argument.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/Predicate.html#test-T-"><code>test(Object)</code></a>.</p>
 ///
@@ -496,7 +586,25 @@ impl<'mc> JavaPredicate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaPredicateClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaPredicateClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/Predicate"
+    }
+}
+
 /// Represents a function that accepts one argument and produces a result.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/Function.html#apply-T-"><code>apply(Object)</code></a>.</p>
 ///
@@ -605,7 +713,25 @@ impl<'mc> JavaFunction<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/Function"
+    }
+}
+
 /// Represents a function that produces a long-valued result. This is the <code>long</code>-producing primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ToLongFunction.html#applyAsLong-T-"><code>applyAsLong(Object)</code></a>.</p>
 ///
@@ -664,7 +790,25 @@ impl<'mc> JavaToLongFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaToLongFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaToLongFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/ToLongFunction"
+    }
+}
+
 /// Represents an operation that accepts a single input argument and returns no result. Unlike most other functional interfaces, <code>Consumer</code> is expected to operate via side-effects.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/Consumer.html#accept-T-"><code>accept(Object)</code></a>.</p>
 ///
@@ -741,7 +885,25 @@ impl<'mc> JavaConsumer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaConsumerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaConsumerClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/Consumer"
+    }
+}
+
 /// Represents a function that accepts two arguments and produces an int-valued result. This is the <code>int</code>-producing primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/BiFunction.html"><code>BiFunction</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ToIntBiFunction.html#applyAsInt-T-U-"><code>applyAsInt(Object, Object)</code></a>.</p>
 ///
@@ -805,7 +967,25 @@ impl<'mc> JavaToIntBiFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaToIntBiFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaToIntBiFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/ToIntBiFunction"
+    }
+}
+
 /// Represents an operation that accepts an object-valued and a <code>long</code>-valued argument, and returns no result. This is the <code>(reference, long)</code> specialization of <a title="interface in java.util.function" href="../../../java/util/function/BiConsumer.html"><code>BiConsumer</code></a>. Unlike most other functional interfaces, <code>ObjLongConsumer</code> is expected to operate via side-effects.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ObjLongConsumer.html#accept-T-long-"><code>accept(Object, long)</code></a>.</p>
 ///
@@ -869,7 +1049,25 @@ impl<'mc> JavaObjLongConsumer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaObjLongConsumerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaObjLongConsumerClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/ObjLongConsumer"
+    }
+}
+
 /// Represents a function that accepts a long-valued argument and produces an int-valued result. This is the <code>long</code>-to-<code>int</code> primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/LongToIntFunction.html#applyAsInt-long-"><code>applyAsInt(long)</code></a>.</p>
 ///
@@ -926,7 +1124,25 @@ impl<'mc> JavaLongToIntFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaLongToIntFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaLongToIntFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/LongToIntFunction"
+    }
+}
+
 /// Represents a supplier of results.
 /// <p>There is no requirement that a new or distinct result be returned each time the supplier is invoked.</p>
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/Supplier.html#get--"><code>get()</code></a>.</p>
@@ -977,7 +1193,25 @@ impl<'mc> JavaSupplier<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaSupplierClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaSupplierClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/Supplier"
+    }
+}
+
 /// Represents an operation on a single operand that produces a result of the same type as its operand. This is a specialization of <code>Function</code> for the case where the operand and result are of the same type.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/Function.html#apply-T-"><code>Function.apply(Object)</code></a>.</p>
 ///
@@ -1088,6 +1322,16 @@ impl<'mc> JavaUnaryOperator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::util::function::JavaFunction<'mc>> for JavaUnaryOperator<'mc> {
     fn into(self) -> crate::util::function::JavaFunction<'mc> {
@@ -1095,6 +1339,14 @@ impl<'mc> Into<crate::util::function::JavaFunction<'mc>> for JavaUnaryOperator<'
             .expect("Error converting JavaUnaryOperator into crate::util::function::JavaFunction")
     }
 }
+
+pub struct JavaUnaryOperatorClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaUnaryOperatorClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/UnaryOperator"
+    }
+}
+
 /// Represents an operation that accepts an object-valued and a <code>int</code>-valued argument, and returns no result. This is the <code>(reference, int)</code> specialization of <a href="../../../java/util/function/BiConsumer.html" title="interface in java.util.function"><code>BiConsumer</code></a>. Unlike most other functional interfaces, <code>ObjIntConsumer</code> is expected to operate via side-effects.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ObjIntConsumer.html#accept-T-int-"><code>accept(Object, int)</code></a>.</p>
 ///
@@ -1158,7 +1410,25 @@ impl<'mc> JavaObjIntConsumer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaObjIntConsumerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaObjIntConsumerClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/ObjIntConsumer"
+    }
+}
+
 /// Represents an operation upon two operands of the same type, producing a result of the same type as the operands. This is a specialization of <a title="interface in java.util.function" href="../../../java/util/function/BiFunction.html"><code>BiFunction</code></a> for the case where the operands and the result are all of the same type.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/BiFunction.html#apply-T-U-"><code>BiFunction.apply(Object, Object)</code></a>.</p>
 ///
@@ -1284,6 +1554,16 @@ impl<'mc> JavaBinaryOperator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::util::function::JavaBiFunction<'mc>> for JavaBinaryOperator<'mc> {
     fn into(self) -> crate::util::function::JavaBiFunction<'mc> {
@@ -1292,6 +1572,14 @@ impl<'mc> Into<crate::util::function::JavaBiFunction<'mc>> for JavaBinaryOperato
         )
     }
 }
+
+pub struct JavaBinaryOperatorClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaBinaryOperatorClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/BinaryOperator"
+    }
+}
+
 /// Represents a supplier of <code>boolean</code>-valued results. This is the <code>boolean</code>-producing primitive specialization of <a title="interface in java.util.function" href="../../../java/util/function/Supplier.html"><code>Supplier</code></a>.
 /// <p>There is no requirement that a new or distinct result be returned each time the supplier is invoked.</p>
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/BooleanSupplier.html#getAsBoolean--"><code>getAsBoolean()</code></a>.</p>
@@ -1344,7 +1632,25 @@ impl<'mc> JavaBooleanSupplier<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaBooleanSupplierClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaBooleanSupplierClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/BooleanSupplier"
+    }
+}
+
 /// Represents a function that produces a double-valued result. This is the <code>double</code>-producing primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ToDoubleFunction.html#applyAsDouble-T-"><code>applyAsDouble(Object)</code></a>.</p>
 ///
@@ -1403,7 +1709,25 @@ impl<'mc> JavaToDoubleFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaToDoubleFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaToDoubleFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/ToDoubleFunction"
+    }
+}
+
 /// Represents an operation on a single <code>double</code>-valued operand that produces a <code>double</code>-valued result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/UnaryOperator.html"><code>UnaryOperator</code></a> for <code>double</code>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleUnaryOperator.html#applyAsDouble-double-"><code>applyAsDouble(double)</code></a>.</p>
 ///
@@ -1519,7 +1843,25 @@ impl<'mc> JavaDoubleUnaryOperator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaDoubleUnaryOperatorClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaDoubleUnaryOperatorClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/DoubleUnaryOperator"
+    }
+}
+
 /// Represents an operation upon two <code>long</code>-valued operands and producing a <code>long</code>-valued result. This is the primitive type specialization of <a href="../../../java/util/function/BinaryOperator.html" title="interface in java.util.function"><code>BinaryOperator</code></a> for <code>long</code>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/LongBinaryOperator.html#applyAsLong-long-long-"><code>applyAsLong(long, long)</code></a>.</p>
 ///
@@ -1580,7 +1922,25 @@ impl<'mc> JavaLongBinaryOperator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaLongBinaryOperatorClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaLongBinaryOperatorClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/LongBinaryOperator"
+    }
+}
+
 /// Represents a predicate (boolean-valued function) of one <code>int</code>-valued argument. This is the <code>int</code>-consuming primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/Predicate.html"><code>Predicate</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntPredicate.html#test-int-"><code>test(int)</code></a>.</p>
 ///
@@ -1691,7 +2051,25 @@ impl<'mc> JavaIntPredicate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaIntPredicateClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaIntPredicateClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/IntPredicate"
+    }
+}
+
 /// Represents a predicate (boolean-valued function) of one <code>double</code>-valued argument. This is the <code>double</code>-consuming primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/Predicate.html"><code>Predicate</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoublePredicate.html#test-double-"><code>test(double)</code></a>.</p>
 ///
@@ -1804,7 +2182,25 @@ impl<'mc> JavaDoublePredicate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaDoublePredicateClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaDoublePredicateClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/DoublePredicate"
+    }
+}
+
 /// Represents a function that accepts two arguments and produces a double-valued result. This is the <code>double</code>-producing primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/BiFunction.html"><code>BiFunction</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ToDoubleBiFunction.html#applyAsDouble-T-U-"><code>applyAsDouble(Object, Object)</code></a>.</p>
 ///
@@ -1869,7 +2265,25 @@ impl<'mc> JavaToDoubleBiFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaToDoubleBiFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaToDoubleBiFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/ToDoubleBiFunction"
+    }
+}
+
 /// Represents a predicate (boolean-valued function) of one <code>long</code>-valued argument. This is the <code>long</code>-consuming primitive type specialization of <a href="../../../java/util/function/Predicate.html" title="interface in java.util.function"><code>Predicate</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/LongPredicate.html#test-long-"><code>test(long)</code></a>.</p>
 ///
@@ -1980,7 +2394,25 @@ impl<'mc> JavaLongPredicate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaLongPredicateClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaLongPredicateClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/LongPredicate"
+    }
+}
+
 /// Represents an operation that accepts a single <code>int</code>-valued argument and returns no result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/Consumer.html"><code>Consumer</code></a> for <code>int</code>. Unlike most other functional interfaces, <code>IntConsumer</code> is expected to operate via side-effects.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntConsumer.html#accept-int-"><code>accept(int)</code></a>.</p>
 ///
@@ -2057,7 +2489,25 @@ impl<'mc> JavaIntConsumer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaIntConsumerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaIntConsumerClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/IntConsumer"
+    }
+}
+
 /// Represents a function that accepts a long-valued argument and produces a double-valued result. This is the <code>long</code>-to-<code>double</code> primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/LongToDoubleFunction.html#applyAsDouble-long-"><code>applyAsDouble(long)</code></a>.</p>
 ///
@@ -2114,7 +2564,25 @@ impl<'mc> JavaLongToDoubleFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaLongToDoubleFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaLongToDoubleFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/LongToDoubleFunction"
+    }
+}
+
 /// Represents a function that accepts a double-valued argument and produces a result. This is the <code>double</code>-consuming primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleFunction.html#apply-double-"><code>apply(double)</code></a>.</p>
 ///
@@ -2173,7 +2641,25 @@ impl<'mc> JavaDoubleFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaDoubleFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaDoubleFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/DoubleFunction"
+    }
+}
+
 /// Represents an operation that accepts a single <code>long</code>-valued argument and returns no result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/Consumer.html"><code>Consumer</code></a> for <code>long</code>. Unlike most other functional interfaces, <code>LongConsumer</code> is expected to operate via side-effects.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/LongConsumer.html#accept-long-"><code>accept(long)</code></a>.</p>
 ///
@@ -2250,7 +2736,25 @@ impl<'mc> JavaLongConsumer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaLongConsumerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaLongConsumerClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/LongConsumer"
+    }
+}
+
 /// Represents an operation that accepts a single <code>double</code>-valued argument and returns no result. This is the primitive type specialization of <a href="../../../java/util/function/Consumer.html" title="interface in java.util.function"><code>Consumer</code></a> for <code>double</code>. Unlike most other functional interfaces, <code>DoubleConsumer</code> is expected to operate via side-effects.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleConsumer.html#accept-double-"><code>accept(double)</code></a>.</p>
 ///
@@ -2328,7 +2832,25 @@ impl<'mc> JavaDoubleConsumer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaDoubleConsumerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaDoubleConsumerClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/DoubleConsumer"
+    }
+}
+
 /// Represents an operation upon two <code>double</code>-valued operands and producing a <code>double</code>-valued result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/BinaryOperator.html"><code>BinaryOperator</code></a> for <code>double</code>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleBinaryOperator.html#applyAsDouble-double-double-"><code>applyAsDouble(double, double)</code></a>.</p>
 ///
@@ -2389,7 +2911,25 @@ impl<'mc> JavaDoubleBinaryOperator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaDoubleBinaryOperatorClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaDoubleBinaryOperatorClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/DoubleBinaryOperator"
+    }
+}
+
 /// Represents a function that accepts a long-valued argument and produces a result. This is the <code>long</code>-consuming primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/LongFunction.html#apply-long-"><code>apply(long)</code></a>.</p>
 ///
@@ -2448,7 +2988,25 @@ impl<'mc> JavaLongFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaLongFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaLongFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/LongFunction"
+    }
+}
+
 /// Represents a function that accepts two arguments and produces a result. This is the two-arity specialization of <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/BiFunction.html#apply-T-U-"><code>apply(Object, Object)</code></a>.</p>
 ///
@@ -2532,7 +3090,25 @@ impl<'mc> JavaBiFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaBiFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaBiFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/BiFunction"
+    }
+}
+
 /// Represents a supplier of <code>double</code>-valued results. This is the <code>double</code>-producing primitive specialization of <a title="interface in java.util.function" href="../../../java/util/function/Supplier.html"><code>Supplier</code></a>.
 /// <p>There is no requirement that a distinct result be returned each time the supplier is invoked.</p>
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleSupplier.html#getAsDouble--"><code>getAsDouble()</code></a>.</p>
@@ -2585,7 +3161,25 @@ impl<'mc> JavaDoubleSupplier<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaDoubleSupplierClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaDoubleSupplierClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/DoubleSupplier"
+    }
+}
+
 /// Represents a function that accepts an int-valued argument and produces a result. This is the <code>int</code>-consuming primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntFunction.html#apply-int-"><code>apply(int)</code></a>.</p>
 ///
@@ -2644,7 +3238,25 @@ impl<'mc> JavaIntFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaIntFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaIntFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/IntFunction"
+    }
+}
+
 /// Represents an operation upon two <code>int</code>-valued operands and producing an <code>int</code>-valued result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/BinaryOperator.html"><code>BinaryOperator</code></a> for <code>int</code>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntBinaryOperator.html#applyAsInt-int-int-"><code>applyAsInt(int, int)</code></a>.</p>
 ///
@@ -2705,7 +3317,25 @@ impl<'mc> JavaIntBinaryOperator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaIntBinaryOperatorClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaIntBinaryOperatorClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/IntBinaryOperator"
+    }
+}
+
 /// Represents an operation on a single <code>long</code>-valued operand that produces a <code>long</code>-valued result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/UnaryOperator.html"><code>UnaryOperator</code></a> for <code>long</code>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/LongUnaryOperator.html#applyAsLong-long-"><code>applyAsLong(long)</code></a>.</p>
 ///
@@ -2818,7 +3448,25 @@ impl<'mc> JavaLongUnaryOperator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaLongUnaryOperatorClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaLongUnaryOperatorClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/LongUnaryOperator"
+    }
+}
+
 /// Represents a function that accepts an int-valued argument and produces a long-valued result. This is the <code>int</code>-to-<code>long</code> primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntToLongFunction.html#applyAsLong-int-"><code>applyAsLong(int)</code></a>.</p>
 ///
@@ -2875,7 +3523,25 @@ impl<'mc> JavaIntToLongFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaIntToLongFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaIntToLongFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/IntToLongFunction"
+    }
+}
+
 /// Represents a function that produces an int-valued result. This is the <code>int</code>-producing primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ToIntFunction.html#applyAsInt-T-"><code>applyAsInt(Object)</code></a>.</p>
 ///
@@ -2934,7 +3600,25 @@ impl<'mc> JavaToIntFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaToIntFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaToIntFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/ToIntFunction"
+    }
+}
+
 /// Represents a supplier of <code>long</code>-valued results. This is the <code>long</code>-producing primitive specialization of <a href="../../../java/util/function/Supplier.html" title="interface in java.util.function"><code>Supplier</code></a>.
 /// <p>There is no requirement that a distinct result be returned each time the supplier is invoked.</p>
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/LongSupplier.html#getAsLong--"><code>getAsLong()</code></a>.</p>
@@ -2987,7 +3671,25 @@ impl<'mc> JavaLongSupplier<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaLongSupplierClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaLongSupplierClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/LongSupplier"
+    }
+}
+
 /// Represents a function that accepts two arguments and produces a long-valued result. This is the <code>long</code>-producing primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/BiFunction.html"><code>BiFunction</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ToLongBiFunction.html#applyAsLong-T-U-"><code>applyAsLong(Object, Object)</code></a>.</p>
 ///
@@ -3051,7 +3753,25 @@ impl<'mc> JavaToLongBiFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaToLongBiFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaToLongBiFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/ToLongBiFunction"
+    }
+}
+
 /// Represents an operation that accepts two input arguments and returns no result. This is the two-arity specialization of <a href="../../../java/util/function/Consumer.html" title="interface in java.util.function"><code>Consumer</code></a>. Unlike most other functional interfaces, <code>BiConsumer</code> is expected to operate via side-effects.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/BiConsumer.html#accept-T-U-"><code>accept(Object, Object)</code></a>.</p>
 ///
@@ -3171,7 +3891,25 @@ impl<'mc> JavaBiConsumer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaBiConsumerClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaBiConsumerClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/BiConsumer"
+    }
+}
+
 /// Represents a predicate (boolean-valued function) of two arguments. This is the two-arity specialization of <a title="interface in java.util.function" href="../../../java/util/function/Predicate.html"><code>Predicate</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/BiPredicate.html#test-T-U-"><code>test(Object, Object)</code></a>.</p>
 ///
@@ -3290,7 +4028,25 @@ impl<'mc> JavaBiPredicate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct JavaBiPredicateClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaBiPredicateClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/BiPredicate"
+    }
+}
+
 /// Represents a function that accepts a double-valued argument and produces an int-valued result. This is the <code>double</code>-to-<code>int</code> primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleToIntFunction.html#applyAsInt-double-"><code>applyAsInt(double)</code></a>.</p>
 ///
@@ -3346,5 +4102,22 @@ impl<'mc> JavaDoubleToIntFunction<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct JavaDoubleToIntFunctionClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaDoubleToIntFunctionClass {
+    fn class_name(&self) -> &str {
+        "java/util/function/DoubleToIntFunction"
     }
 }

@@ -131,6 +131,16 @@ impl<'mc> Criterias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Criterias<'mc> {
@@ -139,6 +149,13 @@ impl<'mc> std::string::ToString for Criterias<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling Criterias.toString: {}", err),
         }
+    }
+}
+
+pub struct CriteriasClass;
+impl blackboxmc_general::JNIProvidesClassName for CriteriasClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scoreboard/Criterias"
     }
 }
 
@@ -258,7 +275,25 @@ impl<'mc> TeamOptionStatus<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct TeamOptionStatusClass;
+impl blackboxmc_general::JNIProvidesClassName for TeamOptionStatusClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scoreboard/Team$OptionStatus"
+    }
+}
+
 /// Represents a scoreboard criteria, either custom or built-in to the Minecraft server, used to keep track of and manually or automatically change scores on a scoreboard.
 /// <p>While this class outlines constants for standard criteria, see <a href="#statistic(org.bukkit.Statistic)"><code>statistic(Statistic)</code></a> (and its overloads) to create instances for statistically-backed criteria.</p>
 ///
@@ -399,7 +434,25 @@ impl<'mc> Criteria<'mc> {
         let obj = res.l()?;
         crate::scoreboard::Criteria::from_raw(&jni, obj)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct CriteriaClass;
+impl blackboxmc_general::JNIProvidesClassName for CriteriaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scoreboard/Criteria"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum NameTagVisibilityEnum {
     Always,
@@ -516,7 +569,25 @@ impl<'mc> NameTagVisibility<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct NameTagVisibilityClass;
+impl blackboxmc_general::JNIProvidesClassName for NameTagVisibilityClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scoreboard/NameTagVisibility"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum RenderTypeEnum {
     Integer,
@@ -622,7 +693,25 @@ impl<'mc> RenderType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct RenderTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for RenderTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scoreboard/RenderType"
+    }
+}
+
 /// An objective on a scoreboard that can show scores specific to entries. This objective is only relevant to the display of the associated <a href="#getScoreboard()"><code>scoreboard</code></a>.
 ///
 /// This is a representation of an abstract class.
@@ -882,7 +971,25 @@ impl<'mc> Objective<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ObjectiveClass;
+impl blackboxmc_general::JNIProvidesClassName for ObjectiveClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scoreboard/Objective"
+    }
+}
+
 /// A score entry for an <a href="#getEntry()"><code>entry</code></a> on an <a href="#getObjective()"><code>objective</code></a>. Changing this will not affect any other objective or scoreboard.
 ///
 /// This is a representation of an abstract class.
@@ -1011,7 +1118,25 @@ impl<'mc> Score<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ScoreClass;
+impl blackboxmc_general::JNIProvidesClassName for ScoreClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scoreboard/Score"
+    }
+}
+
 /// A scoreboard
 ///
 /// This is a representation of an abstract class.
@@ -1331,7 +1456,25 @@ impl<'mc> Scoreboard<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ScoreboardClass;
+impl blackboxmc_general::JNIProvidesClassName for ScoreboardClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scoreboard/Scoreboard"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum DisplaySlotEnum {
     BelowName,
@@ -1505,7 +1648,25 @@ impl<'mc> DisplaySlot<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct DisplaySlotClass;
+impl blackboxmc_general::JNIProvidesClassName for DisplaySlotClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scoreboard/DisplaySlot"
+    }
+}
+
 /// A team on a scoreboard that has a common display theme and other properties. This team is only relevant to the display of the associated <a href="#getScoreboard()"><code>scoreboard</code></a>.
 ///
 /// This is a representation of an abstract class.
@@ -2008,7 +2169,25 @@ impl<'mc> Team<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct TeamClass;
+impl blackboxmc_general::JNIProvidesClassName for TeamClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scoreboard/Team"
+    }
+}
+
 /// Manager of Scoreboards
 ///
 /// This is a representation of an abstract class.
@@ -2082,7 +2261,25 @@ impl<'mc> ScoreboardManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ScoreboardManagerClass;
+impl blackboxmc_general::JNIProvidesClassName for ScoreboardManagerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scoreboard/ScoreboardManager"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum SpigotOptionEnum {
     NameTagVisibility,
@@ -2192,7 +2389,25 @@ impl<'mc> SpigotOption<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct SpigotOptionClass;
+impl blackboxmc_general::JNIProvidesClassName for SpigotOptionClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scoreboard/SpigotOption"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum OptionStatusEnum {
     Always,
@@ -2306,7 +2521,25 @@ impl<'mc> OptionStatus<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct OptionStatusClass;
+impl blackboxmc_general::JNIProvidesClassName for OptionStatusClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scoreboard/OptionStatus"
+    }
+}
+
 /// Represents an option which may be applied to this team.
 #[derive(PartialEq, Eq)]
 pub enum TeamOptionEnum {
@@ -2416,5 +2649,22 @@ impl<'mc> TeamOption<'mc> {
             TeamOption::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct TeamOptionClass;
+impl blackboxmc_general::JNIProvidesClassName for TeamOptionClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/scoreboard/Team$Option"
     }
 }

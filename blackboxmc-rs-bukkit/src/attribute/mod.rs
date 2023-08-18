@@ -64,7 +64,25 @@ impl<'mc> Attributable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct AttributableClass;
+impl blackboxmc_general::JNIProvidesClassName for AttributableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/attribute/Attributable"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum AttributeEnum {
     GenericMaxHealth,
@@ -217,7 +235,25 @@ impl<'mc> Attribute<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct AttributeClass;
+impl blackboxmc_general::JNIProvidesClassName for AttributeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/attribute/Attribute"
+    }
+}
+
 /// Represents a mutable instance of an attribute and its associated modifiers and values.
 ///
 /// This is a representation of an abstract class.
@@ -383,7 +419,25 @@ impl<'mc> AttributeInstance<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct AttributeInstanceClass;
+impl blackboxmc_general::JNIProvidesClassName for AttributeInstanceClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/attribute/AttributeInstance"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum OperationEnum {
     AddNumber,
@@ -493,7 +547,25 @@ impl<'mc> Operation<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct OperationClass;
+impl blackboxmc_general::JNIProvidesClassName for OperationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/attribute/Operation"
+    }
+}
+
 /// Concrete implementation of an attribute modifier.
 pub struct AttributeModifier<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -614,6 +686,23 @@ impl<'mc> AttributeModifierOperation<'mc> {
             AttributeModifierOperation::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct AttributeModifierOperationClass;
+impl blackboxmc_general::JNIProvidesClassName for AttributeModifierOperationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/attribute/AttributeModifier$Operation"
     }
 }
 
@@ -910,6 +999,16 @@ impl<'mc> AttributeModifier<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for AttributeModifier<'mc> {
@@ -928,6 +1027,14 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting AttributeModifier into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
+
+pub struct AttributeModifierClass;
+impl blackboxmc_general::JNIProvidesClassName for AttributeModifierClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/attribute/AttributeModifier"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum AttributeAttributeEnum {
     GenericMaxHealth,
@@ -1098,5 +1205,22 @@ impl<'mc> AttributeAttribute<'mc> {
             AttributeAttribute::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct AttributeAttributeClass;
+impl blackboxmc_general::JNIProvidesClassName for AttributeAttributeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/attribute/Attribute$Attribute"
     }
 }

@@ -252,6 +252,16 @@ impl<'mc> PlayerToggleFlightEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerToggleFlightEvent<'mc> {
@@ -276,6 +286,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerToggleFlightEve
         )
     }
 }
+
+pub struct PlayerToggleFlightEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerToggleFlightEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerToggleFlightEvent"
+    }
+}
+
 /// Thrown when a player is fishing
 pub struct PlayerFishEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -408,6 +426,23 @@ impl<'mc> PlayerFishEventState<'mc> {
             PlayerFishEventState::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PlayerFishEventStateClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerFishEventStateClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerFishEvent$State"
     }
 }
 
@@ -762,6 +797,16 @@ impl<'mc> PlayerFishEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerFishEvent<'mc> {
@@ -785,6 +830,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerFishEvent<'mc> 
             .expect("Error converting PlayerFishEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerFishEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerFishEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerFishEvent"
+    }
+}
+
 /// Called when a player shears an entity
 pub struct PlayerShearEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1087,6 +1140,16 @@ impl<'mc> PlayerShearEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerShearEntityEvent<'mc> {
@@ -1111,6 +1174,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerShearEntityEven
         )
     }
 }
+
+pub struct PlayerShearEntityEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerShearEntityEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerShearEntityEvent"
+    }
+}
+
 /// Represents an event that is called when a player interacts with an object or air, potentially fired once for each hand. The hand can be determined using <a href="#getHand()"><code>getHand()</code></a>.
 /// <p>This event will fire as cancelled if the vanilla behavior is to do nothing (e.g interacting with air). For the purpose of avoiding doubt, this means that the event will only be in the cancelled state if it is fired as a result of some prediction made by the server where no subsequent code will run, rather than when the subsequent interaction activity (e.g. placing a block in an illegal position (<a href="../block/BlockCanBuildEvent.html" title="class in org.bukkit.event.block"><code>BlockCanBuildEvent</code></a>) will fail.</p>
 pub struct PlayerInteractEvent<'mc>(
@@ -1647,6 +1718,16 @@ impl<'mc> PlayerInteractEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerInteractEvent<'mc> {
@@ -1670,6 +1751,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerInteractEvent<'
             .expect("Error converting PlayerInteractEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerInteractEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerInteractEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerInteractEvent"
+    }
+}
+
 /// Used to format chat for chat preview. If this event is used, then the result of the corresponding <a href="AsyncPlayerChatEvent.html" title="class in org.bukkit.event.player"><code>AsyncPlayerChatEvent</code></a> <b>must</b> be formatted in the same way.
 pub struct AsyncPlayerChatPreviewEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1989,6 +2078,16 @@ impl<'mc> AsyncPlayerChatPreviewEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for AsyncPlayerChatPreviewEvent<'mc> {
@@ -2010,6 +2109,14 @@ impl<'mc> Into<crate::event::player::AsyncPlayerChatEvent<'mc>>
         crate::event::player::AsyncPlayerChatEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting AsyncPlayerChatPreviewEvent into crate::event::player::AsyncPlayerChatEvent")
     }
 }
+
+pub struct AsyncPlayerChatPreviewEventClass;
+impl blackboxmc_general::JNIProvidesClassName for AsyncPlayerChatPreviewEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/AsyncPlayerChatPreviewEvent"
+    }
+}
+
 /// Represents a player animation event
 pub struct PlayerAnimationEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2280,6 +2387,16 @@ impl<'mc> PlayerAnimationEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerAnimationEvent<'mc> {
@@ -2303,6 +2420,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerAnimationEvent<
             .expect("Error converting PlayerAnimationEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerAnimationEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerAnimationEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerAnimationEvent"
+    }
+}
+
 /// This event is called whenever a player captures an entity in a bucket.
 pub struct PlayerBucketEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2624,6 +2749,16 @@ impl<'mc> PlayerBucketEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerBucketEntityEvent<'mc> {
@@ -2648,6 +2783,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerBucketEntityEve
         )
     }
 }
+
+pub struct PlayerBucketEntityEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerBucketEntityEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerBucketEntityEvent"
+    }
+}
+
 /// Called when a player is about to teleport because it is in contact with a portal which will generate an exit portal.
 /// <p>For other entities see <a href="../entity/EntityPortalEvent.html" title="class in org.bukkit.event.entity"><code>EntityPortalEvent</code></a></p>
 pub struct PlayerPortalEvent<'mc>(
@@ -3082,6 +3225,16 @@ impl<'mc> PlayerPortalEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerPortalEvent<'mc> {
@@ -3100,6 +3253,14 @@ impl<'mc> Into<crate::event::player::PlayerTeleportEvent<'mc>> for PlayerPortalE
         )
     }
 }
+
+pub struct PlayerPortalEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerPortalEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerPortalEvent"
+    }
+}
+
 /// Thrown when a player drops an item from their inventory
 pub struct PlayerDropItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3351,6 +3512,16 @@ impl<'mc> PlayerDropItemEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerDropItemEvent<'mc> {
@@ -3374,6 +3545,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerDropItemEvent<'
             .expect("Error converting PlayerDropItemEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerDropItemEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerDropItemEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerDropItemEvent"
+    }
+}
+
 /// Called when a player takes action on a resource pack request sent via <a href="../../entity/Player.html#setResourcePack(java.lang.String)"><code>Player.setResourcePack(java.lang.String)</code></a>.
 pub struct PlayerResourcePackStatusEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3509,6 +3688,23 @@ impl<'mc> PlayerResourcePackStatusEventStatus<'mc> {
             PlayerResourcePackStatusEventStatus::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PlayerResourcePackStatusEventStatusClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerResourcePackStatusEventStatusClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerResourcePackStatusEvent$Status"
     }
 }
 
@@ -3756,6 +3952,16 @@ impl<'mc> PlayerResourcePackStatusEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerResourcePackStatusEvent<'mc> {
@@ -3777,6 +3983,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerResourcePackSta
         )
     }
 }
+
+pub struct PlayerResourcePackStatusEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerResourcePackStatusEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerResourcePackStatusEvent"
+    }
+}
+
 /// Called when a player's experience cooldown changes.
 pub struct PlayerExpCooldownChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3897,6 +4111,23 @@ impl<'mc> PlayerExpCooldownChangeEventChangeReason<'mc> {
             PlayerExpCooldownChangeEventChangeReason::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PlayerExpCooldownChangeEventChangeReasonClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerExpCooldownChangeEventChangeReasonClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerExpCooldownChangeEvent$ChangeReason"
     }
 }
 
@@ -4175,6 +4406,16 @@ impl<'mc> PlayerExpCooldownChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerExpCooldownChangeEvent<'mc> {
@@ -4196,6 +4437,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerExpCooldownChan
         )
     }
 }
+
+pub struct PlayerExpCooldownChangeEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerExpCooldownChangeEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerExpCooldownChangeEvent"
+    }
+}
+
 /// This is called immediately after a player unregisters for a plugin channel.
 pub struct PlayerUnregisterChannelEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4428,6 +4677,16 @@ impl<'mc> PlayerUnregisterChannelEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerUnregisterChannelEvent<'mc> {
@@ -4449,6 +4708,14 @@ impl<'mc> Into<crate::event::player::PlayerChannelEvent<'mc>>
         crate::event::player::PlayerChannelEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting PlayerUnregisterChannelEvent into crate::event::player::PlayerChannelEvent")
     }
 }
+
+pub struct PlayerUnregisterChannelEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerUnregisterChannelEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerUnregisterChannelEvent"
+    }
+}
+
 /// Called when a player toggles their sneaking state
 pub struct PlayerToggleSneakEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4697,6 +4964,16 @@ impl<'mc> PlayerToggleSneakEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerToggleSneakEvent<'mc> {
@@ -4721,6 +4998,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerToggleSneakEven
         )
     }
 }
+
+pub struct PlayerToggleSneakEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerToggleSneakEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerToggleSneakEvent"
+    }
+}
+
 /// Called when a player interacts with an armor stand and will either swap, retrieve or place an item.
 pub struct PlayerArmorStandManipulateEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5088,6 +5373,16 @@ impl<'mc> PlayerArmorStandManipulateEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerArmorStandManipulateEvent<'mc> {
@@ -5109,6 +5404,14 @@ impl<'mc> Into<crate::event::player::PlayerInteractEntityEvent<'mc>>
         crate::event::player::PlayerInteractEntityEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting PlayerArmorStandManipulateEvent into crate::event::player::PlayerInteractEntityEvent")
     }
 }
+
+pub struct PlayerArmorStandManipulateEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerArmorStandManipulateEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerArmorStandManipulateEvent"
+    }
+}
+
 /// Represents an event that is called when a player right clicks an entity.
 pub struct PlayerInteractEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5393,6 +5696,16 @@ impl<'mc> PlayerInteractEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerInteractEntityEvent<'mc> {
@@ -5417,6 +5730,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerInteractEntityE
         )
     }
 }
+
+pub struct PlayerInteractEntityEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerInteractEntityEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerInteractEntityEvent"
+    }
+}
+
 /// Called when a player fills a bucket
 pub struct PlayerBucketFillEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5815,6 +6136,16 @@ impl<'mc> PlayerBucketFillEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerBucketFillEvent<'mc> {
@@ -5833,6 +6164,14 @@ impl<'mc> Into<crate::event::player::PlayerBucketEvent<'mc>> for PlayerBucketFil
         )
     }
 }
+
+pub struct PlayerBucketFillEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerBucketFillEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerBucketFillEvent"
+    }
+}
+
 /// This event will fire when a player is finishing consuming an item (food, potion, milk bucket).
 ///
 /// If the ItemStack is modified the server will use the effects of the new item and not remove the original one from the player's inventory.
@@ -6138,6 +6477,16 @@ impl<'mc> PlayerItemConsumeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerItemConsumeEvent<'mc> {
@@ -6162,6 +6511,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerItemConsumeEven
         )
     }
 }
+
+pub struct PlayerItemConsumeEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerItemConsumeEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerItemConsumeEvent"
+    }
+}
+
 /// Represents a player related event
 pub struct PlayerEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6357,6 +6714,16 @@ impl<'mc> PlayerEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerEvent<'mc> {
@@ -6374,6 +6741,14 @@ impl<'mc> Into<crate::event::Event<'mc>> for PlayerEvent<'mc> {
             .expect("Error converting PlayerEvent into crate::event::Event")
     }
 }
+
+pub struct PlayerEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerEvent"
+    }
+}
+
 /// Holds information for player teleport events
 pub struct PlayerTeleportEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6536,6 +6911,23 @@ impl<'mc> PlayerTeleportEventTeleportCause<'mc> {
             PlayerTeleportEventTeleportCause::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PlayerTeleportEventTeleportCauseClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerTeleportEventTeleportCauseClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerTeleportEvent$TeleportCause"
     }
 }
 
@@ -6877,6 +7269,16 @@ impl<'mc> PlayerTeleportEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerTeleportEvent<'mc> {
@@ -6895,6 +7297,14 @@ impl<'mc> Into<crate::event::player::PlayerMoveEvent<'mc>> for PlayerTeleportEve
         )
     }
 }
+
+pub struct PlayerTeleportEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerTeleportEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerTeleportEvent"
+    }
+}
+
 /// Called when a player leaves a server
 pub struct PlayerQuitEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7146,6 +7556,16 @@ impl<'mc> PlayerQuitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerQuitEvent<'mc> {
@@ -7163,6 +7583,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerQuitEvent<'mc> 
             .expect("Error converting PlayerQuitEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerQuitEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerQuitEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerQuitEvent"
+    }
+}
+
 /// Holds information for player movement events
 pub struct PlayerMoveEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7469,6 +7897,16 @@ impl<'mc> PlayerMoveEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerMoveEvent<'mc> {
@@ -7492,6 +7930,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerMoveEvent<'mc> 
             .expect("Error converting PlayerMoveEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerMoveEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerMoveEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerMoveEvent"
+    }
+}
+
 /// Called when a player edits or signs a book and quill item. If the event is cancelled, no changes are made to the BookMeta
 pub struct PlayerEditBookEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7821,6 +8267,16 @@ impl<'mc> PlayerEditBookEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerEditBookEvent<'mc> {
@@ -7844,6 +8300,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerEditBookEvent<'
             .expect("Error converting PlayerEditBookEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerEditBookEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerEditBookEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerEditBookEvent"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum TeleportCauseEnum {
     EnderPearl,
@@ -7985,7 +8449,25 @@ impl<'mc> TeleportCause<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct TeleportCauseClass;
+impl blackboxmc_general::JNIProvidesClassName for TeleportCauseClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/TeleportCause"
+    }
+}
+
 /// Called when a player joins a server
 pub struct PlayerJoinEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8237,6 +8719,16 @@ impl<'mc> PlayerJoinEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerJoinEvent<'mc> {
@@ -8252,6 +8744,13 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerJoinEvent<'mc> 
     fn into(self) -> crate::event::player::PlayerEvent<'mc> {
         crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting PlayerJoinEvent into crate::event::player::PlayerEvent")
+    }
+}
+
+pub struct PlayerJoinEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerJoinEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerJoinEvent"
     }
 }
 
@@ -8375,6 +8874,23 @@ impl<'mc> PlayerSignOpenEventCause<'mc> {
             PlayerSignOpenEventCause::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PlayerSignOpenEventCauseClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerSignOpenEventCauseClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerSignOpenEvent$Cause"
     }
 }
 
@@ -8683,6 +9199,16 @@ impl<'mc> PlayerSignOpenEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerSignOpenEvent<'mc> {
@@ -8706,6 +9232,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerSignOpenEvent<'
             .expect("Error converting PlayerSignOpenEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerSignOpenEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerSignOpenEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerSignOpenEvent"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum StateEnum {
     Fishing,
@@ -8831,7 +9365,25 @@ impl<'mc> State<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct StateClass;
+impl blackboxmc_general::JNIProvidesClassName for StateClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/State"
+    }
+}
+
 /// Fired when a player changes their currently held item
 pub struct PlayerItemHeldEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9091,6 +9643,16 @@ impl<'mc> PlayerItemHeldEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerItemHeldEvent<'mc> {
@@ -9114,6 +9676,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerItemHeldEvent<'
             .expect("Error converting PlayerItemHeldEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerItemHeldEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerItemHeldEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerItemHeldEvent"
+    }
+}
+
 /// Called when a players level changes
 pub struct PlayerLevelChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9353,6 +9923,16 @@ impl<'mc> PlayerLevelChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerLevelChangeEvent<'mc> {
@@ -9371,6 +9951,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerLevelChangeEven
         )
     }
 }
+
+pub struct PlayerLevelChangeEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerLevelChangeEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerLevelChangeEvent"
+    }
+}
+
 /// This event is fired when the player is almost about to enter the bed.
 pub struct PlayerBedEnterEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9511,6 +10099,23 @@ impl<'mc> PlayerBedEnterEventBedEnterResult<'mc> {
             PlayerBedEnterEventBedEnterResult::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PlayerBedEnterEventBedEnterResultClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerBedEnterEventBedEnterResultClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerBedEnterEvent$BedEnterResult"
     }
 }
 
@@ -9842,6 +10447,16 @@ impl<'mc> PlayerBedEnterEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerBedEnterEvent<'mc> {
@@ -9865,6 +10480,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerBedEnterEvent<'
             .expect("Error converting PlayerBedEnterEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerBedEnterEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerBedEnterEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerBedEnterEvent"
+    }
+}
+
 /// Called when a player empties a bucket
 pub struct PlayerBucketEmptyEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10263,6 +10886,16 @@ impl<'mc> PlayerBucketEmptyEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerBucketEmptyEvent<'mc> {
@@ -10281,6 +10914,14 @@ impl<'mc> Into<crate::event::player::PlayerBucketEvent<'mc>> for PlayerBucketEmp
         )
     }
 }
+
+pub struct PlayerBucketEmptyEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerBucketEmptyEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerBucketEmptyEvent"
+    }
+}
+
 /// This event is fired when the player is leaving a bed.
 pub struct PlayerBedLeaveEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10564,6 +11205,16 @@ impl<'mc> PlayerBedLeaveEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerBedLeaveEvent<'mc> {
@@ -10587,6 +11238,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerBedLeaveEvent<'
             .expect("Error converting PlayerBedLeaveEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerBedLeaveEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerBedLeaveEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerBedLeaveEvent"
+    }
+}
+
 /// Called when a player swap items between main hand and off hand using the hotkey.
 pub struct PlayerSwapHandItemsEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10904,6 +11563,16 @@ impl<'mc> PlayerSwapHandItemsEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerSwapHandItemsEvent<'mc> {
@@ -10928,6 +11597,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerSwapHandItemsEv
         )
     }
 }
+
+pub struct PlayerSwapHandItemsEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerSwapHandItemsEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerSwapHandItemsEvent"
+    }
+}
+
 /// This event is fired when the spawn point of the player is changed.
 pub struct PlayerSpawnChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11058,6 +11735,23 @@ impl<'mc> PlayerSpawnChangeEventCause<'mc> {
             PlayerSpawnChangeEventCause::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PlayerSpawnChangeEventCauseClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerSpawnChangeEventCauseClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerSpawnChangeEvent$Cause"
     }
 }
 
@@ -11385,6 +12079,16 @@ impl<'mc> PlayerSpawnChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerSpawnChangeEvent<'mc> {
@@ -11409,6 +12113,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerSpawnChangeEven
         )
     }
 }
+
+pub struct PlayerSpawnChangeEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerSpawnChangeEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerSpawnChangeEvent"
+    }
+}
+
 /// This event is fired when the player activates the riptide enchantment, using their trident to propel them through the air.
 ///
 /// N.B. the riptide action is currently performed client side, so manipulating the player in this event may have undesired effects.
@@ -11639,6 +12351,16 @@ impl<'mc> PlayerRiptideEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerRiptideEvent<'mc> {
@@ -11656,6 +12378,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerRiptideEvent<'m
             .expect("Error converting PlayerRiptideEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerRiptideEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerRiptideEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerRiptideEvent"
+    }
+}
+
 /// This event is called when the list of available server commands is sent to the player.
 ///
 /// Commands may be removed from display using this event, but implementations are not required to securely remove all traces of the command. If secure removal of commands is required, then the command should be assigned a permission which is not granted to the player.
@@ -11871,6 +12601,16 @@ impl<'mc> PlayerCommandSendEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerCommandSendEvent<'mc> {
@@ -11889,6 +12629,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerCommandSendEven
         )
     }
 }
+
+pub struct PlayerCommandSendEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerCommandSendEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerCommandSendEvent"
+    }
+}
+
 /// Called when a player attempts to tab-complete a chat message.
 pub struct PlayerChatTabCompleteEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12131,6 +12879,16 @@ impl<'mc> PlayerChatTabCompleteEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerChatTabCompleteEvent<'mc> {
@@ -12149,6 +12907,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerChatTabComplete
         )
     }
 }
+
+pub struct PlayerChatTabCompleteEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerChatTabCompleteEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerChatTabCompleteEvent"
+    }
+}
+
 /// Called when the velocity of a player changes.
 pub struct PlayerVelocityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12418,6 +13184,16 @@ impl<'mc> PlayerVelocityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerVelocityEvent<'mc> {
@@ -12441,6 +13217,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerVelocityEvent<'
             .expect("Error converting PlayerVelocityEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerVelocityEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerVelocityEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerVelocityEvent"
+    }
+}
+
 /// Called when a player toggles their sprinting state
 pub struct PlayerToggleSprintEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12690,6 +13474,16 @@ impl<'mc> PlayerToggleSprintEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerToggleSprintEvent<'mc> {
@@ -12714,6 +13508,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerToggleSprintEve
         )
     }
 }
+
+pub struct PlayerToggleSprintEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerToggleSprintEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerToggleSprintEvent"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum PlayerAnimationTypeEnum {
     ArmSwing,
@@ -12822,7 +13624,25 @@ impl<'mc> PlayerAnimationType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PlayerAnimationTypeClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerAnimationTypeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerAnimationType"
+    }
+}
+
 /// Called when a player interacts with a Bucket
 pub struct PlayerBucketEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13208,6 +14028,16 @@ impl<'mc> PlayerBucketEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerBucketEvent<'mc> {
@@ -13231,6 +14061,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerBucketEvent<'mc
             .expect("Error converting PlayerBucketEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerBucketEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerBucketEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerBucketEvent"
+    }
+}
+
 /// Called when a player respawns.
 pub struct PlayerRespawnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13353,6 +14191,23 @@ impl<'mc> PlayerRespawnEventRespawnReason<'mc> {
             PlayerRespawnEventRespawnReason::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PlayerRespawnEventRespawnReasonClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerRespawnEventRespawnReasonClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerRespawnEvent$RespawnReason"
     }
 }
 
@@ -13668,6 +14523,16 @@ impl<'mc> PlayerRespawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerRespawnEvent<'mc> {
@@ -13685,6 +14550,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerRespawnEvent<'m
             .expect("Error converting PlayerRespawnEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerRespawnEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerRespawnEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerRespawnEvent"
+    }
+}
+
 /// Called prior to an entity being unleashed due to a player's action.
 pub struct PlayerUnleashEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14029,6 +14902,16 @@ impl<'mc> PlayerUnleashEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerUnleashEntityEvent<'mc> {
@@ -14051,6 +14934,14 @@ impl<'mc> Into<crate::event::entity::EntityUnleashEvent<'mc>> for PlayerUnleashE
         crate::event::entity::EntityUnleashEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting PlayerUnleashEntityEvent into crate::event::entity::EntityUnleashEvent")
     }
 }
+
+pub struct PlayerUnleashEntityEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerUnleashEntityEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerUnleashEntityEvent"
+    }
+}
+
 /// Thrown when a player picks up an arrow from the ground.
 pub struct PlayerPickupArrowEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14327,6 +15218,16 @@ impl<'mc> PlayerPickupArrowEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerPickupArrowEvent<'mc> {
@@ -14343,6 +15244,14 @@ impl<'mc> Into<crate::event::player::PlayerPickupItemEvent<'mc>> for PlayerPicku
         crate::event::player::PlayerPickupItemEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting PlayerPickupArrowEvent into crate::event::player::PlayerPickupItemEvent")
     }
 }
+
+pub struct PlayerPickupArrowEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerPickupArrowEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerPickupArrowEvent"
+    }
+}
+
 /// Called when a player gets kicked from the server
 pub struct PlayerKickEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14650,6 +15559,16 @@ impl<'mc> PlayerKickEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerKickEvent<'mc> {
@@ -14673,6 +15592,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerKickEvent<'mc> 
             .expect("Error converting PlayerKickEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerKickEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerKickEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerKickEvent"
+    }
+}
+
 /// Called when the GameMode of the player is changed.
 pub struct PlayerGameModeChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14939,6 +15866,16 @@ impl<'mc> PlayerGameModeChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerGameModeChangeEvent<'mc> {
@@ -14963,6 +15900,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerGameModeChangeE
         )
     }
 }
+
+pub struct PlayerGameModeChangeEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerGameModeChangeEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerGameModeChangeEvent"
+    }
+}
+
 /// This event is called when a player clicks the button to take a book of a Lectern. If this event is cancelled the book remains on the lectern.
 pub struct PlayerTakeLecternBookEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15233,6 +16178,16 @@ impl<'mc> PlayerTakeLecternBookEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerTakeLecternBookEvent<'mc> {
@@ -15257,6 +16212,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerTakeLecternBook
         )
     }
 }
+
+pub struct PlayerTakeLecternBookEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerTakeLecternBookEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerTakeLecternBookEvent"
+    }
+}
+
 /// This is called immediately after a player registers for a plugin channel.
 pub struct PlayerRegisterChannelEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15489,6 +16452,16 @@ impl<'mc> PlayerRegisterChannelEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerRegisterChannelEvent<'mc> {
@@ -15505,6 +16478,14 @@ impl<'mc> Into<crate::event::player::PlayerChannelEvent<'mc>> for PlayerRegister
         crate::event::player::PlayerChannelEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting PlayerRegisterChannelEvent into crate::event::player::PlayerChannelEvent")
     }
 }
+
+pub struct PlayerRegisterChannelEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerRegisterChannelEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerRegisterChannelEvent"
+    }
+}
+
 /// Called when a player statistic is incremented.
 /// <p>This event is not called for some high frequency statistics, e.g. movement based statistics.</p>
 pub struct PlayerStatisticIncrementEvent<'mc>(
@@ -15860,6 +16841,16 @@ impl<'mc> PlayerStatisticIncrementEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerStatisticIncrementEvent<'mc> {
@@ -15887,6 +16878,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerStatisticIncrem
         )
     }
 }
+
+pub struct PlayerStatisticIncrementEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerStatisticIncrementEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerStatisticIncrementEvent"
+    }
+}
+
 /// Represents an event that is called when a player right clicks an entity that also contains the location where the entity was clicked.
 ///
 /// Note that the client may sometimes spuriously send this packet in addition to <a href="PlayerInteractEntityEvent.html" title="class in org.bukkit.event.player"><code>PlayerInteractEntityEvent</code></a>. Users are advised to listen to this (parent) class unless specifically required.
@@ -16198,6 +17197,16 @@ impl<'mc> PlayerInteractAtEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerInteractAtEntityEvent<'mc> {
@@ -16219,6 +17228,14 @@ impl<'mc> Into<crate::event::player::PlayerInteractEntityEvent<'mc>>
         crate::event::player::PlayerInteractEntityEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting PlayerInteractAtEntityEvent into crate::event::player::PlayerInteractEntityEvent")
     }
 }
+
+pub struct PlayerInteractAtEntityEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerInteractAtEntityEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerInteractAtEntityEvent"
+    }
+}
+
 /// Represents when a player has an item repaired via the Mending enchantment.
 ///
 /// This event is fired directly before the <a href="PlayerExpChangeEvent.html" title="class in org.bukkit.event.player"><code>PlayerExpChangeEvent</code></a>, and the results of this event directly affect the <a title="class in org.bukkit.event.player" href="PlayerExpChangeEvent.html"><code>PlayerExpChangeEvent</code></a>.
@@ -16556,6 +17573,16 @@ impl<'mc> PlayerItemMendEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerItemMendEvent<'mc> {
@@ -16579,6 +17606,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerItemMendEvent<'
             .expect("Error converting PlayerItemMendEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerItemMendEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerItemMendEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerItemMendEvent"
+    }
+}
+
 /// Called when a player changes their locale in the client settings.
 pub struct PlayerLocaleChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16811,6 +17846,16 @@ impl<'mc> PlayerLocaleChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerLocaleChangeEvent<'mc> {
@@ -16829,6 +17874,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerLocaleChangeEve
         )
     }
 }
+
+pub struct PlayerLocaleChangeEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerLocaleChangeEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerLocaleChangeEvent"
+    }
+}
+
 /// Called when a player changes their main hand in the client settings.
 pub struct PlayerChangedMainHandEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -17072,6 +18125,16 @@ impl<'mc> PlayerChangedMainHandEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerChangedMainHandEvent<'mc> {
@@ -17090,6 +18153,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerChangedMainHand
         )
     }
 }
+
+pub struct PlayerChangedMainHandEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerChangedMainHandEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerChangedMainHandEvent"
+    }
+}
+
 /// Stores details for players attempting to log in.
 ///
 /// Note that this event is called <i>early</i> in the player initialization process. It is recommended that most options involving the Player <i>entity</i> be postponed to the <a title="class in org.bukkit.event.player" href="PlayerJoinEvent.html"><code>PlayerJoinEvent</code></a> instead.
@@ -17218,6 +18289,23 @@ impl<'mc> PlayerLoginEventResult<'mc> {
             PlayerLoginEventResult::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PlayerLoginEventResultClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerLoginEventResultClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerLoginEvent$Result"
     }
 }
 
@@ -17602,6 +18690,16 @@ impl<'mc> PlayerLoginEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerLoginEvent<'mc> {
@@ -17619,6 +18717,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerLoginEvent<'mc>
             .expect("Error converting PlayerLoginEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerLoginEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerLoginEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerLoginEvent"
+    }
+}
+
 /// Called when a player has completed all criteria in an advancement.
 pub struct PlayerAdvancementDoneEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -17851,6 +18957,16 @@ impl<'mc> PlayerAdvancementDoneEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerAdvancementDoneEvent<'mc> {
@@ -17869,6 +18985,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerAdvancementDone
         )
     }
 }
+
+pub struct PlayerAdvancementDoneEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerAdvancementDoneEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerAdvancementDoneEvent"
+    }
+}
+
 /// Stores details for players attempting to log in
 pub struct PlayerPreLoginEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -17996,6 +19120,23 @@ impl<'mc> PlayerPreLoginEventResult<'mc> {
             PlayerPreLoginEventResult::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PlayerPreLoginEventResultClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerPreLoginEventResultClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerPreLoginEvent$Result"
     }
 }
 
@@ -18352,6 +19493,16 @@ impl<'mc> PlayerPreLoginEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerPreLoginEvent<'mc> {
@@ -18369,6 +19520,14 @@ impl<'mc> Into<crate::event::Event<'mc>> for PlayerPreLoginEvent<'mc> {
             .expect("Error converting PlayerPreLoginEvent into crate::event::Event")
     }
 }
+
+pub struct PlayerPreLoginEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerPreLoginEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerPreLoginEvent"
+    }
+}
+
 /// Called when a players experience changes naturally
 pub struct PlayerExpChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -18606,6 +19765,16 @@ impl<'mc> PlayerExpChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerExpChangeEvent<'mc> {
@@ -18623,6 +19792,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerExpChangeEvent<
             .expect("Error converting PlayerExpChangeEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerExpChangeEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerExpChangeEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerExpChangeEvent"
+    }
+}
+
 /// Fired when a player's item breaks (such as a shovel or flint and steel).
 /// <p>After this event, the item's amount will be set to <code>item amount - 1</code> and its durability will be reset to 0.</p>
 pub struct PlayerItemBreakEvent<'mc>(
@@ -18854,6 +20031,16 @@ impl<'mc> PlayerItemBreakEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerItemBreakEvent<'mc> {
@@ -18869,6 +20056,13 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerItemBreakEvent<
     fn into(self) -> crate::event::player::PlayerEvent<'mc> {
         crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting PlayerItemBreakEvent into crate::event::player::PlayerEvent")
+    }
+}
+
+pub struct PlayerItemBreakEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerItemBreakEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerItemBreakEvent"
     }
 }
 
@@ -19166,6 +20360,16 @@ impl<'mc> PlayerRecipeBookClickEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerRecipeBookClickEvent<'mc> {
@@ -19184,6 +20388,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerRecipeBookClick
         )
     }
 }
+
+pub struct PlayerRecipeBookClickEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerRecipeBookClickEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerRecipeBookClickEvent"
+    }
+}
+
 /// Holds information for player chat and commands
 pub struct PlayerChatEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19527,6 +20739,16 @@ impl<'mc> PlayerChatEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerChatEvent<'mc> {
@@ -19550,6 +20772,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerChatEvent<'mc> 
             .expect("Error converting PlayerChatEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerChatEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerChatEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerChatEvent"
+    }
+}
+
 /// This event is called after a player registers or unregisters a new plugin channel.
 pub struct PlayerChannelEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19780,6 +21010,16 @@ impl<'mc> PlayerChannelEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerChannelEvent<'mc> {
@@ -19797,6 +21037,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerChannelEvent<'m
             .expect("Error converting PlayerChannelEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerChannelEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerChannelEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerChannelEvent"
+    }
+}
+
 /// Called when a hidden entity is shown to a player.
 ///
 /// This event is only called when the entity's visibility status is actually changed.
@@ -20030,6 +21278,16 @@ impl<'mc> PlayerShowEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerShowEntityEvent<'mc> {
@@ -20047,6 +21305,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerShowEntityEvent
             .expect("Error converting PlayerShowEntityEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerShowEntityEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerShowEntityEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerShowEntityEvent"
+    }
+}
+
 /// This event is called whenever a player harvests a block.
 ///
 /// A 'harvest' is when a block drops an item (usually some sort of crop) and changes state, but is not broken in order to drop the item.
@@ -20325,6 +21591,16 @@ impl<'mc> PlayerHarvestBlockEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerHarvestBlockEvent<'mc> {
@@ -20349,6 +21625,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerHarvestBlockEve
         )
     }
 }
+
+pub struct PlayerHarvestBlockEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerHarvestBlockEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerHarvestBlockEvent"
+    }
+}
+
 /// Called when an item used by the player takes durability damage as a result of being used.
 pub struct PlayerItemDamageEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20626,6 +21910,16 @@ impl<'mc> PlayerItemDamageEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerItemDamageEvent<'mc> {
@@ -20649,6 +21943,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerItemDamageEvent
             .expect("Error converting PlayerItemDamageEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerItemDamageEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerItemDamageEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerItemDamageEvent"
+    }
+}
+
 /// This event is called whenever a player runs a command (by placing a slash at the start of their message). It is called early in the command handling process, and modifications in this event (via <a href="#setMessage(java.lang.String)"><code>setMessage(String)</code></a>) will be shown in the behavior.
 /// <p>Many plugins will have <b>no use for this event</b>, and you should attempt to avoid using it if it is not necessary.</p>
 /// <p>Some examples of valid uses for this event are:</p>
@@ -20972,6 +22274,16 @@ impl<'mc> PlayerCommandPreprocessEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerCommandPreprocessEvent<'mc> {
@@ -20999,6 +22311,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerCommandPreproce
         )
     }
 }
+
+pub struct PlayerCommandPreprocessEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerCommandPreprocessEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerCommandPreprocessEvent"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum RespawnReasonEnum {
     Death,
@@ -21108,7 +22428,25 @@ impl<'mc> RespawnReason<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct RespawnReasonClass;
+impl blackboxmc_general::JNIProvidesClassName for RespawnReasonClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/RespawnReason"
+    }
+}
+
 /// This event is called whenever a player attempts to put a fish in a bucket.
 pub struct PlayerBucketFishEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21458,6 +22796,16 @@ impl<'mc> PlayerBucketFishEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerBucketFishEvent<'mc> {
@@ -21474,6 +22822,14 @@ impl<'mc> Into<crate::event::player::PlayerBucketEntityEvent<'mc>> for PlayerBuc
         crate::event::player::PlayerBucketEntityEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting PlayerBucketFishEvent into crate::event::player::PlayerBucketEntityEvent")
     }
 }
+
+pub struct PlayerBucketFishEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerBucketFishEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerBucketFishEvent"
+    }
+}
+
 /// Called when a player switches to another world.
 pub struct PlayerChangedWorldEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21704,6 +23060,16 @@ impl<'mc> PlayerChangedWorldEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerChangedWorldEvent<'mc> {
@@ -21722,6 +23088,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerChangedWorldEve
         )
     }
 }
+
+pub struct PlayerChangedWorldEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerChangedWorldEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerChangedWorldEvent"
+    }
+}
+
 /// Called when a player discovers a new recipe in the recipe book.
 pub struct PlayerRecipeDiscoverEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21979,6 +23353,16 @@ impl<'mc> PlayerRecipeDiscoverEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerRecipeDiscoverEvent<'mc> {
@@ -22003,6 +23387,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerRecipeDiscoverE
         )
     }
 }
+
+pub struct PlayerRecipeDiscoverEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerRecipeDiscoverEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerRecipeDiscoverEvent"
+    }
+}
+
 /// Stores details for players attempting to log in.
 /// <p>This event is asynchronous, and not run using main thread.</p>
 pub struct AsyncPlayerPreLoginEvent<'mc>(
@@ -22136,6 +23528,23 @@ impl<'mc> AsyncPlayerPreLoginEventResult<'mc> {
             AsyncPlayerPreLoginEventResult::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct AsyncPlayerPreLoginEventResultClass;
+impl blackboxmc_general::JNIProvidesClassName for AsyncPlayerPreLoginEventResultClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/AsyncPlayerPreLoginEvent$Result"
     }
 }
 
@@ -22537,6 +23946,16 @@ impl<'mc> AsyncPlayerPreLoginEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for AsyncPlayerPreLoginEvent<'mc> {
@@ -22554,6 +23973,14 @@ impl<'mc> Into<crate::event::Event<'mc>> for AsyncPlayerPreLoginEvent<'mc> {
             .expect("Error converting AsyncPlayerPreLoginEvent into crate::event::Event")
     }
 }
+
+pub struct AsyncPlayerPreLoginEventClass;
+impl blackboxmc_general::JNIProvidesClassName for AsyncPlayerPreLoginEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/AsyncPlayerPreLoginEvent"
+    }
+}
+
 /// Called when a player throws an egg and it might hatch
 pub struct PlayerEggThrowEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22884,6 +24311,16 @@ impl<'mc> PlayerEggThrowEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerEggThrowEvent<'mc> {
@@ -22901,6 +24338,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerEggThrowEvent<'
             .expect("Error converting PlayerEggThrowEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerEggThrowEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerEggThrowEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerEggThrowEvent"
+    }
+}
+
 /// Called when a visible entity is hidden from a player.
 ///
 /// This event is only called when the entity's visibility status is actually changed.
@@ -23134,6 +24579,16 @@ impl<'mc> PlayerHideEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerHideEntityEvent<'mc> {
@@ -23151,6 +24606,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerHideEntityEvent
             .expect("Error converting PlayerHideEntityEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerHideEntityEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerHideEntityEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerHideEntityEvent"
+    }
+}
+
 /// Thrown when a player picks an item up from the ground
 pub struct PlayerPickupItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23416,6 +24879,16 @@ impl<'mc> PlayerPickupItemEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PlayerPickupItemEvent<'mc> {
@@ -23439,6 +24912,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerPickupItemEvent
             .expect("Error converting PlayerPickupItemEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct PlayerPickupItemEventClass;
+impl blackboxmc_general::JNIProvidesClassName for PlayerPickupItemEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/PlayerPickupItemEvent"
+    }
+}
+
 /// This event will sometimes fire synchronously, depending on how it was triggered.
 /// <p>The constructor provides a boolean to indicate if the event was fired synchronously or asynchronously. When asynchronous, this event can be called from any thread, sans the main thread, and has limited access to the API.</p>
 /// <p>If a player is the direct cause of this event by an incoming packet, this event will be asynchronous. If a plugin triggers this event by compelling a player to chat, this event will be synchronous.</p>
@@ -23760,6 +25241,16 @@ impl<'mc> AsyncPlayerChatEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for AsyncPlayerChatEvent<'mc> {
@@ -23783,6 +25274,14 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for AsyncPlayerChatEvent<
             .expect("Error converting AsyncPlayerChatEvent into crate::event::player::PlayerEvent")
     }
 }
+
+pub struct AsyncPlayerChatEventClass;
+impl blackboxmc_general::JNIProvidesClassName for AsyncPlayerChatEventClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/AsyncPlayerChatEvent"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum BedEnterResultEnum {
     Ok,
@@ -23905,5 +25404,22 @@ impl<'mc> BedEnterResult<'mc> {
             BedEnterResult::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct BedEnterResultClass;
+impl blackboxmc_general::JNIProvidesClassName for BedEnterResultClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/event/player/BedEnterResult"
     }
 }

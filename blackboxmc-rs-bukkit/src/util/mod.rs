@@ -353,6 +353,16 @@ impl<'mc> NumberConversions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for NumberConversions<'mc> {
@@ -361,6 +371,13 @@ impl<'mc> std::string::ToString for NumberConversions<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling NumberConversions.toString: {}", err),
         }
+    }
+}
+
+pub struct NumberConversionsClass;
+impl blackboxmc_general::JNIProvidesClassName for NumberConversionsClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/NumberConversions"
     }
 }
 
@@ -640,6 +657,16 @@ impl<'mc> BlockIterator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for BlockIterator<'mc> {
@@ -657,6 +684,14 @@ impl<'mc> Into<blackboxmc_java::util::JavaIterator<'mc>> for BlockIterator<'mc> 
             .expect("Error converting BlockIterator into blackboxmc_java::util::JavaIterator")
     }
 }
+
+pub struct BlockIteratorClass;
+impl blackboxmc_general::JNIProvidesClassName for BlockIteratorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/BlockIterator"
+    }
+}
+
 /// Represents an arbitrary affine transformation.
 pub struct Transformation<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -855,6 +890,16 @@ impl<'mc> Transformation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Transformation<'mc> {
@@ -863,6 +908,13 @@ impl<'mc> std::string::ToString for Transformation<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling Transformation.toString: {}", err),
         }
+    }
+}
+
+pub struct TransformationClass;
+impl blackboxmc_general::JNIProvidesClassName for TransformationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/Transformation"
     }
 }
 
@@ -1106,6 +1158,16 @@ impl<'mc> RayTraceResult<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for RayTraceResult<'mc> {
@@ -1114,6 +1176,13 @@ impl<'mc> std::string::ToString for RayTraceResult<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling RayTraceResult.toString: {}", err),
         }
+    }
+}
+
+pub struct RayTraceResultClass;
+impl blackboxmc_general::JNIProvidesClassName for RayTraceResultClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/RayTraceResult"
     }
 }
 
@@ -1158,7 +1227,24 @@ impl<'mc> JNIInstantiatable<'mc> for CachedServerIcon<'mc> {
     }
 }
 
-impl<'mc> CachedServerIcon<'mc> {}
+impl<'mc> CachedServerIcon<'mc> {
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct CachedServerIconClass;
+impl blackboxmc_general::JNIProvidesClassName for CachedServerIconClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/CachedServerIcon"
+    }
+}
 
 pub struct ChatPaginatorChatPage<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1331,6 +1417,16 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ChatPaginatorChatPage<'mc> {
@@ -1339,6 +1435,13 @@ impl<'mc> std::string::ToString for ChatPaginatorChatPage<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ChatPaginatorChatPage.toString: {}", err),
         }
+    }
+}
+
+pub struct ChatPaginatorChatPageClass;
+impl blackboxmc_general::JNIProvidesClassName for ChatPaginatorChatPageClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/ChatPaginator$ChatPage"
     }
 }
 
@@ -1420,7 +1523,25 @@ impl<'mc> VoxelShape<'mc> {
         }
         Ok(new_vec)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct VoxelShapeClass;
+impl blackboxmc_general::JNIProvidesClassName for VoxelShapeClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/VoxelShape"
+    }
+}
+
 /// Represents an operation that accepts a single input argument and returns no result.
 ///
 /// This is a representation of an abstract class.
@@ -1487,7 +1608,25 @@ impl<'mc> Consumer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ConsumerClass;
+impl blackboxmc_general::JNIProvidesClassName for ConsumerClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/Consumer"
+    }
+}
+
 /// Holds the result of searching for a structure.
 ///
 /// This is a representation of an abstract class.
@@ -1554,7 +1693,25 @@ impl<'mc> StructureSearchResult<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct StructureSearchResultClass;
+impl blackboxmc_general::JNIProvidesClassName for StructureSearchResultClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/StructureSearchResult"
+    }
+}
+
 /// A mutable axis aligned bounding box (AABB).
 /// <p>This basically represents a rectangular box (specified by minimum and maximum corners) that can for example be used to describe the position and extents of an object (such as an entity, block, or rectangular region) in 3D space. Its edges and faces are parallel to the axes of the cartesian coordinate system.</p>
 /// <p>The bounding box may be degenerate (one or more sides having the length 0).</p>
@@ -2507,6 +2664,16 @@ impl<'mc> BoundingBox<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for BoundingBox<'mc> {
@@ -2525,6 +2692,14 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting BoundingBox into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
+
+pub struct BoundingBoxClass;
+impl blackboxmc_general::JNIProvidesClassName for BoundingBoxClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/BoundingBox"
+    }
+}
+
 /// A vector with a hash function that floors the X, Y, Z components, a la BlockVector in WorldEdit. BlockVectors can be used in hash sets and hash maps. Be aware that BlockVectors are mutable, but it is important that BlockVectors are never changed once put into a hash set or hash map.
 pub struct BlockVector<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3668,6 +3843,16 @@ impl<'mc> BlockVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for BlockVector<'mc> {
@@ -3685,6 +3870,14 @@ impl<'mc> Into<crate::util::Vector<'mc>> for BlockVector<'mc> {
             .expect("Error converting BlockVector into crate::util::Vector")
     }
 }
+
+pub struct BlockVectorClass;
+impl blackboxmc_general::JNIProvidesClassName for BlockVectorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/BlockVector"
+    }
+}
+
 /// EulerAngle is used to represent 3 angles, one for each axis (x, y, z). The angles are in radians
 pub struct EulerAngle<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3971,6 +4164,16 @@ impl<'mc> EulerAngle<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for EulerAngle<'mc> {
@@ -3979,6 +4182,13 @@ impl<'mc> std::string::ToString for EulerAngle<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling EulerAngle.toString: {}", err),
         }
+    }
+}
+
+pub struct EulerAngleClass;
+impl blackboxmc_general::JNIProvidesClassName for EulerAngleClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/EulerAngle"
     }
 }
 
@@ -4147,6 +4357,16 @@ impl<'mc> StringUtil<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for StringUtil<'mc> {
@@ -4155,6 +4375,13 @@ impl<'mc> std::string::ToString for StringUtil<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling StringUtil.toString: {}", err),
         }
+    }
+}
+
+pub struct StringUtilClass;
+impl blackboxmc_general::JNIProvidesClassName for StringUtilClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/StringUtil"
     }
 }
 
@@ -4333,6 +4560,16 @@ impl<'mc> ChatPaginator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for ChatPaginator<'mc> {
@@ -4341,6 +4578,13 @@ impl<'mc> std::string::ToString for ChatPaginator<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ChatPaginator.toString: {}", err),
         }
+    }
+}
+
+pub struct ChatPaginatorClass;
+impl blackboxmc_general::JNIProvidesClassName for ChatPaginatorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/ChatPaginator"
     }
 }
 
@@ -5461,6 +5705,16 @@ impl<'mc> Vector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Vector<'mc> {
@@ -5479,6 +5733,14 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting Vector into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
+
+pub struct VectorClass;
+impl blackboxmc_general::JNIProvidesClassName for VectorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/Vector"
+    }
+}
+
 /// Class containing file utilities
 pub struct FileUtil<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5641,6 +5903,16 @@ impl<'mc> FileUtil<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for FileUtil<'mc> {
@@ -5649,6 +5921,13 @@ impl<'mc> std::string::ToString for FileUtil<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling FileUtil.toString: {}", err),
         }
+    }
+}
+
+pub struct FileUtilClass;
+impl blackboxmc_general::JNIProvidesClassName for FileUtilClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/util/FileUtil"
     }
 }
 

@@ -316,6 +316,16 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for JavaRandomGeneratorFactory<'mc> {
@@ -324,6 +334,13 @@ impl<'mc> std::string::ToString for JavaRandomGeneratorFactory<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling JavaRandomGeneratorFactory.toString: {}", err),
         }
+    }
+}
+
+pub struct JavaRandomGeneratorFactoryClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaRandomGeneratorFactoryClass {
+    fn class_name(&self) -> &str {
+        "java/util/random/RandomGeneratorFactory"
     }
 }
 
@@ -585,12 +602,29 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::util::random::JavaRandomGeneratorStreamableGenerator<'mc>>
     for JavaRandomGeneratorSplittableGenerator<'mc>
 {
     fn into(self) -> crate::util::random::JavaRandomGeneratorStreamableGenerator<'mc> {
         crate::util::random::JavaRandomGeneratorStreamableGenerator::from_raw(&self.jni_ref(), self.1).expect("Error converting JavaRandomGeneratorSplittableGenerator into crate::util::random::JavaRandomGeneratorStreamableGenerator")
+    }
+}
+
+pub struct JavaRandomGeneratorSplittableGeneratorClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaRandomGeneratorSplittableGeneratorClass {
+    fn class_name(&self) -> &str {
+        "java/util/random/RandomGenerator$SplittableGenerator"
     }
 }
 
@@ -822,6 +856,23 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             .call_method(&self.jni_object(), "nextInt", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct JavaRandomGeneratorStreamableGeneratorClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaRandomGeneratorStreamableGeneratorClass {
+    fn class_name(&self) -> &str {
+        "java/util/random/RandomGenerator$StreamableGenerator"
     }
 }
 
@@ -1139,12 +1190,29 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::util::random::JavaRandomGeneratorJumpableGenerator<'mc>>
     for JavaRandomGeneratorLeapableGenerator<'mc>
 {
     fn into(self) -> crate::util::random::JavaRandomGeneratorJumpableGenerator<'mc> {
         crate::util::random::JavaRandomGeneratorJumpableGenerator::from_raw(&self.jni_ref(), self.1).expect("Error converting JavaRandomGeneratorLeapableGenerator into crate::util::random::JavaRandomGeneratorJumpableGenerator")
+    }
+}
+
+pub struct JavaRandomGeneratorLeapableGeneratorClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaRandomGeneratorLeapableGeneratorClass {
+    fn class_name(&self) -> &str {
+        "java/util/random/RandomGenerator$LeapableGenerator"
     }
 }
 
@@ -1381,6 +1449,23 @@ impl<'mc> JavaRandomGenerator<'mc> {
             .call_method(&self.jni_object(), "nextInt", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct JavaRandomGeneratorClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaRandomGeneratorClass {
+    fn class_name(&self) -> &str {
+        "java/util/random/RandomGenerator"
     }
 }
 
@@ -1734,12 +1819,31 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::util::random::JavaRandomGeneratorLeapableGenerator<'mc>>
     for JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc>
 {
     fn into(self) -> crate::util::random::JavaRandomGeneratorLeapableGenerator<'mc> {
         crate::util::random::JavaRandomGeneratorLeapableGenerator::from_raw(&self.jni_ref(), self.1).expect("Error converting JavaRandomGeneratorArbitrarilyJumpableGenerator into crate::util::random::JavaRandomGeneratorLeapableGenerator")
+    }
+}
+
+pub struct JavaRandomGeneratorArbitrarilyJumpableGeneratorClass;
+impl blackboxmc_general::JNIProvidesClassName
+    for JavaRandomGeneratorArbitrarilyJumpableGeneratorClass
+{
+    fn class_name(&self) -> &str {
+        "java/util/random/RandomGenerator$ArbitrarilyJumpableGenerator"
     }
 }
 
@@ -2020,11 +2124,28 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::util::random::JavaRandomGeneratorStreamableGenerator<'mc>>
     for JavaRandomGeneratorJumpableGenerator<'mc>
 {
     fn into(self) -> crate::util::random::JavaRandomGeneratorStreamableGenerator<'mc> {
         crate::util::random::JavaRandomGeneratorStreamableGenerator::from_raw(&self.jni_ref(), self.1).expect("Error converting JavaRandomGeneratorJumpableGenerator into crate::util::random::JavaRandomGeneratorStreamableGenerator")
+    }
+}
+
+pub struct JavaRandomGeneratorJumpableGeneratorClass;
+impl blackboxmc_general::JNIProvidesClassName for JavaRandomGeneratorJumpableGeneratorClass {
+    fn class_name(&self) -> &str {
+        "java/util/random/RandomGenerator$JumpableGenerator"
     }
 }

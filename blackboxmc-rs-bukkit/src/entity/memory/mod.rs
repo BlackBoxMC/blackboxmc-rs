@@ -184,6 +184,16 @@ impl<'mc> MemoryKey<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for MemoryKey<'mc> {
@@ -199,5 +209,12 @@ impl<'mc> Into<crate::Keyed<'mc>> for MemoryKey<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting MemoryKey into crate::Keyed")
+    }
+}
+
+pub struct MemoryKeyClass;
+impl blackboxmc_general::JNIProvidesClassName for MemoryKeyClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/entity/memory/MemoryKey"
     }
 }

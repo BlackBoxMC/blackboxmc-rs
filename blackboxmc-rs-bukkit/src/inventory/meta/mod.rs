@@ -120,6 +120,23 @@ impl<'mc> BookMetaGeneration<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct BookMetaGenerationClass;
+impl blackboxmc_general::JNIProvidesClassName for BookMetaGenerationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/BookMeta$Generation"
+    }
 }
 
 ///
@@ -788,6 +805,16 @@ impl<'mc> BlockDataMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BlockDataMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -795,6 +822,14 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BlockDataMeta<'mc> {
             .expect("Error converting BlockDataMeta into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct BlockDataMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for BlockDataMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/BlockDataMeta"
+    }
+}
+
 /// Represents armor that an entity can equip.
 /// <p><strong>Note: Armor trims are part of an experimental feature of Minecraft and hence subject to change.</strong></p>
 ///
@@ -1465,6 +1500,16 @@ impl<'mc> ArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for ArmorMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -1472,6 +1517,14 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for ArmorMeta<'mc> {
             .expect("Error converting ArmorMeta into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct ArmorMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for ArmorMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/ArmorMeta"
+    }
+}
+
 /// Represents a bucket of axolotl.
 ///
 /// This is a representation of an abstract class.
@@ -2148,6 +2201,16 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for AxolotlBucketMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -2155,6 +2218,14 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for AxolotlBucketMeta<'mc>
             .expect("Error converting AxolotlBucketMeta into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct AxolotlBucketMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for AxolotlBucketMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/AxolotlBucketMeta"
+    }
+}
+
 /// Represents a skull that can have an owner.
 ///
 /// This is a representation of an abstract class.
@@ -2928,6 +2999,16 @@ impl<'mc> SkullMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for SkullMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -2935,6 +3016,14 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for SkullMeta<'mc> {
             .expect("Error converting SkullMeta into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct SkullMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for SkullMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/SkullMeta"
+    }
+}
+
 /// Represents a compass that can track a specific location.
 ///
 /// This is a representation of an abstract class.
@@ -3621,6 +3710,16 @@ impl<'mc> CompassMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for CompassMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -3628,6 +3727,14 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for CompassMeta<'mc> {
             .expect("Error converting CompassMeta into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct CompassMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for CompassMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/CompassMeta"
+    }
+}
+
 /// Represents a suspicious stew that can have custom effects.
 ///
 /// This is a representation of an abstract class.
@@ -4355,11 +4462,28 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for SuspiciousStewMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting SuspiciousStewMeta into crate::inventory::meta::ItemMeta")
+    }
+}
+
+pub struct SuspiciousStewMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for SuspiciousStewMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/SuspiciousStewMeta"
     }
 }
 
@@ -5033,6 +5157,16 @@ impl<'mc> CrossbowMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for CrossbowMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -5040,6 +5174,14 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for CrossbowMeta<'mc> {
             .expect("Error converting CrossbowMeta into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct CrossbowMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for CrossbowMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/CrossbowMeta"
+    }
+}
+
 /// This type represents the storage mechanism for auxiliary item data.
 /// <p>An implementation will handle the creation and application for ItemMeta. This class should not be implemented by a plugin in a live environment.</p>
 ///
@@ -5661,6 +5803,16 @@ impl<'mc> ItemMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
     for ItemMeta<'mc>
@@ -5675,6 +5827,14 @@ impl<'mc> Into<crate::persistence::PersistentDataHolder<'mc>> for ItemMeta<'mc> 
             .expect("Error converting ItemMeta into crate::persistence::PersistentDataHolder")
     }
 }
+
+pub struct ItemMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for ItemMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/ItemMeta"
+    }
+}
+
 /// Represents an item that can be repaired at an anvil.
 ///
 /// This is a representation of an abstract class.
@@ -6330,11 +6490,28 @@ impl<'mc> Repairable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for Repairable<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Repairable into crate::inventory::meta::ItemMeta")
+    }
+}
+
+pub struct RepairableClass;
+impl blackboxmc_general::JNIProvidesClassName for RepairableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/Repairable"
     }
 }
 
@@ -7114,11 +7291,28 @@ impl<'mc> BannerMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BannerMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting BannerMeta into crate::inventory::meta::ItemMeta")
+    }
+}
+
+pub struct BannerMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for BannerMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/BannerMeta"
     }
 }
 
@@ -7786,6 +7980,16 @@ impl<'mc> BundleMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BundleMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -7793,6 +7997,14 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BundleMeta<'mc> {
             .expect("Error converting BundleMeta into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct BundleMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for BundleMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/BundleMeta"
+    }
+}
+
 /// Represents armor that an entity can equip and can also be colored.
 ///
 /// This is a representation of an abstract class.
@@ -8497,6 +8709,16 @@ impl<'mc> ColorableArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ArmorMeta<'mc>> for ColorableArmorMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ArmorMeta<'mc> {
@@ -8511,6 +8733,14 @@ impl<'mc> Into<crate::inventory::meta::LeatherArmorMeta<'mc>> for ColorableArmor
         )
     }
 }
+
+pub struct ColorableArmorMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for ColorableArmorMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/ColorableArmorMeta"
+    }
+}
+
 /// Represents a spawn egg and it's spawned type.
 ///
 /// This is a representation of an abstract class.
@@ -9179,6 +9409,16 @@ impl<'mc> SpawnEggMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for SpawnEggMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -9186,6 +9426,14 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for SpawnEggMeta<'mc> {
             .expect("Error converting SpawnEggMeta into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct SpawnEggMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for SpawnEggMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/SpawnEggMeta"
+    }
+}
+
 /// Represents an item that has durability and can take damage.
 ///
 /// This is a representation of an abstract class.
@@ -9841,6 +10089,16 @@ impl<'mc> Damageable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for Damageable<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -9848,6 +10106,14 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for Damageable<'mc> {
             .expect("Error converting Damageable into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct DamageableClass;
+impl blackboxmc_general::JNIProvidesClassName for DamageableClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/Damageable"
+    }
+}
+
 /// Represents a <a href="../../Material.html#FIREWORK_ROCKET"><code>Material.FIREWORK_ROCKET</code></a> and its effects.
 ///
 /// This is a representation of an abstract class.
@@ -10564,6 +10830,16 @@ impl<'mc> FireworkMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for FireworkMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -10571,6 +10847,14 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for FireworkMeta<'mc> {
             .expect("Error converting FireworkMeta into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct FireworkMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for FireworkMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/FireworkMeta"
+    }
+}
+
 /// Represents a potion or item that can have custom effects.
 ///
 /// This is a representation of an abstract class.
@@ -11392,11 +11676,28 @@ impl<'mc> PotionMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for PotionMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting PotionMeta into crate::inventory::meta::ItemMeta")
+    }
+}
+
+pub struct PotionMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for PotionMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/PotionMeta"
     }
 }
 
@@ -12059,6 +12360,16 @@ impl<'mc> BlockStateMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BlockStateMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -12066,6 +12377,14 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BlockStateMeta<'mc> {
             .expect("Error converting BlockStateMeta into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct BlockStateMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for BlockStateMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/BlockStateMeta"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum GenerationEnum {
     Original,
@@ -12179,7 +12498,25 @@ impl<'mc> Generation<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct GenerationClass;
+impl blackboxmc_general::JNIProvidesClassName for GenerationClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/Generation"
+    }
+}
+
 /// EnchantmentMeta is specific to items that can <i>store</i> enchantments, as opposed to being enchanted. <a href="../../Material.html#ENCHANTED_BOOK"><code>Material.ENCHANTED_BOOK</code></a> is an example of an item with enchantment storage.
 ///
 /// This is a representation of an abstract class.
@@ -12930,11 +13267,28 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for EnchantmentStorageMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting EnchantmentStorageMeta into crate::inventory::meta::ItemMeta")
+    }
+}
+
+pub struct EnchantmentStorageMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for EnchantmentStorageMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/EnchantmentStorageMeta"
     }
 }
 
@@ -13597,6 +13951,16 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for KnowledgeBookMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -13604,6 +13968,14 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for KnowledgeBookMeta<'mc>
             .expect("Error converting KnowledgeBookMeta into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct KnowledgeBookMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for KnowledgeBookMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/KnowledgeBookMeta"
+    }
+}
+
 /// Represents a map that can be scalable.
 ///
 /// This is a representation of an abstract class.
@@ -14409,11 +14781,28 @@ impl<'mc> MapMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for MapMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting MapMeta into crate::inventory::meta::ItemMeta")
+    }
+}
+
+pub struct MapMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for MapMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/MapMeta"
     }
 }
 
@@ -14622,6 +15011,16 @@ impl<'mc> BookMetaSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for BookMetaSpigot<'mc> {
@@ -14630,6 +15029,13 @@ impl<'mc> std::string::ToString for BookMetaSpigot<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling BookMetaSpigot.toString: {}", err),
         }
+    }
+}
+
+pub struct BookMetaSpigotClass;
+impl blackboxmc_general::JNIProvidesClassName for BookMetaSpigotClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/BookMeta$Spigot"
     }
 }
 
@@ -15292,6 +15698,16 @@ impl<'mc> LeatherArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for LeatherArmorMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -15299,6 +15715,14 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for LeatherArmorMeta<'mc> 
             .expect("Error converting LeatherArmorMeta into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct LeatherArmorMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for LeatherArmorMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/LeatherArmorMeta"
+    }
+}
+
 /// Represents a meta that can store a single FireworkEffect. An example includes <a href="../../Material.html#FIREWORK_STAR"><code>Material.FIREWORK_STAR</code></a>.
 ///
 /// This is a representation of an abstract class.
@@ -15968,6 +16392,16 @@ impl<'mc> FireworkEffectMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for FireworkEffectMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -15975,6 +16409,14 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for FireworkEffectMeta<'mc
             .expect("Error converting FireworkEffectMeta into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct FireworkEffectMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for FireworkEffectMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/FireworkEffectMeta"
+    }
+}
+
 /// Represents a bucket of tropical fish.
 ///
 /// This is a representation of an abstract class.
@@ -16736,6 +17178,16 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for TropicalFishBucketMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -16743,6 +17195,14 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for TropicalFishBucketMeta
             .expect("Error converting TropicalFishBucketMeta into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct TropicalFishBucketMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for TropicalFishBucketMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/TropicalFishBucketMeta"
+    }
+}
+
 /// Represents a book (<a href="../../Material.html#WRITABLE_BOOK"><code>Material.WRITABLE_BOOK</code></a> or <a href="../../Material.html#WRITTEN_BOOK"><code>Material.WRITTEN_BOOK</code></a>) that can have a title, an author, and pages.
 ///
 /// This is a representation of an abstract class.
@@ -17600,11 +18060,28 @@ impl<'mc> BookMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BookMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting BookMeta into crate::inventory::meta::ItemMeta")
+    }
+}
+
+pub struct BookMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for BookMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/BookMeta"
     }
 }
 
@@ -18269,6 +18746,16 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for MusicInstrumentMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
@@ -18276,5 +18763,13 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for MusicInstrumentMeta<'m
             .expect("Error converting MusicInstrumentMeta into crate::inventory::meta::ItemMeta")
     }
 }
+
+pub struct MusicInstrumentMetaClass;
+impl blackboxmc_general::JNIProvidesClassName for MusicInstrumentMetaClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/inventory/meta/MusicInstrumentMeta"
+    }
+}
+
 pub mod tags;
 pub mod trim;

@@ -66,7 +66,25 @@ impl<'mc> ServerOperator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct ServerOperatorClass;
+impl blackboxmc_general::JNIProvidesClassName for ServerOperatorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/permissions/ServerOperator"
+    }
+}
+
 /// Base Permissible for use in any Permissible object via proxy or extension
 pub struct PermissibleBase<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -376,6 +394,16 @@ impl<'mc> PermissibleBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PermissibleBase<'mc> {
@@ -393,6 +421,14 @@ impl<'mc> Into<crate::permissions::Permissible<'mc>> for PermissibleBase<'mc> {
             .expect("Error converting PermissibleBase into crate::permissions::Permissible")
     }
 }
+
+pub struct PermissibleBaseClass;
+impl blackboxmc_general::JNIProvidesClassName for PermissibleBaseClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/permissions/PermissibleBase"
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum PermissionDefaultEnum {
     VariantTrue,
@@ -508,7 +544,25 @@ impl<'mc> PermissionDefault<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
+
+pub struct PermissionDefaultClass;
+impl blackboxmc_general::JNIProvidesClassName for PermissionDefaultClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/permissions/PermissionDefault"
+    }
+}
+
 /// Represents an object that may be assigned permissions
 ///
 /// This is a representation of an abstract class.
@@ -695,6 +749,16 @@ impl<'mc> Permissible<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 impl<'mc> Into<crate::permissions::ServerOperator<'mc>> for Permissible<'mc> {
     fn into(self) -> crate::permissions::ServerOperator<'mc> {
@@ -702,6 +766,14 @@ impl<'mc> Into<crate::permissions::ServerOperator<'mc>> for Permissible<'mc> {
             .expect("Error converting Permissible into crate::permissions::ServerOperator")
     }
 }
+
+pub struct PermissibleClass;
+impl blackboxmc_general::JNIProvidesClassName for PermissibleClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/permissions/Permissible"
+    }
+}
+
 /// Represents a unique permission that may be attached to a <a title="interface in org.bukkit.permissions" href="Permissible.html"><code>Permissible</code></a>
 pub struct Permission<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1063,6 +1135,16 @@ impl<'mc> Permission<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for Permission<'mc> {
@@ -1071,6 +1153,13 @@ impl<'mc> std::string::ToString for Permission<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling Permission.toString: {}", err),
         }
+    }
+}
+
+pub struct PermissionClass;
+impl blackboxmc_general::JNIProvidesClassName for PermissionClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/permissions/Permission"
     }
 }
 
@@ -1293,6 +1382,16 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PermissionAttachmentInfo<'mc> {
@@ -1301,6 +1400,13 @@ impl<'mc> std::string::ToString for PermissionAttachmentInfo<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling PermissionAttachmentInfo.toString: {}", err),
         }
+    }
+}
+
+pub struct PermissionAttachmentInfoClass;
+impl blackboxmc_general::JNIProvidesClassName for PermissionAttachmentInfoClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/permissions/PermissionAttachmentInfo"
     }
 }
 
@@ -1591,6 +1697,16 @@ impl<'mc> PermissionAttachment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
 }
 
 impl<'mc> std::string::ToString for PermissionAttachment<'mc> {
@@ -1599,6 +1715,13 @@ impl<'mc> std::string::ToString for PermissionAttachment<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling PermissionAttachment.toString: {}", err),
         }
+    }
+}
+
+pub struct PermissionAttachmentClass;
+impl blackboxmc_general::JNIProvidesClassName for PermissionAttachmentClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/permissions/PermissionAttachment"
     }
 }
 
@@ -1662,5 +1785,22 @@ impl<'mc> PermissionRemovedExecutor<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+
+    pub fn instance_of<A>(&self, other: A) -> bool
+    where
+        A: blackboxmc_general::JNIProvidesClassName,
+    {
+        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
+        self.jni_ref()
+            .is_instance_of(&self.jni_object(), cls)
+            .unwrap()
+    }
+}
+
+pub struct PermissionRemovedExecutorClass;
+impl blackboxmc_general::JNIProvidesClassName for PermissionRemovedExecutorClass {
+    fn class_name(&self) -> &str {
+        "org/bukkit/permissions/PermissionRemovedExecutor"
     }
 }
