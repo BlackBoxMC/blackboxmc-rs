@@ -14,12 +14,10 @@ impl<'mc> JNIRaw<'mc> for CommandSenderSpigot<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CommandSenderSpigot<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -194,14 +192,9 @@ impl<'mc> CommandSenderSpigot<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -226,12 +219,10 @@ impl<'mc> JNIRaw<'mc> for RemoteConsoleCommandSender<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RemoteConsoleCommandSender<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -483,14 +474,9 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::command::CommandSender<'mc>> for RemoteConsoleCommandSender<'mc> {
@@ -511,12 +497,10 @@ impl<'mc> JNIRaw<'mc> for SimpleCommandMap<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SimpleCommandMap<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -825,14 +809,9 @@ impl<'mc> SimpleCommandMap<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -862,12 +841,10 @@ impl<'mc> JNIRaw<'mc> for FormattedCommandAlias<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for FormattedCommandAlias<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1408,14 +1385,9 @@ impl<'mc> FormattedCommandAlias<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1447,12 +1419,10 @@ impl<'mc> JNIRaw<'mc> for TabCompleter<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for TabCompleter<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1529,14 +1499,9 @@ impl<'mc> TabCompleter<'mc> {
         Ok(new_vec)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a class which contains a single method for executing commands
@@ -1552,12 +1517,10 @@ impl<'mc> JNIRaw<'mc> for CommandExecutor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CommandExecutor<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1624,14 +1587,9 @@ impl<'mc> CommandExecutor<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1647,12 +1605,10 @@ impl<'mc> JNIRaw<'mc> for ConsoleCommandSender<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ConsoleCommandSender<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2004,14 +1960,9 @@ impl<'mc> ConsoleCommandSender<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::command::CommandSender<'mc>> for ConsoleCommandSender<'mc> {
@@ -2039,12 +1990,10 @@ impl<'mc> JNIRaw<'mc> for PluginIdentifiableCommand<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PluginIdentifiableCommand<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2082,14 +2031,9 @@ impl<'mc> PluginIdentifiableCommand<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a Command, which executes various tasks upon user input
@@ -2103,12 +2047,10 @@ impl<'mc> JNIRaw<'mc> for Command<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Command<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2626,14 +2568,9 @@ impl<'mc> Command<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2657,12 +2594,10 @@ impl<'mc> JNIRaw<'mc> for MultipleCommandAlias<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MultipleCommandAlias<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3202,14 +3137,9 @@ impl<'mc> MultipleCommandAlias<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3239,12 +3169,10 @@ impl<'mc> JNIRaw<'mc> for PluginCommandYamlParser<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PluginCommandYamlParser<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3400,14 +3328,9 @@ impl<'mc> PluginCommandYamlParser<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3432,12 +3355,10 @@ impl<'mc> JNIRaw<'mc> for ProxiedCommandSender<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ProxiedCommandSender<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3709,14 +3630,9 @@ impl<'mc> ProxiedCommandSender<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::command::CommandSender<'mc>> for ProxiedCommandSender<'mc> {
@@ -3738,12 +3654,10 @@ impl<'mc> JNIRaw<'mc> for TabExecutor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for TabExecutor<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3851,14 +3765,9 @@ impl<'mc> TabExecutor<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::command::TabCompleter<'mc>> for TabExecutor<'mc> {
@@ -3886,12 +3795,10 @@ impl<'mc> JNIRaw<'mc> for CommandSender<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CommandSender<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4139,14 +4046,9 @@ impl<'mc> CommandSender<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::permissions::Permissible<'mc>> for CommandSender<'mc> {
@@ -4168,12 +4070,10 @@ impl<'mc> JNIRaw<'mc> for CommandMap<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CommandMap<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4328,14 +4228,9 @@ impl<'mc> CommandMap<'mc> {
         Ok(new_vec)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a <a title="class in org.bukkit.command" href="Command.html"><code>Command</code></a> belonging to a plugin
@@ -4349,12 +4244,10 @@ impl<'mc> JNIRaw<'mc> for PluginCommand<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PluginCommand<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4949,14 +4842,9 @@ impl<'mc> PluginCommand<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -4994,12 +4882,10 @@ impl<'mc> JNIRaw<'mc> for BlockCommandSender<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockCommandSender<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5260,14 +5146,9 @@ impl<'mc> BlockCommandSender<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::command::CommandSender<'mc>> for BlockCommandSender<'mc> {

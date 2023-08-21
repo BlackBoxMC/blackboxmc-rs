@@ -4,53 +4,73 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Each entry here represents a particular plugin's awareness. These can be checked by using <a href="PluginDescriptionFile.html#getAwareness()"><code>PluginDescriptionFile.getAwareness()</code></a>.<a title="class or interface in java.util" class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html#contains-java.lang.Object-"><code>contains(flag)</code></a>.
-#[derive(PartialEq, Eq)]
-pub enum PluginAwarenessFlagsEnum {
-    Utf8,
-}
-impl std::fmt::Display for PluginAwarenessFlagsEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PluginAwarenessFlagsEnum::Utf8 => f.write_str("UTF8"),
-        }
-    }
+pub enum PluginAwarenessFlags<'mc> {
+    Utf8 {
+        inner: PluginAwarenessFlagsStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for PluginAwarenessFlags<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            PluginAwarenessFlags::Utf8 { .. } => f.write_str("UTF8"),
+        }
     }
 }
+
+impl<'mc> PluginAwarenessFlags<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PluginAwarenessFlags<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/plugin/PluginAwareness$Flags");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/plugin/PluginAwareness$Flags;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "UTF8" => Ok(PluginAwarenessFlags::Utf8 {
+                inner: PluginAwarenessFlagsStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct PluginAwarenessFlags<'mc>(
+pub struct PluginAwarenessFlagsStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub PluginAwarenessFlagsEnum,
 );
-impl<'mc> std::ops::Deref for PluginAwarenessFlags<'mc> {
-    type Target = PluginAwarenessFlagsEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for PluginAwarenessFlags<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Utf8 { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Utf8 { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for PluginAwarenessFlags<'mc> {
-    type Enum = PluginAwarenessFlagsEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for PluginAwarenessFlags<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -65,58 +85,58 @@ impl<'mc> JNIInstantiatableEnum<'mc> for PluginAwarenessFlags<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "UTF8" => Ok(PluginAwarenessFlags::Utf8 {
+                    inner: PluginAwarenessFlagsStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> PluginAwarenessFlags<'mc> {
-    pub const UTF8: PluginAwarenessFlagsEnum = PluginAwarenessFlagsEnum::Utf8;
-    pub fn from_string(str: String) -> std::option::Option<PluginAwarenessFlagsEnum> {
-        match str.as_str() {
-            "UTF8" => Some(PluginAwarenessFlagsEnum::Utf8),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for PluginAwarenessFlagsStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PluginAwarenessFlagsStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PluginAwarenessFlagsStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/PluginAwareness$Flags")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PluginAwarenessFlagsStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<PluginAwarenessFlags<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/plugin/PluginAwareness$Flags");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/plugin/PluginAwareness$Flags;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        PluginAwarenessFlags::from_raw(
-            &jni,
-            raw_obj,
-            PluginAwarenessFlags::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> PluginAwarenessFlagsStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// This type is the runtime-container for the information in the plugin.yml. All plugins must have a respective plugin.yml. For plugins written in java using the standard plugin loader, this file must be in the root of the jar file.
@@ -300,12 +320,10 @@ impl<'mc> JNIRaw<'mc> for PluginDescriptionFile<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PluginDescriptionFile<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -553,12 +571,7 @@ impl<'mc> PluginDescriptionFile<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::plugin::PluginLoadOrder::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::plugin::PluginLoadOrder::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::plugin::PluginLoadOrder::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn authors(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
@@ -717,12 +730,7 @@ impl<'mc> PluginDescriptionFile<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::permissions::PermissionDefault::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::permissions::PermissionDefault::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::permissions::PermissionDefault::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn awareness(
@@ -881,14 +889,9 @@ impl<'mc> PluginDescriptionFile<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -901,55 +904,80 @@ impl<'mc> std::string::ToString for PluginDescriptionFile<'mc> {
     }
 }
 
-#[derive(PartialEq, Eq)]
-pub enum PluginLoadOrderEnum {
-    Startup,
-    Postworld,
-}
-impl std::fmt::Display for PluginLoadOrderEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PluginLoadOrderEnum::Startup => f.write_str("STARTUP"),
-            PluginLoadOrderEnum::Postworld => f.write_str("POSTWORLD"),
-        }
-    }
+pub enum PluginLoadOrder<'mc> {
+    Startup { inner: PluginLoadOrderStruct<'mc> },
+    Postworld { inner: PluginLoadOrderStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for PluginLoadOrder<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            PluginLoadOrder::Startup { .. } => f.write_str("STARTUP"),
+            PluginLoadOrder::Postworld { .. } => f.write_str("POSTWORLD"),
+        }
     }
 }
+
+impl<'mc> PluginLoadOrder<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PluginLoadOrder<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/plugin/PluginLoadOrder");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/plugin/PluginLoadOrder;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "STARTUP" => Ok(PluginLoadOrder::Startup {
+                inner: PluginLoadOrderStruct::from_raw(env, obj)?,
+            }),
+            "POSTWORLD" => Ok(PluginLoadOrder::Postworld {
+                inner: PluginLoadOrderStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct PluginLoadOrder<'mc>(
+pub struct PluginLoadOrderStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub PluginLoadOrderEnum,
 );
-impl<'mc> std::ops::Deref for PluginLoadOrder<'mc> {
-    type Target = PluginLoadOrderEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for PluginLoadOrder<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Startup { inner } => inner.0.clone(),
+            Self::Postworld { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Startup { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Postworld { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for PluginLoadOrder<'mc> {
-    type Enum = PluginLoadOrderEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for PluginLoadOrder<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -964,60 +992,61 @@ impl<'mc> JNIInstantiatableEnum<'mc> for PluginLoadOrder<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "STARTUP" => Ok(PluginLoadOrder::Startup {
+                    inner: PluginLoadOrderStruct::from_raw(env, obj)?,
+                }),
+                "POSTWORLD" => Ok(PluginLoadOrder::Postworld {
+                    inner: PluginLoadOrderStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> PluginLoadOrder<'mc> {
-    pub const STARTUP: PluginLoadOrderEnum = PluginLoadOrderEnum::Startup;
-    pub const POSTWORLD: PluginLoadOrderEnum = PluginLoadOrderEnum::Postworld;
-    pub fn from_string(str: String) -> std::option::Option<PluginLoadOrderEnum> {
-        match str.as_str() {
-            "STARTUP" => Some(PluginLoadOrderEnum::Startup),
-            "POSTWORLD" => Some(PluginLoadOrderEnum::Postworld),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for PluginLoadOrderStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PluginLoadOrderStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PluginLoadOrderStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/PluginLoadOrder")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PluginLoadOrderStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<PluginLoadOrder<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/plugin/PluginLoadOrder");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/plugin/PluginLoadOrder;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        PluginLoadOrder::from_raw(
-            &jni,
-            raw_obj,
-            PluginLoadOrder::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> PluginLoadOrderStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// A registered service provider.
@@ -1031,12 +1060,10 @@ impl<'mc> JNIRaw<'mc> for RegisteredServiceProvider<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RegisteredServiceProvider<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1247,14 +1274,9 @@ impl<'mc> RegisteredServiceProvider<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1267,54 +1289,72 @@ impl<'mc> std::string::ToString for RegisteredServiceProvider<'mc> {
     }
 }
 
-#[derive(PartialEq, Eq)]
-pub enum FlagsEnum {
+pub enum Flags<'mc> {
     #[deprecated]
-    Utf8,
-}
-impl std::fmt::Display for FlagsEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            FlagsEnum::Utf8 => f.write_str("UTF8"),
-        }
-    }
+    Utf8 { inner: FlagsStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Flags<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Flags::Utf8 { .. } => f.write_str("UTF8"),
+        }
     }
 }
+
+impl<'mc> Flags<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Flags<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/plugin/Flags");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/plugin/Flags;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "UTF8" => Ok(Flags::Utf8 {
+                inner: FlagsStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Flags<'mc>(
+pub struct FlagsStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub FlagsEnum,
 );
-impl<'mc> std::ops::Deref for Flags<'mc> {
-    type Target = FlagsEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Flags<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Utf8 { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Utf8 { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Flags<'mc> {
-    type Enum = FlagsEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Flags<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Flags from null object.").into());
@@ -1327,58 +1367,55 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Flags<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "UTF8" => Ok(Flags::Utf8 {
+                    inner: FlagsStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Flags<'mc> {
-    pub const UTF8: FlagsEnum = FlagsEnum::Utf8;
-    pub fn from_string(str: String) -> std::option::Option<FlagsEnum> {
-        match str.as_str() {
-            "UTF8" => Some(FlagsEnum::Utf8),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for FlagsStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for FlagsStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate FlagsStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/Flags")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a FlagsStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Flags<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/plugin/Flags");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/plugin/Flags;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Flags::from_raw(
-            &jni,
-            raw_obj,
-            Flags::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> FlagsStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents various priorities of a provider.
@@ -1392,12 +1429,10 @@ impl<'mc> JNIRaw<'mc> for ServicePriority<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ServicePriority<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1422,14 +1457,9 @@ impl<'mc> JNIInstantiatable<'mc> for ServicePriority<'mc> {
 }
 
 impl<'mc> ServicePriority<'mc> {
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a concept that a plugin is aware of.
@@ -1446,12 +1476,10 @@ impl<'mc> JNIRaw<'mc> for PluginAwareness<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PluginAwareness<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1476,14 +1504,9 @@ impl<'mc> JNIInstantiatable<'mc> for PluginAwareness<'mc> {
 }
 
 impl<'mc> PluginAwareness<'mc> {
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Handles all plugin management from the Server
@@ -1499,12 +1522,10 @@ impl<'mc> JNIRaw<'mc> for PluginManager<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PluginManager<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1993,14 +2014,9 @@ impl<'mc> PluginManager<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a base <a href="Plugin.html" title="interface in org.bukkit.plugin"><code>Plugin</code></a>
@@ -2015,12 +2031,10 @@ impl<'mc> JNIRaw<'mc> for PluginBase<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PluginBase<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2502,14 +2516,9 @@ impl<'mc> PluginBase<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2541,12 +2550,10 @@ impl<'mc> JNIRaw<'mc> for EventExecutor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EventExecutor<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2594,14 +2601,9 @@ impl<'mc> EventExecutor<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Manages services and service providers. Services are an interface specifying a list of methods that a provider must implement. Providers are implementations of these services. A provider can be queried from the services manager in order to use a service (if one is available). If multiple plugins register a service, then the service with the highest priority takes precedence.
@@ -2617,12 +2619,10 @@ impl<'mc> JNIRaw<'mc> for ServicesManager<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ServicesManager<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2818,64 +2818,77 @@ impl<'mc> ServicesManager<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum FlagsFlagsEnum {
+pub enum FlagsFlags<'mc> {
     #[deprecated]
-    Utf8,
-}
-impl std::fmt::Display for FlagsFlagsEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            FlagsFlagsEnum::Utf8 => f.write_str("UTF8"),
-        }
-    }
+    Utf8 { inner: FlagsFlagsStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for FlagsFlags<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            FlagsFlags::Utf8 { .. } => f.write_str("UTF8"),
+        }
     }
 }
+
+impl<'mc> FlagsFlags<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<FlagsFlags<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/plugin/Flags$Flags");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/plugin/Flags$Flags;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "UTF8" => Ok(FlagsFlags::Utf8 {
+                inner: FlagsFlagsStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct FlagsFlags<'mc>(
+pub struct FlagsFlagsStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub FlagsFlagsEnum,
 );
-impl<'mc> std::ops::Deref for FlagsFlags<'mc> {
-    type Target = FlagsFlagsEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for FlagsFlags<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Utf8 { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Utf8 { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for FlagsFlags<'mc> {
-    type Enum = FlagsFlagsEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for FlagsFlags<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate FlagsFlags from null object.").into());
@@ -2888,58 +2901,57 @@ impl<'mc> JNIInstantiatableEnum<'mc> for FlagsFlags<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "UTF8" => Ok(FlagsFlags::Utf8 {
+                    inner: FlagsFlagsStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> FlagsFlags<'mc> {
-    pub const UTF8: FlagsFlagsEnum = FlagsFlagsEnum::Utf8;
-    pub fn from_string(str: String) -> std::option::Option<FlagsFlagsEnum> {
-        match str.as_str() {
-            "UTF8" => Some(FlagsFlagsEnum::Utf8),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for FlagsFlagsStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for FlagsFlagsStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate FlagsFlagsStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/Flags$Flags")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a FlagsFlagsStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<FlagsFlags<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/plugin/Flags$Flags");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/plugin/Flags$Flags;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        FlagsFlags::from_raw(
-            &jni,
-            raw_obj,
-            FlagsFlags::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> FlagsFlagsStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Extends RegisteredListener to include timing information
@@ -2953,12 +2965,10 @@ impl<'mc> JNIRaw<'mc> for TimedRegisteredListener<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for TimedRegisteredListener<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3109,12 +3119,7 @@ impl<'mc> TimedRegisteredListener<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::EventPriority::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::EventPriority::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::EventPriority::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn listener(&self) -> Result<crate::event::Listener<'mc>, Box<dyn std::error::Error>> {
@@ -3242,14 +3247,9 @@ impl<'mc> TimedRegisteredListener<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3282,12 +3282,10 @@ impl<'mc> JNIRaw<'mc> for PluginLoader<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PluginLoader<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3421,14 +3419,9 @@ impl<'mc> PluginLoader<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Stores relevant information for plugin listeners
@@ -3442,12 +3435,10 @@ impl<'mc> JNIRaw<'mc> for RegisteredListener<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RegisteredListener<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3527,12 +3518,7 @@ impl<'mc> RegisteredListener<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::EventPriority::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::EventPriority::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::EventPriority::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn listener(&self) -> Result<crate::event::Listener<'mc>, Box<dyn std::error::Error>> {
@@ -3678,14 +3664,9 @@ impl<'mc> RegisteredListener<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3712,12 +3693,10 @@ impl<'mc> JNIRaw<'mc> for Plugin<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Plugin<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4133,14 +4112,9 @@ impl<'mc> Plugin<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::command::TabExecutor<'mc>> for Plugin<'mc> {

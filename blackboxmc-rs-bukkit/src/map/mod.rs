@@ -14,12 +14,10 @@ impl<'mc> JNIRaw<'mc> for MapCursorCollection<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MapCursorCollection<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -242,14 +240,9 @@ impl<'mc> MapCursorCollection<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -263,61 +256,99 @@ impl<'mc> std::string::ToString for MapCursorCollection<'mc> {
 }
 
 /// An enum representing all possible scales a map can be set to.
-#[derive(PartialEq, Eq)]
-pub enum MapViewScaleEnum {
-    Closest,
-    Close,
-    Normal,
-    Far,
-    Farthest,
-}
-impl std::fmt::Display for MapViewScaleEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            MapViewScaleEnum::Closest => f.write_str("CLOSEST"),
-            MapViewScaleEnum::Close => f.write_str("CLOSE"),
-            MapViewScaleEnum::Normal => f.write_str("NORMAL"),
-            MapViewScaleEnum::Far => f.write_str("FAR"),
-            MapViewScaleEnum::Farthest => f.write_str("FARTHEST"),
-        }
-    }
+pub enum MapViewScale<'mc> {
+    Closest { inner: MapViewScaleStruct<'mc> },
+    Close { inner: MapViewScaleStruct<'mc> },
+    Normal { inner: MapViewScaleStruct<'mc> },
+    Far { inner: MapViewScaleStruct<'mc> },
+    Farthest { inner: MapViewScaleStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for MapViewScale<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            MapViewScale::Closest { .. } => f.write_str("CLOSEST"),
+            MapViewScale::Close { .. } => f.write_str("CLOSE"),
+            MapViewScale::Normal { .. } => f.write_str("NORMAL"),
+            MapViewScale::Far { .. } => f.write_str("FAR"),
+            MapViewScale::Farthest { .. } => f.write_str("FARTHEST"),
+        }
     }
 }
+
+impl<'mc> MapViewScale<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<MapViewScale<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/map/MapView$Scale");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/map/MapView$Scale;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "CLOSEST" => Ok(MapViewScale::Closest {
+                inner: MapViewScaleStruct::from_raw(env, obj)?,
+            }),
+            "CLOSE" => Ok(MapViewScale::Close {
+                inner: MapViewScaleStruct::from_raw(env, obj)?,
+            }),
+            "NORMAL" => Ok(MapViewScale::Normal {
+                inner: MapViewScaleStruct::from_raw(env, obj)?,
+            }),
+            "FAR" => Ok(MapViewScale::Far {
+                inner: MapViewScaleStruct::from_raw(env, obj)?,
+            }),
+            "FARTHEST" => Ok(MapViewScale::Farthest {
+                inner: MapViewScaleStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct MapViewScale<'mc>(
+pub struct MapViewScaleStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub MapViewScaleEnum,
 );
-impl<'mc> std::ops::Deref for MapViewScale<'mc> {
-    type Target = MapViewScaleEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for MapViewScale<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Closest { inner } => inner.0.clone(),
+            Self::Close { inner } => inner.0.clone(),
+            Self::Normal { inner } => inner.0.clone(),
+            Self::Far { inner } => inner.0.clone(),
+            Self::Farthest { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Closest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Close { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Normal { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Far { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Farthest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for MapViewScale<'mc> {
-    type Enum = MapViewScaleEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for MapViewScale<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MapViewScale from null object.").into());
@@ -330,58 +361,66 @@ impl<'mc> JNIInstantiatableEnum<'mc> for MapViewScale<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "CLOSEST" => Ok(MapViewScale::Closest {
+                    inner: MapViewScaleStruct::from_raw(env, obj)?,
+                }),
+                "CLOSE" => Ok(MapViewScale::Close {
+                    inner: MapViewScaleStruct::from_raw(env, obj)?,
+                }),
+                "NORMAL" => Ok(MapViewScale::Normal {
+                    inner: MapViewScaleStruct::from_raw(env, obj)?,
+                }),
+                "FAR" => Ok(MapViewScale::Far {
+                    inner: MapViewScaleStruct::from_raw(env, obj)?,
+                }),
+                "FARTHEST" => Ok(MapViewScale::Farthest {
+                    inner: MapViewScaleStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> MapViewScale<'mc> {
-    pub const CLOSEST: MapViewScaleEnum = MapViewScaleEnum::Closest;
-    pub const CLOSE: MapViewScaleEnum = MapViewScaleEnum::Close;
-    pub const NORMAL: MapViewScaleEnum = MapViewScaleEnum::Normal;
-    pub const FAR: MapViewScaleEnum = MapViewScaleEnum::Far;
-    pub const FARTHEST: MapViewScaleEnum = MapViewScaleEnum::Farthest;
-    pub fn from_string(str: String) -> std::option::Option<MapViewScaleEnum> {
-        match str.as_str() {
-            "CLOSEST" => Some(MapViewScaleEnum::Closest),
-            "CLOSE" => Some(MapViewScaleEnum::Close),
-            "NORMAL" => Some(MapViewScaleEnum::Normal),
-            "FAR" => Some(MapViewScaleEnum::Far),
-            "FARTHEST" => Some(MapViewScaleEnum::Farthest),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for MapViewScaleStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for MapViewScaleStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate MapViewScaleStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MapView$Scale")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a MapViewScaleStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<MapViewScale<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/map/MapView$Scale");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/map/MapView$Scale;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        MapViewScale::from_raw(
-            &jni,
-            raw_obj,
-            MapViewScale::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
+impl<'mc> MapViewScaleStruct<'mc> {
     #[deprecated]
 
     pub fn value(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -393,71 +432,104 @@ impl<'mc> MapViewScale<'mc> {
         Ok(res.b()?)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum ScaleEnum {
-    Closest,
-    Close,
-    Normal,
-    Far,
-    Farthest,
-}
-impl std::fmt::Display for ScaleEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ScaleEnum::Closest => f.write_str("CLOSEST"),
-            ScaleEnum::Close => f.write_str("CLOSE"),
-            ScaleEnum::Normal => f.write_str("NORMAL"),
-            ScaleEnum::Far => f.write_str("FAR"),
-            ScaleEnum::Farthest => f.write_str("FARTHEST"),
-        }
-    }
+pub enum Scale<'mc> {
+    Closest { inner: ScaleStruct<'mc> },
+    Close { inner: ScaleStruct<'mc> },
+    Normal { inner: ScaleStruct<'mc> },
+    Far { inner: ScaleStruct<'mc> },
+    Farthest { inner: ScaleStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Scale<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Scale::Closest { .. } => f.write_str("CLOSEST"),
+            Scale::Close { .. } => f.write_str("CLOSE"),
+            Scale::Normal { .. } => f.write_str("NORMAL"),
+            Scale::Far { .. } => f.write_str("FAR"),
+            Scale::Farthest { .. } => f.write_str("FARTHEST"),
+        }
     }
 }
+
+impl<'mc> Scale<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Scale<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/map/Scale");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/map/Scale;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "CLOSEST" => Ok(Scale::Closest {
+                inner: ScaleStruct::from_raw(env, obj)?,
+            }),
+            "CLOSE" => Ok(Scale::Close {
+                inner: ScaleStruct::from_raw(env, obj)?,
+            }),
+            "NORMAL" => Ok(Scale::Normal {
+                inner: ScaleStruct::from_raw(env, obj)?,
+            }),
+            "FAR" => Ok(Scale::Far {
+                inner: ScaleStruct::from_raw(env, obj)?,
+            }),
+            "FARTHEST" => Ok(Scale::Farthest {
+                inner: ScaleStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Scale<'mc>(
+pub struct ScaleStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub ScaleEnum,
 );
-impl<'mc> std::ops::Deref for Scale<'mc> {
-    type Target = ScaleEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Scale<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Closest { inner } => inner.0.clone(),
+            Self::Close { inner } => inner.0.clone(),
+            Self::Normal { inner } => inner.0.clone(),
+            Self::Far { inner } => inner.0.clone(),
+            Self::Farthest { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Closest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Close { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Normal { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Far { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Farthest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Scale<'mc> {
-    type Enum = ScaleEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Scale<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Scale from null object.").into());
@@ -470,66 +542,67 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Scale<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "CLOSEST" => Ok(Scale::Closest {
+                    inner: ScaleStruct::from_raw(env, obj)?,
+                }),
+                "CLOSE" => Ok(Scale::Close {
+                    inner: ScaleStruct::from_raw(env, obj)?,
+                }),
+                "NORMAL" => Ok(Scale::Normal {
+                    inner: ScaleStruct::from_raw(env, obj)?,
+                }),
+                "FAR" => Ok(Scale::Far {
+                    inner: ScaleStruct::from_raw(env, obj)?,
+                }),
+                "FARTHEST" => Ok(Scale::Farthest {
+                    inner: ScaleStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Scale<'mc> {
-    pub const CLOSEST: ScaleEnum = ScaleEnum::Closest;
-    pub const CLOSE: ScaleEnum = ScaleEnum::Close;
-    pub const NORMAL: ScaleEnum = ScaleEnum::Normal;
-    pub const FAR: ScaleEnum = ScaleEnum::Far;
-    pub const FARTHEST: ScaleEnum = ScaleEnum::Farthest;
-    pub fn from_string(str: String) -> std::option::Option<ScaleEnum> {
-        match str.as_str() {
-            "CLOSEST" => Some(ScaleEnum::Closest),
-            "CLOSE" => Some(ScaleEnum::Close),
-            "NORMAL" => Some(ScaleEnum::Normal),
-            "FAR" => Some(ScaleEnum::Far),
-            "FARTHEST" => Some(ScaleEnum::Farthest),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for ScaleStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ScaleStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate ScaleStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/Scale")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ScaleStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Scale<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/map/Scale");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/map/Scale;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Scale::from_raw(
-            &jni,
-            raw_obj,
-            Scale::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> ScaleStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents the built-in Minecraft font.
@@ -543,12 +616,10 @@ impl<'mc> JNIRaw<'mc> for MinecraftFont<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MinecraftFont<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -757,14 +828,9 @@ impl<'mc> MinecraftFont<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -789,105 +855,301 @@ pub struct MapCursor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum MapCursorTypeEnum {
-    WhitePointer,
-    GreenPointer,
-    RedPointer,
-    BluePointer,
-    WhiteCross,
-    RedMarker,
-    WhiteCircle,
-    SmallWhiteCircle,
-    Mansion,
-    Temple,
-    BannerWhite,
-    BannerOrange,
-    BannerMagenta,
-    BannerLightBlue,
-    BannerYellow,
-    BannerLime,
-    BannerPink,
-    BannerGray,
-    BannerLightGray,
-    BannerCyan,
-    BannerPurple,
-    BannerBlue,
-    BannerBrown,
-    BannerGreen,
-    BannerRed,
-    BannerBlack,
-    RedX,
-}
-impl std::fmt::Display for MapCursorTypeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            MapCursorTypeEnum::WhitePointer => f.write_str("WHITE_POINTER"),
-            MapCursorTypeEnum::GreenPointer => f.write_str("GREEN_POINTER"),
-            MapCursorTypeEnum::RedPointer => f.write_str("RED_POINTER"),
-            MapCursorTypeEnum::BluePointer => f.write_str("BLUE_POINTER"),
-            MapCursorTypeEnum::WhiteCross => f.write_str("WHITE_CROSS"),
-            MapCursorTypeEnum::RedMarker => f.write_str("RED_MARKER"),
-            MapCursorTypeEnum::WhiteCircle => f.write_str("WHITE_CIRCLE"),
-            MapCursorTypeEnum::SmallWhiteCircle => f.write_str("SMALL_WHITE_CIRCLE"),
-            MapCursorTypeEnum::Mansion => f.write_str("MANSION"),
-            MapCursorTypeEnum::Temple => f.write_str("TEMPLE"),
-            MapCursorTypeEnum::BannerWhite => f.write_str("BANNER_WHITE"),
-            MapCursorTypeEnum::BannerOrange => f.write_str("BANNER_ORANGE"),
-            MapCursorTypeEnum::BannerMagenta => f.write_str("BANNER_MAGENTA"),
-            MapCursorTypeEnum::BannerLightBlue => f.write_str("BANNER_LIGHT_BLUE"),
-            MapCursorTypeEnum::BannerYellow => f.write_str("BANNER_YELLOW"),
-            MapCursorTypeEnum::BannerLime => f.write_str("BANNER_LIME"),
-            MapCursorTypeEnum::BannerPink => f.write_str("BANNER_PINK"),
-            MapCursorTypeEnum::BannerGray => f.write_str("BANNER_GRAY"),
-            MapCursorTypeEnum::BannerLightGray => f.write_str("BANNER_LIGHT_GRAY"),
-            MapCursorTypeEnum::BannerCyan => f.write_str("BANNER_CYAN"),
-            MapCursorTypeEnum::BannerPurple => f.write_str("BANNER_PURPLE"),
-            MapCursorTypeEnum::BannerBlue => f.write_str("BANNER_BLUE"),
-            MapCursorTypeEnum::BannerBrown => f.write_str("BANNER_BROWN"),
-            MapCursorTypeEnum::BannerGreen => f.write_str("BANNER_GREEN"),
-            MapCursorTypeEnum::BannerRed => f.write_str("BANNER_RED"),
-            MapCursorTypeEnum::BannerBlack => f.write_str("BANNER_BLACK"),
-            MapCursorTypeEnum::RedX => f.write_str("RED_X"),
-        }
-    }
+pub enum MapCursorType<'mc> {
+    WhitePointer { inner: MapCursorTypeStruct<'mc> },
+    GreenPointer { inner: MapCursorTypeStruct<'mc> },
+    RedPointer { inner: MapCursorTypeStruct<'mc> },
+    BluePointer { inner: MapCursorTypeStruct<'mc> },
+    WhiteCross { inner: MapCursorTypeStruct<'mc> },
+    RedMarker { inner: MapCursorTypeStruct<'mc> },
+    WhiteCircle { inner: MapCursorTypeStruct<'mc> },
+    SmallWhiteCircle { inner: MapCursorTypeStruct<'mc> },
+    Mansion { inner: MapCursorTypeStruct<'mc> },
+    Temple { inner: MapCursorTypeStruct<'mc> },
+    BannerWhite { inner: MapCursorTypeStruct<'mc> },
+    BannerOrange { inner: MapCursorTypeStruct<'mc> },
+    BannerMagenta { inner: MapCursorTypeStruct<'mc> },
+    BannerLightBlue { inner: MapCursorTypeStruct<'mc> },
+    BannerYellow { inner: MapCursorTypeStruct<'mc> },
+    BannerLime { inner: MapCursorTypeStruct<'mc> },
+    BannerPink { inner: MapCursorTypeStruct<'mc> },
+    BannerGray { inner: MapCursorTypeStruct<'mc> },
+    BannerLightGray { inner: MapCursorTypeStruct<'mc> },
+    BannerCyan { inner: MapCursorTypeStruct<'mc> },
+    BannerPurple { inner: MapCursorTypeStruct<'mc> },
+    BannerBlue { inner: MapCursorTypeStruct<'mc> },
+    BannerBrown { inner: MapCursorTypeStruct<'mc> },
+    BannerGreen { inner: MapCursorTypeStruct<'mc> },
+    BannerRed { inner: MapCursorTypeStruct<'mc> },
+    BannerBlack { inner: MapCursorTypeStruct<'mc> },
+    RedX { inner: MapCursorTypeStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for MapCursorType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            MapCursorType::WhitePointer { .. } => f.write_str("WHITE_POINTER"),
+            MapCursorType::GreenPointer { .. } => f.write_str("GREEN_POINTER"),
+            MapCursorType::RedPointer { .. } => f.write_str("RED_POINTER"),
+            MapCursorType::BluePointer { .. } => f.write_str("BLUE_POINTER"),
+            MapCursorType::WhiteCross { .. } => f.write_str("WHITE_CROSS"),
+            MapCursorType::RedMarker { .. } => f.write_str("RED_MARKER"),
+            MapCursorType::WhiteCircle { .. } => f.write_str("WHITE_CIRCLE"),
+            MapCursorType::SmallWhiteCircle { .. } => f.write_str("SMALL_WHITE_CIRCLE"),
+            MapCursorType::Mansion { .. } => f.write_str("MANSION"),
+            MapCursorType::Temple { .. } => f.write_str("TEMPLE"),
+            MapCursorType::BannerWhite { .. } => f.write_str("BANNER_WHITE"),
+            MapCursorType::BannerOrange { .. } => f.write_str("BANNER_ORANGE"),
+            MapCursorType::BannerMagenta { .. } => f.write_str("BANNER_MAGENTA"),
+            MapCursorType::BannerLightBlue { .. } => f.write_str("BANNER_LIGHT_BLUE"),
+            MapCursorType::BannerYellow { .. } => f.write_str("BANNER_YELLOW"),
+            MapCursorType::BannerLime { .. } => f.write_str("BANNER_LIME"),
+            MapCursorType::BannerPink { .. } => f.write_str("BANNER_PINK"),
+            MapCursorType::BannerGray { .. } => f.write_str("BANNER_GRAY"),
+            MapCursorType::BannerLightGray { .. } => f.write_str("BANNER_LIGHT_GRAY"),
+            MapCursorType::BannerCyan { .. } => f.write_str("BANNER_CYAN"),
+            MapCursorType::BannerPurple { .. } => f.write_str("BANNER_PURPLE"),
+            MapCursorType::BannerBlue { .. } => f.write_str("BANNER_BLUE"),
+            MapCursorType::BannerBrown { .. } => f.write_str("BANNER_BROWN"),
+            MapCursorType::BannerGreen { .. } => f.write_str("BANNER_GREEN"),
+            MapCursorType::BannerRed { .. } => f.write_str("BANNER_RED"),
+            MapCursorType::BannerBlack { .. } => f.write_str("BANNER_BLACK"),
+            MapCursorType::RedX { .. } => f.write_str("RED_X"),
+        }
     }
 }
+
+impl<'mc> MapCursorType<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<MapCursorType<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/map/MapCursor$Type");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/map/MapCursor$Type;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "WHITE_POINTER" => Ok(MapCursorType::WhitePointer {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "GREEN_POINTER" => Ok(MapCursorType::GreenPointer {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "RED_POINTER" => Ok(MapCursorType::RedPointer {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BLUE_POINTER" => Ok(MapCursorType::BluePointer {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "WHITE_CROSS" => Ok(MapCursorType::WhiteCross {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "RED_MARKER" => Ok(MapCursorType::RedMarker {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "WHITE_CIRCLE" => Ok(MapCursorType::WhiteCircle {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "SMALL_WHITE_CIRCLE" => Ok(MapCursorType::SmallWhiteCircle {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "MANSION" => Ok(MapCursorType::Mansion {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "TEMPLE" => Ok(MapCursorType::Temple {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_WHITE" => Ok(MapCursorType::BannerWhite {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_ORANGE" => Ok(MapCursorType::BannerOrange {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_MAGENTA" => Ok(MapCursorType::BannerMagenta {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_LIGHT_BLUE" => Ok(MapCursorType::BannerLightBlue {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_YELLOW" => Ok(MapCursorType::BannerYellow {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_LIME" => Ok(MapCursorType::BannerLime {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_PINK" => Ok(MapCursorType::BannerPink {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_GRAY" => Ok(MapCursorType::BannerGray {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_LIGHT_GRAY" => Ok(MapCursorType::BannerLightGray {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_CYAN" => Ok(MapCursorType::BannerCyan {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_PURPLE" => Ok(MapCursorType::BannerPurple {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_BLUE" => Ok(MapCursorType::BannerBlue {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_BROWN" => Ok(MapCursorType::BannerBrown {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_GREEN" => Ok(MapCursorType::BannerGreen {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_RED" => Ok(MapCursorType::BannerRed {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_BLACK" => Ok(MapCursorType::BannerBlack {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+            "RED_X" => Ok(MapCursorType::RedX {
+                inner: MapCursorTypeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct MapCursorType<'mc>(
+pub struct MapCursorTypeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub MapCursorTypeEnum,
 );
-impl<'mc> std::ops::Deref for MapCursorType<'mc> {
-    type Target = MapCursorTypeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for MapCursorType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::WhitePointer { inner } => inner.0.clone(),
+            Self::GreenPointer { inner } => inner.0.clone(),
+            Self::RedPointer { inner } => inner.0.clone(),
+            Self::BluePointer { inner } => inner.0.clone(),
+            Self::WhiteCross { inner } => inner.0.clone(),
+            Self::RedMarker { inner } => inner.0.clone(),
+            Self::WhiteCircle { inner } => inner.0.clone(),
+            Self::SmallWhiteCircle { inner } => inner.0.clone(),
+            Self::Mansion { inner } => inner.0.clone(),
+            Self::Temple { inner } => inner.0.clone(),
+            Self::BannerWhite { inner } => inner.0.clone(),
+            Self::BannerOrange { inner } => inner.0.clone(),
+            Self::BannerMagenta { inner } => inner.0.clone(),
+            Self::BannerLightBlue { inner } => inner.0.clone(),
+            Self::BannerYellow { inner } => inner.0.clone(),
+            Self::BannerLime { inner } => inner.0.clone(),
+            Self::BannerPink { inner } => inner.0.clone(),
+            Self::BannerGray { inner } => inner.0.clone(),
+            Self::BannerLightGray { inner } => inner.0.clone(),
+            Self::BannerCyan { inner } => inner.0.clone(),
+            Self::BannerPurple { inner } => inner.0.clone(),
+            Self::BannerBlue { inner } => inner.0.clone(),
+            Self::BannerBrown { inner } => inner.0.clone(),
+            Self::BannerGreen { inner } => inner.0.clone(),
+            Self::BannerRed { inner } => inner.0.clone(),
+            Self::BannerBlack { inner } => inner.0.clone(),
+            Self::RedX { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::WhitePointer { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GreenPointer { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::RedPointer { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BluePointer { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WhiteCross { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::RedMarker { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WhiteCircle { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SmallWhiteCircle { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Mansion { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Temple { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::BannerWhite { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerOrange { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerMagenta { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerLightBlue { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerYellow { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerLime { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerPink { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerGray { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerLightGray { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerCyan { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerPurple { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerBlue { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerBrown { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerGreen { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerRed { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerBlack { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::RedX { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for MapCursorType<'mc> {
-    type Enum = MapCursorTypeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for MapCursorType<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MapCursorType from null object.").into());
@@ -900,102 +1162,132 @@ impl<'mc> JNIInstantiatableEnum<'mc> for MapCursorType<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "WHITE_POINTER" => Ok(MapCursorType::WhitePointer {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "GREEN_POINTER" => Ok(MapCursorType::GreenPointer {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "RED_POINTER" => Ok(MapCursorType::RedPointer {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BLUE_POINTER" => Ok(MapCursorType::BluePointer {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "WHITE_CROSS" => Ok(MapCursorType::WhiteCross {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "RED_MARKER" => Ok(MapCursorType::RedMarker {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "WHITE_CIRCLE" => Ok(MapCursorType::WhiteCircle {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "SMALL_WHITE_CIRCLE" => Ok(MapCursorType::SmallWhiteCircle {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "MANSION" => Ok(MapCursorType::Mansion {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "TEMPLE" => Ok(MapCursorType::Temple {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_WHITE" => Ok(MapCursorType::BannerWhite {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_ORANGE" => Ok(MapCursorType::BannerOrange {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_MAGENTA" => Ok(MapCursorType::BannerMagenta {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_LIGHT_BLUE" => Ok(MapCursorType::BannerLightBlue {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_YELLOW" => Ok(MapCursorType::BannerYellow {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_LIME" => Ok(MapCursorType::BannerLime {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_PINK" => Ok(MapCursorType::BannerPink {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_GRAY" => Ok(MapCursorType::BannerGray {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_LIGHT_GRAY" => Ok(MapCursorType::BannerLightGray {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_CYAN" => Ok(MapCursorType::BannerCyan {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_PURPLE" => Ok(MapCursorType::BannerPurple {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_BLUE" => Ok(MapCursorType::BannerBlue {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_BROWN" => Ok(MapCursorType::BannerBrown {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_GREEN" => Ok(MapCursorType::BannerGreen {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_RED" => Ok(MapCursorType::BannerRed {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_BLACK" => Ok(MapCursorType::BannerBlack {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                "RED_X" => Ok(MapCursorType::RedX {
+                    inner: MapCursorTypeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> MapCursorType<'mc> {
-    pub const WHITE_POINTER: MapCursorTypeEnum = MapCursorTypeEnum::WhitePointer;
-    pub const GREEN_POINTER: MapCursorTypeEnum = MapCursorTypeEnum::GreenPointer;
-    pub const RED_POINTER: MapCursorTypeEnum = MapCursorTypeEnum::RedPointer;
-    pub const BLUE_POINTER: MapCursorTypeEnum = MapCursorTypeEnum::BluePointer;
-    pub const WHITE_CROSS: MapCursorTypeEnum = MapCursorTypeEnum::WhiteCross;
-    pub const RED_MARKER: MapCursorTypeEnum = MapCursorTypeEnum::RedMarker;
-    pub const WHITE_CIRCLE: MapCursorTypeEnum = MapCursorTypeEnum::WhiteCircle;
-    pub const SMALL_WHITE_CIRCLE: MapCursorTypeEnum = MapCursorTypeEnum::SmallWhiteCircle;
-    pub const MANSION: MapCursorTypeEnum = MapCursorTypeEnum::Mansion;
-    pub const TEMPLE: MapCursorTypeEnum = MapCursorTypeEnum::Temple;
-    pub const BANNER_WHITE: MapCursorTypeEnum = MapCursorTypeEnum::BannerWhite;
-    pub const BANNER_ORANGE: MapCursorTypeEnum = MapCursorTypeEnum::BannerOrange;
-    pub const BANNER_MAGENTA: MapCursorTypeEnum = MapCursorTypeEnum::BannerMagenta;
-    pub const BANNER_LIGHT_BLUE: MapCursorTypeEnum = MapCursorTypeEnum::BannerLightBlue;
-    pub const BANNER_YELLOW: MapCursorTypeEnum = MapCursorTypeEnum::BannerYellow;
-    pub const BANNER_LIME: MapCursorTypeEnum = MapCursorTypeEnum::BannerLime;
-    pub const BANNER_PINK: MapCursorTypeEnum = MapCursorTypeEnum::BannerPink;
-    pub const BANNER_GRAY: MapCursorTypeEnum = MapCursorTypeEnum::BannerGray;
-    pub const BANNER_LIGHT_GRAY: MapCursorTypeEnum = MapCursorTypeEnum::BannerLightGray;
-    pub const BANNER_CYAN: MapCursorTypeEnum = MapCursorTypeEnum::BannerCyan;
-    pub const BANNER_PURPLE: MapCursorTypeEnum = MapCursorTypeEnum::BannerPurple;
-    pub const BANNER_BLUE: MapCursorTypeEnum = MapCursorTypeEnum::BannerBlue;
-    pub const BANNER_BROWN: MapCursorTypeEnum = MapCursorTypeEnum::BannerBrown;
-    pub const BANNER_GREEN: MapCursorTypeEnum = MapCursorTypeEnum::BannerGreen;
-    pub const BANNER_RED: MapCursorTypeEnum = MapCursorTypeEnum::BannerRed;
-    pub const BANNER_BLACK: MapCursorTypeEnum = MapCursorTypeEnum::BannerBlack;
-    pub const RED_X: MapCursorTypeEnum = MapCursorTypeEnum::RedX;
-    pub fn from_string(str: String) -> std::option::Option<MapCursorTypeEnum> {
-        match str.as_str() {
-            "WHITE_POINTER" => Some(MapCursorTypeEnum::WhitePointer),
-            "GREEN_POINTER" => Some(MapCursorTypeEnum::GreenPointer),
-            "RED_POINTER" => Some(MapCursorTypeEnum::RedPointer),
-            "BLUE_POINTER" => Some(MapCursorTypeEnum::BluePointer),
-            "WHITE_CROSS" => Some(MapCursorTypeEnum::WhiteCross),
-            "RED_MARKER" => Some(MapCursorTypeEnum::RedMarker),
-            "WHITE_CIRCLE" => Some(MapCursorTypeEnum::WhiteCircle),
-            "SMALL_WHITE_CIRCLE" => Some(MapCursorTypeEnum::SmallWhiteCircle),
-            "MANSION" => Some(MapCursorTypeEnum::Mansion),
-            "TEMPLE" => Some(MapCursorTypeEnum::Temple),
-            "BANNER_WHITE" => Some(MapCursorTypeEnum::BannerWhite),
-            "BANNER_ORANGE" => Some(MapCursorTypeEnum::BannerOrange),
-            "BANNER_MAGENTA" => Some(MapCursorTypeEnum::BannerMagenta),
-            "BANNER_LIGHT_BLUE" => Some(MapCursorTypeEnum::BannerLightBlue),
-            "BANNER_YELLOW" => Some(MapCursorTypeEnum::BannerYellow),
-            "BANNER_LIME" => Some(MapCursorTypeEnum::BannerLime),
-            "BANNER_PINK" => Some(MapCursorTypeEnum::BannerPink),
-            "BANNER_GRAY" => Some(MapCursorTypeEnum::BannerGray),
-            "BANNER_LIGHT_GRAY" => Some(MapCursorTypeEnum::BannerLightGray),
-            "BANNER_CYAN" => Some(MapCursorTypeEnum::BannerCyan),
-            "BANNER_PURPLE" => Some(MapCursorTypeEnum::BannerPurple),
-            "BANNER_BLUE" => Some(MapCursorTypeEnum::BannerBlue),
-            "BANNER_BROWN" => Some(MapCursorTypeEnum::BannerBrown),
-            "BANNER_GREEN" => Some(MapCursorTypeEnum::BannerGreen),
-            "BANNER_RED" => Some(MapCursorTypeEnum::BannerRed),
-            "BANNER_BLACK" => Some(MapCursorTypeEnum::BannerBlack),
-            "RED_X" => Some(MapCursorTypeEnum::RedX),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for MapCursorTypeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for MapCursorTypeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate MapCursorTypeStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MapCursor$Type")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a MapCursorTypeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<MapCursorType<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/map/MapCursor$Type");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/map/MapCursor$Type;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        MapCursorType::from_raw(
-            &jni,
-            raw_obj,
-            MapCursorType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
+impl<'mc> MapCursorTypeStruct<'mc> {
     #[deprecated]
 
     pub fn value(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -1034,22 +1326,12 @@ impl<'mc> MapCursorType<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        Ok(Some(crate::map::MapCursorType::from_raw(
-            &jni,
-            raw_obj,
-            crate::map::MapCursorType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )?))
+        Ok(Some(crate::map::MapCursorType::from_raw(&jni, raw_obj)?))
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1057,12 +1339,10 @@ impl<'mc> JNIRaw<'mc> for MapCursor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MapCursor<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1144,12 +1424,7 @@ impl<'mc> MapCursor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::map::MapCursorType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::map::MapCursorType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::map::MapCursorType::from_raw(&self.jni_ref(), raw_obj)
     }
     #[deprecated]
 
@@ -1405,14 +1680,9 @@ impl<'mc> MapCursor<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1436,12 +1706,10 @@ impl<'mc> JNIRaw<'mc> for MapFontCharacterSprite<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MapFontCharacterSprite<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1616,14 +1884,9 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1649,12 +1912,10 @@ impl<'mc> JNIRaw<'mc> for MapCanvas<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MapCanvas<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1931,14 +2192,9 @@ impl<'mc> MapCanvas<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a renderer for a map.
@@ -1952,12 +2208,10 @@ impl<'mc> JNIRaw<'mc> for MapRenderer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MapRenderer<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2159,14 +2413,9 @@ impl<'mc> MapRenderer<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2192,12 +2441,10 @@ impl<'mc> JNIRaw<'mc> for MapView<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MapView<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2283,12 +2530,7 @@ impl<'mc> MapView<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::map::MapViewScale::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::map::MapViewScale::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::map::MapViewScale::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_world(
@@ -2479,14 +2721,9 @@ impl<'mc> MapView<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a bitmap font drawable to a map.
@@ -2500,12 +2737,10 @@ impl<'mc> JNIRaw<'mc> for MapFont<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MapFont<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2714,14 +2949,9 @@ impl<'mc> MapFont<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2753,12 +2983,10 @@ impl<'mc> JNIRaw<'mc> for MapPaletteMapColorCache<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MapPaletteMapColorCache<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2793,14 +3021,9 @@ impl<'mc> MapPaletteMapColorCache<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2808,12 +3031,10 @@ impl<'mc> JNIRaw<'mc> for MapPalette<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MapPalette<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3036,14 +3257,9 @@ impl<'mc> MapPalette<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 

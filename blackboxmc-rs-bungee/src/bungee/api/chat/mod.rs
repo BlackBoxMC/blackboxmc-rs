@@ -14,12 +14,10 @@ impl<'mc> JNIRaw<'mc> for TextComponent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for TextComponent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -734,14 +732,9 @@ impl<'mc> TextComponent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -760,59 +753,94 @@ impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for TextComponent<'
             .expect("Error converting TextComponent into crate::bungee::api::chat::BaseComponent")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum FormatRetentionEnum {
-    None,
-    Formatting,
-    Events,
-    All,
-}
-impl std::fmt::Display for FormatRetentionEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            FormatRetentionEnum::None => f.write_str("NONE"),
-            FormatRetentionEnum::Formatting => f.write_str("FORMATTING"),
-            FormatRetentionEnum::Events => f.write_str("EVENTS"),
-            FormatRetentionEnum::All => f.write_str("ALL"),
-        }
-    }
+pub enum FormatRetention<'mc> {
+    None { inner: FormatRetentionStruct<'mc> },
+    Formatting { inner: FormatRetentionStruct<'mc> },
+    Events { inner: FormatRetentionStruct<'mc> },
+    All { inner: FormatRetentionStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for FormatRetention<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            FormatRetention::None { .. } => f.write_str("NONE"),
+            FormatRetention::Formatting { .. } => f.write_str("FORMATTING"),
+            FormatRetention::Events { .. } => f.write_str("EVENTS"),
+            FormatRetention::All { .. } => f.write_str("ALL"),
+        }
     }
 }
+
+impl<'mc> FormatRetention<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<FormatRetention<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("net/md_5/bungee/api/chat/FormatRetention");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/FormatRetention;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "NONE" => Ok(FormatRetention::None {
+                inner: FormatRetentionStruct::from_raw(env, obj)?,
+            }),
+            "FORMATTING" => Ok(FormatRetention::Formatting {
+                inner: FormatRetentionStruct::from_raw(env, obj)?,
+            }),
+            "EVENTS" => Ok(FormatRetention::Events {
+                inner: FormatRetentionStruct::from_raw(env, obj)?,
+            }),
+            "ALL" => Ok(FormatRetention::All {
+                inner: FormatRetentionStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct FormatRetention<'mc>(
+pub struct FormatRetentionStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub FormatRetentionEnum,
 );
-impl<'mc> std::ops::Deref for FormatRetention<'mc> {
-    type Target = FormatRetentionEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for FormatRetention<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::None { inner } => inner.0.clone(),
+            Self::Formatting { inner } => inner.0.clone(),
+            Self::Events { inner } => inner.0.clone(),
+            Self::All { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Formatting { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Events { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::All { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for FormatRetention<'mc> {
-    type Enum = FormatRetentionEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for FormatRetention<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -827,64 +855,67 @@ impl<'mc> JNIInstantiatableEnum<'mc> for FormatRetention<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "NONE" => Ok(FormatRetention::None {
+                    inner: FormatRetentionStruct::from_raw(env, obj)?,
+                }),
+                "FORMATTING" => Ok(FormatRetention::Formatting {
+                    inner: FormatRetentionStruct::from_raw(env, obj)?,
+                }),
+                "EVENTS" => Ok(FormatRetention::Events {
+                    inner: FormatRetentionStruct::from_raw(env, obj)?,
+                }),
+                "ALL" => Ok(FormatRetention::All {
+                    inner: FormatRetentionStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> FormatRetention<'mc> {
-    pub const NONE: FormatRetentionEnum = FormatRetentionEnum::None;
-    pub const FORMATTING: FormatRetentionEnum = FormatRetentionEnum::Formatting;
-    pub const EVENTS: FormatRetentionEnum = FormatRetentionEnum::Events;
-    pub const ALL: FormatRetentionEnum = FormatRetentionEnum::All;
-    pub fn from_string(str: String) -> std::option::Option<FormatRetentionEnum> {
-        match str.as_str() {
-            "NONE" => Some(FormatRetentionEnum::None),
-            "FORMATTING" => Some(FormatRetentionEnum::Formatting),
-            "EVENTS" => Some(FormatRetentionEnum::Events),
-            "ALL" => Some(FormatRetentionEnum::All),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for FormatRetentionStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for FormatRetentionStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate FormatRetentionStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/chat/FormatRetention")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a FormatRetentionStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<FormatRetention<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("net/md_5/bungee/api/chat/FormatRetention");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/FormatRetention;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        FormatRetention::from_raw(
-            &jni,
-            raw_obj,
-            FormatRetention::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> FormatRetentionStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -893,59 +924,96 @@ pub struct HoverEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum HoverEventActionEnum {
-    ShowText,
-    ShowItem,
-    ShowEntity,
-    ShowAchievement,
-}
-impl std::fmt::Display for HoverEventActionEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            HoverEventActionEnum::ShowText => f.write_str("SHOW_TEXT"),
-            HoverEventActionEnum::ShowItem => f.write_str("SHOW_ITEM"),
-            HoverEventActionEnum::ShowEntity => f.write_str("SHOW_ENTITY"),
-            HoverEventActionEnum::ShowAchievement => f.write_str("SHOW_ACHIEVEMENT"),
-        }
-    }
+pub enum HoverEventAction<'mc> {
+    ShowText { inner: HoverEventActionStruct<'mc> },
+    ShowItem { inner: HoverEventActionStruct<'mc> },
+    ShowEntity { inner: HoverEventActionStruct<'mc> },
+    ShowAchievement { inner: HoverEventActionStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for HoverEventAction<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            HoverEventAction::ShowText { .. } => f.write_str("SHOW_TEXT"),
+            HoverEventAction::ShowItem { .. } => f.write_str("SHOW_ITEM"),
+            HoverEventAction::ShowEntity { .. } => f.write_str("SHOW_ENTITY"),
+            HoverEventAction::ShowAchievement { .. } => f.write_str("SHOW_ACHIEVEMENT"),
+        }
     }
 }
+
+impl<'mc> HoverEventAction<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<HoverEventAction<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("net/md_5/bungee/api/chat/HoverEvent$Action");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/HoverEvent$Action;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "SHOW_TEXT" => Ok(HoverEventAction::ShowText {
+                inner: HoverEventActionStruct::from_raw(env, obj)?,
+            }),
+            "SHOW_ITEM" => Ok(HoverEventAction::ShowItem {
+                inner: HoverEventActionStruct::from_raw(env, obj)?,
+            }),
+            "SHOW_ENTITY" => Ok(HoverEventAction::ShowEntity {
+                inner: HoverEventActionStruct::from_raw(env, obj)?,
+            }),
+            "SHOW_ACHIEVEMENT" => Ok(HoverEventAction::ShowAchievement {
+                inner: HoverEventActionStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct HoverEventAction<'mc>(
+pub struct HoverEventActionStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub HoverEventActionEnum,
 );
-impl<'mc> std::ops::Deref for HoverEventAction<'mc> {
-    type Target = HoverEventActionEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for HoverEventAction<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::ShowText { inner } => inner.0.clone(),
+            Self::ShowItem { inner } => inner.0.clone(),
+            Self::ShowEntity { inner } => inner.0.clone(),
+            Self::ShowAchievement { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::ShowText { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ShowItem { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ShowEntity { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ShowAchievement { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for HoverEventAction<'mc> {
-    type Enum = HoverEventActionEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for HoverEventAction<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -961,64 +1029,68 @@ impl<'mc> JNIInstantiatableEnum<'mc> for HoverEventAction<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "SHOW_TEXT" => Ok(HoverEventAction::ShowText {
+                    inner: HoverEventActionStruct::from_raw(env, obj)?,
+                }),
+                "SHOW_ITEM" => Ok(HoverEventAction::ShowItem {
+                    inner: HoverEventActionStruct::from_raw(env, obj)?,
+                }),
+                "SHOW_ENTITY" => Ok(HoverEventAction::ShowEntity {
+                    inner: HoverEventActionStruct::from_raw(env, obj)?,
+                }),
+                "SHOW_ACHIEVEMENT" => Ok(HoverEventAction::ShowAchievement {
+                    inner: HoverEventActionStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> HoverEventAction<'mc> {
-    pub const SHOW_TEXT: HoverEventActionEnum = HoverEventActionEnum::ShowText;
-    pub const SHOW_ITEM: HoverEventActionEnum = HoverEventActionEnum::ShowItem;
-    pub const SHOW_ENTITY: HoverEventActionEnum = HoverEventActionEnum::ShowEntity;
-    pub const SHOW_ACHIEVEMENT: HoverEventActionEnum = HoverEventActionEnum::ShowAchievement;
-    pub fn from_string(str: String) -> std::option::Option<HoverEventActionEnum> {
-        match str.as_str() {
-            "SHOW_TEXT" => Some(HoverEventActionEnum::ShowText),
-            "SHOW_ITEM" => Some(HoverEventActionEnum::ShowItem),
-            "SHOW_ENTITY" => Some(HoverEventActionEnum::ShowEntity),
-            "SHOW_ACHIEVEMENT" => Some(HoverEventActionEnum::ShowAchievement),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for HoverEventActionStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for HoverEventActionStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate HoverEventActionStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "net/md_5/bungee/api/chat/HoverEvent$Action")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a HoverEventActionStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<HoverEventAction<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("net/md_5/bungee/api/chat/HoverEvent$Action");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/HoverEvent$Action;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        HoverEventAction::from_raw(
-            &jni,
-            raw_obj,
-            HoverEventAction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> HoverEventActionStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1026,12 +1098,10 @@ impl<'mc> JNIRaw<'mc> for HoverEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for HoverEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1152,12 +1222,7 @@ impl<'mc> HoverEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::bungee::api::chat::HoverEventAction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::bungee::api::chat::HoverEventAction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn add_content(
@@ -1234,14 +1299,9 @@ impl<'mc> HoverEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1264,12 +1324,10 @@ impl<'mc> JNIRaw<'mc> for BaseComponent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BaseComponent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1933,14 +1991,9 @@ impl<'mc> BaseComponent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1963,12 +2016,10 @@ impl<'mc> JNIRaw<'mc> for SelectorComponent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SelectorComponent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2671,14 +2722,9 @@ impl<'mc> SelectorComponent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2709,12 +2755,10 @@ impl<'mc> JNIRaw<'mc> for ScoreComponent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ScoreComponent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3488,14 +3532,9 @@ impl<'mc> ScoreComponent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3520,63 +3559,114 @@ pub struct ClickEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum ClickEventActionEnum {
-    OpenUrl,
-    OpenFile,
-    RunCommand,
-    SuggestCommand,
-    ChangePage,
-    CopyToClipboard,
-}
-impl std::fmt::Display for ClickEventActionEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ClickEventActionEnum::OpenUrl => f.write_str("OPEN_URL"),
-            ClickEventActionEnum::OpenFile => f.write_str("OPEN_FILE"),
-            ClickEventActionEnum::RunCommand => f.write_str("RUN_COMMAND"),
-            ClickEventActionEnum::SuggestCommand => f.write_str("SUGGEST_COMMAND"),
-            ClickEventActionEnum::ChangePage => f.write_str("CHANGE_PAGE"),
-            ClickEventActionEnum::CopyToClipboard => f.write_str("COPY_TO_CLIPBOARD"),
-        }
-    }
+pub enum ClickEventAction<'mc> {
+    OpenUrl { inner: ClickEventActionStruct<'mc> },
+    OpenFile { inner: ClickEventActionStruct<'mc> },
+    RunCommand { inner: ClickEventActionStruct<'mc> },
+    SuggestCommand { inner: ClickEventActionStruct<'mc> },
+    ChangePage { inner: ClickEventActionStruct<'mc> },
+    CopyToClipboard { inner: ClickEventActionStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for ClickEventAction<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            ClickEventAction::OpenUrl { .. } => f.write_str("OPEN_URL"),
+            ClickEventAction::OpenFile { .. } => f.write_str("OPEN_FILE"),
+            ClickEventAction::RunCommand { .. } => f.write_str("RUN_COMMAND"),
+            ClickEventAction::SuggestCommand { .. } => f.write_str("SUGGEST_COMMAND"),
+            ClickEventAction::ChangePage { .. } => f.write_str("CHANGE_PAGE"),
+            ClickEventAction::CopyToClipboard { .. } => f.write_str("COPY_TO_CLIPBOARD"),
+        }
     }
 }
+
+impl<'mc> ClickEventAction<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<ClickEventAction<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("net/md_5/bungee/api/chat/ClickEvent$Action");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/ClickEvent$Action;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "OPEN_URL" => Ok(ClickEventAction::OpenUrl {
+                inner: ClickEventActionStruct::from_raw(env, obj)?,
+            }),
+            "OPEN_FILE" => Ok(ClickEventAction::OpenFile {
+                inner: ClickEventActionStruct::from_raw(env, obj)?,
+            }),
+            "RUN_COMMAND" => Ok(ClickEventAction::RunCommand {
+                inner: ClickEventActionStruct::from_raw(env, obj)?,
+            }),
+            "SUGGEST_COMMAND" => Ok(ClickEventAction::SuggestCommand {
+                inner: ClickEventActionStruct::from_raw(env, obj)?,
+            }),
+            "CHANGE_PAGE" => Ok(ClickEventAction::ChangePage {
+                inner: ClickEventActionStruct::from_raw(env, obj)?,
+            }),
+            "COPY_TO_CLIPBOARD" => Ok(ClickEventAction::CopyToClipboard {
+                inner: ClickEventActionStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct ClickEventAction<'mc>(
+pub struct ClickEventActionStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub ClickEventActionEnum,
 );
-impl<'mc> std::ops::Deref for ClickEventAction<'mc> {
-    type Target = ClickEventActionEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for ClickEventAction<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::OpenUrl { inner } => inner.0.clone(),
+            Self::OpenFile { inner } => inner.0.clone(),
+            Self::RunCommand { inner } => inner.0.clone(),
+            Self::SuggestCommand { inner } => inner.0.clone(),
+            Self::ChangePage { inner } => inner.0.clone(),
+            Self::CopyToClipboard { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::OpenUrl { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::OpenFile { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::RunCommand { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SuggestCommand { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ChangePage { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CopyToClipboard { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for ClickEventAction<'mc> {
-    type Enum = ClickEventActionEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for ClickEventAction<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -3592,68 +3682,74 @@ impl<'mc> JNIInstantiatableEnum<'mc> for ClickEventAction<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "OPEN_URL" => Ok(ClickEventAction::OpenUrl {
+                    inner: ClickEventActionStruct::from_raw(env, obj)?,
+                }),
+                "OPEN_FILE" => Ok(ClickEventAction::OpenFile {
+                    inner: ClickEventActionStruct::from_raw(env, obj)?,
+                }),
+                "RUN_COMMAND" => Ok(ClickEventAction::RunCommand {
+                    inner: ClickEventActionStruct::from_raw(env, obj)?,
+                }),
+                "SUGGEST_COMMAND" => Ok(ClickEventAction::SuggestCommand {
+                    inner: ClickEventActionStruct::from_raw(env, obj)?,
+                }),
+                "CHANGE_PAGE" => Ok(ClickEventAction::ChangePage {
+                    inner: ClickEventActionStruct::from_raw(env, obj)?,
+                }),
+                "COPY_TO_CLIPBOARD" => Ok(ClickEventAction::CopyToClipboard {
+                    inner: ClickEventActionStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> ClickEventAction<'mc> {
-    pub const OPEN_URL: ClickEventActionEnum = ClickEventActionEnum::OpenUrl;
-    pub const OPEN_FILE: ClickEventActionEnum = ClickEventActionEnum::OpenFile;
-    pub const RUN_COMMAND: ClickEventActionEnum = ClickEventActionEnum::RunCommand;
-    pub const SUGGEST_COMMAND: ClickEventActionEnum = ClickEventActionEnum::SuggestCommand;
-    pub const CHANGE_PAGE: ClickEventActionEnum = ClickEventActionEnum::ChangePage;
-    pub const COPY_TO_CLIPBOARD: ClickEventActionEnum = ClickEventActionEnum::CopyToClipboard;
-    pub fn from_string(str: String) -> std::option::Option<ClickEventActionEnum> {
-        match str.as_str() {
-            "OPEN_URL" => Some(ClickEventActionEnum::OpenUrl),
-            "OPEN_FILE" => Some(ClickEventActionEnum::OpenFile),
-            "RUN_COMMAND" => Some(ClickEventActionEnum::RunCommand),
-            "SUGGEST_COMMAND" => Some(ClickEventActionEnum::SuggestCommand),
-            "CHANGE_PAGE" => Some(ClickEventActionEnum::ChangePage),
-            "COPY_TO_CLIPBOARD" => Some(ClickEventActionEnum::CopyToClipboard),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for ClickEventActionStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ClickEventActionStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate ClickEventActionStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "net/md_5/bungee/api/chat/ClickEvent$Action")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ClickEventActionStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<ClickEventAction<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("net/md_5/bungee/api/chat/ClickEvent$Action");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/ClickEvent$Action;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        ClickEventAction::from_raw(
-            &jni,
-            raw_obj,
-            ClickEventAction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> ClickEventActionStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3661,12 +3757,10 @@ impl<'mc> JNIRaw<'mc> for ClickEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ClickEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3785,12 +3879,7 @@ impl<'mc> ClickEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::bungee::api::chat::ClickEventAction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::bungee::api::chat::ClickEventAction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::bungee::api::chat::ClickEventAction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn wait_with_long(
@@ -3845,14 +3934,9 @@ impl<'mc> ClickEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3877,12 +3961,10 @@ impl<'mc> JNIRaw<'mc> for Keybinds<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Keybinds<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3905,14 +3987,9 @@ impl<'mc> JNIInstantiatable<'mc> for Keybinds<'mc> {
 }
 
 impl<'mc> Keybinds<'mc> {
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3926,12 +4003,10 @@ impl<'mc> JNIRaw<'mc> for ItemTagSerializer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ItemTagSerializer<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4111,14 +4186,9 @@ impl<'mc> ItemTagSerializer<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -4147,12 +4217,10 @@ impl<'mc> JNIRaw<'mc> for TranslatableComponent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for TranslatableComponent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4941,14 +5009,9 @@ impl<'mc> TranslatableComponent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -4981,12 +5044,10 @@ impl<'mc> JNIRaw<'mc> for ComponentBuilderJoiner<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ComponentBuilderJoiner<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5040,14 +5101,9 @@ impl<'mc> ComponentBuilderJoiner<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -5061,12 +5117,10 @@ impl<'mc> JNIRaw<'mc> for ItemTag<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ItemTag<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5214,14 +5268,9 @@ impl<'mc> ItemTag<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -5244,12 +5293,10 @@ impl<'mc> JNIRaw<'mc> for KeybindComponent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for KeybindComponent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5953,14 +6000,9 @@ impl<'mc> KeybindComponent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -5986,59 +6028,102 @@ pub struct ComponentBuilder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum ComponentBuilderFormatRetentionEnum {
-    None,
-    Formatting,
-    Events,
-    All,
-}
-impl std::fmt::Display for ComponentBuilderFormatRetentionEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ComponentBuilderFormatRetentionEnum::None => f.write_str("NONE"),
-            ComponentBuilderFormatRetentionEnum::Formatting => f.write_str("FORMATTING"),
-            ComponentBuilderFormatRetentionEnum::Events => f.write_str("EVENTS"),
-            ComponentBuilderFormatRetentionEnum::All => f.write_str("ALL"),
-        }
-    }
+pub enum ComponentBuilderFormatRetention<'mc> {
+    None {
+        inner: ComponentBuilderFormatRetentionStruct<'mc>,
+    },
+    Formatting {
+        inner: ComponentBuilderFormatRetentionStruct<'mc>,
+    },
+    Events {
+        inner: ComponentBuilderFormatRetentionStruct<'mc>,
+    },
+    All {
+        inner: ComponentBuilderFormatRetentionStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for ComponentBuilderFormatRetention<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            ComponentBuilderFormatRetention::None { .. } => f.write_str("NONE"),
+            ComponentBuilderFormatRetention::Formatting { .. } => f.write_str("FORMATTING"),
+            ComponentBuilderFormatRetention::Events { .. } => f.write_str("EVENTS"),
+            ComponentBuilderFormatRetention::All { .. } => f.write_str("ALL"),
+        }
     }
 }
+
+impl<'mc> ComponentBuilderFormatRetention<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<ComponentBuilderFormatRetention<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("net/md_5/bungee/api/chat/ComponentBuilder$FormatRetention");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "NONE" => Ok(ComponentBuilderFormatRetention::None {
+                inner: ComponentBuilderFormatRetentionStruct::from_raw(env, obj)?,
+            }),
+            "FORMATTING" => Ok(ComponentBuilderFormatRetention::Formatting {
+                inner: ComponentBuilderFormatRetentionStruct::from_raw(env, obj)?,
+            }),
+            "EVENTS" => Ok(ComponentBuilderFormatRetention::Events {
+                inner: ComponentBuilderFormatRetentionStruct::from_raw(env, obj)?,
+            }),
+            "ALL" => Ok(ComponentBuilderFormatRetention::All {
+                inner: ComponentBuilderFormatRetentionStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct ComponentBuilderFormatRetention<'mc>(
+pub struct ComponentBuilderFormatRetentionStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub ComponentBuilderFormatRetentionEnum,
 );
-impl<'mc> std::ops::Deref for ComponentBuilderFormatRetention<'mc> {
-    type Target = ComponentBuilderFormatRetentionEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for ComponentBuilderFormatRetention<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::None { inner } => inner.0.clone(),
+            Self::Formatting { inner } => inner.0.clone(),
+            Self::Events { inner } => inner.0.clone(),
+            Self::All { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Formatting { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Events { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::All { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for ComponentBuilderFormatRetention<'mc> {
-    type Enum = ComponentBuilderFormatRetentionEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for ComponentBuilderFormatRetention<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -6057,66 +6142,70 @@ impl<'mc> JNIInstantiatableEnum<'mc> for ComponentBuilderFormatRetention<'mc> {
                 )
                 .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "NONE" => Ok(ComponentBuilderFormatRetention::None {
+                    inner: ComponentBuilderFormatRetentionStruct::from_raw(env, obj)?,
+                }),
+                "FORMATTING" => Ok(ComponentBuilderFormatRetention::Formatting {
+                    inner: ComponentBuilderFormatRetentionStruct::from_raw(env, obj)?,
+                }),
+                "EVENTS" => Ok(ComponentBuilderFormatRetention::Events {
+                    inner: ComponentBuilderFormatRetentionStruct::from_raw(env, obj)?,
+                }),
+                "ALL" => Ok(ComponentBuilderFormatRetention::All {
+                    inner: ComponentBuilderFormatRetentionStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> ComponentBuilderFormatRetention<'mc> {
-    pub const NONE: ComponentBuilderFormatRetentionEnum = ComponentBuilderFormatRetentionEnum::None;
-    pub const FORMATTING: ComponentBuilderFormatRetentionEnum =
-        ComponentBuilderFormatRetentionEnum::Formatting;
-    pub const EVENTS: ComponentBuilderFormatRetentionEnum =
-        ComponentBuilderFormatRetentionEnum::Events;
-    pub const ALL: ComponentBuilderFormatRetentionEnum = ComponentBuilderFormatRetentionEnum::All;
-    pub fn from_string(str: String) -> std::option::Option<ComponentBuilderFormatRetentionEnum> {
-        match str.as_str() {
-            "NONE" => Some(ComponentBuilderFormatRetentionEnum::None),
-            "FORMATTING" => Some(ComponentBuilderFormatRetentionEnum::Formatting),
-            "EVENTS" => Some(ComponentBuilderFormatRetentionEnum::Events),
-            "ALL" => Some(ComponentBuilderFormatRetentionEnum::All),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for ComponentBuilderFormatRetentionStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ComponentBuilderFormatRetentionStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate ComponentBuilderFormatRetentionStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "net/md_5/bungee/api/chat/ComponentBuilder$FormatRetention",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a ComponentBuilderFormatRetentionStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<ComponentBuilderFormatRetention<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("net/md_5/bungee/api/chat/ComponentBuilder$FormatRetention");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        ComponentBuilderFormatRetention::from_raw(
-            &jni,
-            raw_obj,
-            ComponentBuilderFormatRetention::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> ComponentBuilderFormatRetentionStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -6124,12 +6213,10 @@ impl<'mc> JNIRaw<'mc> for ComponentBuilder<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ComponentBuilder<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6738,14 +6825,9 @@ impl<'mc> ComponentBuilder<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 

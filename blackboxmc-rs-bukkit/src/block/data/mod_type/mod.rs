@@ -16,12 +16,10 @@ impl<'mc> JNIRaw<'mc> for PistonHead<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PistonHead<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -85,12 +83,7 @@ impl<'mc> PistonHead<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::TechnicalPistonType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::TechnicalPistonType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::TechnicalPistonType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_type(
@@ -127,12 +120,7 @@ impl<'mc> PistonHead<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -269,12 +257,7 @@ impl<'mc> PistonHead<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -377,12 +360,7 @@ impl<'mc> PistonHead<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -429,12 +407,7 @@ impl<'mc> PistonHead<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -471,14 +444,9 @@ impl<'mc> PistonHead<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::mod_type::TechnicalPiston<'mc>> for PistonHead<'mc> {
@@ -501,12 +469,10 @@ impl<'mc> JNIRaw<'mc> for Chest<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Chest<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -547,12 +513,7 @@ impl<'mc> Chest<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::ChestType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::ChestType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::ChestType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_type(
@@ -589,12 +550,7 @@ impl<'mc> Chest<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -731,12 +687,7 @@ impl<'mc> Chest<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -839,12 +790,7 @@ impl<'mc> Chest<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -891,12 +837,7 @@ impl<'mc> Chest<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -955,14 +896,9 @@ impl<'mc> Chest<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Chest<'mc> {
@@ -990,12 +926,10 @@ impl<'mc> JNIRaw<'mc> for GlassPane<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for GlassPane<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1188,12 +1122,7 @@ impl<'mc> GlassPane<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -1296,12 +1225,7 @@ impl<'mc> GlassPane<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -1348,12 +1272,7 @@ impl<'mc> GlassPane<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -1412,14 +1331,9 @@ impl<'mc> GlassPane<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::MultipleFacing<'mc>> for GlassPane<'mc> {
@@ -1447,12 +1361,10 @@ impl<'mc> JNIRaw<'mc> for TripwireHook<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for TripwireHook<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1602,12 +1514,7 @@ impl<'mc> TripwireHook<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -1710,12 +1617,7 @@ impl<'mc> TripwireHook<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -1762,12 +1664,7 @@ impl<'mc> TripwireHook<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -1820,12 +1717,7 @@ impl<'mc> TripwireHook<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -1879,14 +1771,9 @@ impl<'mc> TripwireHook<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Attachable<'mc>> for TripwireHook<'mc> {
@@ -1920,12 +1807,10 @@ impl<'mc> JNIRaw<'mc> for PitcherCrop<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PitcherCrop<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2084,12 +1969,7 @@ impl<'mc> PitcherCrop<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -2192,12 +2072,7 @@ impl<'mc> PitcherCrop<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -2244,12 +2119,7 @@ impl<'mc> PitcherCrop<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -2304,12 +2174,7 @@ impl<'mc> PitcherCrop<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::BisectedHalf::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::BisectedHalf::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::BisectedHalf::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_half(
@@ -2330,14 +2195,9 @@ impl<'mc> PitcherCrop<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Ageable<'mc>> for PitcherCrop<'mc> {
@@ -2365,12 +2225,10 @@ impl<'mc> JNIRaw<'mc> for Lectern<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Lectern<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2418,12 +2276,7 @@ impl<'mc> Lectern<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -2560,12 +2413,7 @@ impl<'mc> Lectern<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -2668,12 +2516,7 @@ impl<'mc> Lectern<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -2720,12 +2563,7 @@ impl<'mc> Lectern<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -2784,14 +2622,9 @@ impl<'mc> Lectern<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Lectern<'mc> {
@@ -2819,12 +2652,10 @@ impl<'mc> JNIRaw<'mc> for DaylightDetector<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for DaylightDetector<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3008,12 +2839,7 @@ impl<'mc> DaylightDetector<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -3116,12 +2942,7 @@ impl<'mc> DaylightDetector<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -3168,12 +2989,7 @@ impl<'mc> DaylightDetector<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -3210,14 +3026,9 @@ impl<'mc> DaylightDetector<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::AnaloguePowerable<'mc>> for DaylightDetector<'mc> {
@@ -3239,12 +3050,10 @@ impl<'mc> JNIRaw<'mc> for StructureBlock<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for StructureBlock<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3288,12 +3097,7 @@ impl<'mc> StructureBlock<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::StructureBlockMode::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::StructureBlockMode::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::StructureBlockMode::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_mode(
@@ -3419,12 +3223,7 @@ impl<'mc> StructureBlock<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -3527,12 +3326,7 @@ impl<'mc> StructureBlock<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -3579,12 +3373,7 @@ impl<'mc> StructureBlock<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -3621,14 +3410,9 @@ impl<'mc> StructureBlock<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for StructureBlock<'mc> {
@@ -3650,12 +3434,10 @@ impl<'mc> JNIRaw<'mc> for PinkPetals<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PinkPetals<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3728,12 +3510,7 @@ impl<'mc> PinkPetals<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -3870,12 +3647,7 @@ impl<'mc> PinkPetals<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -3978,12 +3750,7 @@ impl<'mc> PinkPetals<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -4030,12 +3797,7 @@ impl<'mc> PinkPetals<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -4072,14 +3834,9 @@ impl<'mc> PinkPetals<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for PinkPetals<'mc> {
@@ -4101,12 +3858,10 @@ impl<'mc> JNIRaw<'mc> for Piston<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Piston<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4167,12 +3922,7 @@ impl<'mc> Piston<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -4309,12 +4059,7 @@ impl<'mc> Piston<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -4417,12 +4162,7 @@ impl<'mc> Piston<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -4469,12 +4209,7 @@ impl<'mc> Piston<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -4511,14 +4246,9 @@ impl<'mc> Piston<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Piston<'mc> {
@@ -4540,12 +4270,10 @@ impl<'mc> JNIRaw<'mc> for TNT<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for TNT<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4695,12 +4423,7 @@ impl<'mc> TNT<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -4803,12 +4526,7 @@ impl<'mc> TNT<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -4855,12 +4573,7 @@ impl<'mc> TNT<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -4897,14 +4610,9 @@ impl<'mc> TNT<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for TNT<'mc> {
@@ -4926,12 +4634,10 @@ impl<'mc> JNIRaw<'mc> for Fence<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Fence<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5124,12 +4830,7 @@ impl<'mc> Fence<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -5232,12 +4933,7 @@ impl<'mc> Fence<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -5284,12 +4980,7 @@ impl<'mc> Fence<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -5348,14 +5039,9 @@ impl<'mc> Fence<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::MultipleFacing<'mc>> for Fence<'mc> {
@@ -5371,59 +5057,92 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Fence<'mc> {
     }
 }
 /// The tilt of a leaf.
-#[derive(PartialEq, Eq)]
-pub enum BigDripleafTiltEnum {
-    None,
-    Unstable,
-    Partial,
-    Full,
-}
-impl std::fmt::Display for BigDripleafTiltEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            BigDripleafTiltEnum::None => f.write_str("NONE"),
-            BigDripleafTiltEnum::Unstable => f.write_str("UNSTABLE"),
-            BigDripleafTiltEnum::Partial => f.write_str("PARTIAL"),
-            BigDripleafTiltEnum::Full => f.write_str("FULL"),
-        }
-    }
+pub enum BigDripleafTilt<'mc> {
+    None { inner: BigDripleafTiltStruct<'mc> },
+    Unstable { inner: BigDripleafTiltStruct<'mc> },
+    Partial { inner: BigDripleafTiltStruct<'mc> },
+    Full { inner: BigDripleafTiltStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for BigDripleafTilt<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            BigDripleafTilt::None { .. } => f.write_str("NONE"),
+            BigDripleafTilt::Unstable { .. } => f.write_str("UNSTABLE"),
+            BigDripleafTilt::Partial { .. } => f.write_str("PARTIAL"),
+            BigDripleafTilt::Full { .. } => f.write_str("FULL"),
+        }
     }
 }
+
+impl<'mc> BigDripleafTilt<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<BigDripleafTilt<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/BigDripleaf$Tilt");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/BigDripleaf$Tilt;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "NONE" => Ok(BigDripleafTilt::None {
+                inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+            }),
+            "UNSTABLE" => Ok(BigDripleafTilt::Unstable {
+                inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+            }),
+            "PARTIAL" => Ok(BigDripleafTilt::Partial {
+                inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+            }),
+            "FULL" => Ok(BigDripleafTilt::Full {
+                inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct BigDripleafTilt<'mc>(
+pub struct BigDripleafTiltStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub BigDripleafTiltEnum,
 );
-impl<'mc> std::ops::Deref for BigDripleafTilt<'mc> {
-    type Target = BigDripleafTiltEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for BigDripleafTilt<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::None { inner } => inner.0.clone(),
+            Self::Unstable { inner } => inner.0.clone(),
+            Self::Partial { inner } => inner.0.clone(),
+            Self::Full { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unstable { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Partial { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Full { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for BigDripleafTilt<'mc> {
-    type Enum = BigDripleafTiltEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for BigDripleafTilt<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -5439,115 +5158,142 @@ impl<'mc> JNIInstantiatableEnum<'mc> for BigDripleafTilt<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "NONE" => Ok(BigDripleafTilt::None {
+                    inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+                }),
+                "UNSTABLE" => Ok(BigDripleafTilt::Unstable {
+                    inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+                }),
+                "PARTIAL" => Ok(BigDripleafTilt::Partial {
+                    inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+                }),
+                "FULL" => Ok(BigDripleafTilt::Full {
+                    inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> BigDripleafTilt<'mc> {
-    pub const NONE: BigDripleafTiltEnum = BigDripleafTiltEnum::None;
-    pub const UNSTABLE: BigDripleafTiltEnum = BigDripleafTiltEnum::Unstable;
-    pub const PARTIAL: BigDripleafTiltEnum = BigDripleafTiltEnum::Partial;
-    pub const FULL: BigDripleafTiltEnum = BigDripleafTiltEnum::Full;
-    pub fn from_string(str: String) -> std::option::Option<BigDripleafTiltEnum> {
-        match str.as_str() {
-            "NONE" => Some(BigDripleafTiltEnum::None),
-            "UNSTABLE" => Some(BigDripleafTiltEnum::Unstable),
-            "PARTIAL" => Some(BigDripleafTiltEnum::Partial),
-            "FULL" => Some(BigDripleafTiltEnum::Full),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<BigDripleafTilt<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/BigDripleaf$Tilt");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/BigDripleaf$Tilt;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        BigDripleafTilt::from_raw(
-            &jni,
-            raw_obj,
-            BigDripleafTilt::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-#[derive(PartialEq, Eq)]
-pub enum HingeEnum {
-    Left,
-    Right,
-}
-impl std::fmt::Display for HingeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            HingeEnum::Left => f.write_str("LEFT"),
-            HingeEnum::Right => f.write_str("RIGHT"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for Hinge<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct Hinge<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub HingeEnum,
-);
-impl<'mc> std::ops::Deref for Hinge<'mc> {
-    type Target = HingeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for Hinge<'mc> {
+impl<'mc> JNIRaw<'mc> for BigDripleafTiltStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Hinge<'mc> {
-    type Enum = HingeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for BigDripleafTiltStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate BigDripleafTiltStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/block/data/type/BigDripleaf$Tilt")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BigDripleafTiltStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> BigDripleafTiltStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+pub enum Hinge<'mc> {
+    Left { inner: HingeStruct<'mc> },
+    Right { inner: HingeStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for Hinge<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Hinge::Left { .. } => f.write_str("LEFT"),
+            Hinge::Right { .. } => f.write_str("RIGHT"),
+        }
+    }
+}
+
+impl<'mc> Hinge<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Hinge<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Hinge");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Hinge;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "LEFT" => Ok(Hinge::Left {
+                inner: HingeStruct::from_raw(env, obj)?,
+            }),
+            "RIGHT" => Ok(Hinge::Right {
+                inner: HingeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct HingeStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Hinge<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Left { inner } => inner.0.clone(),
+            Self::Right { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Left { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Right { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for Hinge<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Hinge from null object.").into());
@@ -5560,114 +5306,140 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Hinge<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "LEFT" => Ok(Hinge::Left {
+                    inner: HingeStruct::from_raw(env, obj)?,
+                }),
+                "RIGHT" => Ok(Hinge::Right {
+                    inner: HingeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Hinge<'mc> {
-    pub const LEFT: HingeEnum = HingeEnum::Left;
-    pub const RIGHT: HingeEnum = HingeEnum::Right;
-    pub fn from_string(str: String) -> std::option::Option<HingeEnum> {
-        match str.as_str() {
-            "LEFT" => Some(HingeEnum::Left),
-            "RIGHT" => Some(HingeEnum::Right),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Hinge<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Hinge");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Hinge;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Hinge::from_raw(
-            &jni,
-            raw_obj,
-            Hinge::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-/// The different heights a face of a wall may have.
-#[derive(PartialEq, Eq)]
-pub enum WallHeightEnum {
-    None,
-    Low,
-    Tall,
-}
-impl std::fmt::Display for WallHeightEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            WallHeightEnum::None => f.write_str("NONE"),
-            WallHeightEnum::Low => f.write_str("LOW"),
-            WallHeightEnum::Tall => f.write_str("TALL"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for WallHeight<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct WallHeight<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub WallHeightEnum,
-);
-impl<'mc> std::ops::Deref for WallHeight<'mc> {
-    type Target = WallHeightEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for WallHeight<'mc> {
+impl<'mc> JNIRaw<'mc> for HingeStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for WallHeight<'mc> {
-    type Enum = WallHeightEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for HingeStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate HingeStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Hinge")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a HingeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> HingeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+/// The different heights a face of a wall may have.
+pub enum WallHeight<'mc> {
+    None { inner: WallHeightStruct<'mc> },
+    Low { inner: WallHeightStruct<'mc> },
+    Tall { inner: WallHeightStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for WallHeight<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            WallHeight::None { .. } => f.write_str("NONE"),
+            WallHeight::Low { .. } => f.write_str("LOW"),
+            WallHeight::Tall { .. } => f.write_str("TALL"),
+        }
+    }
+}
+
+impl<'mc> WallHeight<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<WallHeight<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Wall$Height");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Wall$Height;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "NONE" => Ok(WallHeight::None {
+                inner: WallHeightStruct::from_raw(env, obj)?,
+            }),
+            "LOW" => Ok(WallHeight::Low {
+                inner: WallHeightStruct::from_raw(env, obj)?,
+            }),
+            "TALL" => Ok(WallHeight::Tall {
+                inner: WallHeightStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct WallHeightStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for WallHeight<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::None { inner } => inner.0.clone(),
+            Self::Low { inner } => inner.0.clone(),
+            Self::Tall { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Low { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Tall { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for WallHeight<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate WallHeight from null object.").into());
@@ -5680,62 +5452,63 @@ impl<'mc> JNIInstantiatableEnum<'mc> for WallHeight<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "NONE" => Ok(WallHeight::None {
+                    inner: WallHeightStruct::from_raw(env, obj)?,
+                }),
+                "LOW" => Ok(WallHeight::Low {
+                    inner: WallHeightStruct::from_raw(env, obj)?,
+                }),
+                "TALL" => Ok(WallHeight::Tall {
+                    inner: WallHeightStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> WallHeight<'mc> {
-    pub const NONE: WallHeightEnum = WallHeightEnum::None;
-    pub const LOW: WallHeightEnum = WallHeightEnum::Low;
-    pub const TALL: WallHeightEnum = WallHeightEnum::Tall;
-    pub fn from_string(str: String) -> std::option::Option<WallHeightEnum> {
-        match str.as_str() {
-            "NONE" => Some(WallHeightEnum::None),
-            "LOW" => Some(WallHeightEnum::Low),
-            "TALL" => Some(WallHeightEnum::Tall),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for WallHeightStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for WallHeightStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate WallHeightStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Wall$Height")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a WallHeightStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<WallHeight<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Wall$Height");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Wall$Height;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        WallHeight::from_raw(
-            &jni,
-            raw_obj,
-            WallHeight::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> WallHeightStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// 'bloom' indicates whether the sculk catalyst is actively spreading the sculk or not.
@@ -5751,12 +5524,10 @@ impl<'mc> JNIRaw<'mc> for SculkCatalyst<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SculkCatalyst<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5906,12 +5677,7 @@ impl<'mc> SculkCatalyst<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -6014,12 +5780,7 @@ impl<'mc> SculkCatalyst<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -6066,12 +5827,7 @@ impl<'mc> SculkCatalyst<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -6108,14 +5864,9 @@ impl<'mc> SculkCatalyst<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for SculkCatalyst<'mc> {
@@ -6125,75 +5876,152 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for SculkCatalyst<'mc> {
     }
 }
 /// The directions the Jigsaw can be oriented.
-#[derive(PartialEq, Eq)]
-pub enum JigsawOrientationEnum {
-    DownEast,
-    DownNorth,
-    DownSouth,
-    DownWest,
-    UpEast,
-    UpNorth,
-    UpSouth,
-    UpWest,
-    WestUp,
-    EastUp,
-    NorthUp,
-    SouthUp,
-}
-impl std::fmt::Display for JigsawOrientationEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            JigsawOrientationEnum::DownEast => f.write_str("DOWN_EAST"),
-            JigsawOrientationEnum::DownNorth => f.write_str("DOWN_NORTH"),
-            JigsawOrientationEnum::DownSouth => f.write_str("DOWN_SOUTH"),
-            JigsawOrientationEnum::DownWest => f.write_str("DOWN_WEST"),
-            JigsawOrientationEnum::UpEast => f.write_str("UP_EAST"),
-            JigsawOrientationEnum::UpNorth => f.write_str("UP_NORTH"),
-            JigsawOrientationEnum::UpSouth => f.write_str("UP_SOUTH"),
-            JigsawOrientationEnum::UpWest => f.write_str("UP_WEST"),
-            JigsawOrientationEnum::WestUp => f.write_str("WEST_UP"),
-            JigsawOrientationEnum::EastUp => f.write_str("EAST_UP"),
-            JigsawOrientationEnum::NorthUp => f.write_str("NORTH_UP"),
-            JigsawOrientationEnum::SouthUp => f.write_str("SOUTH_UP"),
-        }
-    }
+pub enum JigsawOrientation<'mc> {
+    DownEast { inner: JigsawOrientationStruct<'mc> },
+    DownNorth { inner: JigsawOrientationStruct<'mc> },
+    DownSouth { inner: JigsawOrientationStruct<'mc> },
+    DownWest { inner: JigsawOrientationStruct<'mc> },
+    UpEast { inner: JigsawOrientationStruct<'mc> },
+    UpNorth { inner: JigsawOrientationStruct<'mc> },
+    UpSouth { inner: JigsawOrientationStruct<'mc> },
+    UpWest { inner: JigsawOrientationStruct<'mc> },
+    WestUp { inner: JigsawOrientationStruct<'mc> },
+    EastUp { inner: JigsawOrientationStruct<'mc> },
+    NorthUp { inner: JigsawOrientationStruct<'mc> },
+    SouthUp { inner: JigsawOrientationStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for JigsawOrientation<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            JigsawOrientation::DownEast { .. } => f.write_str("DOWN_EAST"),
+            JigsawOrientation::DownNorth { .. } => f.write_str("DOWN_NORTH"),
+            JigsawOrientation::DownSouth { .. } => f.write_str("DOWN_SOUTH"),
+            JigsawOrientation::DownWest { .. } => f.write_str("DOWN_WEST"),
+            JigsawOrientation::UpEast { .. } => f.write_str("UP_EAST"),
+            JigsawOrientation::UpNorth { .. } => f.write_str("UP_NORTH"),
+            JigsawOrientation::UpSouth { .. } => f.write_str("UP_SOUTH"),
+            JigsawOrientation::UpWest { .. } => f.write_str("UP_WEST"),
+            JigsawOrientation::WestUp { .. } => f.write_str("WEST_UP"),
+            JigsawOrientation::EastUp { .. } => f.write_str("EAST_UP"),
+            JigsawOrientation::NorthUp { .. } => f.write_str("NORTH_UP"),
+            JigsawOrientation::SouthUp { .. } => f.write_str("SOUTH_UP"),
+        }
     }
 }
+
+impl<'mc> JigsawOrientation<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<JigsawOrientation<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Jigsaw$Orientation");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Jigsaw$Orientation;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "DOWN_EAST" => Ok(JigsawOrientation::DownEast {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "DOWN_NORTH" => Ok(JigsawOrientation::DownNorth {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "DOWN_SOUTH" => Ok(JigsawOrientation::DownSouth {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "DOWN_WEST" => Ok(JigsawOrientation::DownWest {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_EAST" => Ok(JigsawOrientation::UpEast {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_NORTH" => Ok(JigsawOrientation::UpNorth {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_SOUTH" => Ok(JigsawOrientation::UpSouth {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_WEST" => Ok(JigsawOrientation::UpWest {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "WEST_UP" => Ok(JigsawOrientation::WestUp {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "EAST_UP" => Ok(JigsawOrientation::EastUp {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "NORTH_UP" => Ok(JigsawOrientation::NorthUp {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "SOUTH_UP" => Ok(JigsawOrientation::SouthUp {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct JigsawOrientation<'mc>(
+pub struct JigsawOrientationStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub JigsawOrientationEnum,
 );
-impl<'mc> std::ops::Deref for JigsawOrientation<'mc> {
-    type Target = JigsawOrientationEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for JigsawOrientation<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::DownEast { inner } => inner.0.clone(),
+            Self::DownNorth { inner } => inner.0.clone(),
+            Self::DownSouth { inner } => inner.0.clone(),
+            Self::DownWest { inner } => inner.0.clone(),
+            Self::UpEast { inner } => inner.0.clone(),
+            Self::UpNorth { inner } => inner.0.clone(),
+            Self::UpSouth { inner } => inner.0.clone(),
+            Self::UpWest { inner } => inner.0.clone(),
+            Self::WestUp { inner } => inner.0.clone(),
+            Self::EastUp { inner } => inner.0.clone(),
+            Self::NorthUp { inner } => inner.0.clone(),
+            Self::SouthUp { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::DownEast { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::DownNorth { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DownSouth { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DownWest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpEast { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpNorth { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpSouth { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpWest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WestUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::EastUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NorthUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SouthUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for JigsawOrientation<'mc> {
-    type Enum = JigsawOrientationEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for JigsawOrientation<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -6209,151 +6037,240 @@ impl<'mc> JNIInstantiatableEnum<'mc> for JigsawOrientation<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "DOWN_EAST" => Ok(JigsawOrientation::DownEast {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "DOWN_NORTH" => Ok(JigsawOrientation::DownNorth {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "DOWN_SOUTH" => Ok(JigsawOrientation::DownSouth {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "DOWN_WEST" => Ok(JigsawOrientation::DownWest {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_EAST" => Ok(JigsawOrientation::UpEast {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_NORTH" => Ok(JigsawOrientation::UpNorth {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_SOUTH" => Ok(JigsawOrientation::UpSouth {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_WEST" => Ok(JigsawOrientation::UpWest {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "WEST_UP" => Ok(JigsawOrientation::WestUp {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "EAST_UP" => Ok(JigsawOrientation::EastUp {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "NORTH_UP" => Ok(JigsawOrientation::NorthUp {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "SOUTH_UP" => Ok(JigsawOrientation::SouthUp {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> JigsawOrientation<'mc> {
-    pub const DOWN_EAST: JigsawOrientationEnum = JigsawOrientationEnum::DownEast;
-    pub const DOWN_NORTH: JigsawOrientationEnum = JigsawOrientationEnum::DownNorth;
-    pub const DOWN_SOUTH: JigsawOrientationEnum = JigsawOrientationEnum::DownSouth;
-    pub const DOWN_WEST: JigsawOrientationEnum = JigsawOrientationEnum::DownWest;
-    pub const UP_EAST: JigsawOrientationEnum = JigsawOrientationEnum::UpEast;
-    pub const UP_NORTH: JigsawOrientationEnum = JigsawOrientationEnum::UpNorth;
-    pub const UP_SOUTH: JigsawOrientationEnum = JigsawOrientationEnum::UpSouth;
-    pub const UP_WEST: JigsawOrientationEnum = JigsawOrientationEnum::UpWest;
-    pub const WEST_UP: JigsawOrientationEnum = JigsawOrientationEnum::WestUp;
-    pub const EAST_UP: JigsawOrientationEnum = JigsawOrientationEnum::EastUp;
-    pub const NORTH_UP: JigsawOrientationEnum = JigsawOrientationEnum::NorthUp;
-    pub const SOUTH_UP: JigsawOrientationEnum = JigsawOrientationEnum::SouthUp;
-    pub fn from_string(str: String) -> std::option::Option<JigsawOrientationEnum> {
-        match str.as_str() {
-            "DOWN_EAST" => Some(JigsawOrientationEnum::DownEast),
-            "DOWN_NORTH" => Some(JigsawOrientationEnum::DownNorth),
-            "DOWN_SOUTH" => Some(JigsawOrientationEnum::DownSouth),
-            "DOWN_WEST" => Some(JigsawOrientationEnum::DownWest),
-            "UP_EAST" => Some(JigsawOrientationEnum::UpEast),
-            "UP_NORTH" => Some(JigsawOrientationEnum::UpNorth),
-            "UP_SOUTH" => Some(JigsawOrientationEnum::UpSouth),
-            "UP_WEST" => Some(JigsawOrientationEnum::UpWest),
-            "WEST_UP" => Some(JigsawOrientationEnum::WestUp),
-            "EAST_UP" => Some(JigsawOrientationEnum::EastUp),
-            "NORTH_UP" => Some(JigsawOrientationEnum::NorthUp),
-            "SOUTH_UP" => Some(JigsawOrientationEnum::SouthUp),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<JigsawOrientation<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Jigsaw$Orientation");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Jigsaw$Orientation;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        JigsawOrientation::from_raw(
-            &jni,
-            raw_obj,
-            JigsawOrientation::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-#[derive(PartialEq, Eq)]
-pub enum OrientationEnum {
-    DownEast,
-    DownNorth,
-    DownSouth,
-    DownWest,
-    UpEast,
-    UpNorth,
-    UpSouth,
-    UpWest,
-    WestUp,
-    EastUp,
-    NorthUp,
-    SouthUp,
-}
-impl std::fmt::Display for OrientationEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            OrientationEnum::DownEast => f.write_str("DOWN_EAST"),
-            OrientationEnum::DownNorth => f.write_str("DOWN_NORTH"),
-            OrientationEnum::DownSouth => f.write_str("DOWN_SOUTH"),
-            OrientationEnum::DownWest => f.write_str("DOWN_WEST"),
-            OrientationEnum::UpEast => f.write_str("UP_EAST"),
-            OrientationEnum::UpNorth => f.write_str("UP_NORTH"),
-            OrientationEnum::UpSouth => f.write_str("UP_SOUTH"),
-            OrientationEnum::UpWest => f.write_str("UP_WEST"),
-            OrientationEnum::WestUp => f.write_str("WEST_UP"),
-            OrientationEnum::EastUp => f.write_str("EAST_UP"),
-            OrientationEnum::NorthUp => f.write_str("NORTH_UP"),
-            OrientationEnum::SouthUp => f.write_str("SOUTH_UP"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for Orientation<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct Orientation<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub OrientationEnum,
-);
-impl<'mc> std::ops::Deref for Orientation<'mc> {
-    type Target = OrientationEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for Orientation<'mc> {
+impl<'mc> JNIRaw<'mc> for JigsawOrientationStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Orientation<'mc> {
-    type Enum = OrientationEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for JigsawOrientationStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate JigsawOrientationStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/block/data/type/Jigsaw$Orientation")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a JigsawOrientationStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> JigsawOrientationStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+pub enum Orientation<'mc> {
+    DownEast { inner: OrientationStruct<'mc> },
+    DownNorth { inner: OrientationStruct<'mc> },
+    DownSouth { inner: OrientationStruct<'mc> },
+    DownWest { inner: OrientationStruct<'mc> },
+    UpEast { inner: OrientationStruct<'mc> },
+    UpNorth { inner: OrientationStruct<'mc> },
+    UpSouth { inner: OrientationStruct<'mc> },
+    UpWest { inner: OrientationStruct<'mc> },
+    WestUp { inner: OrientationStruct<'mc> },
+    EastUp { inner: OrientationStruct<'mc> },
+    NorthUp { inner: OrientationStruct<'mc> },
+    SouthUp { inner: OrientationStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for Orientation<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Orientation::DownEast { .. } => f.write_str("DOWN_EAST"),
+            Orientation::DownNorth { .. } => f.write_str("DOWN_NORTH"),
+            Orientation::DownSouth { .. } => f.write_str("DOWN_SOUTH"),
+            Orientation::DownWest { .. } => f.write_str("DOWN_WEST"),
+            Orientation::UpEast { .. } => f.write_str("UP_EAST"),
+            Orientation::UpNorth { .. } => f.write_str("UP_NORTH"),
+            Orientation::UpSouth { .. } => f.write_str("UP_SOUTH"),
+            Orientation::UpWest { .. } => f.write_str("UP_WEST"),
+            Orientation::WestUp { .. } => f.write_str("WEST_UP"),
+            Orientation::EastUp { .. } => f.write_str("EAST_UP"),
+            Orientation::NorthUp { .. } => f.write_str("NORTH_UP"),
+            Orientation::SouthUp { .. } => f.write_str("SOUTH_UP"),
+        }
+    }
+}
+
+impl<'mc> Orientation<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Orientation<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Orientation");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Orientation;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "DOWN_EAST" => Ok(Orientation::DownEast {
+                inner: OrientationStruct::from_raw(env, obj)?,
+            }),
+            "DOWN_NORTH" => Ok(Orientation::DownNorth {
+                inner: OrientationStruct::from_raw(env, obj)?,
+            }),
+            "DOWN_SOUTH" => Ok(Orientation::DownSouth {
+                inner: OrientationStruct::from_raw(env, obj)?,
+            }),
+            "DOWN_WEST" => Ok(Orientation::DownWest {
+                inner: OrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_EAST" => Ok(Orientation::UpEast {
+                inner: OrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_NORTH" => Ok(Orientation::UpNorth {
+                inner: OrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_SOUTH" => Ok(Orientation::UpSouth {
+                inner: OrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_WEST" => Ok(Orientation::UpWest {
+                inner: OrientationStruct::from_raw(env, obj)?,
+            }),
+            "WEST_UP" => Ok(Orientation::WestUp {
+                inner: OrientationStruct::from_raw(env, obj)?,
+            }),
+            "EAST_UP" => Ok(Orientation::EastUp {
+                inner: OrientationStruct::from_raw(env, obj)?,
+            }),
+            "NORTH_UP" => Ok(Orientation::NorthUp {
+                inner: OrientationStruct::from_raw(env, obj)?,
+            }),
+            "SOUTH_UP" => Ok(Orientation::SouthUp {
+                inner: OrientationStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct OrientationStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Orientation<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::DownEast { inner } => inner.0.clone(),
+            Self::DownNorth { inner } => inner.0.clone(),
+            Self::DownSouth { inner } => inner.0.clone(),
+            Self::DownWest { inner } => inner.0.clone(),
+            Self::UpEast { inner } => inner.0.clone(),
+            Self::UpNorth { inner } => inner.0.clone(),
+            Self::UpSouth { inner } => inner.0.clone(),
+            Self::UpWest { inner } => inner.0.clone(),
+            Self::WestUp { inner } => inner.0.clone(),
+            Self::EastUp { inner } => inner.0.clone(),
+            Self::NorthUp { inner } => inner.0.clone(),
+            Self::SouthUp { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::DownEast { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::DownNorth { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DownSouth { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DownWest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpEast { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpNorth { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpSouth { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpWest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WestUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::EastUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NorthUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SouthUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for Orientation<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Orientation from null object.").into());
@@ -6366,80 +6283,90 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Orientation<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "DOWN_EAST" => Ok(Orientation::DownEast {
+                    inner: OrientationStruct::from_raw(env, obj)?,
+                }),
+                "DOWN_NORTH" => Ok(Orientation::DownNorth {
+                    inner: OrientationStruct::from_raw(env, obj)?,
+                }),
+                "DOWN_SOUTH" => Ok(Orientation::DownSouth {
+                    inner: OrientationStruct::from_raw(env, obj)?,
+                }),
+                "DOWN_WEST" => Ok(Orientation::DownWest {
+                    inner: OrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_EAST" => Ok(Orientation::UpEast {
+                    inner: OrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_NORTH" => Ok(Orientation::UpNorth {
+                    inner: OrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_SOUTH" => Ok(Orientation::UpSouth {
+                    inner: OrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_WEST" => Ok(Orientation::UpWest {
+                    inner: OrientationStruct::from_raw(env, obj)?,
+                }),
+                "WEST_UP" => Ok(Orientation::WestUp {
+                    inner: OrientationStruct::from_raw(env, obj)?,
+                }),
+                "EAST_UP" => Ok(Orientation::EastUp {
+                    inner: OrientationStruct::from_raw(env, obj)?,
+                }),
+                "NORTH_UP" => Ok(Orientation::NorthUp {
+                    inner: OrientationStruct::from_raw(env, obj)?,
+                }),
+                "SOUTH_UP" => Ok(Orientation::SouthUp {
+                    inner: OrientationStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Orientation<'mc> {
-    pub const DOWN_EAST: OrientationEnum = OrientationEnum::DownEast;
-    pub const DOWN_NORTH: OrientationEnum = OrientationEnum::DownNorth;
-    pub const DOWN_SOUTH: OrientationEnum = OrientationEnum::DownSouth;
-    pub const DOWN_WEST: OrientationEnum = OrientationEnum::DownWest;
-    pub const UP_EAST: OrientationEnum = OrientationEnum::UpEast;
-    pub const UP_NORTH: OrientationEnum = OrientationEnum::UpNorth;
-    pub const UP_SOUTH: OrientationEnum = OrientationEnum::UpSouth;
-    pub const UP_WEST: OrientationEnum = OrientationEnum::UpWest;
-    pub const WEST_UP: OrientationEnum = OrientationEnum::WestUp;
-    pub const EAST_UP: OrientationEnum = OrientationEnum::EastUp;
-    pub const NORTH_UP: OrientationEnum = OrientationEnum::NorthUp;
-    pub const SOUTH_UP: OrientationEnum = OrientationEnum::SouthUp;
-    pub fn from_string(str: String) -> std::option::Option<OrientationEnum> {
-        match str.as_str() {
-            "DOWN_EAST" => Some(OrientationEnum::DownEast),
-            "DOWN_NORTH" => Some(OrientationEnum::DownNorth),
-            "DOWN_SOUTH" => Some(OrientationEnum::DownSouth),
-            "DOWN_WEST" => Some(OrientationEnum::DownWest),
-            "UP_EAST" => Some(OrientationEnum::UpEast),
-            "UP_NORTH" => Some(OrientationEnum::UpNorth),
-            "UP_SOUTH" => Some(OrientationEnum::UpSouth),
-            "UP_WEST" => Some(OrientationEnum::UpWest),
-            "WEST_UP" => Some(OrientationEnum::WestUp),
-            "EAST_UP" => Some(OrientationEnum::EastUp),
-            "NORTH_UP" => Some(OrientationEnum::NorthUp),
-            "SOUTH_UP" => Some(OrientationEnum::SouthUp),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for OrientationStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for OrientationStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate OrientationStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Orientation")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a OrientationStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Orientation<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Orientation");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Orientation;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Orientation::from_raw(
-            &jni,
-            raw_obj,
-            Orientation::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> OrientationStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -6455,12 +6382,10 @@ impl<'mc> JNIRaw<'mc> for Furnace<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Furnace<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6499,12 +6424,7 @@ impl<'mc> Furnace<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -6641,12 +6561,7 @@ impl<'mc> Furnace<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -6749,12 +6664,7 @@ impl<'mc> Furnace<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -6801,12 +6711,7 @@ impl<'mc> Furnace<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -6865,14 +6770,9 @@ impl<'mc> Furnace<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Furnace<'mc> {
@@ -6902,12 +6802,10 @@ impl<'mc> JNIRaw<'mc> for Sapling<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Sapling<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7066,12 +6964,7 @@ impl<'mc> Sapling<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -7174,12 +7067,7 @@ impl<'mc> Sapling<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -7226,12 +7114,7 @@ impl<'mc> Sapling<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -7268,14 +7151,9 @@ impl<'mc> Sapling<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for Sapling<'mc> {
@@ -7284,61 +7162,99 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Sapling<'mc> {
             .expect("Error converting Sapling into crate::block::data::BlockData")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum ThicknessEnum {
-    TipMerge,
-    Tip,
-    Frustum,
-    Middle,
-    Base,
-}
-impl std::fmt::Display for ThicknessEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ThicknessEnum::TipMerge => f.write_str("TIP_MERGE"),
-            ThicknessEnum::Tip => f.write_str("TIP"),
-            ThicknessEnum::Frustum => f.write_str("FRUSTUM"),
-            ThicknessEnum::Middle => f.write_str("MIDDLE"),
-            ThicknessEnum::Base => f.write_str("BASE"),
-        }
-    }
+pub enum Thickness<'mc> {
+    TipMerge { inner: ThicknessStruct<'mc> },
+    Tip { inner: ThicknessStruct<'mc> },
+    Frustum { inner: ThicknessStruct<'mc> },
+    Middle { inner: ThicknessStruct<'mc> },
+    Base { inner: ThicknessStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Thickness<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Thickness::TipMerge { .. } => f.write_str("TIP_MERGE"),
+            Thickness::Tip { .. } => f.write_str("TIP"),
+            Thickness::Frustum { .. } => f.write_str("FRUSTUM"),
+            Thickness::Middle { .. } => f.write_str("MIDDLE"),
+            Thickness::Base { .. } => f.write_str("BASE"),
+        }
     }
 }
+
+impl<'mc> Thickness<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Thickness<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Thickness");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Thickness;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "TIP_MERGE" => Ok(Thickness::TipMerge {
+                inner: ThicknessStruct::from_raw(env, obj)?,
+            }),
+            "TIP" => Ok(Thickness::Tip {
+                inner: ThicknessStruct::from_raw(env, obj)?,
+            }),
+            "FRUSTUM" => Ok(Thickness::Frustum {
+                inner: ThicknessStruct::from_raw(env, obj)?,
+            }),
+            "MIDDLE" => Ok(Thickness::Middle {
+                inner: ThicknessStruct::from_raw(env, obj)?,
+            }),
+            "BASE" => Ok(Thickness::Base {
+                inner: ThicknessStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Thickness<'mc>(
+pub struct ThicknessStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub ThicknessEnum,
 );
-impl<'mc> std::ops::Deref for Thickness<'mc> {
-    type Target = ThicknessEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Thickness<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::TipMerge { inner } => inner.0.clone(),
+            Self::Tip { inner } => inner.0.clone(),
+            Self::Frustum { inner } => inner.0.clone(),
+            Self::Middle { inner } => inner.0.clone(),
+            Self::Base { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::TipMerge { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Tip { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Frustum { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Middle { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Base { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Thickness<'mc> {
-    type Enum = ThicknessEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Thickness<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Thickness from null object.").into());
@@ -7351,120 +7267,151 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Thickness<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "TIP_MERGE" => Ok(Thickness::TipMerge {
+                    inner: ThicknessStruct::from_raw(env, obj)?,
+                }),
+                "TIP" => Ok(Thickness::Tip {
+                    inner: ThicknessStruct::from_raw(env, obj)?,
+                }),
+                "FRUSTUM" => Ok(Thickness::Frustum {
+                    inner: ThicknessStruct::from_raw(env, obj)?,
+                }),
+                "MIDDLE" => Ok(Thickness::Middle {
+                    inner: ThicknessStruct::from_raw(env, obj)?,
+                }),
+                "BASE" => Ok(Thickness::Base {
+                    inner: ThicknessStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Thickness<'mc> {
-    pub const TIP_MERGE: ThicknessEnum = ThicknessEnum::TipMerge;
-    pub const TIP: ThicknessEnum = ThicknessEnum::Tip;
-    pub const FRUSTUM: ThicknessEnum = ThicknessEnum::Frustum;
-    pub const MIDDLE: ThicknessEnum = ThicknessEnum::Middle;
-    pub const BASE: ThicknessEnum = ThicknessEnum::Base;
-    pub fn from_string(str: String) -> std::option::Option<ThicknessEnum> {
-        match str.as_str() {
-            "TIP_MERGE" => Some(ThicknessEnum::TipMerge),
-            "TIP" => Some(ThicknessEnum::Tip),
-            "FRUSTUM" => Some(ThicknessEnum::Frustum),
-            "MIDDLE" => Some(ThicknessEnum::Middle),
-            "BASE" => Some(ThicknessEnum::Base),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Thickness<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Thickness");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Thickness;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Thickness::from_raw(
-            &jni,
-            raw_obj,
-            Thickness::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-/// The Phase of the sensor.
-#[derive(PartialEq, Eq)]
-pub enum SculkSensorPhaseEnum {
-    Inactive,
-    Active,
-    Cooldown,
-}
-impl std::fmt::Display for SculkSensorPhaseEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            SculkSensorPhaseEnum::Inactive => f.write_str("INACTIVE"),
-            SculkSensorPhaseEnum::Active => f.write_str("ACTIVE"),
-            SculkSensorPhaseEnum::Cooldown => f.write_str("COOLDOWN"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for SculkSensorPhase<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct SculkSensorPhase<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub SculkSensorPhaseEnum,
-);
-impl<'mc> std::ops::Deref for SculkSensorPhase<'mc> {
-    type Target = SculkSensorPhaseEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for SculkSensorPhase<'mc> {
+impl<'mc> JNIRaw<'mc> for ThicknessStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for SculkSensorPhase<'mc> {
-    type Enum = SculkSensorPhaseEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for ThicknessStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate ThicknessStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Thickness")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ThicknessStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> ThicknessStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+/// The Phase of the sensor.
+pub enum SculkSensorPhase<'mc> {
+    Inactive { inner: SculkSensorPhaseStruct<'mc> },
+    Active { inner: SculkSensorPhaseStruct<'mc> },
+    Cooldown { inner: SculkSensorPhaseStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for SculkSensorPhase<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            SculkSensorPhase::Inactive { .. } => f.write_str("INACTIVE"),
+            SculkSensorPhase::Active { .. } => f.write_str("ACTIVE"),
+            SculkSensorPhase::Cooldown { .. } => f.write_str("COOLDOWN"),
+        }
+    }
+}
+
+impl<'mc> SculkSensorPhase<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<SculkSensorPhase<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/SculkSensor$Phase");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/SculkSensor$Phase;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "INACTIVE" => Ok(SculkSensorPhase::Inactive {
+                inner: SculkSensorPhaseStruct::from_raw(env, obj)?,
+            }),
+            "ACTIVE" => Ok(SculkSensorPhase::Active {
+                inner: SculkSensorPhaseStruct::from_raw(env, obj)?,
+            }),
+            "COOLDOWN" => Ok(SculkSensorPhase::Cooldown {
+                inner: SculkSensorPhaseStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct SculkSensorPhaseStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for SculkSensorPhase<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Inactive { inner } => inner.0.clone(),
+            Self::Active { inner } => inner.0.clone(),
+            Self::Cooldown { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Inactive { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Active { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Cooldown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for SculkSensorPhase<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -7480,62 +7427,65 @@ impl<'mc> JNIInstantiatableEnum<'mc> for SculkSensorPhase<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "INACTIVE" => Ok(SculkSensorPhase::Inactive {
+                    inner: SculkSensorPhaseStruct::from_raw(env, obj)?,
+                }),
+                "ACTIVE" => Ok(SculkSensorPhase::Active {
+                    inner: SculkSensorPhaseStruct::from_raw(env, obj)?,
+                }),
+                "COOLDOWN" => Ok(SculkSensorPhase::Cooldown {
+                    inner: SculkSensorPhaseStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> SculkSensorPhase<'mc> {
-    pub const INACTIVE: SculkSensorPhaseEnum = SculkSensorPhaseEnum::Inactive;
-    pub const ACTIVE: SculkSensorPhaseEnum = SculkSensorPhaseEnum::Active;
-    pub const COOLDOWN: SculkSensorPhaseEnum = SculkSensorPhaseEnum::Cooldown;
-    pub fn from_string(str: String) -> std::option::Option<SculkSensorPhaseEnum> {
-        match str.as_str() {
-            "INACTIVE" => Some(SculkSensorPhaseEnum::Inactive),
-            "ACTIVE" => Some(SculkSensorPhaseEnum::Active),
-            "COOLDOWN" => Some(SculkSensorPhaseEnum::Cooldown),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for SculkSensorPhaseStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for SculkSensorPhaseStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate SculkSensorPhaseStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/block/data/type/SculkSensor$Phase")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a SculkSensorPhaseStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<SculkSensorPhase<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/SculkSensor$Phase");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/SculkSensor$Phase;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        SculkSensorPhase::from_raw(
-            &jni,
-            raw_obj,
-            SculkSensorPhase::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> SculkSensorPhaseStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -7551,12 +7501,10 @@ impl<'mc> JNIRaw<'mc> for WallHangingSign<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for WallHangingSign<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7598,12 +7546,7 @@ impl<'mc> WallHangingSign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -7740,12 +7683,7 @@ impl<'mc> WallHangingSign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -7848,12 +7786,7 @@ impl<'mc> WallHangingSign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -7900,12 +7833,7 @@ impl<'mc> WallHangingSign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -7964,14 +7892,9 @@ impl<'mc> WallHangingSign<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for WallHangingSign<'mc> {
@@ -7999,12 +7922,10 @@ impl<'mc> JNIRaw<'mc> for TechnicalPiston<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for TechnicalPiston<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8049,12 +7970,7 @@ impl<'mc> TechnicalPiston<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::TechnicalPistonType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::TechnicalPistonType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::TechnicalPistonType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_type(
@@ -8091,12 +8007,7 @@ impl<'mc> TechnicalPiston<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -8233,12 +8144,7 @@ impl<'mc> TechnicalPiston<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -8341,12 +8247,7 @@ impl<'mc> TechnicalPiston<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -8393,12 +8294,7 @@ impl<'mc> TechnicalPiston<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -8435,14 +8331,9 @@ impl<'mc> TechnicalPiston<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for TechnicalPiston<'mc> {
@@ -8464,12 +8355,10 @@ impl<'mc> JNIRaw<'mc> for Switch<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Switch<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8512,12 +8401,7 @@ impl<'mc> Switch<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::SwitchFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::SwitchFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::SwitchFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_face(
@@ -8554,12 +8438,7 @@ impl<'mc> Switch<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -8696,12 +8575,7 @@ impl<'mc> Switch<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -8804,12 +8678,7 @@ impl<'mc> Switch<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -8856,12 +8725,7 @@ impl<'mc> Switch<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -8917,12 +8781,7 @@ impl<'mc> Switch<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::FaceAttachableAttachedFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::FaceAttachableAttachedFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::FaceAttachableAttachedFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_attached_face(
@@ -8965,14 +8824,9 @@ impl<'mc> Switch<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Switch<'mc> {
@@ -8993,55 +8847,78 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Switch<'mc> {
             .expect("Error converting Switch into crate::block::data::Powerable")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum PartEnum {
-    Head,
-    Foot,
-}
-impl std::fmt::Display for PartEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PartEnum::Head => f.write_str("HEAD"),
-            PartEnum::Foot => f.write_str("FOOT"),
-        }
-    }
+pub enum Part<'mc> {
+    Head { inner: PartStruct<'mc> },
+    Foot { inner: PartStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Part<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Part::Head { .. } => f.write_str("HEAD"),
+            Part::Foot { .. } => f.write_str("FOOT"),
+        }
     }
 }
+
+impl<'mc> Part<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Part<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Part");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Part;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "HEAD" => Ok(Part::Head {
+                inner: PartStruct::from_raw(env, obj)?,
+            }),
+            "FOOT" => Ok(Part::Foot {
+                inner: PartStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Part<'mc>(
+pub struct PartStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub PartEnum,
 );
-impl<'mc> std::ops::Deref for Part<'mc> {
-    type Target = PartEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Part<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Head { inner } => inner.0.clone(),
+            Self::Foot { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Head { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Foot { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Part<'mc> {
-    type Enum = PartEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Part<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Part from null object.").into());
@@ -9054,60 +8931,58 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Part<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "HEAD" => Ok(Part::Head {
+                    inner: PartStruct::from_raw(env, obj)?,
+                }),
+                "FOOT" => Ok(Part::Foot {
+                    inner: PartStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Part<'mc> {
-    pub const HEAD: PartEnum = PartEnum::Head;
-    pub const FOOT: PartEnum = PartEnum::Foot;
-    pub fn from_string(str: String) -> std::option::Option<PartEnum> {
-        match str.as_str() {
-            "HEAD" => Some(PartEnum::Head),
-            "FOOT" => Some(PartEnum::Foot),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for PartStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PartStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate PartStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Part")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PartStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Part<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Part");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Part;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Part::from_raw(
-            &jni,
-            raw_obj,
-            Part::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> PartStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// 'drag' indicates whether a force will be applied on entities moving through this block.
@@ -9123,12 +8998,10 @@ impl<'mc> JNIRaw<'mc> for BubbleColumn<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BubbleColumn<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9278,12 +9151,7 @@ impl<'mc> BubbleColumn<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -9386,12 +9254,7 @@ impl<'mc> BubbleColumn<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -9438,12 +9301,7 @@ impl<'mc> BubbleColumn<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -9480,14 +9338,9 @@ impl<'mc> BubbleColumn<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for BubbleColumn<'mc> {
@@ -9509,12 +9362,10 @@ impl<'mc> JNIRaw<'mc> for Bell<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Bell<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9555,12 +9406,7 @@ impl<'mc> Bell<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::BellAttachment::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::BellAttachment::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::BellAttachment::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_attachment(
@@ -9597,12 +9443,7 @@ impl<'mc> Bell<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -9739,12 +9580,7 @@ impl<'mc> Bell<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -9847,12 +9683,7 @@ impl<'mc> Bell<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -9899,12 +9730,7 @@ impl<'mc> Bell<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -9963,14 +9789,9 @@ impl<'mc> Bell<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Bell<'mc> {
@@ -9998,12 +9819,10 @@ impl<'mc> JNIRaw<'mc> for Bamboo<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Bamboo<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10044,12 +9863,7 @@ impl<'mc> Bamboo<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::BambooLeaves::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::BambooLeaves::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::BambooLeaves::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_leaves(
@@ -10206,12 +10020,7 @@ impl<'mc> Bamboo<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -10314,12 +10123,7 @@ impl<'mc> Bamboo<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -10366,12 +10170,7 @@ impl<'mc> Bamboo<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -10439,14 +10238,9 @@ impl<'mc> Bamboo<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Ageable<'mc>> for Bamboo<'mc> {
@@ -10474,12 +10268,10 @@ impl<'mc> JNIRaw<'mc> for Jigsaw<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Jigsaw<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10521,12 +10313,7 @@ impl<'mc> Jigsaw<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::JigsawOrientation::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::JigsawOrientation::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::JigsawOrientation::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_orientation(
@@ -10652,12 +10439,7 @@ impl<'mc> Jigsaw<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -10760,12 +10542,7 @@ impl<'mc> Jigsaw<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -10812,12 +10589,7 @@ impl<'mc> Jigsaw<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -10854,14 +10626,9 @@ impl<'mc> Jigsaw<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for Jigsaw<'mc> {
@@ -10883,12 +10650,10 @@ impl<'mc> JNIRaw<'mc> for Chain<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Chain<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10927,12 +10692,7 @@ impl<'mc> Chain<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Axis::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Axis::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Axis::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_axis(
@@ -11069,12 +10829,7 @@ impl<'mc> Chain<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -11177,12 +10932,7 @@ impl<'mc> Chain<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -11229,12 +10979,7 @@ impl<'mc> Chain<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -11293,14 +11038,9 @@ impl<'mc> Chain<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Orientable<'mc>> for Chain<'mc> {
@@ -11328,12 +11068,10 @@ impl<'mc> JNIRaw<'mc> for Lantern<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Lantern<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11483,12 +11221,7 @@ impl<'mc> Lantern<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -11591,12 +11324,7 @@ impl<'mc> Lantern<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -11643,12 +11371,7 @@ impl<'mc> Lantern<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -11707,14 +11430,9 @@ impl<'mc> Lantern<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Hangable<'mc>> for Lantern<'mc> {
@@ -11742,12 +11460,10 @@ impl<'mc> JNIRaw<'mc> for Dispenser<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Dispenser<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11808,12 +11524,7 @@ impl<'mc> Dispenser<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -11950,12 +11661,7 @@ impl<'mc> Dispenser<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -12058,12 +11764,7 @@ impl<'mc> Dispenser<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -12110,12 +11811,7 @@ impl<'mc> Dispenser<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -12152,14 +11848,9 @@ impl<'mc> Dispenser<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Dispenser<'mc> {
@@ -12168,61 +11859,107 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for Dispenser<'mc> {
             .expect("Error converting Dispenser into crate::block::data::Directional")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum ShapeEnum {
-    Straight,
-    InnerLeft,
-    InnerRight,
-    OuterLeft,
-    OuterRight,
-}
-impl std::fmt::Display for ShapeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ShapeEnum::Straight => f.write_str("STRAIGHT"),
-            ShapeEnum::InnerLeft => f.write_str("INNER_LEFT"),
-            ShapeEnum::InnerRight => f.write_str("INNER_RIGHT"),
-            ShapeEnum::OuterLeft => f.write_str("OUTER_LEFT"),
-            ShapeEnum::OuterRight => f.write_str("OUTER_RIGHT"),
-        }
-    }
+pub enum Shape<'mc> {
+    Straight { inner: ShapeStruct<'mc> },
+    InnerLeft { inner: ShapeStruct<'mc> },
+    InnerRight { inner: ShapeStruct<'mc> },
+    OuterLeft { inner: ShapeStruct<'mc> },
+    OuterRight { inner: ShapeStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Shape<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Shape::Straight { .. } => f.write_str("STRAIGHT"),
+            Shape::InnerLeft { .. } => f.write_str("INNER_LEFT"),
+            Shape::InnerRight { .. } => f.write_str("INNER_RIGHT"),
+            Shape::OuterLeft { .. } => f.write_str("OUTER_LEFT"),
+            Shape::OuterRight { .. } => f.write_str("OUTER_RIGHT"),
+        }
     }
 }
+
+impl<'mc> Shape<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Shape<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Shape");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Shape;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "STRAIGHT" => Ok(Shape::Straight {
+                inner: ShapeStruct::from_raw(env, obj)?,
+            }),
+            "INNER_LEFT" => Ok(Shape::InnerLeft {
+                inner: ShapeStruct::from_raw(env, obj)?,
+            }),
+            "INNER_RIGHT" => Ok(Shape::InnerRight {
+                inner: ShapeStruct::from_raw(env, obj)?,
+            }),
+            "OUTER_LEFT" => Ok(Shape::OuterLeft {
+                inner: ShapeStruct::from_raw(env, obj)?,
+            }),
+            "OUTER_RIGHT" => Ok(Shape::OuterRight {
+                inner: ShapeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Shape<'mc>(
+pub struct ShapeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub ShapeEnum,
 );
-impl<'mc> std::ops::Deref for Shape<'mc> {
-    type Target = ShapeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Shape<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Straight { inner } => inner.0.clone(),
+            Self::InnerLeft { inner } => inner.0.clone(),
+            Self::InnerRight { inner } => inner.0.clone(),
+            Self::OuterLeft { inner } => inner.0.clone(),
+            Self::OuterRight { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Straight { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::InnerLeft { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::InnerRight { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::OuterLeft { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::OuterRight { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Shape<'mc> {
-    type Enum = ShapeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Shape<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Shape from null object.").into());
@@ -12235,122 +11972,164 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Shape<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "STRAIGHT" => Ok(Shape::Straight {
+                    inner: ShapeStruct::from_raw(env, obj)?,
+                }),
+                "INNER_LEFT" => Ok(Shape::InnerLeft {
+                    inner: ShapeStruct::from_raw(env, obj)?,
+                }),
+                "INNER_RIGHT" => Ok(Shape::InnerRight {
+                    inner: ShapeStruct::from_raw(env, obj)?,
+                }),
+                "OUTER_LEFT" => Ok(Shape::OuterLeft {
+                    inner: ShapeStruct::from_raw(env, obj)?,
+                }),
+                "OUTER_RIGHT" => Ok(Shape::OuterRight {
+                    inner: ShapeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Shape<'mc> {
-    pub const STRAIGHT: ShapeEnum = ShapeEnum::Straight;
-    pub const INNER_LEFT: ShapeEnum = ShapeEnum::InnerLeft;
-    pub const INNER_RIGHT: ShapeEnum = ShapeEnum::InnerRight;
-    pub const OUTER_LEFT: ShapeEnum = ShapeEnum::OuterLeft;
-    pub const OUTER_RIGHT: ShapeEnum = ShapeEnum::OuterRight;
-    pub fn from_string(str: String) -> std::option::Option<ShapeEnum> {
-        match str.as_str() {
-            "STRAIGHT" => Some(ShapeEnum::Straight),
-            "INNER_LEFT" => Some(ShapeEnum::InnerLeft),
-            "INNER_RIGHT" => Some(ShapeEnum::InnerRight),
-            "OUTER_LEFT" => Some(ShapeEnum::OuterLeft),
-            "OUTER_RIGHT" => Some(ShapeEnum::OuterRight),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Shape<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Shape");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Shape;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Shape::from_raw(
-            &jni,
-            raw_obj,
-            Shape::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-/// Operating mode of a structure block.
-#[derive(PartialEq, Eq)]
-pub enum StructureBlockModeEnum {
-    Save,
-    Load,
-    Corner,
-    Data,
-}
-impl std::fmt::Display for StructureBlockModeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            StructureBlockModeEnum::Save => f.write_str("SAVE"),
-            StructureBlockModeEnum::Load => f.write_str("LOAD"),
-            StructureBlockModeEnum::Corner => f.write_str("CORNER"),
-            StructureBlockModeEnum::Data => f.write_str("DATA"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for StructureBlockMode<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct StructureBlockMode<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub StructureBlockModeEnum,
-);
-impl<'mc> std::ops::Deref for StructureBlockMode<'mc> {
-    type Target = StructureBlockModeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for StructureBlockMode<'mc> {
+impl<'mc> JNIRaw<'mc> for ShapeStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for StructureBlockMode<'mc> {
-    type Enum = StructureBlockModeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for ShapeStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate ShapeStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Shape")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ShapeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> ShapeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+/// Operating mode of a structure block.
+pub enum StructureBlockMode<'mc> {
+    Save {
+        inner: StructureBlockModeStruct<'mc>,
+    },
+    Load {
+        inner: StructureBlockModeStruct<'mc>,
+    },
+    Corner {
+        inner: StructureBlockModeStruct<'mc>,
+    },
+    Data {
+        inner: StructureBlockModeStruct<'mc>,
+    },
+}
+impl<'mc> std::fmt::Display for StructureBlockMode<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            StructureBlockMode::Save { .. } => f.write_str("SAVE"),
+            StructureBlockMode::Load { .. } => f.write_str("LOAD"),
+            StructureBlockMode::Corner { .. } => f.write_str("CORNER"),
+            StructureBlockMode::Data { .. } => f.write_str("DATA"),
+        }
+    }
+}
+
+impl<'mc> StructureBlockMode<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<StructureBlockMode<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/StructureBlock$Mode");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/StructureBlock$Mode;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "SAVE" => Ok(StructureBlockMode::Save {
+                inner: StructureBlockModeStruct::from_raw(env, obj)?,
+            }),
+            "LOAD" => Ok(StructureBlockMode::Load {
+                inner: StructureBlockModeStruct::from_raw(env, obj)?,
+            }),
+            "CORNER" => Ok(StructureBlockMode::Corner {
+                inner: StructureBlockModeStruct::from_raw(env, obj)?,
+            }),
+            "DATA" => Ok(StructureBlockMode::Data {
+                inner: StructureBlockModeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct StructureBlockModeStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for StructureBlockMode<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Save { inner } => inner.0.clone(),
+            Self::Load { inner } => inner.0.clone(),
+            Self::Corner { inner } => inner.0.clone(),
+            Self::Data { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Save { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Load { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Corner { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Data { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for StructureBlockMode<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -12366,64 +12145,68 @@ impl<'mc> JNIInstantiatableEnum<'mc> for StructureBlockMode<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "SAVE" => Ok(StructureBlockMode::Save {
+                    inner: StructureBlockModeStruct::from_raw(env, obj)?,
+                }),
+                "LOAD" => Ok(StructureBlockMode::Load {
+                    inner: StructureBlockModeStruct::from_raw(env, obj)?,
+                }),
+                "CORNER" => Ok(StructureBlockMode::Corner {
+                    inner: StructureBlockModeStruct::from_raw(env, obj)?,
+                }),
+                "DATA" => Ok(StructureBlockMode::Data {
+                    inner: StructureBlockModeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> StructureBlockMode<'mc> {
-    pub const SAVE: StructureBlockModeEnum = StructureBlockModeEnum::Save;
-    pub const LOAD: StructureBlockModeEnum = StructureBlockModeEnum::Load;
-    pub const CORNER: StructureBlockModeEnum = StructureBlockModeEnum::Corner;
-    pub const DATA: StructureBlockModeEnum = StructureBlockModeEnum::Data;
-    pub fn from_string(str: String) -> std::option::Option<StructureBlockModeEnum> {
-        match str.as_str() {
-            "SAVE" => Some(StructureBlockModeEnum::Save),
-            "LOAD" => Some(StructureBlockModeEnum::Load),
-            "CORNER" => Some(StructureBlockModeEnum::Corner),
-            "DATA" => Some(StructureBlockModeEnum::Data),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for StructureBlockModeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for StructureBlockModeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate StructureBlockModeStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/block/data/type/StructureBlock$Mode")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a StructureBlockModeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<StructureBlockMode<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/StructureBlock$Mode");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/StructureBlock$Mode;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        StructureBlockMode::from_raw(
-            &jni,
-            raw_obj,
-            StructureBlockMode::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> StructureBlockModeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// 'charges' represents the amount of times the anchor may still be used.
@@ -12439,12 +12222,10 @@ impl<'mc> JNIRaw<'mc> for RespawnAnchor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RespawnAnchor<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12606,12 +12387,7 @@ impl<'mc> RespawnAnchor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -12714,12 +12490,7 @@ impl<'mc> RespawnAnchor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -12766,12 +12537,7 @@ impl<'mc> RespawnAnchor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -12808,14 +12574,9 @@ impl<'mc> RespawnAnchor<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for RespawnAnchor<'mc> {
@@ -12839,12 +12600,10 @@ impl<'mc> JNIRaw<'mc> for Cake<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Cake<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13003,12 +12762,7 @@ impl<'mc> Cake<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -13111,12 +12865,7 @@ impl<'mc> Cake<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -13163,12 +12912,7 @@ impl<'mc> Cake<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -13205,14 +12949,9 @@ impl<'mc> Cake<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for Cake<'mc> {
@@ -13234,12 +12973,10 @@ impl<'mc> JNIRaw<'mc> for EndPortalFrame<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EndPortalFrame<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13302,12 +13039,7 @@ impl<'mc> EndPortalFrame<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -13444,12 +13176,7 @@ impl<'mc> EndPortalFrame<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -13552,12 +13279,7 @@ impl<'mc> EndPortalFrame<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -13604,12 +13326,7 @@ impl<'mc> EndPortalFrame<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -13646,14 +13363,9 @@ impl<'mc> EndPortalFrame<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for EndPortalFrame<'mc> {
@@ -13675,12 +13387,10 @@ impl<'mc> JNIRaw<'mc> for DecoratedPot<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for DecoratedPot<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13719,12 +13429,7 @@ impl<'mc> DecoratedPot<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -13861,12 +13566,7 @@ impl<'mc> DecoratedPot<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -13969,12 +13669,7 @@ impl<'mc> DecoratedPot<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -14021,12 +13716,7 @@ impl<'mc> DecoratedPot<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -14085,14 +13775,9 @@ impl<'mc> DecoratedPot<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for DecoratedPot<'mc> {
@@ -14120,12 +13805,10 @@ impl<'mc> JNIRaw<'mc> for GlowLichen<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for GlowLichen<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14318,12 +14001,7 @@ impl<'mc> GlowLichen<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -14426,12 +14104,7 @@ impl<'mc> GlowLichen<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -14478,12 +14151,7 @@ impl<'mc> GlowLichen<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -14542,14 +14210,9 @@ impl<'mc> GlowLichen<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::MultipleFacing<'mc>> for GlowLichen<'mc> {
@@ -14565,55 +14228,78 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for GlowLichen<'mc> {
     }
 }
 /// The mode in which a comparator will operate in.
-#[derive(PartialEq, Eq)]
-pub enum ComparatorModeEnum {
-    Compare,
-    Subtract,
-}
-impl std::fmt::Display for ComparatorModeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ComparatorModeEnum::Compare => f.write_str("COMPARE"),
-            ComparatorModeEnum::Subtract => f.write_str("SUBTRACT"),
-        }
-    }
+pub enum ComparatorMode<'mc> {
+    Compare { inner: ComparatorModeStruct<'mc> },
+    Subtract { inner: ComparatorModeStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for ComparatorMode<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            ComparatorMode::Compare { .. } => f.write_str("COMPARE"),
+            ComparatorMode::Subtract { .. } => f.write_str("SUBTRACT"),
+        }
     }
 }
+
+impl<'mc> ComparatorMode<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<ComparatorMode<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Comparator$Mode");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Comparator$Mode;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "COMPARE" => Ok(ComparatorMode::Compare {
+                inner: ComparatorModeStruct::from_raw(env, obj)?,
+            }),
+            "SUBTRACT" => Ok(ComparatorMode::Subtract {
+                inner: ComparatorModeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct ComparatorMode<'mc>(
+pub struct ComparatorModeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub ComparatorModeEnum,
 );
-impl<'mc> std::ops::Deref for ComparatorMode<'mc> {
-    type Target = ComparatorModeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for ComparatorMode<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Compare { inner } => inner.0.clone(),
+            Self::Subtract { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Compare { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Subtract { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for ComparatorMode<'mc> {
-    type Enum = ComparatorModeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for ComparatorMode<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -14629,60 +14315,61 @@ impl<'mc> JNIInstantiatableEnum<'mc> for ComparatorMode<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "COMPARE" => Ok(ComparatorMode::Compare {
+                    inner: ComparatorModeStruct::from_raw(env, obj)?,
+                }),
+                "SUBTRACT" => Ok(ComparatorMode::Subtract {
+                    inner: ComparatorModeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> ComparatorMode<'mc> {
-    pub const COMPARE: ComparatorModeEnum = ComparatorModeEnum::Compare;
-    pub const SUBTRACT: ComparatorModeEnum = ComparatorModeEnum::Subtract;
-    pub fn from_string(str: String) -> std::option::Option<ComparatorModeEnum> {
-        match str.as_str() {
-            "COMPARE" => Some(ComparatorModeEnum::Compare),
-            "SUBTRACT" => Some(ComparatorModeEnum::Subtract),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for ComparatorModeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ComparatorModeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate ComparatorModeStruct from null object.").into(),
+            );
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/block/data/type/Comparator$Mode")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ComparatorModeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<ComparatorMode<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Comparator$Mode");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Comparator$Mode;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        ComparatorMode::from_raw(
-            &jni,
-            raw_obj,
-            ComparatorMode::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> ComparatorModeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -14698,12 +14385,10 @@ impl<'mc> JNIRaw<'mc> for Observer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Observer<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14742,12 +14427,7 @@ impl<'mc> Observer<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -14884,12 +14564,7 @@ impl<'mc> Observer<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -14992,12 +14667,7 @@ impl<'mc> Observer<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -15044,12 +14714,7 @@ impl<'mc> Observer<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -15108,14 +14773,9 @@ impl<'mc> Observer<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Observer<'mc> {
@@ -15131,59 +14791,96 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Observer<'mc> {
     }
 }
 /// What the bell is attached to.
-#[derive(PartialEq, Eq)]
-pub enum BellAttachmentEnum {
-    Floor,
-    Ceiling,
-    SingleWall,
-    DoubleWall,
-}
-impl std::fmt::Display for BellAttachmentEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            BellAttachmentEnum::Floor => f.write_str("FLOOR"),
-            BellAttachmentEnum::Ceiling => f.write_str("CEILING"),
-            BellAttachmentEnum::SingleWall => f.write_str("SINGLE_WALL"),
-            BellAttachmentEnum::DoubleWall => f.write_str("DOUBLE_WALL"),
-        }
-    }
+pub enum BellAttachment<'mc> {
+    Floor { inner: BellAttachmentStruct<'mc> },
+    Ceiling { inner: BellAttachmentStruct<'mc> },
+    SingleWall { inner: BellAttachmentStruct<'mc> },
+    DoubleWall { inner: BellAttachmentStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for BellAttachment<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            BellAttachment::Floor { .. } => f.write_str("FLOOR"),
+            BellAttachment::Ceiling { .. } => f.write_str("CEILING"),
+            BellAttachment::SingleWall { .. } => f.write_str("SINGLE_WALL"),
+            BellAttachment::DoubleWall { .. } => f.write_str("DOUBLE_WALL"),
+        }
     }
 }
+
+impl<'mc> BellAttachment<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<BellAttachment<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Bell$Attachment");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Bell$Attachment;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "FLOOR" => Ok(BellAttachment::Floor {
+                inner: BellAttachmentStruct::from_raw(env, obj)?,
+            }),
+            "CEILING" => Ok(BellAttachment::Ceiling {
+                inner: BellAttachmentStruct::from_raw(env, obj)?,
+            }),
+            "SINGLE_WALL" => Ok(BellAttachment::SingleWall {
+                inner: BellAttachmentStruct::from_raw(env, obj)?,
+            }),
+            "DOUBLE_WALL" => Ok(BellAttachment::DoubleWall {
+                inner: BellAttachmentStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct BellAttachment<'mc>(
+pub struct BellAttachmentStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub BellAttachmentEnum,
 );
-impl<'mc> std::ops::Deref for BellAttachment<'mc> {
-    type Target = BellAttachmentEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for BellAttachment<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Floor { inner } => inner.0.clone(),
+            Self::Ceiling { inner } => inner.0.clone(),
+            Self::SingleWall { inner } => inner.0.clone(),
+            Self::DoubleWall { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Floor { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Ceiling { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SingleWall { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DoubleWall { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for BellAttachment<'mc> {
-    type Enum = BellAttachmentEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for BellAttachment<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -15199,64 +14896,67 @@ impl<'mc> JNIInstantiatableEnum<'mc> for BellAttachment<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "FLOOR" => Ok(BellAttachment::Floor {
+                    inner: BellAttachmentStruct::from_raw(env, obj)?,
+                }),
+                "CEILING" => Ok(BellAttachment::Ceiling {
+                    inner: BellAttachmentStruct::from_raw(env, obj)?,
+                }),
+                "SINGLE_WALL" => Ok(BellAttachment::SingleWall {
+                    inner: BellAttachmentStruct::from_raw(env, obj)?,
+                }),
+                "DOUBLE_WALL" => Ok(BellAttachment::DoubleWall {
+                    inner: BellAttachmentStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> BellAttachment<'mc> {
-    pub const FLOOR: BellAttachmentEnum = BellAttachmentEnum::Floor;
-    pub const CEILING: BellAttachmentEnum = BellAttachmentEnum::Ceiling;
-    pub const SINGLE_WALL: BellAttachmentEnum = BellAttachmentEnum::SingleWall;
-    pub const DOUBLE_WALL: BellAttachmentEnum = BellAttachmentEnum::DoubleWall;
-    pub fn from_string(str: String) -> std::option::Option<BellAttachmentEnum> {
-        match str.as_str() {
-            "FLOOR" => Some(BellAttachmentEnum::Floor),
-            "CEILING" => Some(BellAttachmentEnum::Ceiling),
-            "SINGLE_WALL" => Some(BellAttachmentEnum::SingleWall),
-            "DOUBLE_WALL" => Some(BellAttachmentEnum::DoubleWall),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for BellAttachmentStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for BellAttachmentStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate BellAttachmentStruct from null object.").into(),
+            );
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/block/data/type/Bell$Attachment")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BellAttachmentStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<BellAttachment<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Bell$Attachment");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Bell$Attachment;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        BellAttachment::from_raw(
-            &jni,
-            raw_obj,
-            BellAttachment::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> BellAttachmentStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// 'shape' represents the texture and bounding box shape of these stairs.
@@ -15272,12 +14972,10 @@ impl<'mc> JNIRaw<'mc> for Stairs<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Stairs<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15318,12 +15016,7 @@ impl<'mc> Stairs<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::StairsShape::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::StairsShape::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::StairsShape::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_shape(
@@ -15362,12 +15055,7 @@ impl<'mc> Stairs<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::BisectedHalf::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::BisectedHalf::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::BisectedHalf::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_half(
@@ -15493,12 +15181,7 @@ impl<'mc> Stairs<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -15601,12 +15284,7 @@ impl<'mc> Stairs<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -15653,12 +15331,7 @@ impl<'mc> Stairs<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -15711,12 +15384,7 @@ impl<'mc> Stairs<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -15770,14 +15438,9 @@ impl<'mc> Stairs<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Bisected<'mc>> for Stairs<'mc> {
@@ -15799,55 +15462,78 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Stairs<'mc> {
     }
 }
 /// The hinge of a door.
-#[derive(PartialEq, Eq)]
-pub enum DoorHingeEnum {
-    Left,
-    Right,
-}
-impl std::fmt::Display for DoorHingeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            DoorHingeEnum::Left => f.write_str("LEFT"),
-            DoorHingeEnum::Right => f.write_str("RIGHT"),
-        }
-    }
+pub enum DoorHinge<'mc> {
+    Left { inner: DoorHingeStruct<'mc> },
+    Right { inner: DoorHingeStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for DoorHinge<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            DoorHinge::Left { .. } => f.write_str("LEFT"),
+            DoorHinge::Right { .. } => f.write_str("RIGHT"),
+        }
     }
 }
+
+impl<'mc> DoorHinge<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<DoorHinge<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Door$Hinge");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Door$Hinge;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "LEFT" => Ok(DoorHinge::Left {
+                inner: DoorHingeStruct::from_raw(env, obj)?,
+            }),
+            "RIGHT" => Ok(DoorHinge::Right {
+                inner: DoorHingeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct DoorHinge<'mc>(
+pub struct DoorHingeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub DoorHingeEnum,
 );
-impl<'mc> std::ops::Deref for DoorHinge<'mc> {
-    type Target = DoorHingeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for DoorHinge<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Left { inner } => inner.0.clone(),
+            Self::Right { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Left { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Right { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for DoorHinge<'mc> {
-    type Enum = DoorHingeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for DoorHinge<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate DoorHinge from null object.").into());
@@ -15860,60 +15546,60 @@ impl<'mc> JNIInstantiatableEnum<'mc> for DoorHinge<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "LEFT" => Ok(DoorHinge::Left {
+                    inner: DoorHingeStruct::from_raw(env, obj)?,
+                }),
+                "RIGHT" => Ok(DoorHinge::Right {
+                    inner: DoorHingeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> DoorHinge<'mc> {
-    pub const LEFT: DoorHingeEnum = DoorHingeEnum::Left;
-    pub const RIGHT: DoorHingeEnum = DoorHingeEnum::Right;
-    pub fn from_string(str: String) -> std::option::Option<DoorHingeEnum> {
-        match str.as_str() {
-            "LEFT" => Some(DoorHingeEnum::Left),
-            "RIGHT" => Some(DoorHingeEnum::Right),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for DoorHingeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for DoorHingeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate DoorHingeStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Door$Hinge")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a DoorHingeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<DoorHinge<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Door$Hinge");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Door$Hinge;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        DoorHinge::from_raw(
-            &jni,
-            raw_obj,
-            DoorHinge::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> DoorHingeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -15929,12 +15615,10 @@ impl<'mc> JNIRaw<'mc> for CalibratedSculkSensor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CalibratedSculkSensor<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15977,12 +15661,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -16119,12 +15798,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -16227,12 +15901,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -16279,12 +15948,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -16340,12 +16004,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::SculkSensorPhase::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::SculkSensorPhase::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::SculkSensorPhase::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_phase(
@@ -16419,14 +16078,9 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for CalibratedSculkSensor<'mc> {
@@ -16442,57 +16096,85 @@ impl<'mc> Into<crate::block::data::mod_type::SculkSensor<'mc>> for CalibratedScu
         )
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum FaceEnum {
-    Floor,
-    Wall,
-    Ceiling,
-}
-impl std::fmt::Display for FaceEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            FaceEnum::Floor => f.write_str("FLOOR"),
-            FaceEnum::Wall => f.write_str("WALL"),
-            FaceEnum::Ceiling => f.write_str("CEILING"),
-        }
-    }
+pub enum Face<'mc> {
+    Floor { inner: FaceStruct<'mc> },
+    Wall { inner: FaceStruct<'mc> },
+    Ceiling { inner: FaceStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Face<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Face::Floor { .. } => f.write_str("FLOOR"),
+            Face::Wall { .. } => f.write_str("WALL"),
+            Face::Ceiling { .. } => f.write_str("CEILING"),
+        }
     }
 }
+
+impl<'mc> Face<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Face<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Face");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Face;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "FLOOR" => Ok(Face::Floor {
+                inner: FaceStruct::from_raw(env, obj)?,
+            }),
+            "WALL" => Ok(Face::Wall {
+                inner: FaceStruct::from_raw(env, obj)?,
+            }),
+            "CEILING" => Ok(Face::Ceiling {
+                inner: FaceStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Face<'mc>(
+pub struct FaceStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub FaceEnum,
 );
-impl<'mc> std::ops::Deref for Face<'mc> {
-    type Target = FaceEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Face<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Floor { inner } => inner.0.clone(),
+            Self::Wall { inner } => inner.0.clone(),
+            Self::Ceiling { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Floor { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Wall { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Ceiling { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Face<'mc> {
-    type Enum = FaceEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Face<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Face from null object.").into());
@@ -16505,62 +16187,61 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Face<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "FLOOR" => Ok(Face::Floor {
+                    inner: FaceStruct::from_raw(env, obj)?,
+                }),
+                "WALL" => Ok(Face::Wall {
+                    inner: FaceStruct::from_raw(env, obj)?,
+                }),
+                "CEILING" => Ok(Face::Ceiling {
+                    inner: FaceStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Face<'mc> {
-    pub const FLOOR: FaceEnum = FaceEnum::Floor;
-    pub const WALL: FaceEnum = FaceEnum::Wall;
-    pub const CEILING: FaceEnum = FaceEnum::Ceiling;
-    pub fn from_string(str: String) -> std::option::Option<FaceEnum> {
-        match str.as_str() {
-            "FLOOR" => Some(FaceEnum::Floor),
-            "WALL" => Some(FaceEnum::Wall),
-            "CEILING" => Some(FaceEnum::Ceiling),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for FaceStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for FaceStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate FaceStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Face")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a FaceStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Face<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Face");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Face;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Face::from_raw(
-            &jni,
-            raw_obj,
-            Face::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> FaceStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -16576,12 +16257,10 @@ impl<'mc> JNIRaw<'mc> for EnderChest<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EnderChest<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16620,12 +16299,7 @@ impl<'mc> EnderChest<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -16762,12 +16436,7 @@ impl<'mc> EnderChest<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -16870,12 +16539,7 @@ impl<'mc> EnderChest<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -16922,12 +16586,7 @@ impl<'mc> EnderChest<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -16986,14 +16645,9 @@ impl<'mc> EnderChest<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for EnderChest<'mc> {
@@ -17023,12 +16677,10 @@ impl<'mc> JNIRaw<'mc> for Bed<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Bed<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -17069,12 +16721,7 @@ impl<'mc> Bed<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::BedPart::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::BedPart::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::BedPart::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_part(
@@ -17120,12 +16767,7 @@ impl<'mc> Bed<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -17262,12 +16904,7 @@ impl<'mc> Bed<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -17370,12 +17007,7 @@ impl<'mc> Bed<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -17422,12 +17054,7 @@ impl<'mc> Bed<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -17464,14 +17091,9 @@ impl<'mc> Bed<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Bed<'mc> {
@@ -17483,57 +17105,85 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for Bed<'mc> {
 /// Type of this chest block.
 ///
 /// NB: Left and right are relative to the chest itself, i.e opposite to what a player placing the appropriate block would see.
-#[derive(PartialEq, Eq)]
-pub enum ChestTypeEnum {
-    Single,
-    Left,
-    Right,
-}
-impl std::fmt::Display for ChestTypeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ChestTypeEnum::Single => f.write_str("SINGLE"),
-            ChestTypeEnum::Left => f.write_str("LEFT"),
-            ChestTypeEnum::Right => f.write_str("RIGHT"),
-        }
-    }
+pub enum ChestType<'mc> {
+    Single { inner: ChestTypeStruct<'mc> },
+    Left { inner: ChestTypeStruct<'mc> },
+    Right { inner: ChestTypeStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for ChestType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            ChestType::Single { .. } => f.write_str("SINGLE"),
+            ChestType::Left { .. } => f.write_str("LEFT"),
+            ChestType::Right { .. } => f.write_str("RIGHT"),
+        }
     }
 }
+
+impl<'mc> ChestType<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<ChestType<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Chest$Type");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Chest$Type;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "SINGLE" => Ok(ChestType::Single {
+                inner: ChestTypeStruct::from_raw(env, obj)?,
+            }),
+            "LEFT" => Ok(ChestType::Left {
+                inner: ChestTypeStruct::from_raw(env, obj)?,
+            }),
+            "RIGHT" => Ok(ChestType::Right {
+                inner: ChestTypeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct ChestType<'mc>(
+pub struct ChestTypeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub ChestTypeEnum,
 );
-impl<'mc> std::ops::Deref for ChestType<'mc> {
-    type Target = ChestTypeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for ChestType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Single { inner } => inner.0.clone(),
+            Self::Left { inner } => inner.0.clone(),
+            Self::Right { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Single { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Left { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Right { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for ChestType<'mc> {
-    type Enum = ChestTypeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for ChestType<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate ChestType from null object.").into());
@@ -17546,62 +17196,63 @@ impl<'mc> JNIInstantiatableEnum<'mc> for ChestType<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "SINGLE" => Ok(ChestType::Single {
+                    inner: ChestTypeStruct::from_raw(env, obj)?,
+                }),
+                "LEFT" => Ok(ChestType::Left {
+                    inner: ChestTypeStruct::from_raw(env, obj)?,
+                }),
+                "RIGHT" => Ok(ChestType::Right {
+                    inner: ChestTypeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> ChestType<'mc> {
-    pub const SINGLE: ChestTypeEnum = ChestTypeEnum::Single;
-    pub const LEFT: ChestTypeEnum = ChestTypeEnum::Left;
-    pub const RIGHT: ChestTypeEnum = ChestTypeEnum::Right;
-    pub fn from_string(str: String) -> std::option::Option<ChestTypeEnum> {
-        match str.as_str() {
-            "SINGLE" => Some(ChestTypeEnum::Single),
-            "LEFT" => Some(ChestTypeEnum::Left),
-            "RIGHT" => Some(ChestTypeEnum::Right),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for ChestTypeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ChestTypeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate ChestTypeStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Chest$Type")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ChestTypeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<ChestType<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Chest$Type");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Chest$Type;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        ChestType::from_raw(
-            &jni,
-            raw_obj,
-            ChestType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> ChestTypeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -17617,12 +17268,10 @@ impl<'mc> JNIRaw<'mc> for AmethystCluster<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for AmethystCluster<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -17664,12 +17313,7 @@ impl<'mc> AmethystCluster<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -17806,12 +17450,7 @@ impl<'mc> AmethystCluster<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -17914,12 +17553,7 @@ impl<'mc> AmethystCluster<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -17966,12 +17600,7 @@ impl<'mc> AmethystCluster<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -18030,14 +17659,9 @@ impl<'mc> AmethystCluster<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for AmethystCluster<'mc> {
@@ -18067,12 +17691,10 @@ impl<'mc> JNIRaw<'mc> for NoteBlock<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for NoteBlock<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -18114,12 +17736,7 @@ impl<'mc> NoteBlock<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        Ok(Some(crate::Instrument::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Instrument::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )?))
+        Ok(Some(crate::Instrument::from_raw(&self.jni_ref(), raw_obj)?))
     }
 
     pub fn set_instrument(
@@ -18296,12 +17913,7 @@ impl<'mc> NoteBlock<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -18404,12 +18016,7 @@ impl<'mc> NoteBlock<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -18456,12 +18063,7 @@ impl<'mc> NoteBlock<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -18498,14 +18100,9 @@ impl<'mc> NoteBlock<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Powerable<'mc>> for NoteBlock<'mc> {
@@ -18514,57 +18111,85 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for NoteBlock<'mc> {
             .expect("Error converting NoteBlock into crate::block::data::Powerable")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum ConnectionEnum {
-    Up,
-    Side,
-    None,
-}
-impl std::fmt::Display for ConnectionEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ConnectionEnum::Up => f.write_str("UP"),
-            ConnectionEnum::Side => f.write_str("SIDE"),
-            ConnectionEnum::None => f.write_str("NONE"),
-        }
-    }
+pub enum Connection<'mc> {
+    Up { inner: ConnectionStruct<'mc> },
+    Side { inner: ConnectionStruct<'mc> },
+    None { inner: ConnectionStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Connection<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Connection::Up { .. } => f.write_str("UP"),
+            Connection::Side { .. } => f.write_str("SIDE"),
+            Connection::None { .. } => f.write_str("NONE"),
+        }
     }
 }
+
+impl<'mc> Connection<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Connection<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Connection");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Connection;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "UP" => Ok(Connection::Up {
+                inner: ConnectionStruct::from_raw(env, obj)?,
+            }),
+            "SIDE" => Ok(Connection::Side {
+                inner: ConnectionStruct::from_raw(env, obj)?,
+            }),
+            "NONE" => Ok(Connection::None {
+                inner: ConnectionStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Connection<'mc>(
+pub struct ConnectionStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub ConnectionEnum,
 );
-impl<'mc> std::ops::Deref for Connection<'mc> {
-    type Target = ConnectionEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Connection<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Up { inner } => inner.0.clone(),
+            Self::Side { inner } => inner.0.clone(),
+            Self::None { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Up { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Side { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Connection<'mc> {
-    type Enum = ConnectionEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Connection<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Connection from null object.").into());
@@ -18577,62 +18202,63 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Connection<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "UP" => Ok(Connection::Up {
+                    inner: ConnectionStruct::from_raw(env, obj)?,
+                }),
+                "SIDE" => Ok(Connection::Side {
+                    inner: ConnectionStruct::from_raw(env, obj)?,
+                }),
+                "NONE" => Ok(Connection::None {
+                    inner: ConnectionStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Connection<'mc> {
-    pub const UP: ConnectionEnum = ConnectionEnum::Up;
-    pub const SIDE: ConnectionEnum = ConnectionEnum::Side;
-    pub const NONE: ConnectionEnum = ConnectionEnum::None;
-    pub fn from_string(str: String) -> std::option::Option<ConnectionEnum> {
-        match str.as_str() {
-            "UP" => Some(ConnectionEnum::Up),
-            "SIDE" => Some(ConnectionEnum::Side),
-            "NONE" => Some(ConnectionEnum::None),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for ConnectionStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ConnectionStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate ConnectionStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Connection")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ConnectionStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Connection<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Connection");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Connection;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Connection::from_raw(
-            &jni,
-            raw_obj,
-            Connection::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> ConnectionStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -18648,12 +18274,10 @@ impl<'mc> JNIRaw<'mc> for MangrovePropagule<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MangrovePropagule<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -18815,12 +18439,7 @@ impl<'mc> MangrovePropagule<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -18923,12 +18542,7 @@ impl<'mc> MangrovePropagule<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -18975,12 +18589,7 @@ impl<'mc> MangrovePropagule<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -19092,14 +18701,9 @@ impl<'mc> MangrovePropagule<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Ageable<'mc>> for MangrovePropagule<'mc> {
@@ -19139,12 +18743,10 @@ impl<'mc> JNIRaw<'mc> for SculkSensor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SculkSensor<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19186,12 +18788,7 @@ impl<'mc> SculkSensor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::SculkSensorPhase::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::SculkSensorPhase::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::SculkSensorPhase::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_phase(
@@ -19348,12 +18945,7 @@ impl<'mc> SculkSensor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -19456,12 +19048,7 @@ impl<'mc> SculkSensor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -19508,12 +19095,7 @@ impl<'mc> SculkSensor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -19572,14 +19154,9 @@ impl<'mc> SculkSensor<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::AnaloguePowerable<'mc>> for SculkSensor<'mc> {
@@ -19607,12 +19184,10 @@ impl<'mc> JNIRaw<'mc> for BigDripleaf<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BigDripleaf<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19654,12 +19229,7 @@ impl<'mc> BigDripleaf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::BigDripleafTilt::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::BigDripleafTilt::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::BigDripleafTilt::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_tilt(
@@ -19696,12 +19266,7 @@ impl<'mc> BigDripleaf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -19838,12 +19403,7 @@ impl<'mc> BigDripleaf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -19946,12 +19506,7 @@ impl<'mc> BigDripleaf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -19998,12 +19553,7 @@ impl<'mc> BigDripleaf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -20062,14 +19612,9 @@ impl<'mc> BigDripleaf<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::mod_type::Dripleaf<'mc>> for BigDripleaf<'mc> {
@@ -20091,12 +19636,10 @@ impl<'mc> JNIRaw<'mc> for Ladder<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Ladder<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20135,12 +19678,7 @@ impl<'mc> Ladder<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -20277,12 +19815,7 @@ impl<'mc> Ladder<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -20385,12 +19918,7 @@ impl<'mc> Ladder<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -20437,12 +19965,7 @@ impl<'mc> Ladder<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -20501,14 +20024,9 @@ impl<'mc> Ladder<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Ladder<'mc> {
@@ -20540,12 +20058,10 @@ impl<'mc> JNIRaw<'mc> for Scaffolding<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Scaffolding<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20751,12 +20267,7 @@ impl<'mc> Scaffolding<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -20859,12 +20370,7 @@ impl<'mc> Scaffolding<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -20911,12 +20417,7 @@ impl<'mc> Scaffolding<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -20953,14 +20454,9 @@ impl<'mc> Scaffolding<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Scaffolding<'mc> {
@@ -20984,12 +20480,10 @@ impl<'mc> JNIRaw<'mc> for BrewingStand<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BrewingStand<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21173,12 +20667,7 @@ impl<'mc> BrewingStand<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -21281,12 +20770,7 @@ impl<'mc> BrewingStand<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -21333,12 +20817,7 @@ impl<'mc> BrewingStand<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -21375,14 +20854,9 @@ impl<'mc> BrewingStand<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for BrewingStand<'mc> {
@@ -21404,12 +20878,10 @@ impl<'mc> JNIRaw<'mc> for Fire<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Fire<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21568,12 +21040,7 @@ impl<'mc> Fire<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -21676,12 +21143,7 @@ impl<'mc> Fire<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -21728,12 +21190,7 @@ impl<'mc> Fire<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -21835,14 +21292,9 @@ impl<'mc> Fire<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Ageable<'mc>> for Fire<'mc> {
@@ -21872,12 +21324,10 @@ impl<'mc> JNIRaw<'mc> for Hopper<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Hopper<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21938,12 +21388,7 @@ impl<'mc> Hopper<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -22080,12 +21525,7 @@ impl<'mc> Hopper<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -22188,12 +21628,7 @@ impl<'mc> Hopper<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -22240,12 +21675,7 @@ impl<'mc> Hopper<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -22282,14 +21712,9 @@ impl<'mc> Hopper<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Hopper<'mc> {
@@ -22317,12 +21742,10 @@ impl<'mc> JNIRaw<'mc> for Repeater<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Repeater<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22423,12 +21846,7 @@ impl<'mc> Repeater<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -22565,12 +21983,7 @@ impl<'mc> Repeater<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -22673,12 +22086,7 @@ impl<'mc> Repeater<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -22725,12 +22133,7 @@ impl<'mc> Repeater<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -22789,14 +22192,9 @@ impl<'mc> Repeater<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Repeater<'mc> {
@@ -22824,12 +22222,10 @@ impl<'mc> JNIRaw<'mc> for Slab<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Slab<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22870,12 +22266,7 @@ impl<'mc> Slab<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::SlabType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::SlabType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::SlabType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_type(
@@ -23023,12 +22414,7 @@ impl<'mc> Slab<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -23131,12 +22517,7 @@ impl<'mc> Slab<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -23183,12 +22564,7 @@ impl<'mc> Slab<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -23225,14 +22601,9 @@ impl<'mc> Slab<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Slab<'mc> {
@@ -23256,12 +22627,10 @@ impl<'mc> JNIRaw<'mc> for Snow<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Snow<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23435,12 +22804,7 @@ impl<'mc> Snow<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -23543,12 +22907,7 @@ impl<'mc> Snow<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -23595,12 +22954,7 @@ impl<'mc> Snow<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -23637,14 +22991,9 @@ impl<'mc> Snow<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for Snow<'mc> {
@@ -23654,57 +23003,91 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Snow<'mc> {
     }
 }
 /// The way in which a redstone wire can connect to an adjacent block face.
-#[derive(PartialEq, Eq)]
-pub enum RedstoneWireConnectionEnum {
-    Up,
-    Side,
-    None,
-}
-impl std::fmt::Display for RedstoneWireConnectionEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            RedstoneWireConnectionEnum::Up => f.write_str("UP"),
-            RedstoneWireConnectionEnum::Side => f.write_str("SIDE"),
-            RedstoneWireConnectionEnum::None => f.write_str("NONE"),
-        }
-    }
+pub enum RedstoneWireConnection<'mc> {
+    Up {
+        inner: RedstoneWireConnectionStruct<'mc>,
+    },
+    Side {
+        inner: RedstoneWireConnectionStruct<'mc>,
+    },
+    None {
+        inner: RedstoneWireConnectionStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for RedstoneWireConnection<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            RedstoneWireConnection::Up { .. } => f.write_str("UP"),
+            RedstoneWireConnection::Side { .. } => f.write_str("SIDE"),
+            RedstoneWireConnection::None { .. } => f.write_str("NONE"),
+        }
     }
 }
+
+impl<'mc> RedstoneWireConnection<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<RedstoneWireConnection<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/RedstoneWire$Connection");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/RedstoneWire$Connection;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "UP" => Ok(RedstoneWireConnection::Up {
+                inner: RedstoneWireConnectionStruct::from_raw(env, obj)?,
+            }),
+            "SIDE" => Ok(RedstoneWireConnection::Side {
+                inner: RedstoneWireConnectionStruct::from_raw(env, obj)?,
+            }),
+            "NONE" => Ok(RedstoneWireConnection::None {
+                inner: RedstoneWireConnectionStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct RedstoneWireConnection<'mc>(
+pub struct RedstoneWireConnectionStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub RedstoneWireConnectionEnum,
 );
-impl<'mc> std::ops::Deref for RedstoneWireConnection<'mc> {
-    type Target = RedstoneWireConnectionEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for RedstoneWireConnection<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Up { inner } => inner.0.clone(),
+            Self::Side { inner } => inner.0.clone(),
+            Self::None { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Up { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Side { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for RedstoneWireConnection<'mc> {
-    type Enum = RedstoneWireConnectionEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for RedstoneWireConnection<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -23721,117 +23104,157 @@ impl<'mc> JNIInstantiatableEnum<'mc> for RedstoneWireConnection<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "UP" => Ok(RedstoneWireConnection::Up {
+                    inner: RedstoneWireConnectionStruct::from_raw(env, obj)?,
+                }),
+                "SIDE" => Ok(RedstoneWireConnection::Side {
+                    inner: RedstoneWireConnectionStruct::from_raw(env, obj)?,
+                }),
+                "NONE" => Ok(RedstoneWireConnection::None {
+                    inner: RedstoneWireConnectionStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> RedstoneWireConnection<'mc> {
-    pub const UP: RedstoneWireConnectionEnum = RedstoneWireConnectionEnum::Up;
-    pub const SIDE: RedstoneWireConnectionEnum = RedstoneWireConnectionEnum::Side;
-    pub const NONE: RedstoneWireConnectionEnum = RedstoneWireConnectionEnum::None;
-    pub fn from_string(str: String) -> std::option::Option<RedstoneWireConnectionEnum> {
-        match str.as_str() {
-            "UP" => Some(RedstoneWireConnectionEnum::Up),
-            "SIDE" => Some(RedstoneWireConnectionEnum::Side),
-            "NONE" => Some(RedstoneWireConnectionEnum::None),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<RedstoneWireConnection<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/RedstoneWire$Connection");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/RedstoneWire$Connection;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        RedstoneWireConnection::from_raw(
-            &jni,
-            raw_obj,
-            RedstoneWireConnection::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-#[derive(PartialEq, Eq)]
-pub enum AttachmentEnum {
-    Floor,
-    Ceiling,
-    SingleWall,
-    DoubleWall,
-}
-impl std::fmt::Display for AttachmentEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            AttachmentEnum::Floor => f.write_str("FLOOR"),
-            AttachmentEnum::Ceiling => f.write_str("CEILING"),
-            AttachmentEnum::SingleWall => f.write_str("SINGLE_WALL"),
-            AttachmentEnum::DoubleWall => f.write_str("DOUBLE_WALL"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for Attachment<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct Attachment<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub AttachmentEnum,
-);
-impl<'mc> std::ops::Deref for Attachment<'mc> {
-    type Target = AttachmentEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for Attachment<'mc> {
+impl<'mc> JNIRaw<'mc> for RedstoneWireConnectionStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Attachment<'mc> {
-    type Enum = AttachmentEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for RedstoneWireConnectionStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate RedstoneWireConnectionStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/block/data/type/RedstoneWire$Connection")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a RedstoneWireConnectionStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> RedstoneWireConnectionStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+pub enum Attachment<'mc> {
+    Floor { inner: AttachmentStruct<'mc> },
+    Ceiling { inner: AttachmentStruct<'mc> },
+    SingleWall { inner: AttachmentStruct<'mc> },
+    DoubleWall { inner: AttachmentStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for Attachment<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Attachment::Floor { .. } => f.write_str("FLOOR"),
+            Attachment::Ceiling { .. } => f.write_str("CEILING"),
+            Attachment::SingleWall { .. } => f.write_str("SINGLE_WALL"),
+            Attachment::DoubleWall { .. } => f.write_str("DOUBLE_WALL"),
+        }
+    }
+}
+
+impl<'mc> Attachment<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Attachment<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Attachment");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Attachment;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "FLOOR" => Ok(Attachment::Floor {
+                inner: AttachmentStruct::from_raw(env, obj)?,
+            }),
+            "CEILING" => Ok(Attachment::Ceiling {
+                inner: AttachmentStruct::from_raw(env, obj)?,
+            }),
+            "SINGLE_WALL" => Ok(Attachment::SingleWall {
+                inner: AttachmentStruct::from_raw(env, obj)?,
+            }),
+            "DOUBLE_WALL" => Ok(Attachment::DoubleWall {
+                inner: AttachmentStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct AttachmentStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Attachment<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Floor { inner } => inner.0.clone(),
+            Self::Ceiling { inner } => inner.0.clone(),
+            Self::SingleWall { inner } => inner.0.clone(),
+            Self::DoubleWall { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Floor { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Ceiling { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SingleWall { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DoubleWall { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for Attachment<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Attachment from null object.").into());
@@ -23844,64 +23267,66 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Attachment<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "FLOOR" => Ok(Attachment::Floor {
+                    inner: AttachmentStruct::from_raw(env, obj)?,
+                }),
+                "CEILING" => Ok(Attachment::Ceiling {
+                    inner: AttachmentStruct::from_raw(env, obj)?,
+                }),
+                "SINGLE_WALL" => Ok(Attachment::SingleWall {
+                    inner: AttachmentStruct::from_raw(env, obj)?,
+                }),
+                "DOUBLE_WALL" => Ok(Attachment::DoubleWall {
+                    inner: AttachmentStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Attachment<'mc> {
-    pub const FLOOR: AttachmentEnum = AttachmentEnum::Floor;
-    pub const CEILING: AttachmentEnum = AttachmentEnum::Ceiling;
-    pub const SINGLE_WALL: AttachmentEnum = AttachmentEnum::SingleWall;
-    pub const DOUBLE_WALL: AttachmentEnum = AttachmentEnum::DoubleWall;
-    pub fn from_string(str: String) -> std::option::Option<AttachmentEnum> {
-        match str.as_str() {
-            "FLOOR" => Some(AttachmentEnum::Floor),
-            "CEILING" => Some(AttachmentEnum::Ceiling),
-            "SINGLE_WALL" => Some(AttachmentEnum::SingleWall),
-            "DOUBLE_WALL" => Some(AttachmentEnum::DoubleWall),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for AttachmentStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for AttachmentStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate AttachmentStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Attachment")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a AttachmentStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Attachment<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Attachment");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Attachment;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Attachment::from_raw(
-            &jni,
-            raw_obj,
-            Attachment::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> AttachmentStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -23917,12 +23342,10 @@ impl<'mc> JNIRaw<'mc> for Cocoa<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Cocoa<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24081,12 +23504,7 @@ impl<'mc> Cocoa<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -24189,12 +23607,7 @@ impl<'mc> Cocoa<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -24241,12 +23654,7 @@ impl<'mc> Cocoa<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -24299,12 +23707,7 @@ impl<'mc> Cocoa<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -24336,14 +23739,9 @@ impl<'mc> Cocoa<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Ageable<'mc>> for Cocoa<'mc> {
@@ -24371,12 +23769,10 @@ impl<'mc> JNIRaw<'mc> for Comparator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Comparator<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24417,12 +23813,7 @@ impl<'mc> Comparator<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::ComparatorMode::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::ComparatorMode::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::ComparatorMode::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_mode(
@@ -24459,12 +23850,7 @@ impl<'mc> Comparator<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -24601,12 +23987,7 @@ impl<'mc> Comparator<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -24709,12 +24090,7 @@ impl<'mc> Comparator<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -24761,12 +24137,7 @@ impl<'mc> Comparator<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -24825,14 +24196,9 @@ impl<'mc> Comparator<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Comparator<'mc> {
@@ -24860,12 +24226,10 @@ impl<'mc> JNIRaw<'mc> for RedstoneRail<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RedstoneRail<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -25015,12 +24379,7 @@ impl<'mc> RedstoneRail<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -25123,12 +24482,7 @@ impl<'mc> RedstoneRail<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -25175,12 +24529,7 @@ impl<'mc> RedstoneRail<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -25233,12 +24582,7 @@ impl<'mc> RedstoneRail<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::RailShape::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::RailShape::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::RailShape::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_shape(
@@ -25294,14 +24638,9 @@ impl<'mc> RedstoneRail<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Powerable<'mc>> for RedstoneRail<'mc> {
@@ -25329,12 +24668,10 @@ impl<'mc> JNIRaw<'mc> for CaveVinesPlant<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CaveVinesPlant<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -25486,12 +24823,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -25594,12 +24926,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -25646,12 +24973,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -25688,14 +25010,9 @@ impl<'mc> CaveVinesPlant<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for CaveVinesPlant<'mc> {
@@ -25717,12 +25034,10 @@ impl<'mc> JNIRaw<'mc> for Light<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Light<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -25881,12 +25196,7 @@ impl<'mc> Light<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -25989,12 +25299,7 @@ impl<'mc> Light<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -26041,12 +25346,7 @@ impl<'mc> Light<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -26105,14 +25405,9 @@ impl<'mc> Light<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Levelled<'mc>> for Light<'mc> {
@@ -26140,12 +25435,10 @@ impl<'mc> JNIRaw<'mc> for SmallDripleaf<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SmallDripleaf<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -26184,12 +25477,7 @@ impl<'mc> SmallDripleaf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -26326,12 +25614,7 @@ impl<'mc> SmallDripleaf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -26434,12 +25717,7 @@ impl<'mc> SmallDripleaf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -26486,12 +25764,7 @@ impl<'mc> SmallDripleaf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -26568,12 +25841,7 @@ impl<'mc> SmallDripleaf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::BisectedHalf::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::BisectedHalf::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::BisectedHalf::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_half(
@@ -26594,14 +25862,9 @@ impl<'mc> SmallDripleaf<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::mod_type::Dripleaf<'mc>> for SmallDripleaf<'mc> {
@@ -26629,12 +25892,10 @@ impl<'mc> JNIRaw<'mc> for TrapDoor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for TrapDoor<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -26675,12 +25936,7 @@ impl<'mc> TrapDoor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::BisectedHalf::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::BisectedHalf::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::BisectedHalf::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_half(
@@ -26806,12 +26062,7 @@ impl<'mc> TrapDoor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -26914,12 +26165,7 @@ impl<'mc> TrapDoor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -26966,12 +26212,7 @@ impl<'mc> TrapDoor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -27024,12 +26265,7 @@ impl<'mc> TrapDoor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -27127,14 +26363,9 @@ impl<'mc> TrapDoor<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Bisected<'mc>> for TrapDoor<'mc> {
@@ -27180,12 +26411,10 @@ impl<'mc> JNIRaw<'mc> for Grindstone<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Grindstone<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -27224,12 +26453,7 @@ impl<'mc> Grindstone<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -27366,12 +26590,7 @@ impl<'mc> Grindstone<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -27474,12 +26693,7 @@ impl<'mc> Grindstone<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -27526,12 +26740,7 @@ impl<'mc> Grindstone<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -27587,12 +26796,7 @@ impl<'mc> Grindstone<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::FaceAttachableAttachedFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::FaceAttachableAttachedFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::FaceAttachableAttachedFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_attached_face(
@@ -27613,14 +26817,9 @@ impl<'mc> Grindstone<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Grindstone<'mc> {
@@ -27636,61 +26835,109 @@ impl<'mc> Into<crate::block::data::FaceAttachable<'mc>> for Grindstone<'mc> {
     }
 }
 /// Represents the thickness of the dripstone, corresponding to its position within a multi-block dripstone formation.
-#[derive(PartialEq, Eq)]
-pub enum PointedDripstoneThicknessEnum {
-    TipMerge,
-    Tip,
-    Frustum,
-    Middle,
-    Base,
-}
-impl std::fmt::Display for PointedDripstoneThicknessEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PointedDripstoneThicknessEnum::TipMerge => f.write_str("TIP_MERGE"),
-            PointedDripstoneThicknessEnum::Tip => f.write_str("TIP"),
-            PointedDripstoneThicknessEnum::Frustum => f.write_str("FRUSTUM"),
-            PointedDripstoneThicknessEnum::Middle => f.write_str("MIDDLE"),
-            PointedDripstoneThicknessEnum::Base => f.write_str("BASE"),
-        }
-    }
+pub enum PointedDripstoneThickness<'mc> {
+    TipMerge {
+        inner: PointedDripstoneThicknessStruct<'mc>,
+    },
+    Tip {
+        inner: PointedDripstoneThicknessStruct<'mc>,
+    },
+    Frustum {
+        inner: PointedDripstoneThicknessStruct<'mc>,
+    },
+    Middle {
+        inner: PointedDripstoneThicknessStruct<'mc>,
+    },
+    Base {
+        inner: PointedDripstoneThicknessStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for PointedDripstoneThickness<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            PointedDripstoneThickness::TipMerge { .. } => f.write_str("TIP_MERGE"),
+            PointedDripstoneThickness::Tip { .. } => f.write_str("TIP"),
+            PointedDripstoneThickness::Frustum { .. } => f.write_str("FRUSTUM"),
+            PointedDripstoneThickness::Middle { .. } => f.write_str("MIDDLE"),
+            PointedDripstoneThickness::Base { .. } => f.write_str("BASE"),
+        }
     }
 }
+
+impl<'mc> PointedDripstoneThickness<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PointedDripstoneThickness<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/PointedDripstone$Thickness");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/PointedDripstone$Thickness;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "TIP_MERGE" => Ok(PointedDripstoneThickness::TipMerge {
+                inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+            }),
+            "TIP" => Ok(PointedDripstoneThickness::Tip {
+                inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+            }),
+            "FRUSTUM" => Ok(PointedDripstoneThickness::Frustum {
+                inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+            }),
+            "MIDDLE" => Ok(PointedDripstoneThickness::Middle {
+                inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+            }),
+            "BASE" => Ok(PointedDripstoneThickness::Base {
+                inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct PointedDripstoneThickness<'mc>(
+pub struct PointedDripstoneThicknessStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub PointedDripstoneThicknessEnum,
 );
-impl<'mc> std::ops::Deref for PointedDripstoneThickness<'mc> {
-    type Target = PointedDripstoneThicknessEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for PointedDripstoneThickness<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::TipMerge { inner } => inner.0.clone(),
+            Self::Tip { inner } => inner.0.clone(),
+            Self::Frustum { inner } => inner.0.clone(),
+            Self::Middle { inner } => inner.0.clone(),
+            Self::Base { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::TipMerge { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Tip { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Frustum { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Middle { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Base { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for PointedDripstoneThickness<'mc> {
-    type Enum = PointedDripstoneThicknessEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for PointedDripstoneThickness<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -27709,66 +26956,73 @@ impl<'mc> JNIInstantiatableEnum<'mc> for PointedDripstoneThickness<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "TIP_MERGE" => Ok(PointedDripstoneThickness::TipMerge {
+                    inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+                }),
+                "TIP" => Ok(PointedDripstoneThickness::Tip {
+                    inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+                }),
+                "FRUSTUM" => Ok(PointedDripstoneThickness::Frustum {
+                    inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+                }),
+                "MIDDLE" => Ok(PointedDripstoneThickness::Middle {
+                    inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+                }),
+                "BASE" => Ok(PointedDripstoneThickness::Base {
+                    inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> PointedDripstoneThickness<'mc> {
-    pub const TIP_MERGE: PointedDripstoneThicknessEnum = PointedDripstoneThicknessEnum::TipMerge;
-    pub const TIP: PointedDripstoneThicknessEnum = PointedDripstoneThicknessEnum::Tip;
-    pub const FRUSTUM: PointedDripstoneThicknessEnum = PointedDripstoneThicknessEnum::Frustum;
-    pub const MIDDLE: PointedDripstoneThicknessEnum = PointedDripstoneThicknessEnum::Middle;
-    pub const BASE: PointedDripstoneThicknessEnum = PointedDripstoneThicknessEnum::Base;
-    pub fn from_string(str: String) -> std::option::Option<PointedDripstoneThicknessEnum> {
-        match str.as_str() {
-            "TIP_MERGE" => Some(PointedDripstoneThicknessEnum::TipMerge),
-            "TIP" => Some(PointedDripstoneThicknessEnum::Tip),
-            "FRUSTUM" => Some(PointedDripstoneThicknessEnum::Frustum),
-            "MIDDLE" => Some(PointedDripstoneThicknessEnum::Middle),
-            "BASE" => Some(PointedDripstoneThicknessEnum::Base),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for PointedDripstoneThicknessStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PointedDripstoneThicknessStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PointedDripstoneThicknessStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/block/data/type/PointedDripstone$Thickness",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a PointedDripstoneThicknessStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<PointedDripstoneThickness<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/PointedDripstone$Thickness");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/PointedDripstone$Thickness;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        PointedDripstoneThickness::from_raw(
-            &jni,
-            raw_obj,
-            PointedDripstoneThickness::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> PointedDripstoneThicknessStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// 'honey_level' represents the amount of honey stored in the hive.
@@ -27784,12 +27038,10 @@ impl<'mc> JNIRaw<'mc> for Beehive<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Beehive<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -27862,12 +27114,7 @@ impl<'mc> Beehive<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -28004,12 +27251,7 @@ impl<'mc> Beehive<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -28112,12 +27354,7 @@ impl<'mc> Beehive<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -28164,12 +27401,7 @@ impl<'mc> Beehive<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -28206,14 +27438,9 @@ impl<'mc> Beehive<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Beehive<'mc> {
@@ -28235,12 +27462,10 @@ impl<'mc> JNIRaw<'mc> for CoralWallFan<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CoralWallFan<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -28279,12 +27504,7 @@ impl<'mc> CoralWallFan<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -28421,12 +27641,7 @@ impl<'mc> CoralWallFan<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -28529,12 +27744,7 @@ impl<'mc> CoralWallFan<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -28581,12 +27791,7 @@ impl<'mc> CoralWallFan<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -28645,14 +27850,9 @@ impl<'mc> CoralWallFan<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for CoralWallFan<'mc> {
@@ -28680,12 +27880,10 @@ impl<'mc> JNIRaw<'mc> for SculkVein<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SculkVein<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -28878,12 +28076,7 @@ impl<'mc> SculkVein<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -28986,12 +28179,7 @@ impl<'mc> SculkVein<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -29038,12 +28226,7 @@ impl<'mc> SculkVein<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -29102,14 +28285,9 @@ impl<'mc> SculkVein<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::MultipleFacing<'mc>> for SculkVein<'mc> {
@@ -29125,57 +28303,85 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for SculkVein<'mc> {
     }
 }
 /// The type of the slab.
-#[derive(PartialEq, Eq)]
-pub enum SlabTypeEnum {
-    Top,
-    Bottom,
-    Double,
-}
-impl std::fmt::Display for SlabTypeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            SlabTypeEnum::Top => f.write_str("TOP"),
-            SlabTypeEnum::Bottom => f.write_str("BOTTOM"),
-            SlabTypeEnum::Double => f.write_str("DOUBLE"),
-        }
-    }
+pub enum SlabType<'mc> {
+    Top { inner: SlabTypeStruct<'mc> },
+    Bottom { inner: SlabTypeStruct<'mc> },
+    Double { inner: SlabTypeStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for SlabType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            SlabType::Top { .. } => f.write_str("TOP"),
+            SlabType::Bottom { .. } => f.write_str("BOTTOM"),
+            SlabType::Double { .. } => f.write_str("DOUBLE"),
+        }
     }
 }
+
+impl<'mc> SlabType<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<SlabType<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Slab$Type");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Slab$Type;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "TOP" => Ok(SlabType::Top {
+                inner: SlabTypeStruct::from_raw(env, obj)?,
+            }),
+            "BOTTOM" => Ok(SlabType::Bottom {
+                inner: SlabTypeStruct::from_raw(env, obj)?,
+            }),
+            "DOUBLE" => Ok(SlabType::Double {
+                inner: SlabTypeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct SlabType<'mc>(
+pub struct SlabTypeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub SlabTypeEnum,
 );
-impl<'mc> std::ops::Deref for SlabType<'mc> {
-    type Target = SlabTypeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for SlabType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Top { inner } => inner.0.clone(),
+            Self::Bottom { inner } => inner.0.clone(),
+            Self::Double { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Top { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Bottom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Double { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for SlabType<'mc> {
-    type Enum = SlabTypeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for SlabType<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SlabType from null object.").into());
@@ -29188,62 +28394,63 @@ impl<'mc> JNIInstantiatableEnum<'mc> for SlabType<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "TOP" => Ok(SlabType::Top {
+                    inner: SlabTypeStruct::from_raw(env, obj)?,
+                }),
+                "BOTTOM" => Ok(SlabType::Bottom {
+                    inner: SlabTypeStruct::from_raw(env, obj)?,
+                }),
+                "DOUBLE" => Ok(SlabType::Double {
+                    inner: SlabTypeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> SlabType<'mc> {
-    pub const TOP: SlabTypeEnum = SlabTypeEnum::Top;
-    pub const BOTTOM: SlabTypeEnum = SlabTypeEnum::Bottom;
-    pub const DOUBLE: SlabTypeEnum = SlabTypeEnum::Double;
-    pub fn from_string(str: String) -> std::option::Option<SlabTypeEnum> {
-        match str.as_str() {
-            "TOP" => Some(SlabTypeEnum::Top),
-            "BOTTOM" => Some(SlabTypeEnum::Bottom),
-            "DOUBLE" => Some(SlabTypeEnum::Double),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for SlabTypeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for SlabTypeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate SlabTypeStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Slab$Type")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a SlabTypeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<SlabType<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Slab$Type");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Slab$Type;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        SlabType::from_raw(
-            &jni,
-            raw_obj,
-            SlabType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> SlabTypeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// 'disarmed' denotes that the tripwire was broken with shears and will not subsequently produce a current when destroyed.
@@ -29259,12 +28466,10 @@ impl<'mc> JNIRaw<'mc> for Tripwire<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Tripwire<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -29436,12 +28641,7 @@ impl<'mc> Tripwire<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -29544,12 +28744,7 @@ impl<'mc> Tripwire<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -29596,12 +28791,7 @@ impl<'mc> Tripwire<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -29725,14 +28915,9 @@ impl<'mc> Tripwire<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Attachable<'mc>> for Tripwire<'mc> {
@@ -29766,12 +28951,10 @@ impl<'mc> JNIRaw<'mc> for Wall<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Wall<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -29820,12 +29003,7 @@ impl<'mc> Wall<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::WallHeight::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::WallHeight::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::WallHeight::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_up(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -30003,12 +29181,7 @@ impl<'mc> Wall<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -30111,12 +29284,7 @@ impl<'mc> Wall<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -30163,12 +29331,7 @@ impl<'mc> Wall<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -30205,14 +29368,9 @@ impl<'mc> Wall<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Wall<'mc> {
@@ -30221,57 +29379,85 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Wall<'mc> {
             .expect("Error converting Wall into crate::block::data::Waterlogged")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum PhaseEnum {
-    Inactive,
-    Active,
-    Cooldown,
-}
-impl std::fmt::Display for PhaseEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PhaseEnum::Inactive => f.write_str("INACTIVE"),
-            PhaseEnum::Active => f.write_str("ACTIVE"),
-            PhaseEnum::Cooldown => f.write_str("COOLDOWN"),
-        }
-    }
+pub enum Phase<'mc> {
+    Inactive { inner: PhaseStruct<'mc> },
+    Active { inner: PhaseStruct<'mc> },
+    Cooldown { inner: PhaseStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Phase<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Phase::Inactive { .. } => f.write_str("INACTIVE"),
+            Phase::Active { .. } => f.write_str("ACTIVE"),
+            Phase::Cooldown { .. } => f.write_str("COOLDOWN"),
+        }
     }
 }
+
+impl<'mc> Phase<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Phase<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Phase");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Phase;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "INACTIVE" => Ok(Phase::Inactive {
+                inner: PhaseStruct::from_raw(env, obj)?,
+            }),
+            "ACTIVE" => Ok(Phase::Active {
+                inner: PhaseStruct::from_raw(env, obj)?,
+            }),
+            "COOLDOWN" => Ok(Phase::Cooldown {
+                inner: PhaseStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Phase<'mc>(
+pub struct PhaseStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub PhaseEnum,
 );
-impl<'mc> std::ops::Deref for Phase<'mc> {
-    type Target = PhaseEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Phase<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Inactive { inner } => inner.0.clone(),
+            Self::Active { inner } => inner.0.clone(),
+            Self::Cooldown { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Inactive { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Active { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Cooldown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Phase<'mc> {
-    type Enum = PhaseEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Phase<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Phase from null object.").into());
@@ -30284,120 +29470,165 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Phase<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "INACTIVE" => Ok(Phase::Inactive {
+                    inner: PhaseStruct::from_raw(env, obj)?,
+                }),
+                "ACTIVE" => Ok(Phase::Active {
+                    inner: PhaseStruct::from_raw(env, obj)?,
+                }),
+                "COOLDOWN" => Ok(Phase::Cooldown {
+                    inner: PhaseStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Phase<'mc> {
-    pub const INACTIVE: PhaseEnum = PhaseEnum::Inactive;
-    pub const ACTIVE: PhaseEnum = PhaseEnum::Active;
-    pub const COOLDOWN: PhaseEnum = PhaseEnum::Cooldown;
-    pub fn from_string(str: String) -> std::option::Option<PhaseEnum> {
-        match str.as_str() {
-            "INACTIVE" => Some(PhaseEnum::Inactive),
-            "ACTIVE" => Some(PhaseEnum::Active),
-            "COOLDOWN" => Some(PhaseEnum::Cooldown),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Phase<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Phase");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Phase;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Phase::from_raw(
-            &jni,
-            raw_obj,
-            Phase::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-/// The shape of a stair block - used for constructing corners.
-#[derive(PartialEq, Eq)]
-pub enum StairsShapeEnum {
-    Straight,
-    InnerLeft,
-    InnerRight,
-    OuterLeft,
-    OuterRight,
-}
-impl std::fmt::Display for StairsShapeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            StairsShapeEnum::Straight => f.write_str("STRAIGHT"),
-            StairsShapeEnum::InnerLeft => f.write_str("INNER_LEFT"),
-            StairsShapeEnum::InnerRight => f.write_str("INNER_RIGHT"),
-            StairsShapeEnum::OuterLeft => f.write_str("OUTER_LEFT"),
-            StairsShapeEnum::OuterRight => f.write_str("OUTER_RIGHT"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for StairsShape<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct StairsShape<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub StairsShapeEnum,
-);
-impl<'mc> std::ops::Deref for StairsShape<'mc> {
-    type Target = StairsShapeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for StairsShape<'mc> {
+impl<'mc> JNIRaw<'mc> for PhaseStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for StairsShape<'mc> {
-    type Enum = StairsShapeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for PhaseStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate PhaseStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Phase")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PhaseStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> PhaseStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+/// The shape of a stair block - used for constructing corners.
+pub enum StairsShape<'mc> {
+    Straight { inner: StairsShapeStruct<'mc> },
+    InnerLeft { inner: StairsShapeStruct<'mc> },
+    InnerRight { inner: StairsShapeStruct<'mc> },
+    OuterLeft { inner: StairsShapeStruct<'mc> },
+    OuterRight { inner: StairsShapeStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for StairsShape<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            StairsShape::Straight { .. } => f.write_str("STRAIGHT"),
+            StairsShape::InnerLeft { .. } => f.write_str("INNER_LEFT"),
+            StairsShape::InnerRight { .. } => f.write_str("INNER_RIGHT"),
+            StairsShape::OuterLeft { .. } => f.write_str("OUTER_LEFT"),
+            StairsShape::OuterRight { .. } => f.write_str("OUTER_RIGHT"),
+        }
+    }
+}
+
+impl<'mc> StairsShape<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<StairsShape<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Stairs$Shape");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Stairs$Shape;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "STRAIGHT" => Ok(StairsShape::Straight {
+                inner: StairsShapeStruct::from_raw(env, obj)?,
+            }),
+            "INNER_LEFT" => Ok(StairsShape::InnerLeft {
+                inner: StairsShapeStruct::from_raw(env, obj)?,
+            }),
+            "INNER_RIGHT" => Ok(StairsShape::InnerRight {
+                inner: StairsShapeStruct::from_raw(env, obj)?,
+            }),
+            "OUTER_LEFT" => Ok(StairsShape::OuterLeft {
+                inner: StairsShapeStruct::from_raw(env, obj)?,
+            }),
+            "OUTER_RIGHT" => Ok(StairsShape::OuterRight {
+                inner: StairsShapeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct StairsShapeStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for StairsShape<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Straight { inner } => inner.0.clone(),
+            Self::InnerLeft { inner } => inner.0.clone(),
+            Self::InnerRight { inner } => inner.0.clone(),
+            Self::OuterLeft { inner } => inner.0.clone(),
+            Self::OuterRight { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Straight { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::InnerLeft { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::InnerRight { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::OuterLeft { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::OuterRight { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for StairsShape<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate StairsShape from null object.").into());
@@ -30410,66 +29641,69 @@ impl<'mc> JNIInstantiatableEnum<'mc> for StairsShape<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "STRAIGHT" => Ok(StairsShape::Straight {
+                    inner: StairsShapeStruct::from_raw(env, obj)?,
+                }),
+                "INNER_LEFT" => Ok(StairsShape::InnerLeft {
+                    inner: StairsShapeStruct::from_raw(env, obj)?,
+                }),
+                "INNER_RIGHT" => Ok(StairsShape::InnerRight {
+                    inner: StairsShapeStruct::from_raw(env, obj)?,
+                }),
+                "OUTER_LEFT" => Ok(StairsShape::OuterLeft {
+                    inner: StairsShapeStruct::from_raw(env, obj)?,
+                }),
+                "OUTER_RIGHT" => Ok(StairsShape::OuterRight {
+                    inner: StairsShapeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> StairsShape<'mc> {
-    pub const STRAIGHT: StairsShapeEnum = StairsShapeEnum::Straight;
-    pub const INNER_LEFT: StairsShapeEnum = StairsShapeEnum::InnerLeft;
-    pub const INNER_RIGHT: StairsShapeEnum = StairsShapeEnum::InnerRight;
-    pub const OUTER_LEFT: StairsShapeEnum = StairsShapeEnum::OuterLeft;
-    pub const OUTER_RIGHT: StairsShapeEnum = StairsShapeEnum::OuterRight;
-    pub fn from_string(str: String) -> std::option::Option<StairsShapeEnum> {
-        match str.as_str() {
-            "STRAIGHT" => Some(StairsShapeEnum::Straight),
-            "INNER_LEFT" => Some(StairsShapeEnum::InnerLeft),
-            "INNER_RIGHT" => Some(StairsShapeEnum::InnerRight),
-            "OUTER_LEFT" => Some(StairsShapeEnum::OuterLeft),
-            "OUTER_RIGHT" => Some(StairsShapeEnum::OuterRight),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for StairsShapeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for StairsShapeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate StairsShapeStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Stairs$Shape")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a StairsShapeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<StairsShape<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Stairs$Shape");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Stairs$Shape;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        StairsShape::from_raw(
-            &jni,
-            raw_obj,
-            StairsShape::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> StairsShapeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// The 'moisture' level of farmland indicates how close it is to a water source (if any).
@@ -30487,12 +29721,10 @@ impl<'mc> JNIRaw<'mc> for Farmland<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Farmland<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -30654,12 +29886,7 @@ impl<'mc> Farmland<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -30762,12 +29989,7 @@ impl<'mc> Farmland<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -30814,12 +30036,7 @@ impl<'mc> Farmland<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -30856,14 +30073,9 @@ impl<'mc> Farmland<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for Farmland<'mc> {
@@ -30885,12 +30097,10 @@ impl<'mc> JNIRaw<'mc> for Gate<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Gate<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -30951,12 +30161,7 @@ impl<'mc> Gate<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -31093,12 +30298,7 @@ impl<'mc> Gate<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -31201,12 +30401,7 @@ impl<'mc> Gate<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -31253,12 +30448,7 @@ impl<'mc> Gate<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -31339,14 +30529,9 @@ impl<'mc> Gate<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Gate<'mc> {
@@ -31368,57 +30553,85 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Gate<'mc> {
     }
 }
 /// The face to which a switch type block is stuck.
-#[derive(PartialEq, Eq)]
-pub enum SwitchFaceEnum {
-    Floor,
-    Wall,
-    Ceiling,
-}
-impl std::fmt::Display for SwitchFaceEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            SwitchFaceEnum::Floor => f.write_str("FLOOR"),
-            SwitchFaceEnum::Wall => f.write_str("WALL"),
-            SwitchFaceEnum::Ceiling => f.write_str("CEILING"),
-        }
-    }
+pub enum SwitchFace<'mc> {
+    Floor { inner: SwitchFaceStruct<'mc> },
+    Wall { inner: SwitchFaceStruct<'mc> },
+    Ceiling { inner: SwitchFaceStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for SwitchFace<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            SwitchFace::Floor { .. } => f.write_str("FLOOR"),
+            SwitchFace::Wall { .. } => f.write_str("WALL"),
+            SwitchFace::Ceiling { .. } => f.write_str("CEILING"),
+        }
     }
 }
+
+impl<'mc> SwitchFace<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<SwitchFace<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Switch$Face");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Switch$Face;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "FLOOR" => Ok(SwitchFace::Floor {
+                inner: SwitchFaceStruct::from_raw(env, obj)?,
+            }),
+            "WALL" => Ok(SwitchFace::Wall {
+                inner: SwitchFaceStruct::from_raw(env, obj)?,
+            }),
+            "CEILING" => Ok(SwitchFace::Ceiling {
+                inner: SwitchFaceStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct SwitchFace<'mc>(
+pub struct SwitchFaceStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub SwitchFaceEnum,
 );
-impl<'mc> std::ops::Deref for SwitchFace<'mc> {
-    type Target = SwitchFaceEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for SwitchFace<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Floor { inner } => inner.0.clone(),
+            Self::Wall { inner } => inner.0.clone(),
+            Self::Ceiling { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Floor { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Wall { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Ceiling { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for SwitchFace<'mc> {
-    type Enum = SwitchFaceEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for SwitchFace<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SwitchFace from null object.").into());
@@ -31431,62 +30644,63 @@ impl<'mc> JNIInstantiatableEnum<'mc> for SwitchFace<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "FLOOR" => Ok(SwitchFace::Floor {
+                    inner: SwitchFaceStruct::from_raw(env, obj)?,
+                }),
+                "WALL" => Ok(SwitchFace::Wall {
+                    inner: SwitchFaceStruct::from_raw(env, obj)?,
+                }),
+                "CEILING" => Ok(SwitchFace::Ceiling {
+                    inner: SwitchFaceStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> SwitchFace<'mc> {
-    pub const FLOOR: SwitchFaceEnum = SwitchFaceEnum::Floor;
-    pub const WALL: SwitchFaceEnum = SwitchFaceEnum::Wall;
-    pub const CEILING: SwitchFaceEnum = SwitchFaceEnum::Ceiling;
-    pub fn from_string(str: String) -> std::option::Option<SwitchFaceEnum> {
-        match str.as_str() {
-            "FLOOR" => Some(SwitchFaceEnum::Floor),
-            "WALL" => Some(SwitchFaceEnum::Wall),
-            "CEILING" => Some(SwitchFaceEnum::Ceiling),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for SwitchFaceStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for SwitchFaceStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate SwitchFaceStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Switch$Face")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a SwitchFaceStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<SwitchFace<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Switch$Face");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Switch$Face;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        SwitchFace::from_raw(
-            &jni,
-            raw_obj,
-            SwitchFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> SwitchFaceStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// 'can_summon' indicates whether the sculk shrieker can summon the warden.
@@ -31503,12 +30717,10 @@ impl<'mc> JNIRaw<'mc> for SculkShrieker<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SculkShrieker<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -31702,12 +30914,7 @@ impl<'mc> SculkShrieker<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -31810,12 +31017,7 @@ impl<'mc> SculkShrieker<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -31862,12 +31064,7 @@ impl<'mc> SculkShrieker<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -31904,14 +31101,9 @@ impl<'mc> SculkShrieker<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for SculkShrieker<'mc> {
@@ -31920,57 +31112,85 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for SculkShrieker<'mc> {
             .expect("Error converting SculkShrieker into crate::block::data::Waterlogged")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum LeavesEnum {
-    None,
-    Small,
-    Large,
-}
-impl std::fmt::Display for LeavesEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            LeavesEnum::None => f.write_str("NONE"),
-            LeavesEnum::Small => f.write_str("SMALL"),
-            LeavesEnum::Large => f.write_str("LARGE"),
-        }
-    }
+pub enum Leaves<'mc> {
+    None { inner: LeavesStruct<'mc> },
+    Small { inner: LeavesStruct<'mc> },
+    Large { inner: LeavesStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Leaves<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Leaves::None { .. } => f.write_str("NONE"),
+            Leaves::Small { .. } => f.write_str("SMALL"),
+            Leaves::Large { .. } => f.write_str("LARGE"),
+        }
     }
 }
+
+impl<'mc> Leaves<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Leaves<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Leaves");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Leaves;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "NONE" => Ok(Leaves::None {
+                inner: LeavesStruct::from_raw(env, obj)?,
+            }),
+            "SMALL" => Ok(Leaves::Small {
+                inner: LeavesStruct::from_raw(env, obj)?,
+            }),
+            "LARGE" => Ok(Leaves::Large {
+                inner: LeavesStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Leaves<'mc>(
+pub struct LeavesStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub LeavesEnum,
 );
-impl<'mc> std::ops::Deref for Leaves<'mc> {
-    type Target = LeavesEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Leaves<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::None { inner } => inner.0.clone(),
+            Self::Small { inner } => inner.0.clone(),
+            Self::Large { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Small { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Large { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Leaves<'mc> {
-    type Enum = LeavesEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Leaves<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Leaves from null object.").into());
@@ -31983,62 +31203,61 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Leaves<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "NONE" => Ok(Leaves::None {
+                    inner: LeavesStruct::from_raw(env, obj)?,
+                }),
+                "SMALL" => Ok(Leaves::Small {
+                    inner: LeavesStruct::from_raw(env, obj)?,
+                }),
+                "LARGE" => Ok(Leaves::Large {
+                    inner: LeavesStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Leaves<'mc> {
-    pub const NONE: LeavesEnum = LeavesEnum::None;
-    pub const SMALL: LeavesEnum = LeavesEnum::Small;
-    pub const LARGE: LeavesEnum = LeavesEnum::Large;
-    pub fn from_string(str: String) -> std::option::Option<LeavesEnum> {
-        match str.as_str() {
-            "NONE" => Some(LeavesEnum::None),
-            "SMALL" => Some(LeavesEnum::Small),
-            "LARGE" => Some(LeavesEnum::Large),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for LeavesStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for LeavesStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate LeavesStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Leaves")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a LeavesStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Leaves<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Leaves");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Leaves;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Leaves::from_raw(
-            &jni,
-            raw_obj,
-            Leaves::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> LeavesStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// 'signal_fire' denotes whether the fire is extra smokey due to having a hay bale placed beneath it.
@@ -32054,12 +31273,10 @@ impl<'mc> JNIRaw<'mc> for Campfire<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Campfire<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -32120,12 +31337,7 @@ impl<'mc> Campfire<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -32262,12 +31474,7 @@ impl<'mc> Campfire<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -32370,12 +31577,7 @@ impl<'mc> Campfire<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -32422,12 +31624,7 @@ impl<'mc> Campfire<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -32508,14 +31705,9 @@ impl<'mc> Campfire<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Campfire<'mc> {
@@ -32549,12 +31741,10 @@ impl<'mc> JNIRaw<'mc> for Dripleaf<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Dripleaf<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -32593,12 +31783,7 @@ impl<'mc> Dripleaf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -32735,12 +31920,7 @@ impl<'mc> Dripleaf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -32843,12 +32023,7 @@ impl<'mc> Dripleaf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -32895,12 +32070,7 @@ impl<'mc> Dripleaf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -32959,14 +32129,9 @@ impl<'mc> Dripleaf<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Dripleaf<'mc> {
@@ -32994,12 +32159,10 @@ impl<'mc> JNIRaw<'mc> for SeaPickle<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SeaPickle<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -33195,12 +32358,7 @@ impl<'mc> SeaPickle<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -33303,12 +32461,7 @@ impl<'mc> SeaPickle<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -33355,12 +32508,7 @@ impl<'mc> SeaPickle<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -33397,14 +32545,9 @@ impl<'mc> SeaPickle<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for SeaPickle<'mc> {
@@ -33426,12 +32569,10 @@ impl<'mc> JNIRaw<'mc> for RedstoneWallTorch<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RedstoneWallTorch<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -33473,12 +32614,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -33615,12 +32751,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -33723,12 +32854,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -33775,12 +32901,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -33839,14 +32960,9 @@ impl<'mc> RedstoneWallTorch<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for RedstoneWallTorch<'mc> {
@@ -33861,57 +32977,85 @@ impl<'mc> Into<crate::block::data::Lightable<'mc>> for RedstoneWallTorch<'mc> {
             .expect("Error converting RedstoneWallTorch into crate::block::data::Lightable")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum HeightEnum {
-    None,
-    Low,
-    Tall,
-}
-impl std::fmt::Display for HeightEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            HeightEnum::None => f.write_str("NONE"),
-            HeightEnum::Low => f.write_str("LOW"),
-            HeightEnum::Tall => f.write_str("TALL"),
-        }
-    }
+pub enum Height<'mc> {
+    None { inner: HeightStruct<'mc> },
+    Low { inner: HeightStruct<'mc> },
+    Tall { inner: HeightStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Height<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Height::None { .. } => f.write_str("NONE"),
+            Height::Low { .. } => f.write_str("LOW"),
+            Height::Tall { .. } => f.write_str("TALL"),
+        }
     }
 }
+
+impl<'mc> Height<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Height<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Height");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Height;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "NONE" => Ok(Height::None {
+                inner: HeightStruct::from_raw(env, obj)?,
+            }),
+            "LOW" => Ok(Height::Low {
+                inner: HeightStruct::from_raw(env, obj)?,
+            }),
+            "TALL" => Ok(Height::Tall {
+                inner: HeightStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Height<'mc>(
+pub struct HeightStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub HeightEnum,
 );
-impl<'mc> std::ops::Deref for Height<'mc> {
-    type Target = HeightEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Height<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::None { inner } => inner.0.clone(),
+            Self::Low { inner } => inner.0.clone(),
+            Self::Tall { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Low { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Tall { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Height<'mc> {
-    type Enum = HeightEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Height<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Height from null object.").into());
@@ -33924,114 +33068,136 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Height<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "NONE" => Ok(Height::None {
+                    inner: HeightStruct::from_raw(env, obj)?,
+                }),
+                "LOW" => Ok(Height::Low {
+                    inner: HeightStruct::from_raw(env, obj)?,
+                }),
+                "TALL" => Ok(Height::Tall {
+                    inner: HeightStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Height<'mc> {
-    pub const NONE: HeightEnum = HeightEnum::None;
-    pub const LOW: HeightEnum = HeightEnum::Low;
-    pub const TALL: HeightEnum = HeightEnum::Tall;
-    pub fn from_string(str: String) -> std::option::Option<HeightEnum> {
-        match str.as_str() {
-            "NONE" => Some(HeightEnum::None),
-            "LOW" => Some(HeightEnum::Low),
-            "TALL" => Some(HeightEnum::Tall),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Height<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Height");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Height;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Height::from_raw(
-            &jni,
-            raw_obj,
-            Height::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-/// Horizontal half of a bed.
-#[derive(PartialEq, Eq)]
-pub enum BedPartEnum {
-    Head,
-    Foot,
-}
-impl std::fmt::Display for BedPartEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            BedPartEnum::Head => f.write_str("HEAD"),
-            BedPartEnum::Foot => f.write_str("FOOT"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for BedPart<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct BedPart<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub BedPartEnum,
-);
-impl<'mc> std::ops::Deref for BedPart<'mc> {
-    type Target = BedPartEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for BedPart<'mc> {
+impl<'mc> JNIRaw<'mc> for HeightStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for BedPart<'mc> {
-    type Enum = BedPartEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for HeightStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate HeightStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Height")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a HeightStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> HeightStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+/// Horizontal half of a bed.
+pub enum BedPart<'mc> {
+    Head { inner: BedPartStruct<'mc> },
+    Foot { inner: BedPartStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for BedPart<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            BedPart::Head { .. } => f.write_str("HEAD"),
+            BedPart::Foot { .. } => f.write_str("FOOT"),
+        }
+    }
+}
+
+impl<'mc> BedPart<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<BedPart<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Bed$Part");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Bed$Part;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "HEAD" => Ok(BedPart::Head {
+                inner: BedPartStruct::from_raw(env, obj)?,
+            }),
+            "FOOT" => Ok(BedPart::Foot {
+                inner: BedPartStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct BedPartStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for BedPart<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Head { inner } => inner.0.clone(),
+            Self::Foot { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Head { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Foot { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for BedPart<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BedPart from null object.").into());
@@ -34044,60 +33210,58 @@ impl<'mc> JNIInstantiatableEnum<'mc> for BedPart<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "HEAD" => Ok(BedPart::Head {
+                    inner: BedPartStruct::from_raw(env, obj)?,
+                }),
+                "FOOT" => Ok(BedPart::Foot {
+                    inner: BedPartStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> BedPart<'mc> {
-    pub const HEAD: BedPartEnum = BedPartEnum::Head;
-    pub const FOOT: BedPartEnum = BedPartEnum::Foot;
-    pub fn from_string(str: String) -> std::option::Option<BedPartEnum> {
-        match str.as_str() {
-            "HEAD" => Some(BedPartEnum::Head),
-            "FOOT" => Some(BedPartEnum::Foot),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for BedPartStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for BedPartStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate BedPartStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Bed$Part")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BedPartStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<BedPart<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Bed$Part");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Bed$Part;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        BedPart::from_raw(
-            &jni,
-            raw_obj,
-            BedPart::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> BedPartStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -34113,12 +33277,10 @@ impl<'mc> JNIRaw<'mc> for WallSign<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for WallSign<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -34157,12 +33319,7 @@ impl<'mc> WallSign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -34299,12 +33456,7 @@ impl<'mc> WallSign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -34407,12 +33559,7 @@ impl<'mc> WallSign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -34459,12 +33606,7 @@ impl<'mc> WallSign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -34523,14 +33665,9 @@ impl<'mc> WallSign<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for WallSign<'mc> {
@@ -34558,12 +33695,10 @@ impl<'mc> JNIRaw<'mc> for RedstoneWire<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RedstoneWire<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -34614,12 +33749,7 @@ impl<'mc> RedstoneWire<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::RedstoneWireConnection::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::RedstoneWireConnection::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::RedstoneWireConnection::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_face(
@@ -34798,12 +33928,7 @@ impl<'mc> RedstoneWire<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -34906,12 +34031,7 @@ impl<'mc> RedstoneWire<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -34958,12 +34078,7 @@ impl<'mc> RedstoneWire<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -35000,14 +34115,9 @@ impl<'mc> RedstoneWire<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::AnaloguePowerable<'mc>> for RedstoneWire<'mc> {
@@ -35029,12 +34139,10 @@ impl<'mc> JNIRaw<'mc> for Jukebox<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Jukebox<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -35171,12 +34279,7 @@ impl<'mc> Jukebox<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -35279,12 +34382,7 @@ impl<'mc> Jukebox<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -35331,12 +34429,7 @@ impl<'mc> Jukebox<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -35373,14 +34466,9 @@ impl<'mc> Jukebox<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::BlockData<'mc>> for Jukebox<'mc> {
@@ -35389,55 +34477,78 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Jukebox<'mc> {
             .expect("Error converting Jukebox into crate::block::data::BlockData")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum ModeEnum {
-    Compare,
-    Subtract,
-}
-impl std::fmt::Display for ModeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ModeEnum::Compare => f.write_str("COMPARE"),
-            ModeEnum::Subtract => f.write_str("SUBTRACT"),
-        }
-    }
+pub enum Mode<'mc> {
+    Compare { inner: ModeStruct<'mc> },
+    Subtract { inner: ModeStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Mode<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Mode::Compare { .. } => f.write_str("COMPARE"),
+            Mode::Subtract { .. } => f.write_str("SUBTRACT"),
+        }
     }
 }
+
+impl<'mc> Mode<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Mode<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Mode");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Mode;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "COMPARE" => Ok(Mode::Compare {
+                inner: ModeStruct::from_raw(env, obj)?,
+            }),
+            "SUBTRACT" => Ok(Mode::Subtract {
+                inner: ModeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Mode<'mc>(
+pub struct ModeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub ModeEnum,
 );
-impl<'mc> std::ops::Deref for Mode<'mc> {
-    type Target = ModeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Mode<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Compare { inner } => inner.0.clone(),
+            Self::Subtract { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Compare { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Subtract { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Mode<'mc> {
-    type Enum = ModeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Mode<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Mode from null object.").into());
@@ -35450,60 +34561,58 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Mode<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "COMPARE" => Ok(Mode::Compare {
+                    inner: ModeStruct::from_raw(env, obj)?,
+                }),
+                "SUBTRACT" => Ok(Mode::Subtract {
+                    inner: ModeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Mode<'mc> {
-    pub const COMPARE: ModeEnum = ModeEnum::Compare;
-    pub const SUBTRACT: ModeEnum = ModeEnum::Subtract;
-    pub fn from_string(str: String) -> std::option::Option<ModeEnum> {
-        match str.as_str() {
-            "COMPARE" => Some(ModeEnum::Compare),
-            "SUBTRACT" => Some(ModeEnum::Subtract),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for ModeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ModeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate ModeStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Mode")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ModeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Mode<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Mode");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Mode;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Mode::from_raw(
-            &jni,
-            raw_obj,
-            Mode::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> ModeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -35519,12 +34628,10 @@ impl<'mc> JNIRaw<'mc> for Barrel<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Barrel<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -35563,12 +34670,7 @@ impl<'mc> Barrel<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -35705,12 +34807,7 @@ impl<'mc> Barrel<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -35813,12 +34910,7 @@ impl<'mc> Barrel<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -35865,12 +34957,7 @@ impl<'mc> Barrel<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -35929,14 +35016,9 @@ impl<'mc> Barrel<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for Barrel<'mc> {
@@ -35964,12 +35046,10 @@ impl<'mc> JNIRaw<'mc> for CommandBlock<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CommandBlock<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -36030,12 +35110,7 @@ impl<'mc> CommandBlock<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -36172,12 +35247,7 @@ impl<'mc> CommandBlock<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -36280,12 +35350,7 @@ impl<'mc> CommandBlock<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -36332,12 +35397,7 @@ impl<'mc> CommandBlock<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -36374,14 +35434,9 @@ impl<'mc> CommandBlock<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for CommandBlock<'mc> {
@@ -36403,12 +35458,10 @@ impl<'mc> JNIRaw<'mc> for Door<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Door<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -36449,12 +35502,7 @@ impl<'mc> Door<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::DoorHinge::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::DoorHinge::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::DoorHinge::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_hinge(
@@ -36493,12 +35541,7 @@ impl<'mc> Door<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::BisectedHalf::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::BisectedHalf::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::BisectedHalf::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_half(
@@ -36624,12 +35667,7 @@ impl<'mc> Door<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -36732,12 +35770,7 @@ impl<'mc> Door<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -36784,12 +35817,7 @@ impl<'mc> Door<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -36842,12 +35870,7 @@ impl<'mc> Door<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -36923,14 +35946,9 @@ impl<'mc> Door<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Bisected<'mc>> for Door<'mc> {
@@ -36972,12 +35990,10 @@ impl<'mc> JNIRaw<'mc> for ChiseledBookshelf<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ChiseledBookshelf<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -37082,12 +36098,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -37224,12 +36235,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -37332,12 +36338,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -37384,12 +36385,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -37426,14 +36422,9 @@ impl<'mc> ChiseledBookshelf<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for ChiseledBookshelf<'mc> {
@@ -37455,12 +36446,10 @@ impl<'mc> JNIRaw<'mc> for HangingSign<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for HangingSign<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -37610,12 +36599,7 @@ impl<'mc> HangingSign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -37718,12 +36702,7 @@ impl<'mc> HangingSign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -37770,12 +36749,7 @@ impl<'mc> HangingSign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -37828,12 +36802,7 @@ impl<'mc> HangingSign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_rotation(
@@ -37876,14 +36845,9 @@ impl<'mc> HangingSign<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Attachable<'mc>> for HangingSign<'mc> {
@@ -37917,12 +36881,10 @@ impl<'mc> JNIRaw<'mc> for Candle<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Candle<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -38106,12 +37068,7 @@ impl<'mc> Candle<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -38214,12 +37171,7 @@ impl<'mc> Candle<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -38266,12 +37218,7 @@ impl<'mc> Candle<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -38330,14 +37277,9 @@ impl<'mc> Candle<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Lightable<'mc>> for Candle<'mc> {
@@ -38369,12 +37311,10 @@ impl<'mc> JNIRaw<'mc> for PointedDripstone<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PointedDripstone<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -38421,12 +37361,7 @@ impl<'mc> PointedDripstone<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_vertical_direction(
@@ -38484,12 +37419,7 @@ impl<'mc> PointedDripstone<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::data::mod_type::PointedDripstoneThickness::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::data::mod_type::PointedDripstoneThickness::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::data::mod_type::PointedDripstoneThickness::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_thickness(
@@ -38637,12 +37567,7 @@ impl<'mc> PointedDripstone<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -38745,12 +37670,7 @@ impl<'mc> PointedDripstone<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -38797,12 +37717,7 @@ impl<'mc> PointedDripstone<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -38839,14 +37754,9 @@ impl<'mc> PointedDripstone<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for PointedDripstone<'mc> {
@@ -38868,12 +37778,10 @@ impl<'mc> JNIRaw<'mc> for LightningRod<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for LightningRod<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -38912,12 +37820,7 @@ impl<'mc> LightningRod<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_facing(
@@ -39054,12 +37957,7 @@ impl<'mc> LightningRod<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -39162,12 +38060,7 @@ impl<'mc> LightningRod<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -39214,12 +38107,7 @@ impl<'mc> LightningRod<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -39300,14 +38188,9 @@ impl<'mc> LightningRod<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Directional<'mc>> for LightningRod<'mc> {
@@ -39329,55 +38212,82 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for LightningRod<'mc> {
     }
 }
 /// Different piston variants.
-#[derive(PartialEq, Eq)]
-pub enum TechnicalPistonTypeEnum {
-    Normal,
-    Sticky,
-}
-impl std::fmt::Display for TechnicalPistonTypeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TechnicalPistonTypeEnum::Normal => f.write_str("NORMAL"),
-            TechnicalPistonTypeEnum::Sticky => f.write_str("STICKY"),
-        }
-    }
+pub enum TechnicalPistonType<'mc> {
+    Normal {
+        inner: TechnicalPistonTypeStruct<'mc>,
+    },
+    Sticky {
+        inner: TechnicalPistonTypeStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for TechnicalPistonType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            TechnicalPistonType::Normal { .. } => f.write_str("NORMAL"),
+            TechnicalPistonType::Sticky { .. } => f.write_str("STICKY"),
+        }
     }
 }
+
+impl<'mc> TechnicalPistonType<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<TechnicalPistonType<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/TechnicalPiston$Type");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/TechnicalPiston$Type;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "NORMAL" => Ok(TechnicalPistonType::Normal {
+                inner: TechnicalPistonTypeStruct::from_raw(env, obj)?,
+            }),
+            "STICKY" => Ok(TechnicalPistonType::Sticky {
+                inner: TechnicalPistonTypeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct TechnicalPistonType<'mc>(
+pub struct TechnicalPistonTypeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub TechnicalPistonTypeEnum,
 );
-impl<'mc> std::ops::Deref for TechnicalPistonType<'mc> {
-    type Target = TechnicalPistonTypeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for TechnicalPistonType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Normal { inner } => inner.0.clone(),
+            Self::Sticky { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Normal { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Sticky { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for TechnicalPistonType<'mc> {
-    type Enum = TechnicalPistonTypeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for TechnicalPistonType<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -39393,60 +38303,62 @@ impl<'mc> JNIInstantiatableEnum<'mc> for TechnicalPistonType<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "NORMAL" => Ok(TechnicalPistonType::Normal {
+                    inner: TechnicalPistonTypeStruct::from_raw(env, obj)?,
+                }),
+                "STICKY" => Ok(TechnicalPistonType::Sticky {
+                    inner: TechnicalPistonTypeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> TechnicalPistonType<'mc> {
-    pub const NORMAL: TechnicalPistonTypeEnum = TechnicalPistonTypeEnum::Normal;
-    pub const STICKY: TechnicalPistonTypeEnum = TechnicalPistonTypeEnum::Sticky;
-    pub fn from_string(str: String) -> std::option::Option<TechnicalPistonTypeEnum> {
-        match str.as_str() {
-            "NORMAL" => Some(TechnicalPistonTypeEnum::Normal),
-            "STICKY" => Some(TechnicalPistonTypeEnum::Sticky),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for TechnicalPistonTypeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for TechnicalPistonTypeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate TechnicalPistonTypeStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/block/data/type/TechnicalPiston$Type")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a TechnicalPistonTypeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<TechnicalPistonType<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/TechnicalPiston$Type");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/TechnicalPiston$Type;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        TechnicalPistonType::from_raw(
-            &jni,
-            raw_obj,
-            TechnicalPistonType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> TechnicalPistonTypeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -39462,12 +38374,10 @@ impl<'mc> JNIRaw<'mc> for Sign<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Sign<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -39506,12 +38416,7 @@ impl<'mc> Sign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_rotation(
@@ -39637,12 +38542,7 @@ impl<'mc> Sign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -39745,12 +38645,7 @@ impl<'mc> Sign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -39797,12 +38692,7 @@ impl<'mc> Sign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -39861,14 +38751,9 @@ impl<'mc> Sign<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Rotatable<'mc>> for Sign<'mc> {
@@ -39883,59 +38768,92 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Sign<'mc> {
             .expect("Error converting Sign into crate::block::data::Waterlogged")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum TiltEnum {
-    None,
-    Unstable,
-    Partial,
-    Full,
-}
-impl std::fmt::Display for TiltEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TiltEnum::None => f.write_str("NONE"),
-            TiltEnum::Unstable => f.write_str("UNSTABLE"),
-            TiltEnum::Partial => f.write_str("PARTIAL"),
-            TiltEnum::Full => f.write_str("FULL"),
-        }
-    }
+pub enum Tilt<'mc> {
+    None { inner: TiltStruct<'mc> },
+    Unstable { inner: TiltStruct<'mc> },
+    Partial { inner: TiltStruct<'mc> },
+    Full { inner: TiltStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Tilt<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Tilt::None { .. } => f.write_str("NONE"),
+            Tilt::Unstable { .. } => f.write_str("UNSTABLE"),
+            Tilt::Partial { .. } => f.write_str("PARTIAL"),
+            Tilt::Full { .. } => f.write_str("FULL"),
+        }
     }
 }
+
+impl<'mc> Tilt<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Tilt<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Tilt");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Tilt;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "NONE" => Ok(Tilt::None {
+                inner: TiltStruct::from_raw(env, obj)?,
+            }),
+            "UNSTABLE" => Ok(Tilt::Unstable {
+                inner: TiltStruct::from_raw(env, obj)?,
+            }),
+            "PARTIAL" => Ok(Tilt::Partial {
+                inner: TiltStruct::from_raw(env, obj)?,
+            }),
+            "FULL" => Ok(Tilt::Full {
+                inner: TiltStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Tilt<'mc>(
+pub struct TiltStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub TiltEnum,
 );
-impl<'mc> std::ops::Deref for Tilt<'mc> {
-    type Target = TiltEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Tilt<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::None { inner } => inner.0.clone(),
+            Self::Unstable { inner } => inner.0.clone(),
+            Self::Partial { inner } => inner.0.clone(),
+            Self::Full { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unstable { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Partial { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Full { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Tilt<'mc> {
-    type Enum = TiltEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Tilt<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Tilt from null object.").into());
@@ -39948,118 +38866,146 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Tilt<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "NONE" => Ok(Tilt::None {
+                    inner: TiltStruct::from_raw(env, obj)?,
+                }),
+                "UNSTABLE" => Ok(Tilt::Unstable {
+                    inner: TiltStruct::from_raw(env, obj)?,
+                }),
+                "PARTIAL" => Ok(Tilt::Partial {
+                    inner: TiltStruct::from_raw(env, obj)?,
+                }),
+                "FULL" => Ok(Tilt::Full {
+                    inner: TiltStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Tilt<'mc> {
-    pub const NONE: TiltEnum = TiltEnum::None;
-    pub const UNSTABLE: TiltEnum = TiltEnum::Unstable;
-    pub const PARTIAL: TiltEnum = TiltEnum::Partial;
-    pub const FULL: TiltEnum = TiltEnum::Full;
-    pub fn from_string(str: String) -> std::option::Option<TiltEnum> {
-        match str.as_str() {
-            "NONE" => Some(TiltEnum::None),
-            "UNSTABLE" => Some(TiltEnum::Unstable),
-            "PARTIAL" => Some(TiltEnum::Partial),
-            "FULL" => Some(TiltEnum::Full),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Tilt<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Tilt");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Tilt;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Tilt::from_raw(
-            &jni,
-            raw_obj,
-            Tilt::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-/// Bamboo leaf size.
-#[derive(PartialEq, Eq)]
-pub enum BambooLeavesEnum {
-    None,
-    Small,
-    Large,
-}
-impl std::fmt::Display for BambooLeavesEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            BambooLeavesEnum::None => f.write_str("NONE"),
-            BambooLeavesEnum::Small => f.write_str("SMALL"),
-            BambooLeavesEnum::Large => f.write_str("LARGE"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for BambooLeaves<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct BambooLeaves<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub BambooLeavesEnum,
-);
-impl<'mc> std::ops::Deref for BambooLeaves<'mc> {
-    type Target = BambooLeavesEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for BambooLeaves<'mc> {
+impl<'mc> JNIRaw<'mc> for TiltStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for BambooLeaves<'mc> {
-    type Enum = BambooLeavesEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for TiltStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate TiltStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Tilt")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a TiltStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> TiltStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+/// Bamboo leaf size.
+pub enum BambooLeaves<'mc> {
+    None { inner: BambooLeavesStruct<'mc> },
+    Small { inner: BambooLeavesStruct<'mc> },
+    Large { inner: BambooLeavesStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for BambooLeaves<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            BambooLeaves::None { .. } => f.write_str("NONE"),
+            BambooLeaves::Small { .. } => f.write_str("SMALL"),
+            BambooLeaves::Large { .. } => f.write_str("LARGE"),
+        }
+    }
+}
+
+impl<'mc> BambooLeaves<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<BambooLeaves<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Bamboo$Leaves");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Bamboo$Leaves;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "NONE" => Ok(BambooLeaves::None {
+                inner: BambooLeavesStruct::from_raw(env, obj)?,
+            }),
+            "SMALL" => Ok(BambooLeaves::Small {
+                inner: BambooLeavesStruct::from_raw(env, obj)?,
+            }),
+            "LARGE" => Ok(BambooLeaves::Large {
+                inner: BambooLeavesStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct BambooLeavesStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for BambooLeaves<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::None { inner } => inner.0.clone(),
+            Self::Small { inner } => inner.0.clone(),
+            Self::Large { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Small { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Large { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for BambooLeaves<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BambooLeaves from null object.").into());
@@ -40072,62 +39018,63 @@ impl<'mc> JNIInstantiatableEnum<'mc> for BambooLeaves<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "NONE" => Ok(BambooLeaves::None {
+                    inner: BambooLeavesStruct::from_raw(env, obj)?,
+                }),
+                "SMALL" => Ok(BambooLeaves::Small {
+                    inner: BambooLeavesStruct::from_raw(env, obj)?,
+                }),
+                "LARGE" => Ok(BambooLeaves::Large {
+                    inner: BambooLeavesStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> BambooLeaves<'mc> {
-    pub const NONE: BambooLeavesEnum = BambooLeavesEnum::None;
-    pub const SMALL: BambooLeavesEnum = BambooLeavesEnum::Small;
-    pub const LARGE: BambooLeavesEnum = BambooLeavesEnum::Large;
-    pub fn from_string(str: String) -> std::option::Option<BambooLeavesEnum> {
-        match str.as_str() {
-            "NONE" => Some(BambooLeavesEnum::None),
-            "SMALL" => Some(BambooLeavesEnum::Small),
-            "LARGE" => Some(BambooLeavesEnum::Large),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for BambooLeavesStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for BambooLeavesStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate BambooLeavesStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Bamboo$Leaves")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BambooLeavesStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<BambooLeaves<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/data/type/Bamboo$Leaves");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Bamboo$Leaves;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        BambooLeaves::from_raw(
-            &jni,
-            raw_obj,
-            BambooLeaves::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> BambooLeavesStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -40143,12 +39090,10 @@ impl<'mc> JNIRaw<'mc> for CaveVines<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CaveVines<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -40307,12 +39252,7 @@ impl<'mc> CaveVines<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -40415,12 +39355,7 @@ impl<'mc> CaveVines<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -40467,12 +39402,7 @@ impl<'mc> CaveVines<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -40531,14 +39461,9 @@ impl<'mc> CaveVines<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Ageable<'mc>> for CaveVines<'mc> {
@@ -40566,12 +39491,10 @@ impl<'mc> JNIRaw<'mc> for TurtleEgg<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for TurtleEgg<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -40770,12 +39693,7 @@ impl<'mc> TurtleEgg<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -40878,12 +39796,7 @@ impl<'mc> TurtleEgg<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_face_sturdy(
@@ -40930,12 +39843,7 @@ impl<'mc> TurtleEgg<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn mirror(
@@ -40972,14 +39880,9 @@ impl<'mc> TurtleEgg<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::data::Hatchable<'mc>> for TurtleEgg<'mc> {

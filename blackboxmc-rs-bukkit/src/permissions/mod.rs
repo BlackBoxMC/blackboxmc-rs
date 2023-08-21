@@ -16,12 +16,10 @@ impl<'mc> JNIRaw<'mc> for ServerOperator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ServerOperator<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -68,14 +66,9 @@ impl<'mc> ServerOperator<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Base Permissible for use in any Permissible object via proxy or extension
@@ -89,12 +82,10 @@ impl<'mc> JNIRaw<'mc> for PermissibleBase<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PermissibleBase<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -389,14 +380,9 @@ impl<'mc> PermissibleBase<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -415,59 +401,96 @@ impl<'mc> Into<crate::permissions::Permissible<'mc>> for PermissibleBase<'mc> {
             .expect("Error converting PermissibleBase into crate::permissions::Permissible")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum PermissionDefaultEnum {
-    VariantTrue,
-    VariantFalse,
-    Op,
-    NotOp,
-}
-impl std::fmt::Display for PermissionDefaultEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PermissionDefaultEnum::VariantTrue => f.write_str("TRUE"),
-            PermissionDefaultEnum::VariantFalse => f.write_str("FALSE"),
-            PermissionDefaultEnum::Op => f.write_str("OP"),
-            PermissionDefaultEnum::NotOp => f.write_str("NOT_OP"),
-        }
-    }
+pub enum PermissionDefault<'mc> {
+    VariantTrue { inner: PermissionDefaultStruct<'mc> },
+    VariantFalse { inner: PermissionDefaultStruct<'mc> },
+    Op { inner: PermissionDefaultStruct<'mc> },
+    NotOp { inner: PermissionDefaultStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for PermissionDefault<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            PermissionDefault::VariantTrue { .. } => f.write_str("TRUE"),
+            PermissionDefault::VariantFalse { .. } => f.write_str("FALSE"),
+            PermissionDefault::Op { .. } => f.write_str("OP"),
+            PermissionDefault::NotOp { .. } => f.write_str("NOT_OP"),
+        }
     }
 }
+
+impl<'mc> PermissionDefault<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PermissionDefault<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/permissions/PermissionDefault");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/permissions/PermissionDefault;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "TRUE" => Ok(PermissionDefault::VariantTrue {
+                inner: PermissionDefaultStruct::from_raw(env, obj)?,
+            }),
+            "FALSE" => Ok(PermissionDefault::VariantFalse {
+                inner: PermissionDefaultStruct::from_raw(env, obj)?,
+            }),
+            "OP" => Ok(PermissionDefault::Op {
+                inner: PermissionDefaultStruct::from_raw(env, obj)?,
+            }),
+            "NOT_OP" => Ok(PermissionDefault::NotOp {
+                inner: PermissionDefaultStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct PermissionDefault<'mc>(
+pub struct PermissionDefaultStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub PermissionDefaultEnum,
 );
-impl<'mc> std::ops::Deref for PermissionDefault<'mc> {
-    type Target = PermissionDefaultEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for PermissionDefault<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::VariantTrue { inner } => inner.0.clone(),
+            Self::VariantFalse { inner } => inner.0.clone(),
+            Self::Op { inner } => inner.0.clone(),
+            Self::NotOp { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::VariantTrue { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::VariantFalse { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Op { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NotOp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for PermissionDefault<'mc> {
-    type Enum = PermissionDefaultEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for PermissionDefault<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -482,64 +505,67 @@ impl<'mc> JNIInstantiatableEnum<'mc> for PermissionDefault<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "TRUE" => Ok(PermissionDefault::VariantTrue {
+                    inner: PermissionDefaultStruct::from_raw(env, obj)?,
+                }),
+                "FALSE" => Ok(PermissionDefault::VariantFalse {
+                    inner: PermissionDefaultStruct::from_raw(env, obj)?,
+                }),
+                "OP" => Ok(PermissionDefault::Op {
+                    inner: PermissionDefaultStruct::from_raw(env, obj)?,
+                }),
+                "NOT_OP" => Ok(PermissionDefault::NotOp {
+                    inner: PermissionDefaultStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> PermissionDefault<'mc> {
-    pub const TRUE: PermissionDefaultEnum = PermissionDefaultEnum::VariantTrue;
-    pub const FALSE: PermissionDefaultEnum = PermissionDefaultEnum::VariantFalse;
-    pub const OP: PermissionDefaultEnum = PermissionDefaultEnum::Op;
-    pub const NOT_OP: PermissionDefaultEnum = PermissionDefaultEnum::NotOp;
-    pub fn from_string(str: String) -> std::option::Option<PermissionDefaultEnum> {
-        match str.as_str() {
-            "TRUE" => Some(PermissionDefaultEnum::VariantTrue),
-            "FALSE" => Some(PermissionDefaultEnum::VariantFalse),
-            "OP" => Some(PermissionDefaultEnum::Op),
-            "NOT_OP" => Some(PermissionDefaultEnum::NotOp),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for PermissionDefaultStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PermissionDefaultStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PermissionDefaultStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/permissions/PermissionDefault")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PermissionDefaultStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<PermissionDefault<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/permissions/PermissionDefault");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/permissions/PermissionDefault;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        PermissionDefault::from_raw(
-            &jni,
-            raw_obj,
-            PermissionDefault::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> PermissionDefaultStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents an object that may be assigned permissions
@@ -555,12 +581,10 @@ impl<'mc> JNIRaw<'mc> for Permissible<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Permissible<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -730,14 +754,9 @@ impl<'mc> Permissible<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::permissions::ServerOperator<'mc>> for Permissible<'mc> {
@@ -757,12 +776,10 @@ impl<'mc> JNIRaw<'mc> for Permission<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Permission<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -890,12 +907,7 @@ impl<'mc> Permission<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::permissions::PermissionDefault::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::permissions::PermissionDefault::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::permissions::PermissionDefault::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1109,14 +1121,9 @@ impl<'mc> Permission<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1140,12 +1147,10 @@ impl<'mc> JNIRaw<'mc> for PermissionAttachmentInfo<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PermissionAttachmentInfo<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1350,14 +1355,9 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1381,12 +1381,10 @@ impl<'mc> JNIRaw<'mc> for PermissionAttachment<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PermissionAttachment<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1659,14 +1657,9 @@ impl<'mc> PermissionAttachment<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1692,12 +1685,10 @@ impl<'mc> JNIRaw<'mc> for PermissionRemovedExecutor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PermissionRemovedExecutor<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1742,13 +1733,8 @@ impl<'mc> PermissionRemovedExecutor<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }

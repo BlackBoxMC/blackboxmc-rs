@@ -16,12 +16,10 @@ impl<'mc> JNIRaw<'mc> for CartographyInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CartographyInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -255,12 +253,7 @@ impl<'mc> CartographyInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -457,14 +450,9 @@ impl<'mc> CartographyInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for CartographyInventory<'mc> {
@@ -486,12 +474,10 @@ impl<'mc> JNIRaw<'mc> for Recipe<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Recipe<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -525,14 +511,9 @@ impl<'mc> Recipe<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a Stonecutting recipe.
@@ -546,12 +527,10 @@ impl<'mc> JNIRaw<'mc> for StonecuttingRecipe<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for StonecuttingRecipe<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -814,14 +793,9 @@ impl<'mc> StonecuttingRecipe<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -857,12 +831,10 @@ impl<'mc> JNIRaw<'mc> for FurnaceRecipe<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for FurnaceRecipe<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1070,12 +1042,7 @@ impl<'mc> FurnaceRecipe<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::inventory::recipe::CookingBookCategory::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::inventory::recipe::CookingBookCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::inventory::recipe::CookingBookCategory::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn input_choice(
@@ -1272,14 +1239,9 @@ impl<'mc> FurnaceRecipe<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1311,12 +1273,10 @@ impl<'mc> JNIRaw<'mc> for HorseInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for HorseInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1620,12 +1580,7 @@ impl<'mc> HorseInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1822,14 +1777,9 @@ impl<'mc> HorseInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::AbstractHorseInventory<'mc>> for HorseInventory<'mc> {
@@ -1851,12 +1801,10 @@ impl<'mc> JNIRaw<'mc> for ComplexRecipe<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ComplexRecipe<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1901,14 +1849,9 @@ impl<'mc> ComplexRecipe<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Recipe<'mc>> for ComplexRecipe<'mc> {
@@ -1936,12 +1879,10 @@ impl<'mc> JNIRaw<'mc> for DoubleChestInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for DoubleChestInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2220,12 +2161,7 @@ impl<'mc> DoubleChestInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2405,14 +2341,9 @@ impl<'mc> DoubleChestInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for DoubleChestInventory<'mc> {
@@ -2434,12 +2365,10 @@ impl<'mc> JNIRaw<'mc> for BlockInventoryHolder<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockInventoryHolder<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2488,14 +2417,9 @@ impl<'mc> BlockInventoryHolder<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::InventoryHolder<'mc>> for BlockInventoryHolder<'mc> {
@@ -2517,12 +2441,10 @@ impl<'mc> JNIRaw<'mc> for JukeboxInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for JukeboxInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2808,12 +2730,7 @@ impl<'mc> JukeboxInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2993,14 +2910,9 @@ impl<'mc> JukeboxInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for JukeboxInventory<'mc> {
@@ -3020,12 +2932,10 @@ impl<'mc> JNIRaw<'mc> for SmithingRecipe<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SmithingRecipe<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3225,14 +3135,9 @@ impl<'mc> SmithingRecipe<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3268,12 +3173,10 @@ impl<'mc> JNIRaw<'mc> for CraftingRecipe<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CraftingRecipe<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3339,12 +3242,7 @@ impl<'mc> CraftingRecipe<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::inventory::recipe::CraftingBookCategory::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::inventory::recipe::CraftingBookCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::inventory::recipe::CraftingBookCategory::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3484,14 +3382,9 @@ impl<'mc> CraftingRecipe<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3523,95 +3416,287 @@ pub struct InventoryView<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum InventoryViewPropertyEnum {
-    BrewTime,
-    FuelTime,
-    BurnTime,
-    TicksForCurrentFuel,
-    CookTime,
-    TicksForCurrentSmelting,
-    EnchantButton1,
-    EnchantButton2,
-    EnchantButton3,
-    EnchantXpSeed,
-    EnchantId1,
-    EnchantId2,
-    EnchantId3,
-    EnchantLevel1,
-    EnchantLevel2,
-    EnchantLevel3,
-    Levels,
-    PrimaryEffect,
-    SecondaryEffect,
-    RepairCost,
-    BookPage,
-}
-impl std::fmt::Display for InventoryViewPropertyEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            InventoryViewPropertyEnum::BrewTime => f.write_str("BREW_TIME"),
-            InventoryViewPropertyEnum::FuelTime => f.write_str("FUEL_TIME"),
-            InventoryViewPropertyEnum::BurnTime => f.write_str("BURN_TIME"),
-            InventoryViewPropertyEnum::TicksForCurrentFuel => f.write_str("TICKS_FOR_CURRENT_FUEL"),
-            InventoryViewPropertyEnum::CookTime => f.write_str("COOK_TIME"),
-            InventoryViewPropertyEnum::TicksForCurrentSmelting => {
-                f.write_str("TICKS_FOR_CURRENT_SMELTING")
-            }
-            InventoryViewPropertyEnum::EnchantButton1 => f.write_str("ENCHANT_BUTTON1"),
-            InventoryViewPropertyEnum::EnchantButton2 => f.write_str("ENCHANT_BUTTON2"),
-            InventoryViewPropertyEnum::EnchantButton3 => f.write_str("ENCHANT_BUTTON3"),
-            InventoryViewPropertyEnum::EnchantXpSeed => f.write_str("ENCHANT_XP_SEED"),
-            InventoryViewPropertyEnum::EnchantId1 => f.write_str("ENCHANT_ID1"),
-            InventoryViewPropertyEnum::EnchantId2 => f.write_str("ENCHANT_ID2"),
-            InventoryViewPropertyEnum::EnchantId3 => f.write_str("ENCHANT_ID3"),
-            InventoryViewPropertyEnum::EnchantLevel1 => f.write_str("ENCHANT_LEVEL1"),
-            InventoryViewPropertyEnum::EnchantLevel2 => f.write_str("ENCHANT_LEVEL2"),
-            InventoryViewPropertyEnum::EnchantLevel3 => f.write_str("ENCHANT_LEVEL3"),
-            InventoryViewPropertyEnum::Levels => f.write_str("LEVELS"),
-            InventoryViewPropertyEnum::PrimaryEffect => f.write_str("PRIMARY_EFFECT"),
-            InventoryViewPropertyEnum::SecondaryEffect => f.write_str("SECONDARY_EFFECT"),
-            InventoryViewPropertyEnum::RepairCost => f.write_str("REPAIR_COST"),
-            InventoryViewPropertyEnum::BookPage => f.write_str("BOOK_PAGE"),
-        }
-    }
+pub enum InventoryViewProperty<'mc> {
+    BrewTime {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    FuelTime {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    BurnTime {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    TicksForCurrentFuel {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    CookTime {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    TicksForCurrentSmelting {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    EnchantButton1 {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    EnchantButton2 {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    EnchantButton3 {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    EnchantXpSeed {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    EnchantId1 {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    EnchantId2 {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    EnchantId3 {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    EnchantLevel1 {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    EnchantLevel2 {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    EnchantLevel3 {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    Levels {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    PrimaryEffect {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    SecondaryEffect {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    RepairCost {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
+    BookPage {
+        inner: InventoryViewPropertyStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for InventoryViewProperty<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            InventoryViewProperty::BrewTime { .. } => f.write_str("BREW_TIME"),
+            InventoryViewProperty::FuelTime { .. } => f.write_str("FUEL_TIME"),
+            InventoryViewProperty::BurnTime { .. } => f.write_str("BURN_TIME"),
+            InventoryViewProperty::TicksForCurrentFuel { .. } => {
+                f.write_str("TICKS_FOR_CURRENT_FUEL")
+            }
+            InventoryViewProperty::CookTime { .. } => f.write_str("COOK_TIME"),
+            InventoryViewProperty::TicksForCurrentSmelting { .. } => {
+                f.write_str("TICKS_FOR_CURRENT_SMELTING")
+            }
+            InventoryViewProperty::EnchantButton1 { .. } => f.write_str("ENCHANT_BUTTON1"),
+            InventoryViewProperty::EnchantButton2 { .. } => f.write_str("ENCHANT_BUTTON2"),
+            InventoryViewProperty::EnchantButton3 { .. } => f.write_str("ENCHANT_BUTTON3"),
+            InventoryViewProperty::EnchantXpSeed { .. } => f.write_str("ENCHANT_XP_SEED"),
+            InventoryViewProperty::EnchantId1 { .. } => f.write_str("ENCHANT_ID1"),
+            InventoryViewProperty::EnchantId2 { .. } => f.write_str("ENCHANT_ID2"),
+            InventoryViewProperty::EnchantId3 { .. } => f.write_str("ENCHANT_ID3"),
+            InventoryViewProperty::EnchantLevel1 { .. } => f.write_str("ENCHANT_LEVEL1"),
+            InventoryViewProperty::EnchantLevel2 { .. } => f.write_str("ENCHANT_LEVEL2"),
+            InventoryViewProperty::EnchantLevel3 { .. } => f.write_str("ENCHANT_LEVEL3"),
+            InventoryViewProperty::Levels { .. } => f.write_str("LEVELS"),
+            InventoryViewProperty::PrimaryEffect { .. } => f.write_str("PRIMARY_EFFECT"),
+            InventoryViewProperty::SecondaryEffect { .. } => f.write_str("SECONDARY_EFFECT"),
+            InventoryViewProperty::RepairCost { .. } => f.write_str("REPAIR_COST"),
+            InventoryViewProperty::BookPage { .. } => f.write_str("BOOK_PAGE"),
+        }
     }
 }
+
+impl<'mc> InventoryViewProperty<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<InventoryViewProperty<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/inventory/InventoryView$Property");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/inventory/InventoryView$Property;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "BREW_TIME" => Ok(InventoryViewProperty::BrewTime {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "FUEL_TIME" => Ok(InventoryViewProperty::FuelTime {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "BURN_TIME" => Ok(InventoryViewProperty::BurnTime {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "TICKS_FOR_CURRENT_FUEL" => Ok(InventoryViewProperty::TicksForCurrentFuel {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "COOK_TIME" => Ok(InventoryViewProperty::CookTime {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "TICKS_FOR_CURRENT_SMELTING" => Ok(InventoryViewProperty::TicksForCurrentSmelting {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_BUTTON1" => Ok(InventoryViewProperty::EnchantButton1 {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_BUTTON2" => Ok(InventoryViewProperty::EnchantButton2 {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_BUTTON3" => Ok(InventoryViewProperty::EnchantButton3 {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_XP_SEED" => Ok(InventoryViewProperty::EnchantXpSeed {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_ID1" => Ok(InventoryViewProperty::EnchantId1 {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_ID2" => Ok(InventoryViewProperty::EnchantId2 {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_ID3" => Ok(InventoryViewProperty::EnchantId3 {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_LEVEL1" => Ok(InventoryViewProperty::EnchantLevel1 {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_LEVEL2" => Ok(InventoryViewProperty::EnchantLevel2 {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_LEVEL3" => Ok(InventoryViewProperty::EnchantLevel3 {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "LEVELS" => Ok(InventoryViewProperty::Levels {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "PRIMARY_EFFECT" => Ok(InventoryViewProperty::PrimaryEffect {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "SECONDARY_EFFECT" => Ok(InventoryViewProperty::SecondaryEffect {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "REPAIR_COST" => Ok(InventoryViewProperty::RepairCost {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+            "BOOK_PAGE" => Ok(InventoryViewProperty::BookPage {
+                inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct InventoryViewProperty<'mc>(
+pub struct InventoryViewPropertyStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub InventoryViewPropertyEnum,
 );
-impl<'mc> std::ops::Deref for InventoryViewProperty<'mc> {
-    type Target = InventoryViewPropertyEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for InventoryViewProperty<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::BrewTime { inner } => inner.0.clone(),
+            Self::FuelTime { inner } => inner.0.clone(),
+            Self::BurnTime { inner } => inner.0.clone(),
+            Self::TicksForCurrentFuel { inner } => inner.0.clone(),
+            Self::CookTime { inner } => inner.0.clone(),
+            Self::TicksForCurrentSmelting { inner } => inner.0.clone(),
+            Self::EnchantButton1 { inner } => inner.0.clone(),
+            Self::EnchantButton2 { inner } => inner.0.clone(),
+            Self::EnchantButton3 { inner } => inner.0.clone(),
+            Self::EnchantXpSeed { inner } => inner.0.clone(),
+            Self::EnchantId1 { inner } => inner.0.clone(),
+            Self::EnchantId2 { inner } => inner.0.clone(),
+            Self::EnchantId3 { inner } => inner.0.clone(),
+            Self::EnchantLevel1 { inner } => inner.0.clone(),
+            Self::EnchantLevel2 { inner } => inner.0.clone(),
+            Self::EnchantLevel3 { inner } => inner.0.clone(),
+            Self::Levels { inner } => inner.0.clone(),
+            Self::PrimaryEffect { inner } => inner.0.clone(),
+            Self::SecondaryEffect { inner } => inner.0.clone(),
+            Self::RepairCost { inner } => inner.0.clone(),
+            Self::BookPage { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::BrewTime { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FuelTime { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::BurnTime { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::TicksForCurrentFuel { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CookTime { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::TicksForCurrentSmelting { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantButton1 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantButton2 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantButton3 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantXpSeed { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantId1 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantId2 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantId3 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantLevel1 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantLevel2 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantLevel3 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Levels { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::PrimaryEffect { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SecondaryEffect { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::RepairCost { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BookPage { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for InventoryViewProperty<'mc> {
-    type Enum = InventoryViewPropertyEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for InventoryViewProperty<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -3628,98 +3713,118 @@ impl<'mc> JNIInstantiatableEnum<'mc> for InventoryViewProperty<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "BREW_TIME" => Ok(InventoryViewProperty::BrewTime {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "FUEL_TIME" => Ok(InventoryViewProperty::FuelTime {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "BURN_TIME" => Ok(InventoryViewProperty::BurnTime {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "TICKS_FOR_CURRENT_FUEL" => Ok(InventoryViewProperty::TicksForCurrentFuel {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "COOK_TIME" => Ok(InventoryViewProperty::CookTime {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "TICKS_FOR_CURRENT_SMELTING" => {
+                    Ok(InventoryViewProperty::TicksForCurrentSmelting {
+                        inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                    })
+                }
+                "ENCHANT_BUTTON1" => Ok(InventoryViewProperty::EnchantButton1 {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_BUTTON2" => Ok(InventoryViewProperty::EnchantButton2 {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_BUTTON3" => Ok(InventoryViewProperty::EnchantButton3 {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_XP_SEED" => Ok(InventoryViewProperty::EnchantXpSeed {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_ID1" => Ok(InventoryViewProperty::EnchantId1 {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_ID2" => Ok(InventoryViewProperty::EnchantId2 {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_ID3" => Ok(InventoryViewProperty::EnchantId3 {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_LEVEL1" => Ok(InventoryViewProperty::EnchantLevel1 {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_LEVEL2" => Ok(InventoryViewProperty::EnchantLevel2 {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_LEVEL3" => Ok(InventoryViewProperty::EnchantLevel3 {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "LEVELS" => Ok(InventoryViewProperty::Levels {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "PRIMARY_EFFECT" => Ok(InventoryViewProperty::PrimaryEffect {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "SECONDARY_EFFECT" => Ok(InventoryViewProperty::SecondaryEffect {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "REPAIR_COST" => Ok(InventoryViewProperty::RepairCost {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                "BOOK_PAGE" => Ok(InventoryViewProperty::BookPage {
+                    inner: InventoryViewPropertyStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> InventoryViewProperty<'mc> {
-    pub const BREW_TIME: InventoryViewPropertyEnum = InventoryViewPropertyEnum::BrewTime;
-    pub const FUEL_TIME: InventoryViewPropertyEnum = InventoryViewPropertyEnum::FuelTime;
-    pub const BURN_TIME: InventoryViewPropertyEnum = InventoryViewPropertyEnum::BurnTime;
-    pub const TICKS_FOR_CURRENT_FUEL: InventoryViewPropertyEnum =
-        InventoryViewPropertyEnum::TicksForCurrentFuel;
-    pub const COOK_TIME: InventoryViewPropertyEnum = InventoryViewPropertyEnum::CookTime;
-    pub const TICKS_FOR_CURRENT_SMELTING: InventoryViewPropertyEnum =
-        InventoryViewPropertyEnum::TicksForCurrentSmelting;
-    pub const ENCHANT_BUTTON1: InventoryViewPropertyEnum =
-        InventoryViewPropertyEnum::EnchantButton1;
-    pub const ENCHANT_BUTTON2: InventoryViewPropertyEnum =
-        InventoryViewPropertyEnum::EnchantButton2;
-    pub const ENCHANT_BUTTON3: InventoryViewPropertyEnum =
-        InventoryViewPropertyEnum::EnchantButton3;
-    pub const ENCHANT_XP_SEED: InventoryViewPropertyEnum = InventoryViewPropertyEnum::EnchantXpSeed;
-    pub const ENCHANT_ID1: InventoryViewPropertyEnum = InventoryViewPropertyEnum::EnchantId1;
-    pub const ENCHANT_ID2: InventoryViewPropertyEnum = InventoryViewPropertyEnum::EnchantId2;
-    pub const ENCHANT_ID3: InventoryViewPropertyEnum = InventoryViewPropertyEnum::EnchantId3;
-    pub const ENCHANT_LEVEL1: InventoryViewPropertyEnum = InventoryViewPropertyEnum::EnchantLevel1;
-    pub const ENCHANT_LEVEL2: InventoryViewPropertyEnum = InventoryViewPropertyEnum::EnchantLevel2;
-    pub const ENCHANT_LEVEL3: InventoryViewPropertyEnum = InventoryViewPropertyEnum::EnchantLevel3;
-    pub const LEVELS: InventoryViewPropertyEnum = InventoryViewPropertyEnum::Levels;
-    pub const PRIMARY_EFFECT: InventoryViewPropertyEnum = InventoryViewPropertyEnum::PrimaryEffect;
-    pub const SECONDARY_EFFECT: InventoryViewPropertyEnum =
-        InventoryViewPropertyEnum::SecondaryEffect;
-    pub const REPAIR_COST: InventoryViewPropertyEnum = InventoryViewPropertyEnum::RepairCost;
-    pub const BOOK_PAGE: InventoryViewPropertyEnum = InventoryViewPropertyEnum::BookPage;
-    pub fn from_string(str: String) -> std::option::Option<InventoryViewPropertyEnum> {
-        match str.as_str() {
-            "BREW_TIME" => Some(InventoryViewPropertyEnum::BrewTime),
-            "FUEL_TIME" => Some(InventoryViewPropertyEnum::FuelTime),
-            "BURN_TIME" => Some(InventoryViewPropertyEnum::BurnTime),
-            "TICKS_FOR_CURRENT_FUEL" => Some(InventoryViewPropertyEnum::TicksForCurrentFuel),
-            "COOK_TIME" => Some(InventoryViewPropertyEnum::CookTime),
-            "TICKS_FOR_CURRENT_SMELTING" => {
-                Some(InventoryViewPropertyEnum::TicksForCurrentSmelting)
-            }
-            "ENCHANT_BUTTON1" => Some(InventoryViewPropertyEnum::EnchantButton1),
-            "ENCHANT_BUTTON2" => Some(InventoryViewPropertyEnum::EnchantButton2),
-            "ENCHANT_BUTTON3" => Some(InventoryViewPropertyEnum::EnchantButton3),
-            "ENCHANT_XP_SEED" => Some(InventoryViewPropertyEnum::EnchantXpSeed),
-            "ENCHANT_ID1" => Some(InventoryViewPropertyEnum::EnchantId1),
-            "ENCHANT_ID2" => Some(InventoryViewPropertyEnum::EnchantId2),
-            "ENCHANT_ID3" => Some(InventoryViewPropertyEnum::EnchantId3),
-            "ENCHANT_LEVEL1" => Some(InventoryViewPropertyEnum::EnchantLevel1),
-            "ENCHANT_LEVEL2" => Some(InventoryViewPropertyEnum::EnchantLevel2),
-            "ENCHANT_LEVEL3" => Some(InventoryViewPropertyEnum::EnchantLevel3),
-            "LEVELS" => Some(InventoryViewPropertyEnum::Levels),
-            "PRIMARY_EFFECT" => Some(InventoryViewPropertyEnum::PrimaryEffect),
-            "SECONDARY_EFFECT" => Some(InventoryViewPropertyEnum::SecondaryEffect),
-            "REPAIR_COST" => Some(InventoryViewPropertyEnum::RepairCost),
-            "BOOK_PAGE" => Some(InventoryViewPropertyEnum::BookPage),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for InventoryViewPropertyStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for InventoryViewPropertyStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate InventoryViewPropertyStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/inventory/InventoryView$Property")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a InventoryViewPropertyStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<InventoryViewProperty<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/inventory/InventoryView$Property");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/inventory/InventoryView$Property;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        InventoryViewProperty::from_raw(
-            &jni,
-            raw_obj,
-            InventoryViewProperty::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
+impl<'mc> InventoryViewPropertyStruct<'mc> {
     pub fn id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -3746,22 +3851,12 @@ impl<'mc> InventoryViewProperty<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3769,12 +3864,10 @@ impl<'mc> JNIRaw<'mc> for InventoryView<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for InventoryView<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3880,12 +3973,7 @@ impl<'mc> InventoryView<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_item(
@@ -4075,12 +4163,7 @@ impl<'mc> InventoryView<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryTypeSlotType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryTypeSlotType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryTypeSlotType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn original_title(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4205,14 +4288,9 @@ impl<'mc> InventoryView<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -4236,12 +4314,10 @@ impl<'mc> JNIRaw<'mc> for CampfireRecipe<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CampfireRecipe<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4377,12 +4453,7 @@ impl<'mc> CampfireRecipe<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::inventory::recipe::CookingBookCategory::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::inventory::recipe::CookingBookCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::inventory::recipe::CookingBookCategory::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_input_choice(
@@ -4601,14 +4672,9 @@ impl<'mc> CampfireRecipe<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -4639,12 +4705,10 @@ impl<'mc> JNIRaw<'mc> for ItemStack<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ItemStack<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4787,12 +4851,7 @@ impl<'mc> ItemStack<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_type(
@@ -5199,14 +5258,9 @@ impl<'mc> ItemStack<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -5243,12 +5297,10 @@ impl<'mc> JNIRaw<'mc> for RecipeChoiceMaterialChoice<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RecipeChoiceMaterialChoice<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5420,21 +5472,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
         let iter = list.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
-            let variant = self
-                .0
-                .call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-            let variant = self.jni_ref().translate_error(variant)?;
-            let variant_str = self
-                .0
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            new_vec.push(crate::Material::from_raw(
-                &self.0,
-                obj,
-                crate::Material::from_string(variant_str)
-                    .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-            )?);
+            new_vec.push(crate::Material::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
     }
@@ -5547,14 +5585,9 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -5567,67 +5600,134 @@ impl<'mc> std::string::ToString for RecipeChoiceMaterialChoice<'mc> {
     }
 }
 
-#[derive(PartialEq, Eq)]
-pub enum ItemFlagEnum {
-    HideEnchants,
-    HideAttributes,
-    HideUnbreakable,
-    HideDestroys,
-    HidePlacedOn,
-    HidePotionEffects,
-    HideDye,
-    HideArmorTrim,
-}
-impl std::fmt::Display for ItemFlagEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ItemFlagEnum::HideEnchants => f.write_str("HIDE_ENCHANTS"),
-            ItemFlagEnum::HideAttributes => f.write_str("HIDE_ATTRIBUTES"),
-            ItemFlagEnum::HideUnbreakable => f.write_str("HIDE_UNBREAKABLE"),
-            ItemFlagEnum::HideDestroys => f.write_str("HIDE_DESTROYS"),
-            ItemFlagEnum::HidePlacedOn => f.write_str("HIDE_PLACED_ON"),
-            ItemFlagEnum::HidePotionEffects => f.write_str("HIDE_POTION_EFFECTS"),
-            ItemFlagEnum::HideDye => f.write_str("HIDE_DYE"),
-            ItemFlagEnum::HideArmorTrim => f.write_str("HIDE_ARMOR_TRIM"),
-        }
-    }
+pub enum ItemFlag<'mc> {
+    HideEnchants { inner: ItemFlagStruct<'mc> },
+    HideAttributes { inner: ItemFlagStruct<'mc> },
+    HideUnbreakable { inner: ItemFlagStruct<'mc> },
+    HideDestroys { inner: ItemFlagStruct<'mc> },
+    HidePlacedOn { inner: ItemFlagStruct<'mc> },
+    HidePotionEffects { inner: ItemFlagStruct<'mc> },
+    HideDye { inner: ItemFlagStruct<'mc> },
+    HideArmorTrim { inner: ItemFlagStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for ItemFlag<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            ItemFlag::HideEnchants { .. } => f.write_str("HIDE_ENCHANTS"),
+            ItemFlag::HideAttributes { .. } => f.write_str("HIDE_ATTRIBUTES"),
+            ItemFlag::HideUnbreakable { .. } => f.write_str("HIDE_UNBREAKABLE"),
+            ItemFlag::HideDestroys { .. } => f.write_str("HIDE_DESTROYS"),
+            ItemFlag::HidePlacedOn { .. } => f.write_str("HIDE_PLACED_ON"),
+            ItemFlag::HidePotionEffects { .. } => f.write_str("HIDE_POTION_EFFECTS"),
+            ItemFlag::HideDye { .. } => f.write_str("HIDE_DYE"),
+            ItemFlag::HideArmorTrim { .. } => f.write_str("HIDE_ARMOR_TRIM"),
+        }
     }
 }
+
+impl<'mc> ItemFlag<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<ItemFlag<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/inventory/ItemFlag");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/inventory/ItemFlag;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "HIDE_ENCHANTS" => Ok(ItemFlag::HideEnchants {
+                inner: ItemFlagStruct::from_raw(env, obj)?,
+            }),
+            "HIDE_ATTRIBUTES" => Ok(ItemFlag::HideAttributes {
+                inner: ItemFlagStruct::from_raw(env, obj)?,
+            }),
+            "HIDE_UNBREAKABLE" => Ok(ItemFlag::HideUnbreakable {
+                inner: ItemFlagStruct::from_raw(env, obj)?,
+            }),
+            "HIDE_DESTROYS" => Ok(ItemFlag::HideDestroys {
+                inner: ItemFlagStruct::from_raw(env, obj)?,
+            }),
+            "HIDE_PLACED_ON" => Ok(ItemFlag::HidePlacedOn {
+                inner: ItemFlagStruct::from_raw(env, obj)?,
+            }),
+            "HIDE_POTION_EFFECTS" => Ok(ItemFlag::HidePotionEffects {
+                inner: ItemFlagStruct::from_raw(env, obj)?,
+            }),
+            "HIDE_DYE" => Ok(ItemFlag::HideDye {
+                inner: ItemFlagStruct::from_raw(env, obj)?,
+            }),
+            "HIDE_ARMOR_TRIM" => Ok(ItemFlag::HideArmorTrim {
+                inner: ItemFlagStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct ItemFlag<'mc>(
+pub struct ItemFlagStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub ItemFlagEnum,
 );
-impl<'mc> std::ops::Deref for ItemFlag<'mc> {
-    type Target = ItemFlagEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for ItemFlag<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::HideEnchants { inner } => inner.0.clone(),
+            Self::HideAttributes { inner } => inner.0.clone(),
+            Self::HideUnbreakable { inner } => inner.0.clone(),
+            Self::HideDestroys { inner } => inner.0.clone(),
+            Self::HidePlacedOn { inner } => inner.0.clone(),
+            Self::HidePotionEffects { inner } => inner.0.clone(),
+            Self::HideDye { inner } => inner.0.clone(),
+            Self::HideArmorTrim { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::HideEnchants { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HideAttributes { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HideUnbreakable { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HideDestroys { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HidePlacedOn { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HidePotionEffects { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HideDye { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::HideArmorTrim { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for ItemFlag<'mc> {
-    type Enum = ItemFlagEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for ItemFlag<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate ItemFlag from null object.").into());
@@ -5640,123 +5740,152 @@ impl<'mc> JNIInstantiatableEnum<'mc> for ItemFlag<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "HIDE_ENCHANTS" => Ok(ItemFlag::HideEnchants {
+                    inner: ItemFlagStruct::from_raw(env, obj)?,
+                }),
+                "HIDE_ATTRIBUTES" => Ok(ItemFlag::HideAttributes {
+                    inner: ItemFlagStruct::from_raw(env, obj)?,
+                }),
+                "HIDE_UNBREAKABLE" => Ok(ItemFlag::HideUnbreakable {
+                    inner: ItemFlagStruct::from_raw(env, obj)?,
+                }),
+                "HIDE_DESTROYS" => Ok(ItemFlag::HideDestroys {
+                    inner: ItemFlagStruct::from_raw(env, obj)?,
+                }),
+                "HIDE_PLACED_ON" => Ok(ItemFlag::HidePlacedOn {
+                    inner: ItemFlagStruct::from_raw(env, obj)?,
+                }),
+                "HIDE_POTION_EFFECTS" => Ok(ItemFlag::HidePotionEffects {
+                    inner: ItemFlagStruct::from_raw(env, obj)?,
+                }),
+                "HIDE_DYE" => Ok(ItemFlag::HideDye {
+                    inner: ItemFlagStruct::from_raw(env, obj)?,
+                }),
+                "HIDE_ARMOR_TRIM" => Ok(ItemFlag::HideArmorTrim {
+                    inner: ItemFlagStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> ItemFlag<'mc> {
-    pub const HIDE_ENCHANTS: ItemFlagEnum = ItemFlagEnum::HideEnchants;
-    pub const HIDE_ATTRIBUTES: ItemFlagEnum = ItemFlagEnum::HideAttributes;
-    pub const HIDE_UNBREAKABLE: ItemFlagEnum = ItemFlagEnum::HideUnbreakable;
-    pub const HIDE_DESTROYS: ItemFlagEnum = ItemFlagEnum::HideDestroys;
-    pub const HIDE_PLACED_ON: ItemFlagEnum = ItemFlagEnum::HidePlacedOn;
-    pub const HIDE_POTION_EFFECTS: ItemFlagEnum = ItemFlagEnum::HidePotionEffects;
-    pub const HIDE_DYE: ItemFlagEnum = ItemFlagEnum::HideDye;
-    pub const HIDE_ARMOR_TRIM: ItemFlagEnum = ItemFlagEnum::HideArmorTrim;
-    pub fn from_string(str: String) -> std::option::Option<ItemFlagEnum> {
-        match str.as_str() {
-            "HIDE_ENCHANTS" => Some(ItemFlagEnum::HideEnchants),
-            "HIDE_ATTRIBUTES" => Some(ItemFlagEnum::HideAttributes),
-            "HIDE_UNBREAKABLE" => Some(ItemFlagEnum::HideUnbreakable),
-            "HIDE_DESTROYS" => Some(ItemFlagEnum::HideDestroys),
-            "HIDE_PLACED_ON" => Some(ItemFlagEnum::HidePlacedOn),
-            "HIDE_POTION_EFFECTS" => Some(ItemFlagEnum::HidePotionEffects),
-            "HIDE_DYE" => Some(ItemFlagEnum::HideDye),
-            "HIDE_ARMOR_TRIM" => Some(ItemFlagEnum::HideArmorTrim),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<ItemFlag<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/inventory/ItemFlag");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/inventory/ItemFlag;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        ItemFlag::from_raw(
-            &jni,
-            raw_obj,
-            ItemFlag::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-#[derive(PartialEq, Eq)]
-pub enum MainHandEnum {
-    Left,
-    Right,
-}
-impl std::fmt::Display for MainHandEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            MainHandEnum::Left => f.write_str("LEFT"),
-            MainHandEnum::Right => f.write_str("RIGHT"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for MainHand<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct MainHand<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub MainHandEnum,
-);
-impl<'mc> std::ops::Deref for MainHand<'mc> {
-    type Target = MainHandEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for MainHand<'mc> {
+impl<'mc> JNIRaw<'mc> for ItemFlagStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for MainHand<'mc> {
-    type Enum = MainHandEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for ItemFlagStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate ItemFlagStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/inventory/ItemFlag")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ItemFlagStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> ItemFlagStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+pub enum MainHand<'mc> {
+    Left { inner: MainHandStruct<'mc> },
+    Right { inner: MainHandStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for MainHand<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            MainHand::Left { .. } => f.write_str("LEFT"),
+            MainHand::Right { .. } => f.write_str("RIGHT"),
+        }
+    }
+}
+
+impl<'mc> MainHand<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<MainHand<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/inventory/MainHand");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/inventory/MainHand;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "LEFT" => Ok(MainHand::Left {
+                inner: MainHandStruct::from_raw(env, obj)?,
+            }),
+            "RIGHT" => Ok(MainHand::Right {
+                inner: MainHandStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct MainHandStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for MainHand<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Left { inner } => inner.0.clone(),
+            Self::Right { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Left { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Right { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for MainHand<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MainHand from null object.").into());
@@ -5769,60 +5898,60 @@ impl<'mc> JNIInstantiatableEnum<'mc> for MainHand<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "LEFT" => Ok(MainHand::Left {
+                    inner: MainHandStruct::from_raw(env, obj)?,
+                }),
+                "RIGHT" => Ok(MainHand::Right {
+                    inner: MainHandStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> MainHand<'mc> {
-    pub const LEFT: MainHandEnum = MainHandEnum::Left;
-    pub const RIGHT: MainHandEnum = MainHandEnum::Right;
-    pub fn from_string(str: String) -> std::option::Option<MainHandEnum> {
-        match str.as_str() {
-            "LEFT" => Some(MainHandEnum::Left),
-            "RIGHT" => Some(MainHandEnum::Right),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for MainHandStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for MainHandStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate MainHandStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/inventory/MainHand")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a MainHandStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<MainHand<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/inventory/MainHand");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/inventory/MainHand;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        MainHand::from_raw(
-            &jni,
-            raw_obj,
-            MainHand::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> MainHandStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Interface to the various inventories. Behavior relating to <a href="../Material.html#AIR"><code>Material.AIR</code></a> is unspecified.
@@ -5842,12 +5971,10 @@ impl<'mc> JNIRaw<'mc> for Inventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Inventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6079,12 +6206,7 @@ impl<'mc> Inventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -6288,14 +6410,9 @@ impl<'mc> Inventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a choice that will be valid only one of the stacks is exactly matched (aside from stack size).
@@ -6311,12 +6428,10 @@ impl<'mc> JNIRaw<'mc> for RecipeChoiceExactChoice<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RecipeChoiceExactChoice<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6587,14 +6702,9 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -6620,12 +6730,10 @@ impl<'mc> JNIRaw<'mc> for LecternInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for LecternInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6878,12 +6986,7 @@ impl<'mc> LecternInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -7063,14 +7166,9 @@ impl<'mc> LecternInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for LecternInventory<'mc> {
@@ -7092,12 +7190,10 @@ impl<'mc> JNIRaw<'mc> for BrewerInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BrewerInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7420,12 +7516,7 @@ impl<'mc> BrewerInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -7605,14 +7696,9 @@ impl<'mc> BrewerInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for BrewerInventory<'mc> {
@@ -7634,12 +7720,10 @@ impl<'mc> JNIRaw<'mc> for LoomInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for LoomInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7871,12 +7955,7 @@ impl<'mc> LoomInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -8073,14 +8152,9 @@ impl<'mc> LoomInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for LoomInventory<'mc> {
@@ -8100,12 +8174,10 @@ impl<'mc> JNIRaw<'mc> for ShapedRecipe<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ShapedRecipe<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8272,12 +8344,7 @@ impl<'mc> ShapedRecipe<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::inventory::recipe::CraftingBookCategory::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::inventory::recipe::CraftingBookCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::inventory::recipe::CraftingBookCategory::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -8417,14 +8484,9 @@ impl<'mc> ShapedRecipe<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -8454,12 +8516,10 @@ impl<'mc> JNIRaw<'mc> for SmithingTransformRecipe<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SmithingTransformRecipe<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8677,14 +8737,9 @@ impl<'mc> SmithingTransformRecipe<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -8704,63 +8759,106 @@ impl<'mc> Into<crate::inventory::SmithingRecipe<'mc>> for SmithingTransformRecip
         )
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum EquipmentSlotEnum {
-    Hand,
-    OffHand,
-    Feet,
-    Legs,
-    Chest,
-    Head,
-}
-impl std::fmt::Display for EquipmentSlotEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            EquipmentSlotEnum::Hand => f.write_str("HAND"),
-            EquipmentSlotEnum::OffHand => f.write_str("OFF_HAND"),
-            EquipmentSlotEnum::Feet => f.write_str("FEET"),
-            EquipmentSlotEnum::Legs => f.write_str("LEGS"),
-            EquipmentSlotEnum::Chest => f.write_str("CHEST"),
-            EquipmentSlotEnum::Head => f.write_str("HEAD"),
-        }
-    }
+pub enum EquipmentSlot<'mc> {
+    Hand { inner: EquipmentSlotStruct<'mc> },
+    OffHand { inner: EquipmentSlotStruct<'mc> },
+    Feet { inner: EquipmentSlotStruct<'mc> },
+    Legs { inner: EquipmentSlotStruct<'mc> },
+    Chest { inner: EquipmentSlotStruct<'mc> },
+    Head { inner: EquipmentSlotStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for EquipmentSlot<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            EquipmentSlot::Hand { .. } => f.write_str("HAND"),
+            EquipmentSlot::OffHand { .. } => f.write_str("OFF_HAND"),
+            EquipmentSlot::Feet { .. } => f.write_str("FEET"),
+            EquipmentSlot::Legs { .. } => f.write_str("LEGS"),
+            EquipmentSlot::Chest { .. } => f.write_str("CHEST"),
+            EquipmentSlot::Head { .. } => f.write_str("HEAD"),
+        }
     }
 }
+
+impl<'mc> EquipmentSlot<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/inventory/EquipmentSlot");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/inventory/EquipmentSlot;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "HAND" => Ok(EquipmentSlot::Hand {
+                inner: EquipmentSlotStruct::from_raw(env, obj)?,
+            }),
+            "OFF_HAND" => Ok(EquipmentSlot::OffHand {
+                inner: EquipmentSlotStruct::from_raw(env, obj)?,
+            }),
+            "FEET" => Ok(EquipmentSlot::Feet {
+                inner: EquipmentSlotStruct::from_raw(env, obj)?,
+            }),
+            "LEGS" => Ok(EquipmentSlot::Legs {
+                inner: EquipmentSlotStruct::from_raw(env, obj)?,
+            }),
+            "CHEST" => Ok(EquipmentSlot::Chest {
+                inner: EquipmentSlotStruct::from_raw(env, obj)?,
+            }),
+            "HEAD" => Ok(EquipmentSlot::Head {
+                inner: EquipmentSlotStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct EquipmentSlot<'mc>(
+pub struct EquipmentSlotStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub EquipmentSlotEnum,
 );
-impl<'mc> std::ops::Deref for EquipmentSlot<'mc> {
-    type Target = EquipmentSlotEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for EquipmentSlot<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Hand { inner } => inner.0.clone(),
+            Self::OffHand { inner } => inner.0.clone(),
+            Self::Feet { inner } => inner.0.clone(),
+            Self::Legs { inner } => inner.0.clone(),
+            Self::Chest { inner } => inner.0.clone(),
+            Self::Head { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Hand { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::OffHand { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Feet { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Legs { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Chest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Head { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for EquipmentSlot<'mc> {
-    type Enum = EquipmentSlotEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for EquipmentSlot<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate EquipmentSlot from null object.").into());
@@ -8773,68 +8871,72 @@ impl<'mc> JNIInstantiatableEnum<'mc> for EquipmentSlot<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "HAND" => Ok(EquipmentSlot::Hand {
+                    inner: EquipmentSlotStruct::from_raw(env, obj)?,
+                }),
+                "OFF_HAND" => Ok(EquipmentSlot::OffHand {
+                    inner: EquipmentSlotStruct::from_raw(env, obj)?,
+                }),
+                "FEET" => Ok(EquipmentSlot::Feet {
+                    inner: EquipmentSlotStruct::from_raw(env, obj)?,
+                }),
+                "LEGS" => Ok(EquipmentSlot::Legs {
+                    inner: EquipmentSlotStruct::from_raw(env, obj)?,
+                }),
+                "CHEST" => Ok(EquipmentSlot::Chest {
+                    inner: EquipmentSlotStruct::from_raw(env, obj)?,
+                }),
+                "HEAD" => Ok(EquipmentSlot::Head {
+                    inner: EquipmentSlotStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> EquipmentSlot<'mc> {
-    pub const HAND: EquipmentSlotEnum = EquipmentSlotEnum::Hand;
-    pub const OFF_HAND: EquipmentSlotEnum = EquipmentSlotEnum::OffHand;
-    pub const FEET: EquipmentSlotEnum = EquipmentSlotEnum::Feet;
-    pub const LEGS: EquipmentSlotEnum = EquipmentSlotEnum::Legs;
-    pub const CHEST: EquipmentSlotEnum = EquipmentSlotEnum::Chest;
-    pub const HEAD: EquipmentSlotEnum = EquipmentSlotEnum::Head;
-    pub fn from_string(str: String) -> std::option::Option<EquipmentSlotEnum> {
-        match str.as_str() {
-            "HAND" => Some(EquipmentSlotEnum::Hand),
-            "OFF_HAND" => Some(EquipmentSlotEnum::OffHand),
-            "FEET" => Some(EquipmentSlotEnum::Feet),
-            "LEGS" => Some(EquipmentSlotEnum::Legs),
-            "CHEST" => Some(EquipmentSlotEnum::Chest),
-            "HEAD" => Some(EquipmentSlotEnum::Head),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for EquipmentSlotStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EquipmentSlotStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate EquipmentSlotStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/inventory/EquipmentSlot")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a EquipmentSlotStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/inventory/EquipmentSlot");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/inventory/EquipmentSlot;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        EquipmentSlot::from_raw(
-            &jni,
-            raw_obj,
-            EquipmentSlot::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> EquipmentSlotStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a merchant. A merchant is a special type of inventory which can facilitate custom trades between items.
@@ -8850,12 +8952,10 @@ impl<'mc> JNIRaw<'mc> for Merchant<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Merchant<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8975,14 +9075,9 @@ impl<'mc> Merchant<'mc> {
         )?))
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// An instance of the ItemFactory can be obtained with <a href="../Server.html#getItemFactory()"><code>Server.getItemFactory()</code></a>.
@@ -8999,12 +9094,10 @@ impl<'mc> JNIRaw<'mc> for ItemFactory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ItemFactory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9160,12 +9253,7 @@ impl<'mc> ItemFactory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn default_leather_color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
@@ -9227,22 +9315,12 @@ impl<'mc> ItemFactory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// An interface to a creatures inventory
@@ -9258,12 +9336,10 @@ impl<'mc> JNIRaw<'mc> for EntityEquipment<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityEquipment<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9853,14 +9929,9 @@ impl<'mc> EntityEquipment<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Interface to the inventory of a chiseled bookshelf.
@@ -9876,12 +9947,10 @@ impl<'mc> JNIRaw<'mc> for ChiseledBookshelfInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ChiseledBookshelfInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10136,12 +10205,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -10321,14 +10385,9 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for ChiseledBookshelfInventory<'mc> {
@@ -10348,12 +10407,10 @@ impl<'mc> JNIRaw<'mc> for ShapelessRecipe<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ShapelessRecipe<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10647,12 +10704,7 @@ impl<'mc> ShapelessRecipe<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::inventory::recipe::CraftingBookCategory::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::inventory::recipe::CraftingBookCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::inventory::recipe::CraftingBookCategory::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -10792,14 +10844,9 @@ impl<'mc> ShapelessRecipe<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -10831,12 +10878,10 @@ impl<'mc> JNIRaw<'mc> for AnvilInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for AnvilInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11160,12 +11205,7 @@ impl<'mc> AnvilInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -11362,14 +11402,9 @@ impl<'mc> AnvilInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for AnvilInventory<'mc> {
@@ -11391,12 +11426,10 @@ impl<'mc> JNIRaw<'mc> for RecipeChoice<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RecipeChoice<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11520,14 +11553,9 @@ impl<'mc> RecipeChoice<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<blackboxmc_java::util::function::JavaPredicate<'mc>> for RecipeChoice<'mc> {
@@ -11550,12 +11578,10 @@ impl<'mc> JNIRaw<'mc> for InventoryHolder<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for InventoryHolder<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11593,103 +11619,246 @@ impl<'mc> InventoryHolder<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum PropertyEnum {
-    BrewTime,
-    FuelTime,
-    BurnTime,
-    TicksForCurrentFuel,
-    CookTime,
-    TicksForCurrentSmelting,
-    EnchantButton1,
-    EnchantButton2,
-    EnchantButton3,
-    EnchantXpSeed,
-    EnchantId1,
-    EnchantId2,
-    EnchantId3,
-    EnchantLevel1,
-    EnchantLevel2,
-    EnchantLevel3,
-    Levels,
-    PrimaryEffect,
-    SecondaryEffect,
-    RepairCost,
-    BookPage,
-}
-impl std::fmt::Display for PropertyEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PropertyEnum::BrewTime => f.write_str("BREW_TIME"),
-            PropertyEnum::FuelTime => f.write_str("FUEL_TIME"),
-            PropertyEnum::BurnTime => f.write_str("BURN_TIME"),
-            PropertyEnum::TicksForCurrentFuel => f.write_str("TICKS_FOR_CURRENT_FUEL"),
-            PropertyEnum::CookTime => f.write_str("COOK_TIME"),
-            PropertyEnum::TicksForCurrentSmelting => f.write_str("TICKS_FOR_CURRENT_SMELTING"),
-            PropertyEnum::EnchantButton1 => f.write_str("ENCHANT_BUTTON1"),
-            PropertyEnum::EnchantButton2 => f.write_str("ENCHANT_BUTTON2"),
-            PropertyEnum::EnchantButton3 => f.write_str("ENCHANT_BUTTON3"),
-            PropertyEnum::EnchantXpSeed => f.write_str("ENCHANT_XP_SEED"),
-            PropertyEnum::EnchantId1 => f.write_str("ENCHANT_ID1"),
-            PropertyEnum::EnchantId2 => f.write_str("ENCHANT_ID2"),
-            PropertyEnum::EnchantId3 => f.write_str("ENCHANT_ID3"),
-            PropertyEnum::EnchantLevel1 => f.write_str("ENCHANT_LEVEL1"),
-            PropertyEnum::EnchantLevel2 => f.write_str("ENCHANT_LEVEL2"),
-            PropertyEnum::EnchantLevel3 => f.write_str("ENCHANT_LEVEL3"),
-            PropertyEnum::Levels => f.write_str("LEVELS"),
-            PropertyEnum::PrimaryEffect => f.write_str("PRIMARY_EFFECT"),
-            PropertyEnum::SecondaryEffect => f.write_str("SECONDARY_EFFECT"),
-            PropertyEnum::RepairCost => f.write_str("REPAIR_COST"),
-            PropertyEnum::BookPage => f.write_str("BOOK_PAGE"),
-        }
-    }
+pub enum Property<'mc> {
+    BrewTime { inner: PropertyStruct<'mc> },
+    FuelTime { inner: PropertyStruct<'mc> },
+    BurnTime { inner: PropertyStruct<'mc> },
+    TicksForCurrentFuel { inner: PropertyStruct<'mc> },
+    CookTime { inner: PropertyStruct<'mc> },
+    TicksForCurrentSmelting { inner: PropertyStruct<'mc> },
+    EnchantButton1 { inner: PropertyStruct<'mc> },
+    EnchantButton2 { inner: PropertyStruct<'mc> },
+    EnchantButton3 { inner: PropertyStruct<'mc> },
+    EnchantXpSeed { inner: PropertyStruct<'mc> },
+    EnchantId1 { inner: PropertyStruct<'mc> },
+    EnchantId2 { inner: PropertyStruct<'mc> },
+    EnchantId3 { inner: PropertyStruct<'mc> },
+    EnchantLevel1 { inner: PropertyStruct<'mc> },
+    EnchantLevel2 { inner: PropertyStruct<'mc> },
+    EnchantLevel3 { inner: PropertyStruct<'mc> },
+    Levels { inner: PropertyStruct<'mc> },
+    PrimaryEffect { inner: PropertyStruct<'mc> },
+    SecondaryEffect { inner: PropertyStruct<'mc> },
+    RepairCost { inner: PropertyStruct<'mc> },
+    BookPage { inner: PropertyStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Property<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Property::BrewTime { .. } => f.write_str("BREW_TIME"),
+            Property::FuelTime { .. } => f.write_str("FUEL_TIME"),
+            Property::BurnTime { .. } => f.write_str("BURN_TIME"),
+            Property::TicksForCurrentFuel { .. } => f.write_str("TICKS_FOR_CURRENT_FUEL"),
+            Property::CookTime { .. } => f.write_str("COOK_TIME"),
+            Property::TicksForCurrentSmelting { .. } => f.write_str("TICKS_FOR_CURRENT_SMELTING"),
+            Property::EnchantButton1 { .. } => f.write_str("ENCHANT_BUTTON1"),
+            Property::EnchantButton2 { .. } => f.write_str("ENCHANT_BUTTON2"),
+            Property::EnchantButton3 { .. } => f.write_str("ENCHANT_BUTTON3"),
+            Property::EnchantXpSeed { .. } => f.write_str("ENCHANT_XP_SEED"),
+            Property::EnchantId1 { .. } => f.write_str("ENCHANT_ID1"),
+            Property::EnchantId2 { .. } => f.write_str("ENCHANT_ID2"),
+            Property::EnchantId3 { .. } => f.write_str("ENCHANT_ID3"),
+            Property::EnchantLevel1 { .. } => f.write_str("ENCHANT_LEVEL1"),
+            Property::EnchantLevel2 { .. } => f.write_str("ENCHANT_LEVEL2"),
+            Property::EnchantLevel3 { .. } => f.write_str("ENCHANT_LEVEL3"),
+            Property::Levels { .. } => f.write_str("LEVELS"),
+            Property::PrimaryEffect { .. } => f.write_str("PRIMARY_EFFECT"),
+            Property::SecondaryEffect { .. } => f.write_str("SECONDARY_EFFECT"),
+            Property::RepairCost { .. } => f.write_str("REPAIR_COST"),
+            Property::BookPage { .. } => f.write_str("BOOK_PAGE"),
+        }
     }
 }
+
+impl<'mc> Property<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Property<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/inventory/Property");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/inventory/Property;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "BREW_TIME" => Ok(Property::BrewTime {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "FUEL_TIME" => Ok(Property::FuelTime {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "BURN_TIME" => Ok(Property::BurnTime {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "TICKS_FOR_CURRENT_FUEL" => Ok(Property::TicksForCurrentFuel {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "COOK_TIME" => Ok(Property::CookTime {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "TICKS_FOR_CURRENT_SMELTING" => Ok(Property::TicksForCurrentSmelting {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_BUTTON1" => Ok(Property::EnchantButton1 {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_BUTTON2" => Ok(Property::EnchantButton2 {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_BUTTON3" => Ok(Property::EnchantButton3 {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_XP_SEED" => Ok(Property::EnchantXpSeed {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_ID1" => Ok(Property::EnchantId1 {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_ID2" => Ok(Property::EnchantId2 {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_ID3" => Ok(Property::EnchantId3 {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_LEVEL1" => Ok(Property::EnchantLevel1 {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_LEVEL2" => Ok(Property::EnchantLevel2 {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANT_LEVEL3" => Ok(Property::EnchantLevel3 {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "LEVELS" => Ok(Property::Levels {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "PRIMARY_EFFECT" => Ok(Property::PrimaryEffect {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "SECONDARY_EFFECT" => Ok(Property::SecondaryEffect {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "REPAIR_COST" => Ok(Property::RepairCost {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+            "BOOK_PAGE" => Ok(Property::BookPage {
+                inner: PropertyStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Property<'mc>(
+pub struct PropertyStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub PropertyEnum,
 );
-impl<'mc> std::ops::Deref for Property<'mc> {
-    type Target = PropertyEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Property<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::BrewTime { inner } => inner.0.clone(),
+            Self::FuelTime { inner } => inner.0.clone(),
+            Self::BurnTime { inner } => inner.0.clone(),
+            Self::TicksForCurrentFuel { inner } => inner.0.clone(),
+            Self::CookTime { inner } => inner.0.clone(),
+            Self::TicksForCurrentSmelting { inner } => inner.0.clone(),
+            Self::EnchantButton1 { inner } => inner.0.clone(),
+            Self::EnchantButton2 { inner } => inner.0.clone(),
+            Self::EnchantButton3 { inner } => inner.0.clone(),
+            Self::EnchantXpSeed { inner } => inner.0.clone(),
+            Self::EnchantId1 { inner } => inner.0.clone(),
+            Self::EnchantId2 { inner } => inner.0.clone(),
+            Self::EnchantId3 { inner } => inner.0.clone(),
+            Self::EnchantLevel1 { inner } => inner.0.clone(),
+            Self::EnchantLevel2 { inner } => inner.0.clone(),
+            Self::EnchantLevel3 { inner } => inner.0.clone(),
+            Self::Levels { inner } => inner.0.clone(),
+            Self::PrimaryEffect { inner } => inner.0.clone(),
+            Self::SecondaryEffect { inner } => inner.0.clone(),
+            Self::RepairCost { inner } => inner.0.clone(),
+            Self::BookPage { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::BrewTime { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FuelTime { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::BurnTime { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::TicksForCurrentFuel { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CookTime { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::TicksForCurrentSmelting { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantButton1 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantButton2 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantButton3 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantXpSeed { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantId1 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantId2 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantId3 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantLevel1 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantLevel2 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EnchantLevel3 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Levels { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::PrimaryEffect { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SecondaryEffect { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::RepairCost { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BookPage { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Property<'mc> {
-    type Enum = PropertyEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Property<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Property from null object.").into());
@@ -11702,98 +11871,117 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Property<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "BREW_TIME" => Ok(Property::BrewTime {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "FUEL_TIME" => Ok(Property::FuelTime {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "BURN_TIME" => Ok(Property::BurnTime {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "TICKS_FOR_CURRENT_FUEL" => Ok(Property::TicksForCurrentFuel {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "COOK_TIME" => Ok(Property::CookTime {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "TICKS_FOR_CURRENT_SMELTING" => Ok(Property::TicksForCurrentSmelting {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_BUTTON1" => Ok(Property::EnchantButton1 {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_BUTTON2" => Ok(Property::EnchantButton2 {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_BUTTON3" => Ok(Property::EnchantButton3 {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_XP_SEED" => Ok(Property::EnchantXpSeed {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_ID1" => Ok(Property::EnchantId1 {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_ID2" => Ok(Property::EnchantId2 {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_ID3" => Ok(Property::EnchantId3 {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_LEVEL1" => Ok(Property::EnchantLevel1 {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_LEVEL2" => Ok(Property::EnchantLevel2 {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANT_LEVEL3" => Ok(Property::EnchantLevel3 {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "LEVELS" => Ok(Property::Levels {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "PRIMARY_EFFECT" => Ok(Property::PrimaryEffect {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "SECONDARY_EFFECT" => Ok(Property::SecondaryEffect {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "REPAIR_COST" => Ok(Property::RepairCost {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                "BOOK_PAGE" => Ok(Property::BookPage {
+                    inner: PropertyStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Property<'mc> {
-    pub const BREW_TIME: PropertyEnum = PropertyEnum::BrewTime;
-    pub const FUEL_TIME: PropertyEnum = PropertyEnum::FuelTime;
-    pub const BURN_TIME: PropertyEnum = PropertyEnum::BurnTime;
-    pub const TICKS_FOR_CURRENT_FUEL: PropertyEnum = PropertyEnum::TicksForCurrentFuel;
-    pub const COOK_TIME: PropertyEnum = PropertyEnum::CookTime;
-    pub const TICKS_FOR_CURRENT_SMELTING: PropertyEnum = PropertyEnum::TicksForCurrentSmelting;
-    pub const ENCHANT_BUTTON1: PropertyEnum = PropertyEnum::EnchantButton1;
-    pub const ENCHANT_BUTTON2: PropertyEnum = PropertyEnum::EnchantButton2;
-    pub const ENCHANT_BUTTON3: PropertyEnum = PropertyEnum::EnchantButton3;
-    pub const ENCHANT_XP_SEED: PropertyEnum = PropertyEnum::EnchantXpSeed;
-    pub const ENCHANT_ID1: PropertyEnum = PropertyEnum::EnchantId1;
-    pub const ENCHANT_ID2: PropertyEnum = PropertyEnum::EnchantId2;
-    pub const ENCHANT_ID3: PropertyEnum = PropertyEnum::EnchantId3;
-    pub const ENCHANT_LEVEL1: PropertyEnum = PropertyEnum::EnchantLevel1;
-    pub const ENCHANT_LEVEL2: PropertyEnum = PropertyEnum::EnchantLevel2;
-    pub const ENCHANT_LEVEL3: PropertyEnum = PropertyEnum::EnchantLevel3;
-    pub const LEVELS: PropertyEnum = PropertyEnum::Levels;
-    pub const PRIMARY_EFFECT: PropertyEnum = PropertyEnum::PrimaryEffect;
-    pub const SECONDARY_EFFECT: PropertyEnum = PropertyEnum::SecondaryEffect;
-    pub const REPAIR_COST: PropertyEnum = PropertyEnum::RepairCost;
-    pub const BOOK_PAGE: PropertyEnum = PropertyEnum::BookPage;
-    pub fn from_string(str: String) -> std::option::Option<PropertyEnum> {
-        match str.as_str() {
-            "BREW_TIME" => Some(PropertyEnum::BrewTime),
-            "FUEL_TIME" => Some(PropertyEnum::FuelTime),
-            "BURN_TIME" => Some(PropertyEnum::BurnTime),
-            "TICKS_FOR_CURRENT_FUEL" => Some(PropertyEnum::TicksForCurrentFuel),
-            "COOK_TIME" => Some(PropertyEnum::CookTime),
-            "TICKS_FOR_CURRENT_SMELTING" => Some(PropertyEnum::TicksForCurrentSmelting),
-            "ENCHANT_BUTTON1" => Some(PropertyEnum::EnchantButton1),
-            "ENCHANT_BUTTON2" => Some(PropertyEnum::EnchantButton2),
-            "ENCHANT_BUTTON3" => Some(PropertyEnum::EnchantButton3),
-            "ENCHANT_XP_SEED" => Some(PropertyEnum::EnchantXpSeed),
-            "ENCHANT_ID1" => Some(PropertyEnum::EnchantId1),
-            "ENCHANT_ID2" => Some(PropertyEnum::EnchantId2),
-            "ENCHANT_ID3" => Some(PropertyEnum::EnchantId3),
-            "ENCHANT_LEVEL1" => Some(PropertyEnum::EnchantLevel1),
-            "ENCHANT_LEVEL2" => Some(PropertyEnum::EnchantLevel2),
-            "ENCHANT_LEVEL3" => Some(PropertyEnum::EnchantLevel3),
-            "LEVELS" => Some(PropertyEnum::Levels),
-            "PRIMARY_EFFECT" => Some(PropertyEnum::PrimaryEffect),
-            "SECONDARY_EFFECT" => Some(PropertyEnum::SecondaryEffect),
-            "REPAIR_COST" => Some(PropertyEnum::RepairCost),
-            "BOOK_PAGE" => Some(PropertyEnum::BookPage),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for PropertyStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PropertyStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PropertyStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/inventory/Property")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PropertyStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Property<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/inventory/Property");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/inventory/Property;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Property::from_raw(
-            &jni,
-            raw_obj,
-            Property::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> PropertyStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Interface to the inventory of an Enchantment Table.
@@ -11809,12 +11997,10 @@ impl<'mc> JNIRaw<'mc> for EnchantingInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EnchantingInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12108,12 +12294,7 @@ impl<'mc> EnchantingInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -12287,14 +12468,9 @@ impl<'mc> EnchantingInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for EnchantingInventory<'mc> {
@@ -12314,12 +12490,10 @@ impl<'mc> JNIRaw<'mc> for BlastingRecipe<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlastingRecipe<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12455,12 +12629,7 @@ impl<'mc> BlastingRecipe<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::inventory::recipe::CookingBookCategory::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::inventory::recipe::CookingBookCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::inventory::recipe::CookingBookCategory::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_input_choice(
@@ -12679,14 +12848,9 @@ impl<'mc> BlastingRecipe<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -12716,12 +12880,10 @@ impl<'mc> JNIRaw<'mc> for SmokingRecipe<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SmokingRecipe<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12855,12 +13017,7 @@ impl<'mc> SmokingRecipe<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::inventory::recipe::CookingBookCategory::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::inventory::recipe::CookingBookCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::inventory::recipe::CookingBookCategory::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_input_choice(
@@ -13079,14 +13236,9 @@ impl<'mc> SmokingRecipe<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -13118,12 +13270,10 @@ impl<'mc> JNIRaw<'mc> for CraftingInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CraftingInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13415,12 +13565,7 @@ impl<'mc> CraftingInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -13617,14 +13762,9 @@ impl<'mc> CraftingInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for CraftingInventory<'mc> {
@@ -13652,12 +13792,10 @@ impl<'mc> JNIRaw<'mc> for MerchantRecipe<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MerchantRecipe<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14093,14 +14231,9 @@ impl<'mc> MerchantRecipe<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -14134,12 +14267,10 @@ impl<'mc> JNIRaw<'mc> for MerchantInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MerchantInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14416,12 +14547,7 @@ impl<'mc> MerchantInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -14618,14 +14744,9 @@ impl<'mc> MerchantInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for MerchantInventory<'mc> {
@@ -14647,12 +14768,10 @@ impl<'mc> JNIRaw<'mc> for LlamaInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for LlamaInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14956,12 +15075,7 @@ impl<'mc> LlamaInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -15158,14 +15272,9 @@ impl<'mc> LlamaInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::AbstractHorseInventory<'mc>> for LlamaInventory<'mc> {
@@ -15187,12 +15296,10 @@ impl<'mc> JNIRaw<'mc> for GrindstoneInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for GrindstoneInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15426,12 +15533,7 @@ impl<'mc> GrindstoneInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -15628,14 +15730,9 @@ impl<'mc> GrindstoneInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for GrindstoneInventory<'mc> {
@@ -15655,12 +15752,10 @@ impl<'mc> JNIRaw<'mc> for CookingRecipe<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CookingRecipe<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15794,12 +15889,7 @@ impl<'mc> CookingRecipe<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::inventory::recipe::CookingBookCategory::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::inventory::recipe::CookingBookCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::inventory::recipe::CookingBookCategory::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_input_choice(
@@ -16018,14 +16108,9 @@ impl<'mc> CookingRecipe<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -16063,12 +16148,10 @@ impl<'mc> JNIRaw<'mc> for StonecutterInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for StonecutterInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16302,12 +16385,7 @@ impl<'mc> StonecutterInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -16504,14 +16582,9 @@ impl<'mc> StonecutterInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for StonecutterInventory<'mc> {
@@ -16520,69 +16593,133 @@ impl<'mc> Into<crate::inventory::Inventory<'mc>> for StonecutterInventory<'mc> {
             .expect("Error converting StonecutterInventory into crate::inventory::Inventory")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum CreativeCategoryEnum {
-    BuildingBlocks,
-    Decorations,
-    Redstone,
-    Transportation,
-    Misc,
-    Food,
-    Tools,
-    Combat,
-    Brewing,
-}
-impl std::fmt::Display for CreativeCategoryEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            CreativeCategoryEnum::BuildingBlocks => f.write_str("BUILDING_BLOCKS"),
-            CreativeCategoryEnum::Decorations => f.write_str("DECORATIONS"),
-            CreativeCategoryEnum::Redstone => f.write_str("REDSTONE"),
-            CreativeCategoryEnum::Transportation => f.write_str("TRANSPORTATION"),
-            CreativeCategoryEnum::Misc => f.write_str("MISC"),
-            CreativeCategoryEnum::Food => f.write_str("FOOD"),
-            CreativeCategoryEnum::Tools => f.write_str("TOOLS"),
-            CreativeCategoryEnum::Combat => f.write_str("COMBAT"),
-            CreativeCategoryEnum::Brewing => f.write_str("BREWING"),
-        }
-    }
+pub enum CreativeCategory<'mc> {
+    BuildingBlocks { inner: CreativeCategoryStruct<'mc> },
+    Decorations { inner: CreativeCategoryStruct<'mc> },
+    Redstone { inner: CreativeCategoryStruct<'mc> },
+    Transportation { inner: CreativeCategoryStruct<'mc> },
+    Misc { inner: CreativeCategoryStruct<'mc> },
+    Food { inner: CreativeCategoryStruct<'mc> },
+    Tools { inner: CreativeCategoryStruct<'mc> },
+    Combat { inner: CreativeCategoryStruct<'mc> },
+    Brewing { inner: CreativeCategoryStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for CreativeCategory<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            CreativeCategory::BuildingBlocks { .. } => f.write_str("BUILDING_BLOCKS"),
+            CreativeCategory::Decorations { .. } => f.write_str("DECORATIONS"),
+            CreativeCategory::Redstone { .. } => f.write_str("REDSTONE"),
+            CreativeCategory::Transportation { .. } => f.write_str("TRANSPORTATION"),
+            CreativeCategory::Misc { .. } => f.write_str("MISC"),
+            CreativeCategory::Food { .. } => f.write_str("FOOD"),
+            CreativeCategory::Tools { .. } => f.write_str("TOOLS"),
+            CreativeCategory::Combat { .. } => f.write_str("COMBAT"),
+            CreativeCategory::Brewing { .. } => f.write_str("BREWING"),
+        }
     }
 }
+
+impl<'mc> CreativeCategory<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<CreativeCategory<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/inventory/CreativeCategory");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/inventory/CreativeCategory;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "BUILDING_BLOCKS" => Ok(CreativeCategory::BuildingBlocks {
+                inner: CreativeCategoryStruct::from_raw(env, obj)?,
+            }),
+            "DECORATIONS" => Ok(CreativeCategory::Decorations {
+                inner: CreativeCategoryStruct::from_raw(env, obj)?,
+            }),
+            "REDSTONE" => Ok(CreativeCategory::Redstone {
+                inner: CreativeCategoryStruct::from_raw(env, obj)?,
+            }),
+            "TRANSPORTATION" => Ok(CreativeCategory::Transportation {
+                inner: CreativeCategoryStruct::from_raw(env, obj)?,
+            }),
+            "MISC" => Ok(CreativeCategory::Misc {
+                inner: CreativeCategoryStruct::from_raw(env, obj)?,
+            }),
+            "FOOD" => Ok(CreativeCategory::Food {
+                inner: CreativeCategoryStruct::from_raw(env, obj)?,
+            }),
+            "TOOLS" => Ok(CreativeCategory::Tools {
+                inner: CreativeCategoryStruct::from_raw(env, obj)?,
+            }),
+            "COMBAT" => Ok(CreativeCategory::Combat {
+                inner: CreativeCategoryStruct::from_raw(env, obj)?,
+            }),
+            "BREWING" => Ok(CreativeCategory::Brewing {
+                inner: CreativeCategoryStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct CreativeCategory<'mc>(
+pub struct CreativeCategoryStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub CreativeCategoryEnum,
 );
-impl<'mc> std::ops::Deref for CreativeCategory<'mc> {
-    type Target = CreativeCategoryEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for CreativeCategory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::BuildingBlocks { inner } => inner.0.clone(),
+            Self::Decorations { inner } => inner.0.clone(),
+            Self::Redstone { inner } => inner.0.clone(),
+            Self::Transportation { inner } => inner.0.clone(),
+            Self::Misc { inner } => inner.0.clone(),
+            Self::Food { inner } => inner.0.clone(),
+            Self::Tools { inner } => inner.0.clone(),
+            Self::Combat { inner } => inner.0.clone(),
+            Self::Brewing { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::BuildingBlocks { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Decorations { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Redstone { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Transportation { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Misc { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Food { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Tools { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Combat { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Brewing { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for CreativeCategory<'mc> {
-    type Enum = CreativeCategoryEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for CreativeCategory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -16597,74 +16734,82 @@ impl<'mc> JNIInstantiatableEnum<'mc> for CreativeCategory<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "BUILDING_BLOCKS" => Ok(CreativeCategory::BuildingBlocks {
+                    inner: CreativeCategoryStruct::from_raw(env, obj)?,
+                }),
+                "DECORATIONS" => Ok(CreativeCategory::Decorations {
+                    inner: CreativeCategoryStruct::from_raw(env, obj)?,
+                }),
+                "REDSTONE" => Ok(CreativeCategory::Redstone {
+                    inner: CreativeCategoryStruct::from_raw(env, obj)?,
+                }),
+                "TRANSPORTATION" => Ok(CreativeCategory::Transportation {
+                    inner: CreativeCategoryStruct::from_raw(env, obj)?,
+                }),
+                "MISC" => Ok(CreativeCategory::Misc {
+                    inner: CreativeCategoryStruct::from_raw(env, obj)?,
+                }),
+                "FOOD" => Ok(CreativeCategory::Food {
+                    inner: CreativeCategoryStruct::from_raw(env, obj)?,
+                }),
+                "TOOLS" => Ok(CreativeCategory::Tools {
+                    inner: CreativeCategoryStruct::from_raw(env, obj)?,
+                }),
+                "COMBAT" => Ok(CreativeCategory::Combat {
+                    inner: CreativeCategoryStruct::from_raw(env, obj)?,
+                }),
+                "BREWING" => Ok(CreativeCategory::Brewing {
+                    inner: CreativeCategoryStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> CreativeCategory<'mc> {
-    pub const BUILDING_BLOCKS: CreativeCategoryEnum = CreativeCategoryEnum::BuildingBlocks;
-    pub const DECORATIONS: CreativeCategoryEnum = CreativeCategoryEnum::Decorations;
-    pub const REDSTONE: CreativeCategoryEnum = CreativeCategoryEnum::Redstone;
-    pub const TRANSPORTATION: CreativeCategoryEnum = CreativeCategoryEnum::Transportation;
-    pub const MISC: CreativeCategoryEnum = CreativeCategoryEnum::Misc;
-    pub const FOOD: CreativeCategoryEnum = CreativeCategoryEnum::Food;
-    pub const TOOLS: CreativeCategoryEnum = CreativeCategoryEnum::Tools;
-    pub const COMBAT: CreativeCategoryEnum = CreativeCategoryEnum::Combat;
-    pub const BREWING: CreativeCategoryEnum = CreativeCategoryEnum::Brewing;
-    pub fn from_string(str: String) -> std::option::Option<CreativeCategoryEnum> {
-        match str.as_str() {
-            "BUILDING_BLOCKS" => Some(CreativeCategoryEnum::BuildingBlocks),
-            "DECORATIONS" => Some(CreativeCategoryEnum::Decorations),
-            "REDSTONE" => Some(CreativeCategoryEnum::Redstone),
-            "TRANSPORTATION" => Some(CreativeCategoryEnum::Transportation),
-            "MISC" => Some(CreativeCategoryEnum::Misc),
-            "FOOD" => Some(CreativeCategoryEnum::Food),
-            "TOOLS" => Some(CreativeCategoryEnum::Tools),
-            "COMBAT" => Some(CreativeCategoryEnum::Combat),
-            "BREWING" => Some(CreativeCategoryEnum::Brewing),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for CreativeCategoryStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for CreativeCategoryStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate CreativeCategoryStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/inventory/CreativeCategory")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a CreativeCategoryStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<CreativeCategory<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/inventory/CreativeCategory");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/inventory/CreativeCategory;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        CreativeCategory::from_raw(
-            &jni,
-            raw_obj,
-            CreativeCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> CreativeCategoryStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Interface to the inventory of a Smithing table.
@@ -16680,12 +16825,10 @@ impl<'mc> JNIRaw<'mc> for SmithingInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SmithingInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16965,12 +17108,7 @@ impl<'mc> SmithingInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -17167,14 +17305,9 @@ impl<'mc> SmithingInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for SmithingInventory<'mc> {
@@ -17196,12 +17329,10 @@ impl<'mc> JNIRaw<'mc> for PlayerInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PlayerInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -17753,12 +17884,7 @@ impl<'mc> PlayerInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -17915,14 +18041,9 @@ impl<'mc> PlayerInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for PlayerInventory<'mc> {
@@ -17944,12 +18065,10 @@ impl<'mc> JNIRaw<'mc> for FurnaceInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for FurnaceInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -18301,12 +18420,7 @@ impl<'mc> FurnaceInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -18486,14 +18600,9 @@ impl<'mc> FurnaceInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for FurnaceInventory<'mc> {
@@ -18515,12 +18624,10 @@ impl<'mc> JNIRaw<'mc> for AbstractHorseInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for AbstractHorseInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -18791,12 +18898,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -18993,14 +19095,9 @@ impl<'mc> AbstractHorseInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for AbstractHorseInventory<'mc> {
@@ -19022,12 +19119,10 @@ impl<'mc> JNIRaw<'mc> for BeaconInventory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BeaconInventory<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19286,12 +19381,7 @@ impl<'mc> BeaconInventory<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::inventory::InventoryType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::inventory::InventoryType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::inventory::InventoryType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -19465,14 +19555,9 @@ impl<'mc> BeaconInventory<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::inventory::Inventory<'mc>> for BeaconInventory<'mc> {
@@ -19492,12 +19577,10 @@ impl<'mc> JNIRaw<'mc> for SmithingTrimRecipe<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SmithingTrimRecipe<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19708,14 +19791,9 @@ impl<'mc> SmithingTrimRecipe<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 

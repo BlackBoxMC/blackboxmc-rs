@@ -14,12 +14,10 @@ impl<'mc> JNIRaw<'mc> for PotionEffectTypeWrapper<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PotionEffectTypeWrapper<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -337,14 +335,9 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -374,12 +367,10 @@ impl<'mc> JNIRaw<'mc> for PotionData<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PotionData<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -474,12 +465,7 @@ impl<'mc> PotionData<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::potion::PotionType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::potion::PotionType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::potion::PotionType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_upgraded(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -566,14 +552,9 @@ impl<'mc> PotionData<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -597,12 +578,10 @@ impl<'mc> JNIRaw<'mc> for Potion<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Potion<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -738,12 +717,7 @@ impl<'mc> Potion<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::potion::PotionType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::potion::PotionType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::potion::PotionType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn level(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1040,14 +1014,9 @@ impl<'mc> Potion<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1071,12 +1040,10 @@ impl<'mc> JNIRaw<'mc> for PotionEffect<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PotionEffect<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1369,14 +1336,9 @@ impl<'mc> PotionEffect<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1407,12 +1369,10 @@ impl<'mc> JNIRaw<'mc> for PotionEffectType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PotionEffectType<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1716,14 +1676,9 @@ impl<'mc> PotionEffectType<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1755,12 +1710,10 @@ impl<'mc> JNIRaw<'mc> for PotionBrewer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PotionBrewer<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1870,103 +1823,234 @@ impl<'mc> PotionBrewer<'mc> {
         Ok(new_vec)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum PotionTypeEnum {
-    Uncraftable,
-    Water,
-    Mundane,
-    Thick,
-    Awkward,
-    NightVision,
-    Invisibility,
-    Jump,
-    FireResistance,
-    Speed,
-    Slowness,
-    WaterBreathing,
-    InstantHeal,
-    InstantDamage,
-    Poison,
-    Regen,
-    Strength,
-    Weakness,
-    Luck,
-    TurtleMaster,
-    SlowFalling,
-}
-impl std::fmt::Display for PotionTypeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PotionTypeEnum::Uncraftable => f.write_str("UNCRAFTABLE"),
-            PotionTypeEnum::Water => f.write_str("WATER"),
-            PotionTypeEnum::Mundane => f.write_str("MUNDANE"),
-            PotionTypeEnum::Thick => f.write_str("THICK"),
-            PotionTypeEnum::Awkward => f.write_str("AWKWARD"),
-            PotionTypeEnum::NightVision => f.write_str("NIGHT_VISION"),
-            PotionTypeEnum::Invisibility => f.write_str("INVISIBILITY"),
-            PotionTypeEnum::Jump => f.write_str("JUMP"),
-            PotionTypeEnum::FireResistance => f.write_str("FIRE_RESISTANCE"),
-            PotionTypeEnum::Speed => f.write_str("SPEED"),
-            PotionTypeEnum::Slowness => f.write_str("SLOWNESS"),
-            PotionTypeEnum::WaterBreathing => f.write_str("WATER_BREATHING"),
-            PotionTypeEnum::InstantHeal => f.write_str("INSTANT_HEAL"),
-            PotionTypeEnum::InstantDamage => f.write_str("INSTANT_DAMAGE"),
-            PotionTypeEnum::Poison => f.write_str("POISON"),
-            PotionTypeEnum::Regen => f.write_str("REGEN"),
-            PotionTypeEnum::Strength => f.write_str("STRENGTH"),
-            PotionTypeEnum::Weakness => f.write_str("WEAKNESS"),
-            PotionTypeEnum::Luck => f.write_str("LUCK"),
-            PotionTypeEnum::TurtleMaster => f.write_str("TURTLE_MASTER"),
-            PotionTypeEnum::SlowFalling => f.write_str("SLOW_FALLING"),
-        }
-    }
+pub enum PotionType<'mc> {
+    Uncraftable { inner: PotionTypeStruct<'mc> },
+    Water { inner: PotionTypeStruct<'mc> },
+    Mundane { inner: PotionTypeStruct<'mc> },
+    Thick { inner: PotionTypeStruct<'mc> },
+    Awkward { inner: PotionTypeStruct<'mc> },
+    NightVision { inner: PotionTypeStruct<'mc> },
+    Invisibility { inner: PotionTypeStruct<'mc> },
+    Jump { inner: PotionTypeStruct<'mc> },
+    FireResistance { inner: PotionTypeStruct<'mc> },
+    Speed { inner: PotionTypeStruct<'mc> },
+    Slowness { inner: PotionTypeStruct<'mc> },
+    WaterBreathing { inner: PotionTypeStruct<'mc> },
+    InstantHeal { inner: PotionTypeStruct<'mc> },
+    InstantDamage { inner: PotionTypeStruct<'mc> },
+    Poison { inner: PotionTypeStruct<'mc> },
+    Regen { inner: PotionTypeStruct<'mc> },
+    Strength { inner: PotionTypeStruct<'mc> },
+    Weakness { inner: PotionTypeStruct<'mc> },
+    Luck { inner: PotionTypeStruct<'mc> },
+    TurtleMaster { inner: PotionTypeStruct<'mc> },
+    SlowFalling { inner: PotionTypeStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for PotionType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            PotionType::Uncraftable { .. } => f.write_str("UNCRAFTABLE"),
+            PotionType::Water { .. } => f.write_str("WATER"),
+            PotionType::Mundane { .. } => f.write_str("MUNDANE"),
+            PotionType::Thick { .. } => f.write_str("THICK"),
+            PotionType::Awkward { .. } => f.write_str("AWKWARD"),
+            PotionType::NightVision { .. } => f.write_str("NIGHT_VISION"),
+            PotionType::Invisibility { .. } => f.write_str("INVISIBILITY"),
+            PotionType::Jump { .. } => f.write_str("JUMP"),
+            PotionType::FireResistance { .. } => f.write_str("FIRE_RESISTANCE"),
+            PotionType::Speed { .. } => f.write_str("SPEED"),
+            PotionType::Slowness { .. } => f.write_str("SLOWNESS"),
+            PotionType::WaterBreathing { .. } => f.write_str("WATER_BREATHING"),
+            PotionType::InstantHeal { .. } => f.write_str("INSTANT_HEAL"),
+            PotionType::InstantDamage { .. } => f.write_str("INSTANT_DAMAGE"),
+            PotionType::Poison { .. } => f.write_str("POISON"),
+            PotionType::Regen { .. } => f.write_str("REGEN"),
+            PotionType::Strength { .. } => f.write_str("STRENGTH"),
+            PotionType::Weakness { .. } => f.write_str("WEAKNESS"),
+            PotionType::Luck { .. } => f.write_str("LUCK"),
+            PotionType::TurtleMaster { .. } => f.write_str("TURTLE_MASTER"),
+            PotionType::SlowFalling { .. } => f.write_str("SLOW_FALLING"),
+        }
     }
 }
+
+impl<'mc> PotionType<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PotionType<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/potion/PotionType");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/potion/PotionType;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "UNCRAFTABLE" => Ok(PotionType::Uncraftable {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "WATER" => Ok(PotionType::Water {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "MUNDANE" => Ok(PotionType::Mundane {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "THICK" => Ok(PotionType::Thick {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "AWKWARD" => Ok(PotionType::Awkward {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "NIGHT_VISION" => Ok(PotionType::NightVision {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "INVISIBILITY" => Ok(PotionType::Invisibility {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "JUMP" => Ok(PotionType::Jump {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "FIRE_RESISTANCE" => Ok(PotionType::FireResistance {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "SPEED" => Ok(PotionType::Speed {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "SLOWNESS" => Ok(PotionType::Slowness {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "WATER_BREATHING" => Ok(PotionType::WaterBreathing {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "INSTANT_HEAL" => Ok(PotionType::InstantHeal {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "INSTANT_DAMAGE" => Ok(PotionType::InstantDamage {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "POISON" => Ok(PotionType::Poison {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "REGEN" => Ok(PotionType::Regen {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "STRENGTH" => Ok(PotionType::Strength {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "WEAKNESS" => Ok(PotionType::Weakness {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "LUCK" => Ok(PotionType::Luck {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "TURTLE_MASTER" => Ok(PotionType::TurtleMaster {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+            "SLOW_FALLING" => Ok(PotionType::SlowFalling {
+                inner: PotionTypeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct PotionType<'mc>(
+pub struct PotionTypeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub PotionTypeEnum,
 );
-impl<'mc> std::ops::Deref for PotionType<'mc> {
-    type Target = PotionTypeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for PotionType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Uncraftable { inner } => inner.0.clone(),
+            Self::Water { inner } => inner.0.clone(),
+            Self::Mundane { inner } => inner.0.clone(),
+            Self::Thick { inner } => inner.0.clone(),
+            Self::Awkward { inner } => inner.0.clone(),
+            Self::NightVision { inner } => inner.0.clone(),
+            Self::Invisibility { inner } => inner.0.clone(),
+            Self::Jump { inner } => inner.0.clone(),
+            Self::FireResistance { inner } => inner.0.clone(),
+            Self::Speed { inner } => inner.0.clone(),
+            Self::Slowness { inner } => inner.0.clone(),
+            Self::WaterBreathing { inner } => inner.0.clone(),
+            Self::InstantHeal { inner } => inner.0.clone(),
+            Self::InstantDamage { inner } => inner.0.clone(),
+            Self::Poison { inner } => inner.0.clone(),
+            Self::Regen { inner } => inner.0.clone(),
+            Self::Strength { inner } => inner.0.clone(),
+            Self::Weakness { inner } => inner.0.clone(),
+            Self::Luck { inner } => inner.0.clone(),
+            Self::TurtleMaster { inner } => inner.0.clone(),
+            Self::SlowFalling { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Uncraftable { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Water { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Mundane { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Thick { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Awkward { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NightVision { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Invisibility { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Jump { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FireResistance { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Speed { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Slowness { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WaterBreathing { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::InstantHeal { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::InstantDamage { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Poison { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Regen { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Strength { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Weakness { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Luck { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::TurtleMaster { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SlowFalling { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for PotionType<'mc> {
-    type Enum = PotionTypeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for PotionType<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate PotionType from null object.").into());
@@ -1979,97 +2063,116 @@ impl<'mc> JNIInstantiatableEnum<'mc> for PotionType<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "UNCRAFTABLE" => Ok(PotionType::Uncraftable {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "WATER" => Ok(PotionType::Water {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "MUNDANE" => Ok(PotionType::Mundane {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "THICK" => Ok(PotionType::Thick {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "AWKWARD" => Ok(PotionType::Awkward {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "NIGHT_VISION" => Ok(PotionType::NightVision {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "INVISIBILITY" => Ok(PotionType::Invisibility {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "JUMP" => Ok(PotionType::Jump {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "FIRE_RESISTANCE" => Ok(PotionType::FireResistance {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "SPEED" => Ok(PotionType::Speed {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "SLOWNESS" => Ok(PotionType::Slowness {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "WATER_BREATHING" => Ok(PotionType::WaterBreathing {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "INSTANT_HEAL" => Ok(PotionType::InstantHeal {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "INSTANT_DAMAGE" => Ok(PotionType::InstantDamage {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "POISON" => Ok(PotionType::Poison {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "REGEN" => Ok(PotionType::Regen {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "STRENGTH" => Ok(PotionType::Strength {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "WEAKNESS" => Ok(PotionType::Weakness {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "LUCK" => Ok(PotionType::Luck {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "TURTLE_MASTER" => Ok(PotionType::TurtleMaster {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                "SLOW_FALLING" => Ok(PotionType::SlowFalling {
+                    inner: PotionTypeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> PotionType<'mc> {
-    pub const UNCRAFTABLE: PotionTypeEnum = PotionTypeEnum::Uncraftable;
-    pub const WATER: PotionTypeEnum = PotionTypeEnum::Water;
-    pub const MUNDANE: PotionTypeEnum = PotionTypeEnum::Mundane;
-    pub const THICK: PotionTypeEnum = PotionTypeEnum::Thick;
-    pub const AWKWARD: PotionTypeEnum = PotionTypeEnum::Awkward;
-    pub const NIGHT_VISION: PotionTypeEnum = PotionTypeEnum::NightVision;
-    pub const INVISIBILITY: PotionTypeEnum = PotionTypeEnum::Invisibility;
-    pub const JUMP: PotionTypeEnum = PotionTypeEnum::Jump;
-    pub const FIRE_RESISTANCE: PotionTypeEnum = PotionTypeEnum::FireResistance;
-    pub const SPEED: PotionTypeEnum = PotionTypeEnum::Speed;
-    pub const SLOWNESS: PotionTypeEnum = PotionTypeEnum::Slowness;
-    pub const WATER_BREATHING: PotionTypeEnum = PotionTypeEnum::WaterBreathing;
-    pub const INSTANT_HEAL: PotionTypeEnum = PotionTypeEnum::InstantHeal;
-    pub const INSTANT_DAMAGE: PotionTypeEnum = PotionTypeEnum::InstantDamage;
-    pub const POISON: PotionTypeEnum = PotionTypeEnum::Poison;
-    pub const REGEN: PotionTypeEnum = PotionTypeEnum::Regen;
-    pub const STRENGTH: PotionTypeEnum = PotionTypeEnum::Strength;
-    pub const WEAKNESS: PotionTypeEnum = PotionTypeEnum::Weakness;
-    pub const LUCK: PotionTypeEnum = PotionTypeEnum::Luck;
-    pub const TURTLE_MASTER: PotionTypeEnum = PotionTypeEnum::TurtleMaster;
-    pub const SLOW_FALLING: PotionTypeEnum = PotionTypeEnum::SlowFalling;
-    pub fn from_string(str: String) -> std::option::Option<PotionTypeEnum> {
-        match str.as_str() {
-            "UNCRAFTABLE" => Some(PotionTypeEnum::Uncraftable),
-            "WATER" => Some(PotionTypeEnum::Water),
-            "MUNDANE" => Some(PotionTypeEnum::Mundane),
-            "THICK" => Some(PotionTypeEnum::Thick),
-            "AWKWARD" => Some(PotionTypeEnum::Awkward),
-            "NIGHT_VISION" => Some(PotionTypeEnum::NightVision),
-            "INVISIBILITY" => Some(PotionTypeEnum::Invisibility),
-            "JUMP" => Some(PotionTypeEnum::Jump),
-            "FIRE_RESISTANCE" => Some(PotionTypeEnum::FireResistance),
-            "SPEED" => Some(PotionTypeEnum::Speed),
-            "SLOWNESS" => Some(PotionTypeEnum::Slowness),
-            "WATER_BREATHING" => Some(PotionTypeEnum::WaterBreathing),
-            "INSTANT_HEAL" => Some(PotionTypeEnum::InstantHeal),
-            "INSTANT_DAMAGE" => Some(PotionTypeEnum::InstantDamage),
-            "POISON" => Some(PotionTypeEnum::Poison),
-            "REGEN" => Some(PotionTypeEnum::Regen),
-            "STRENGTH" => Some(PotionTypeEnum::Strength),
-            "WEAKNESS" => Some(PotionTypeEnum::Weakness),
-            "LUCK" => Some(PotionTypeEnum::Luck),
-            "TURTLE_MASTER" => Some(PotionTypeEnum::TurtleMaster),
-            "SLOW_FALLING" => Some(PotionTypeEnum::SlowFalling),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for PotionTypeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PotionTypeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PotionTypeStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/potion/PotionType")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PotionTypeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<PotionType<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/potion/PotionType");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/potion/PotionType;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        PotionType::from_raw(
-            &jni,
-            raw_obj,
-            PotionType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> PotionTypeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }

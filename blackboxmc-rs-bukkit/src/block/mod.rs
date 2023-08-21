@@ -16,12 +16,10 @@ impl<'mc> JNIRaw<'mc> for Chest<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Chest<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -177,12 +175,7 @@ impl<'mc> Chest<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -599,14 +592,9 @@ impl<'mc> Chest<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for Chest<'mc> {
@@ -627,89 +615,223 @@ impl<'mc> Into<crate::block::Lidded<'mc>> for Chest<'mc> {
             .expect("Error converting Chest into crate::block::Lidded")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum BlockFaceEnum {
-    North,
-    East,
-    South,
-    West,
-    Up,
-    Down,
-    NorthEast,
-    NorthWest,
-    SouthEast,
-    SouthWest,
-    WestNorthWest,
-    NorthNorthWest,
-    NorthNorthEast,
-    EastNorthEast,
-    EastSouthEast,
-    SouthSouthEast,
-    SouthSouthWest,
-    WestSouthWest,
-    VariantSelf,
-}
-impl std::fmt::Display for BlockFaceEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            BlockFaceEnum::North => f.write_str("NORTH"),
-            BlockFaceEnum::East => f.write_str("EAST"),
-            BlockFaceEnum::South => f.write_str("SOUTH"),
-            BlockFaceEnum::West => f.write_str("WEST"),
-            BlockFaceEnum::Up => f.write_str("UP"),
-            BlockFaceEnum::Down => f.write_str("DOWN"),
-            BlockFaceEnum::NorthEast => f.write_str("NORTH_EAST"),
-            BlockFaceEnum::NorthWest => f.write_str("NORTH_WEST"),
-            BlockFaceEnum::SouthEast => f.write_str("SOUTH_EAST"),
-            BlockFaceEnum::SouthWest => f.write_str("SOUTH_WEST"),
-            BlockFaceEnum::WestNorthWest => f.write_str("WEST_NORTH_WEST"),
-            BlockFaceEnum::NorthNorthWest => f.write_str("NORTH_NORTH_WEST"),
-            BlockFaceEnum::NorthNorthEast => f.write_str("NORTH_NORTH_EAST"),
-            BlockFaceEnum::EastNorthEast => f.write_str("EAST_NORTH_EAST"),
-            BlockFaceEnum::EastSouthEast => f.write_str("EAST_SOUTH_EAST"),
-            BlockFaceEnum::SouthSouthEast => f.write_str("SOUTH_SOUTH_EAST"),
-            BlockFaceEnum::SouthSouthWest => f.write_str("SOUTH_SOUTH_WEST"),
-            BlockFaceEnum::WestSouthWest => f.write_str("WEST_SOUTH_WEST"),
-            BlockFaceEnum::VariantSelf => f.write_str("SELF"),
-        }
-    }
+pub enum BlockFace<'mc> {
+    North { inner: BlockFaceStruct<'mc> },
+    East { inner: BlockFaceStruct<'mc> },
+    South { inner: BlockFaceStruct<'mc> },
+    West { inner: BlockFaceStruct<'mc> },
+    Up { inner: BlockFaceStruct<'mc> },
+    Down { inner: BlockFaceStruct<'mc> },
+    NorthEast { inner: BlockFaceStruct<'mc> },
+    NorthWest { inner: BlockFaceStruct<'mc> },
+    SouthEast { inner: BlockFaceStruct<'mc> },
+    SouthWest { inner: BlockFaceStruct<'mc> },
+    WestNorthWest { inner: BlockFaceStruct<'mc> },
+    NorthNorthWest { inner: BlockFaceStruct<'mc> },
+    NorthNorthEast { inner: BlockFaceStruct<'mc> },
+    EastNorthEast { inner: BlockFaceStruct<'mc> },
+    EastSouthEast { inner: BlockFaceStruct<'mc> },
+    SouthSouthEast { inner: BlockFaceStruct<'mc> },
+    SouthSouthWest { inner: BlockFaceStruct<'mc> },
+    WestSouthWest { inner: BlockFaceStruct<'mc> },
+    VariantSelf { inner: BlockFaceStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for BlockFace<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            BlockFace::North { .. } => f.write_str("NORTH"),
+            BlockFace::East { .. } => f.write_str("EAST"),
+            BlockFace::South { .. } => f.write_str("SOUTH"),
+            BlockFace::West { .. } => f.write_str("WEST"),
+            BlockFace::Up { .. } => f.write_str("UP"),
+            BlockFace::Down { .. } => f.write_str("DOWN"),
+            BlockFace::NorthEast { .. } => f.write_str("NORTH_EAST"),
+            BlockFace::NorthWest { .. } => f.write_str("NORTH_WEST"),
+            BlockFace::SouthEast { .. } => f.write_str("SOUTH_EAST"),
+            BlockFace::SouthWest { .. } => f.write_str("SOUTH_WEST"),
+            BlockFace::WestNorthWest { .. } => f.write_str("WEST_NORTH_WEST"),
+            BlockFace::NorthNorthWest { .. } => f.write_str("NORTH_NORTH_WEST"),
+            BlockFace::NorthNorthEast { .. } => f.write_str("NORTH_NORTH_EAST"),
+            BlockFace::EastNorthEast { .. } => f.write_str("EAST_NORTH_EAST"),
+            BlockFace::EastSouthEast { .. } => f.write_str("EAST_SOUTH_EAST"),
+            BlockFace::SouthSouthEast { .. } => f.write_str("SOUTH_SOUTH_EAST"),
+            BlockFace::SouthSouthWest { .. } => f.write_str("SOUTH_SOUTH_WEST"),
+            BlockFace::WestSouthWest { .. } => f.write_str("WEST_SOUTH_WEST"),
+            BlockFace::VariantSelf { .. } => f.write_str("SELF"),
+        }
     }
 }
+
+impl<'mc> BlockFace<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/BlockFace");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/BlockFace;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "NORTH" => Ok(BlockFace::North {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "EAST" => Ok(BlockFace::East {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "SOUTH" => Ok(BlockFace::South {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "WEST" => Ok(BlockFace::West {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "UP" => Ok(BlockFace::Up {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "DOWN" => Ok(BlockFace::Down {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "NORTH_EAST" => Ok(BlockFace::NorthEast {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "NORTH_WEST" => Ok(BlockFace::NorthWest {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "SOUTH_EAST" => Ok(BlockFace::SouthEast {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "SOUTH_WEST" => Ok(BlockFace::SouthWest {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "WEST_NORTH_WEST" => Ok(BlockFace::WestNorthWest {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "NORTH_NORTH_WEST" => Ok(BlockFace::NorthNorthWest {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "NORTH_NORTH_EAST" => Ok(BlockFace::NorthNorthEast {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "EAST_NORTH_EAST" => Ok(BlockFace::EastNorthEast {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "EAST_SOUTH_EAST" => Ok(BlockFace::EastSouthEast {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "SOUTH_SOUTH_EAST" => Ok(BlockFace::SouthSouthEast {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "SOUTH_SOUTH_WEST" => Ok(BlockFace::SouthSouthWest {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "WEST_SOUTH_WEST" => Ok(BlockFace::WestSouthWest {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+            "SELF" => Ok(BlockFace::VariantSelf {
+                inner: BlockFaceStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct BlockFace<'mc>(
+pub struct BlockFaceStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub BlockFaceEnum,
 );
-impl<'mc> std::ops::Deref for BlockFace<'mc> {
-    type Target = BlockFaceEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for BlockFace<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::North { inner } => inner.0.clone(),
+            Self::East { inner } => inner.0.clone(),
+            Self::South { inner } => inner.0.clone(),
+            Self::West { inner } => inner.0.clone(),
+            Self::Up { inner } => inner.0.clone(),
+            Self::Down { inner } => inner.0.clone(),
+            Self::NorthEast { inner } => inner.0.clone(),
+            Self::NorthWest { inner } => inner.0.clone(),
+            Self::SouthEast { inner } => inner.0.clone(),
+            Self::SouthWest { inner } => inner.0.clone(),
+            Self::WestNorthWest { inner } => inner.0.clone(),
+            Self::NorthNorthWest { inner } => inner.0.clone(),
+            Self::NorthNorthEast { inner } => inner.0.clone(),
+            Self::EastNorthEast { inner } => inner.0.clone(),
+            Self::EastSouthEast { inner } => inner.0.clone(),
+            Self::SouthSouthEast { inner } => inner.0.clone(),
+            Self::SouthSouthWest { inner } => inner.0.clone(),
+            Self::WestSouthWest { inner } => inner.0.clone(),
+            Self::VariantSelf { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::North { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::East { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::South { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::West { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Up { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Down { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NorthEast { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NorthWest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SouthEast { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SouthWest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WestNorthWest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NorthNorthWest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NorthNorthEast { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EastNorthEast { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EastSouthEast { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SouthSouthEast { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SouthSouthWest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WestSouthWest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::VariantSelf { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for BlockFace<'mc> {
-    type Enum = BlockFaceEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for BlockFace<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BlockFace from null object.").into());
@@ -722,94 +844,111 @@ impl<'mc> JNIInstantiatableEnum<'mc> for BlockFace<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "NORTH" => Ok(BlockFace::North {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "EAST" => Ok(BlockFace::East {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "SOUTH" => Ok(BlockFace::South {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "WEST" => Ok(BlockFace::West {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "UP" => Ok(BlockFace::Up {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "DOWN" => Ok(BlockFace::Down {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "NORTH_EAST" => Ok(BlockFace::NorthEast {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "NORTH_WEST" => Ok(BlockFace::NorthWest {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "SOUTH_EAST" => Ok(BlockFace::SouthEast {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "SOUTH_WEST" => Ok(BlockFace::SouthWest {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "WEST_NORTH_WEST" => Ok(BlockFace::WestNorthWest {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "NORTH_NORTH_WEST" => Ok(BlockFace::NorthNorthWest {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "NORTH_NORTH_EAST" => Ok(BlockFace::NorthNorthEast {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "EAST_NORTH_EAST" => Ok(BlockFace::EastNorthEast {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "EAST_SOUTH_EAST" => Ok(BlockFace::EastSouthEast {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "SOUTH_SOUTH_EAST" => Ok(BlockFace::SouthSouthEast {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "SOUTH_SOUTH_WEST" => Ok(BlockFace::SouthSouthWest {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "WEST_SOUTH_WEST" => Ok(BlockFace::WestSouthWest {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                "SELF" => Ok(BlockFace::VariantSelf {
+                    inner: BlockFaceStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> BlockFace<'mc> {
-    pub const NORTH: BlockFaceEnum = BlockFaceEnum::North;
-    pub const EAST: BlockFaceEnum = BlockFaceEnum::East;
-    pub const SOUTH: BlockFaceEnum = BlockFaceEnum::South;
-    pub const WEST: BlockFaceEnum = BlockFaceEnum::West;
-    pub const UP: BlockFaceEnum = BlockFaceEnum::Up;
-    pub const DOWN: BlockFaceEnum = BlockFaceEnum::Down;
-    pub const NORTH_EAST: BlockFaceEnum = BlockFaceEnum::NorthEast;
-    pub const NORTH_WEST: BlockFaceEnum = BlockFaceEnum::NorthWest;
-    pub const SOUTH_EAST: BlockFaceEnum = BlockFaceEnum::SouthEast;
-    pub const SOUTH_WEST: BlockFaceEnum = BlockFaceEnum::SouthWest;
-    pub const WEST_NORTH_WEST: BlockFaceEnum = BlockFaceEnum::WestNorthWest;
-    pub const NORTH_NORTH_WEST: BlockFaceEnum = BlockFaceEnum::NorthNorthWest;
-    pub const NORTH_NORTH_EAST: BlockFaceEnum = BlockFaceEnum::NorthNorthEast;
-    pub const EAST_NORTH_EAST: BlockFaceEnum = BlockFaceEnum::EastNorthEast;
-    pub const EAST_SOUTH_EAST: BlockFaceEnum = BlockFaceEnum::EastSouthEast;
-    pub const SOUTH_SOUTH_EAST: BlockFaceEnum = BlockFaceEnum::SouthSouthEast;
-    pub const SOUTH_SOUTH_WEST: BlockFaceEnum = BlockFaceEnum::SouthSouthWest;
-    pub const WEST_SOUTH_WEST: BlockFaceEnum = BlockFaceEnum::WestSouthWest;
-    pub const SELF: BlockFaceEnum = BlockFaceEnum::VariantSelf;
-    pub fn from_string(str: String) -> std::option::Option<BlockFaceEnum> {
-        match str.as_str() {
-            "NORTH" => Some(BlockFaceEnum::North),
-            "EAST" => Some(BlockFaceEnum::East),
-            "SOUTH" => Some(BlockFaceEnum::South),
-            "WEST" => Some(BlockFaceEnum::West),
-            "UP" => Some(BlockFaceEnum::Up),
-            "DOWN" => Some(BlockFaceEnum::Down),
-            "NORTH_EAST" => Some(BlockFaceEnum::NorthEast),
-            "NORTH_WEST" => Some(BlockFaceEnum::NorthWest),
-            "SOUTH_EAST" => Some(BlockFaceEnum::SouthEast),
-            "SOUTH_WEST" => Some(BlockFaceEnum::SouthWest),
-            "WEST_NORTH_WEST" => Some(BlockFaceEnum::WestNorthWest),
-            "NORTH_NORTH_WEST" => Some(BlockFaceEnum::NorthNorthWest),
-            "NORTH_NORTH_EAST" => Some(BlockFaceEnum::NorthNorthEast),
-            "EAST_NORTH_EAST" => Some(BlockFaceEnum::EastNorthEast),
-            "EAST_SOUTH_EAST" => Some(BlockFaceEnum::EastSouthEast),
-            "SOUTH_SOUTH_EAST" => Some(BlockFaceEnum::SouthSouthEast),
-            "SOUTH_SOUTH_WEST" => Some(BlockFaceEnum::SouthSouthWest),
-            "WEST_SOUTH_WEST" => Some(BlockFaceEnum::WestSouthWest),
-            "SELF" => Some(BlockFaceEnum::VariantSelf),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for BlockFaceStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for BlockFaceStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate BlockFaceStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/BlockFace")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BlockFaceStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/BlockFace");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/BlockFace;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        BlockFace::from_raw(
-            &jni,
-            raw_obj,
-            BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> BlockFaceStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a captured state of a (possibly inverted) daylight detector.
@@ -825,12 +964,10 @@ impl<'mc> JNIRaw<'mc> for DaylightDetector<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for DaylightDetector<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -943,12 +1080,7 @@ impl<'mc> DaylightDetector<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -1216,14 +1348,9 @@ impl<'mc> DaylightDetector<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for DaylightDetector<'mc> {
@@ -1245,12 +1372,10 @@ impl<'mc> JNIRaw<'mc> for Lockable<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Lockable<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1310,14 +1435,9 @@ impl<'mc> Lockable<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a captured state of a lectern.
@@ -1333,12 +1453,10 @@ impl<'mc> JNIRaw<'mc> for Lectern<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Lectern<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1500,12 +1618,7 @@ impl<'mc> Lectern<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -1775,14 +1888,9 @@ impl<'mc> Lectern<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Lectern<'mc> {
@@ -1810,12 +1918,10 @@ impl<'mc> JNIRaw<'mc> for CreatureSpawner<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CreatureSpawner<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1858,12 +1964,7 @@ impl<'mc> CreatureSpawner<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_spawned_type(
@@ -2186,12 +2287,7 @@ impl<'mc> CreatureSpawner<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -2459,14 +2555,9 @@ impl<'mc> CreatureSpawner<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for CreatureSpawner<'mc> {
@@ -2488,12 +2579,10 @@ impl<'mc> JNIRaw<'mc> for Comparator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Comparator<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2604,12 +2693,7 @@ impl<'mc> Comparator<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -2877,14 +2961,9 @@ impl<'mc> Comparator<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Comparator<'mc> {
@@ -2906,12 +2985,10 @@ impl<'mc> JNIRaw<'mc> for Container<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Container<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3051,12 +3128,7 @@ impl<'mc> Container<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -3398,14 +3470,9 @@ impl<'mc> Container<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Container<'mc> {
@@ -3445,12 +3512,10 @@ impl<'mc> JNIRaw<'mc> for EndGateway<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EndGateway<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3641,12 +3706,7 @@ impl<'mc> EndGateway<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -3914,14 +3974,9 @@ impl<'mc> EndGateway<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for EndGateway<'mc> {
@@ -3943,12 +3998,10 @@ impl<'mc> JNIRaw<'mc> for BlastFurnace<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlastFurnace<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4174,12 +4227,7 @@ impl<'mc> BlastFurnace<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -4521,14 +4569,9 @@ impl<'mc> BlastFurnace<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::Furnace<'mc>> for BlastFurnace<'mc> {
@@ -4537,61 +4580,113 @@ impl<'mc> Into<crate::block::Furnace<'mc>> for BlastFurnace<'mc> {
             .expect("Error converting BlastFurnace into crate::block::Furnace")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum PistonMoveReactionEnum {
-    VariantMove,
-    VariantBreak,
-    Block,
-    Ignore,
-    PushOnly,
-}
-impl std::fmt::Display for PistonMoveReactionEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PistonMoveReactionEnum::VariantMove => f.write_str("MOVE"),
-            PistonMoveReactionEnum::VariantBreak => f.write_str("BREAK"),
-            PistonMoveReactionEnum::Block => f.write_str("BLOCK"),
-            PistonMoveReactionEnum::Ignore => f.write_str("IGNORE"),
-            PistonMoveReactionEnum::PushOnly => f.write_str("PUSH_ONLY"),
-        }
-    }
+pub enum PistonMoveReaction<'mc> {
+    VariantMove {
+        inner: PistonMoveReactionStruct<'mc>,
+    },
+    VariantBreak {
+        inner: PistonMoveReactionStruct<'mc>,
+    },
+    Block {
+        inner: PistonMoveReactionStruct<'mc>,
+    },
+    Ignore {
+        inner: PistonMoveReactionStruct<'mc>,
+    },
+    PushOnly {
+        inner: PistonMoveReactionStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for PistonMoveReaction<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            PistonMoveReaction::VariantMove { .. } => f.write_str("MOVE"),
+            PistonMoveReaction::VariantBreak { .. } => f.write_str("BREAK"),
+            PistonMoveReaction::Block { .. } => f.write_str("BLOCK"),
+            PistonMoveReaction::Ignore { .. } => f.write_str("IGNORE"),
+            PistonMoveReaction::PushOnly { .. } => f.write_str("PUSH_ONLY"),
+        }
     }
 }
+
+impl<'mc> PistonMoveReaction<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/PistonMoveReaction");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/PistonMoveReaction;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "MOVE" => Ok(PistonMoveReaction::VariantMove {
+                inner: PistonMoveReactionStruct::from_raw(env, obj)?,
+            }),
+            "BREAK" => Ok(PistonMoveReaction::VariantBreak {
+                inner: PistonMoveReactionStruct::from_raw(env, obj)?,
+            }),
+            "BLOCK" => Ok(PistonMoveReaction::Block {
+                inner: PistonMoveReactionStruct::from_raw(env, obj)?,
+            }),
+            "IGNORE" => Ok(PistonMoveReaction::Ignore {
+                inner: PistonMoveReactionStruct::from_raw(env, obj)?,
+            }),
+            "PUSH_ONLY" => Ok(PistonMoveReaction::PushOnly {
+                inner: PistonMoveReactionStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct PistonMoveReaction<'mc>(
+pub struct PistonMoveReactionStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub PistonMoveReactionEnum,
 );
-impl<'mc> std::ops::Deref for PistonMoveReaction<'mc> {
-    type Target = PistonMoveReactionEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for PistonMoveReaction<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::VariantMove { inner } => inner.0.clone(),
+            Self::VariantBreak { inner } => inner.0.clone(),
+            Self::Block { inner } => inner.0.clone(),
+            Self::Ignore { inner } => inner.0.clone(),
+            Self::PushOnly { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::VariantMove { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::VariantBreak { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Block { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Ignore { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::PushOnly { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for PistonMoveReaction<'mc> {
-    type Enum = PistonMoveReactionEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for PistonMoveReaction<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -4606,66 +4701,70 @@ impl<'mc> JNIInstantiatableEnum<'mc> for PistonMoveReaction<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "MOVE" => Ok(PistonMoveReaction::VariantMove {
+                    inner: PistonMoveReactionStruct::from_raw(env, obj)?,
+                }),
+                "BREAK" => Ok(PistonMoveReaction::VariantBreak {
+                    inner: PistonMoveReactionStruct::from_raw(env, obj)?,
+                }),
+                "BLOCK" => Ok(PistonMoveReaction::Block {
+                    inner: PistonMoveReactionStruct::from_raw(env, obj)?,
+                }),
+                "IGNORE" => Ok(PistonMoveReaction::Ignore {
+                    inner: PistonMoveReactionStruct::from_raw(env, obj)?,
+                }),
+                "PUSH_ONLY" => Ok(PistonMoveReaction::PushOnly {
+                    inner: PistonMoveReactionStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> PistonMoveReaction<'mc> {
-    pub const MOVE: PistonMoveReactionEnum = PistonMoveReactionEnum::VariantMove;
-    pub const BREAK: PistonMoveReactionEnum = PistonMoveReactionEnum::VariantBreak;
-    pub const BLOCK: PistonMoveReactionEnum = PistonMoveReactionEnum::Block;
-    pub const IGNORE: PistonMoveReactionEnum = PistonMoveReactionEnum::Ignore;
-    pub const PUSH_ONLY: PistonMoveReactionEnum = PistonMoveReactionEnum::PushOnly;
-    pub fn from_string(str: String) -> std::option::Option<PistonMoveReactionEnum> {
-        match str.as_str() {
-            "MOVE" => Some(PistonMoveReactionEnum::VariantMove),
-            "BREAK" => Some(PistonMoveReactionEnum::VariantBreak),
-            "BLOCK" => Some(PistonMoveReactionEnum::Block),
-            "IGNORE" => Some(PistonMoveReactionEnum::Ignore),
-            "PUSH_ONLY" => Some(PistonMoveReactionEnum::PushOnly),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for PistonMoveReactionStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PistonMoveReactionStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PistonMoveReactionStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/PistonMoveReaction")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PistonMoveReactionStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/PistonMoveReaction");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/PistonMoveReaction;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        PistonMoveReaction::from_raw(
-            &jni,
-            raw_obj,
-            PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> PistonMoveReactionStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -4681,12 +4780,10 @@ impl<'mc> JNIRaw<'mc> for Lidded<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Lidded<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4727,14 +4824,9 @@ impl<'mc> Lidded<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a captured state of an enchanting table.
@@ -4750,12 +4842,10 @@ impl<'mc> JNIRaw<'mc> for EnchantingTable<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EnchantingTable<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4868,12 +4958,7 @@ impl<'mc> EnchantingTable<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -5176,14 +5261,9 @@ impl<'mc> EnchantingTable<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for EnchantingTable<'mc> {
@@ -5211,12 +5291,10 @@ impl<'mc> JNIRaw<'mc> for ShulkerBox<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ShulkerBox<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5258,12 +5336,7 @@ impl<'mc> ShulkerBox<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        Ok(Some(crate::DyeColor::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::DyeColor::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )?))
+        Ok(Some(crate::DyeColor::from_raw(&self.jni_ref(), raw_obj)?))
     }
 
     pub fn inventory(
@@ -5383,12 +5456,7 @@ impl<'mc> ShulkerBox<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -5805,14 +5873,9 @@ impl<'mc> ShulkerBox<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for ShulkerBox<'mc> {
@@ -5846,12 +5909,10 @@ impl<'mc> JNIRaw<'mc> for EntityBlockStorage<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityBlockStorage<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6040,12 +6101,7 @@ impl<'mc> EntityBlockStorage<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -6313,14 +6369,9 @@ impl<'mc> EntityBlockStorage<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for EntityBlockStorage<'mc> {
@@ -6342,12 +6393,10 @@ impl<'mc> JNIRaw<'mc> for Beehive<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Beehive<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6575,12 +6624,7 @@ impl<'mc> Beehive<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -6848,14 +6892,9 @@ impl<'mc> Beehive<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::EntityBlockStorage<'mc>> for Beehive<'mc> {
@@ -6865,59 +6904,92 @@ impl<'mc> Into<crate::block::EntityBlockStorage<'mc>> for Beehive<'mc> {
     }
 }
 /// A side on a decorated pot. Sides are relative to the facing state of a <a href="data/type/DecoratedPot.html" title="interface in org.bukkit.block.data.type"><code>DecoratedPot</code></a>.
-#[derive(PartialEq, Eq)]
-pub enum DecoratedPotSideEnum {
-    Back,
-    Left,
-    Right,
-    Front,
-}
-impl std::fmt::Display for DecoratedPotSideEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            DecoratedPotSideEnum::Back => f.write_str("BACK"),
-            DecoratedPotSideEnum::Left => f.write_str("LEFT"),
-            DecoratedPotSideEnum::Right => f.write_str("RIGHT"),
-            DecoratedPotSideEnum::Front => f.write_str("FRONT"),
-        }
-    }
+pub enum DecoratedPotSide<'mc> {
+    Back { inner: DecoratedPotSideStruct<'mc> },
+    Left { inner: DecoratedPotSideStruct<'mc> },
+    Right { inner: DecoratedPotSideStruct<'mc> },
+    Front { inner: DecoratedPotSideStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for DecoratedPotSide<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            DecoratedPotSide::Back { .. } => f.write_str("BACK"),
+            DecoratedPotSide::Left { .. } => f.write_str("LEFT"),
+            DecoratedPotSide::Right { .. } => f.write_str("RIGHT"),
+            DecoratedPotSide::Front { .. } => f.write_str("FRONT"),
+        }
     }
 }
+
+impl<'mc> DecoratedPotSide<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<DecoratedPotSide<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/DecoratedPot$Side");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/DecoratedPot$Side;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "BACK" => Ok(DecoratedPotSide::Back {
+                inner: DecoratedPotSideStruct::from_raw(env, obj)?,
+            }),
+            "LEFT" => Ok(DecoratedPotSide::Left {
+                inner: DecoratedPotSideStruct::from_raw(env, obj)?,
+            }),
+            "RIGHT" => Ok(DecoratedPotSide::Right {
+                inner: DecoratedPotSideStruct::from_raw(env, obj)?,
+            }),
+            "FRONT" => Ok(DecoratedPotSide::Front {
+                inner: DecoratedPotSideStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct DecoratedPotSide<'mc>(
+pub struct DecoratedPotSideStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub DecoratedPotSideEnum,
 );
-impl<'mc> std::ops::Deref for DecoratedPotSide<'mc> {
-    type Target = DecoratedPotSideEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for DecoratedPotSide<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Back { inner } => inner.0.clone(),
+            Self::Left { inner } => inner.0.clone(),
+            Self::Right { inner } => inner.0.clone(),
+            Self::Front { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Back { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Left { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Right { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Front { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for DecoratedPotSide<'mc> {
-    type Enum = DecoratedPotSideEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for DecoratedPotSide<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -6932,64 +7004,67 @@ impl<'mc> JNIInstantiatableEnum<'mc> for DecoratedPotSide<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "BACK" => Ok(DecoratedPotSide::Back {
+                    inner: DecoratedPotSideStruct::from_raw(env, obj)?,
+                }),
+                "LEFT" => Ok(DecoratedPotSide::Left {
+                    inner: DecoratedPotSideStruct::from_raw(env, obj)?,
+                }),
+                "RIGHT" => Ok(DecoratedPotSide::Right {
+                    inner: DecoratedPotSideStruct::from_raw(env, obj)?,
+                }),
+                "FRONT" => Ok(DecoratedPotSide::Front {
+                    inner: DecoratedPotSideStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> DecoratedPotSide<'mc> {
-    pub const BACK: DecoratedPotSideEnum = DecoratedPotSideEnum::Back;
-    pub const LEFT: DecoratedPotSideEnum = DecoratedPotSideEnum::Left;
-    pub const RIGHT: DecoratedPotSideEnum = DecoratedPotSideEnum::Right;
-    pub const FRONT: DecoratedPotSideEnum = DecoratedPotSideEnum::Front;
-    pub fn from_string(str: String) -> std::option::Option<DecoratedPotSideEnum> {
-        match str.as_str() {
-            "BACK" => Some(DecoratedPotSideEnum::Back),
-            "LEFT" => Some(DecoratedPotSideEnum::Left),
-            "RIGHT" => Some(DecoratedPotSideEnum::Right),
-            "FRONT" => Some(DecoratedPotSideEnum::Front),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for DecoratedPotSideStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for DecoratedPotSideStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate DecoratedPotSideStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/DecoratedPot$Side")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a DecoratedPotSideStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<DecoratedPotSide<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/DecoratedPot$Side");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/DecoratedPot$Side;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        DecoratedPotSide::from_raw(
-            &jni,
-            raw_obj,
-            DecoratedPotSide::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> DecoratedPotSideStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a captured state of a sculk catalyst.
@@ -7005,12 +7080,10 @@ impl<'mc> JNIRaw<'mc> for SculkCatalyst<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SculkCatalyst<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7121,12 +7194,7 @@ impl<'mc> SculkCatalyst<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -7394,14 +7462,9 @@ impl<'mc> SculkCatalyst<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for SculkCatalyst<'mc> {
@@ -7423,12 +7486,10 @@ impl<'mc> JNIRaw<'mc> for Furnace<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Furnace<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7654,12 +7715,7 @@ impl<'mc> Furnace<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -8001,14 +8057,9 @@ impl<'mc> Furnace<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for Furnace<'mc> {
@@ -8030,12 +8081,10 @@ impl<'mc> JNIRaw<'mc> for Dropper<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Dropper<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8184,12 +8233,7 @@ impl<'mc> Dropper<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -8588,14 +8632,9 @@ impl<'mc> Dropper<'mc> {
         )?))
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for Dropper<'mc> {
@@ -8623,12 +8662,10 @@ impl<'mc> JNIRaw<'mc> for SuspiciousSand<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SuspiciousSand<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8827,12 +8864,7 @@ impl<'mc> SuspiciousSand<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -9100,14 +9132,9 @@ impl<'mc> SuspiciousSand<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::BrushableBlock<'mc>> for SuspiciousSand<'mc> {
@@ -9129,12 +9156,10 @@ impl<'mc> JNIRaw<'mc> for Conduit<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Conduit<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9245,12 +9270,7 @@ impl<'mc> Conduit<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -9518,14 +9538,9 @@ impl<'mc> Conduit<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Conduit<'mc> {
@@ -9547,12 +9562,10 @@ impl<'mc> JNIRaw<'mc> for Beacon<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Beacon<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9769,12 +9782,7 @@ impl<'mc> Beacon<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -10114,14 +10122,9 @@ impl<'mc> Beacon<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Beacon<'mc> {
@@ -10157,12 +10160,10 @@ impl<'mc> JNIRaw<'mc> for Block<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Block<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10250,12 +10251,7 @@ impl<'mc> Block<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -10333,12 +10329,7 @@ impl<'mc> Block<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn bounding_box(
@@ -10464,12 +10455,7 @@ impl<'mc> Block<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn ray_trace(
@@ -10523,12 +10509,7 @@ impl<'mc> Block<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::Biome::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::Biome::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::Biome::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_biome(
@@ -10949,14 +10930,9 @@ impl<'mc> Block<'mc> {
             .to_string())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::metadata::Metadatable<'mc>> for Block<'mc> {
@@ -10984,12 +10960,10 @@ impl<'mc> JNIRaw<'mc> for Bell<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Bell<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11168,12 +11142,7 @@ impl<'mc> Bell<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -11441,14 +11410,9 @@ impl<'mc> Bell<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Bell<'mc> {
@@ -11470,12 +11434,10 @@ impl<'mc> JNIRaw<'mc> for Jigsaw<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Jigsaw<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11586,12 +11548,7 @@ impl<'mc> Jigsaw<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -11859,14 +11816,9 @@ impl<'mc> Jigsaw<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Jigsaw<'mc> {
@@ -11888,12 +11840,10 @@ impl<'mc> JNIRaw<'mc> for Dispenser<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Dispenser<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12063,12 +12013,7 @@ impl<'mc> Dispenser<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -12467,14 +12412,9 @@ impl<'mc> Dispenser<'mc> {
         )?))
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for Dispenser<'mc> {
@@ -12508,12 +12448,10 @@ impl<'mc> JNIRaw<'mc> for BrushableBlock<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BrushableBlock<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12712,12 +12650,7 @@ impl<'mc> BrushableBlock<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -12985,14 +12918,9 @@ impl<'mc> BrushableBlock<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::loot::Lootable<'mc>> for BrushableBlock<'mc> {
@@ -13020,12 +12948,10 @@ impl<'mc> JNIRaw<'mc> for SculkShrieker<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SculkShrieker<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13158,12 +13084,7 @@ impl<'mc> SculkShrieker<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -13431,14 +13352,9 @@ impl<'mc> SculkShrieker<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for SculkShrieker<'mc> {
@@ -13460,12 +13376,10 @@ impl<'mc> JNIRaw<'mc> for DecoratedPot<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for DecoratedPot<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13538,12 +13452,7 @@ impl<'mc> DecoratedPot<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn sherds(
@@ -13571,21 +13480,7 @@ impl<'mc> DecoratedPot<'mc> {
         let iter = list.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
-            let variant =
-                self.jni_ref()
-                    .call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-            let variant = self.jni_ref().translate_error(variant)?;
-            let variant_str = self
-                .jni_ref()
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            new_vec.push(crate::Material::from_raw(
-                &self.jni_ref(),
-                obj,
-                crate::Material::from_string(variant_str)
-                    .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-            )?);
+            new_vec.push(crate::Material::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
     }
@@ -13678,12 +13573,7 @@ impl<'mc> DecoratedPot<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -13951,14 +13841,9 @@ impl<'mc> DecoratedPot<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for DecoratedPot<'mc> {
@@ -13980,12 +13865,10 @@ impl<'mc> JNIRaw<'mc> for Campfire<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Campfire<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14216,12 +14099,7 @@ impl<'mc> Campfire<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -14489,14 +14367,9 @@ impl<'mc> Campfire<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Campfire<'mc> {
@@ -14505,181 +14378,615 @@ impl<'mc> Into<crate::block::TileState<'mc>> for Campfire<'mc> {
             .expect("Error converting Campfire into crate::block::TileState")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum BiomeEnum {
-    Ocean,
-    Plains,
-    Desert,
-    WindsweptHills,
-    Forest,
-    Taiga,
-    Swamp,
-    MangroveSwamp,
-    River,
-    NetherWastes,
-    TheEnd,
-    FrozenOcean,
-    FrozenRiver,
-    SnowyPlains,
-    MushroomFields,
-    Beach,
-    Jungle,
-    SparseJungle,
-    DeepOcean,
-    StonyShore,
-    SnowyBeach,
-    BirchForest,
-    DarkForest,
-    SnowyTaiga,
-    OldGrowthPineTaiga,
-    WindsweptForest,
-    Savanna,
-    SavannaPlateau,
-    Badlands,
-    WoodedBadlands,
-    SmallEndIslands,
-    EndMidlands,
-    EndHighlands,
-    EndBarrens,
-    WarmOcean,
-    LukewarmOcean,
-    ColdOcean,
-    DeepLukewarmOcean,
-    DeepColdOcean,
-    DeepFrozenOcean,
-    TheVoid,
-    SunflowerPlains,
-    WindsweptGravellyHills,
-    FlowerForest,
-    IceSpikes,
-    OldGrowthBirchForest,
-    OldGrowthSpruceTaiga,
-    WindsweptSavanna,
-    ErodedBadlands,
-    BambooJungle,
-    SoulSandValley,
-    CrimsonForest,
-    WarpedForest,
-    BasaltDeltas,
-    DripstoneCaves,
-    LushCaves,
-    DeepDark,
-    Meadow,
-    Grove,
-    SnowySlopes,
-    FrozenPeaks,
-    JaggedPeaks,
-    StonyPeaks,
-    CherryGrove,
-    Custom,
-}
-impl std::fmt::Display for BiomeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            BiomeEnum::Ocean => f.write_str("OCEAN"),
-            BiomeEnum::Plains => f.write_str("PLAINS"),
-            BiomeEnum::Desert => f.write_str("DESERT"),
-            BiomeEnum::WindsweptHills => f.write_str("WINDSWEPT_HILLS"),
-            BiomeEnum::Forest => f.write_str("FOREST"),
-            BiomeEnum::Taiga => f.write_str("TAIGA"),
-            BiomeEnum::Swamp => f.write_str("SWAMP"),
-            BiomeEnum::MangroveSwamp => f.write_str("MANGROVE_SWAMP"),
-            BiomeEnum::River => f.write_str("RIVER"),
-            BiomeEnum::NetherWastes => f.write_str("NETHER_WASTES"),
-            BiomeEnum::TheEnd => f.write_str("THE_END"),
-            BiomeEnum::FrozenOcean => f.write_str("FROZEN_OCEAN"),
-            BiomeEnum::FrozenRiver => f.write_str("FROZEN_RIVER"),
-            BiomeEnum::SnowyPlains => f.write_str("SNOWY_PLAINS"),
-            BiomeEnum::MushroomFields => f.write_str("MUSHROOM_FIELDS"),
-            BiomeEnum::Beach => f.write_str("BEACH"),
-            BiomeEnum::Jungle => f.write_str("JUNGLE"),
-            BiomeEnum::SparseJungle => f.write_str("SPARSE_JUNGLE"),
-            BiomeEnum::DeepOcean => f.write_str("DEEP_OCEAN"),
-            BiomeEnum::StonyShore => f.write_str("STONY_SHORE"),
-            BiomeEnum::SnowyBeach => f.write_str("SNOWY_BEACH"),
-            BiomeEnum::BirchForest => f.write_str("BIRCH_FOREST"),
-            BiomeEnum::DarkForest => f.write_str("DARK_FOREST"),
-            BiomeEnum::SnowyTaiga => f.write_str("SNOWY_TAIGA"),
-            BiomeEnum::OldGrowthPineTaiga => f.write_str("OLD_GROWTH_PINE_TAIGA"),
-            BiomeEnum::WindsweptForest => f.write_str("WINDSWEPT_FOREST"),
-            BiomeEnum::Savanna => f.write_str("SAVANNA"),
-            BiomeEnum::SavannaPlateau => f.write_str("SAVANNA_PLATEAU"),
-            BiomeEnum::Badlands => f.write_str("BADLANDS"),
-            BiomeEnum::WoodedBadlands => f.write_str("WOODED_BADLANDS"),
-            BiomeEnum::SmallEndIslands => f.write_str("SMALL_END_ISLANDS"),
-            BiomeEnum::EndMidlands => f.write_str("END_MIDLANDS"),
-            BiomeEnum::EndHighlands => f.write_str("END_HIGHLANDS"),
-            BiomeEnum::EndBarrens => f.write_str("END_BARRENS"),
-            BiomeEnum::WarmOcean => f.write_str("WARM_OCEAN"),
-            BiomeEnum::LukewarmOcean => f.write_str("LUKEWARM_OCEAN"),
-            BiomeEnum::ColdOcean => f.write_str("COLD_OCEAN"),
-            BiomeEnum::DeepLukewarmOcean => f.write_str("DEEP_LUKEWARM_OCEAN"),
-            BiomeEnum::DeepColdOcean => f.write_str("DEEP_COLD_OCEAN"),
-            BiomeEnum::DeepFrozenOcean => f.write_str("DEEP_FROZEN_OCEAN"),
-            BiomeEnum::TheVoid => f.write_str("THE_VOID"),
-            BiomeEnum::SunflowerPlains => f.write_str("SUNFLOWER_PLAINS"),
-            BiomeEnum::WindsweptGravellyHills => f.write_str("WINDSWEPT_GRAVELLY_HILLS"),
-            BiomeEnum::FlowerForest => f.write_str("FLOWER_FOREST"),
-            BiomeEnum::IceSpikes => f.write_str("ICE_SPIKES"),
-            BiomeEnum::OldGrowthBirchForest => f.write_str("OLD_GROWTH_BIRCH_FOREST"),
-            BiomeEnum::OldGrowthSpruceTaiga => f.write_str("OLD_GROWTH_SPRUCE_TAIGA"),
-            BiomeEnum::WindsweptSavanna => f.write_str("WINDSWEPT_SAVANNA"),
-            BiomeEnum::ErodedBadlands => f.write_str("ERODED_BADLANDS"),
-            BiomeEnum::BambooJungle => f.write_str("BAMBOO_JUNGLE"),
-            BiomeEnum::SoulSandValley => f.write_str("SOUL_SAND_VALLEY"),
-            BiomeEnum::CrimsonForest => f.write_str("CRIMSON_FOREST"),
-            BiomeEnum::WarpedForest => f.write_str("WARPED_FOREST"),
-            BiomeEnum::BasaltDeltas => f.write_str("BASALT_DELTAS"),
-            BiomeEnum::DripstoneCaves => f.write_str("DRIPSTONE_CAVES"),
-            BiomeEnum::LushCaves => f.write_str("LUSH_CAVES"),
-            BiomeEnum::DeepDark => f.write_str("DEEP_DARK"),
-            BiomeEnum::Meadow => f.write_str("MEADOW"),
-            BiomeEnum::Grove => f.write_str("GROVE"),
-            BiomeEnum::SnowySlopes => f.write_str("SNOWY_SLOPES"),
-            BiomeEnum::FrozenPeaks => f.write_str("FROZEN_PEAKS"),
-            BiomeEnum::JaggedPeaks => f.write_str("JAGGED_PEAKS"),
-            BiomeEnum::StonyPeaks => f.write_str("STONY_PEAKS"),
-            BiomeEnum::CherryGrove => f.write_str("CHERRY_GROVE"),
-            BiomeEnum::Custom => f.write_str("CUSTOM"),
-        }
-    }
+pub enum Biome<'mc> {
+    Ocean { inner: BiomeStruct<'mc> },
+    Plains { inner: BiomeStruct<'mc> },
+    Desert { inner: BiomeStruct<'mc> },
+    WindsweptHills { inner: BiomeStruct<'mc> },
+    Forest { inner: BiomeStruct<'mc> },
+    Taiga { inner: BiomeStruct<'mc> },
+    Swamp { inner: BiomeStruct<'mc> },
+    MangroveSwamp { inner: BiomeStruct<'mc> },
+    River { inner: BiomeStruct<'mc> },
+    NetherWastes { inner: BiomeStruct<'mc> },
+    TheEnd { inner: BiomeStruct<'mc> },
+    FrozenOcean { inner: BiomeStruct<'mc> },
+    FrozenRiver { inner: BiomeStruct<'mc> },
+    SnowyPlains { inner: BiomeStruct<'mc> },
+    MushroomFields { inner: BiomeStruct<'mc> },
+    Beach { inner: BiomeStruct<'mc> },
+    Jungle { inner: BiomeStruct<'mc> },
+    SparseJungle { inner: BiomeStruct<'mc> },
+    DeepOcean { inner: BiomeStruct<'mc> },
+    StonyShore { inner: BiomeStruct<'mc> },
+    SnowyBeach { inner: BiomeStruct<'mc> },
+    BirchForest { inner: BiomeStruct<'mc> },
+    DarkForest { inner: BiomeStruct<'mc> },
+    SnowyTaiga { inner: BiomeStruct<'mc> },
+    OldGrowthPineTaiga { inner: BiomeStruct<'mc> },
+    WindsweptForest { inner: BiomeStruct<'mc> },
+    Savanna { inner: BiomeStruct<'mc> },
+    SavannaPlateau { inner: BiomeStruct<'mc> },
+    Badlands { inner: BiomeStruct<'mc> },
+    WoodedBadlands { inner: BiomeStruct<'mc> },
+    SmallEndIslands { inner: BiomeStruct<'mc> },
+    EndMidlands { inner: BiomeStruct<'mc> },
+    EndHighlands { inner: BiomeStruct<'mc> },
+    EndBarrens { inner: BiomeStruct<'mc> },
+    WarmOcean { inner: BiomeStruct<'mc> },
+    LukewarmOcean { inner: BiomeStruct<'mc> },
+    ColdOcean { inner: BiomeStruct<'mc> },
+    DeepLukewarmOcean { inner: BiomeStruct<'mc> },
+    DeepColdOcean { inner: BiomeStruct<'mc> },
+    DeepFrozenOcean { inner: BiomeStruct<'mc> },
+    TheVoid { inner: BiomeStruct<'mc> },
+    SunflowerPlains { inner: BiomeStruct<'mc> },
+    WindsweptGravellyHills { inner: BiomeStruct<'mc> },
+    FlowerForest { inner: BiomeStruct<'mc> },
+    IceSpikes { inner: BiomeStruct<'mc> },
+    OldGrowthBirchForest { inner: BiomeStruct<'mc> },
+    OldGrowthSpruceTaiga { inner: BiomeStruct<'mc> },
+    WindsweptSavanna { inner: BiomeStruct<'mc> },
+    ErodedBadlands { inner: BiomeStruct<'mc> },
+    BambooJungle { inner: BiomeStruct<'mc> },
+    SoulSandValley { inner: BiomeStruct<'mc> },
+    CrimsonForest { inner: BiomeStruct<'mc> },
+    WarpedForest { inner: BiomeStruct<'mc> },
+    BasaltDeltas { inner: BiomeStruct<'mc> },
+    DripstoneCaves { inner: BiomeStruct<'mc> },
+    LushCaves { inner: BiomeStruct<'mc> },
+    DeepDark { inner: BiomeStruct<'mc> },
+    Meadow { inner: BiomeStruct<'mc> },
+    Grove { inner: BiomeStruct<'mc> },
+    SnowySlopes { inner: BiomeStruct<'mc> },
+    FrozenPeaks { inner: BiomeStruct<'mc> },
+    JaggedPeaks { inner: BiomeStruct<'mc> },
+    StonyPeaks { inner: BiomeStruct<'mc> },
+    CherryGrove { inner: BiomeStruct<'mc> },
+    Custom { inner: BiomeStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Biome<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Biome::Ocean { .. } => f.write_str("OCEAN"),
+            Biome::Plains { .. } => f.write_str("PLAINS"),
+            Biome::Desert { .. } => f.write_str("DESERT"),
+            Biome::WindsweptHills { .. } => f.write_str("WINDSWEPT_HILLS"),
+            Biome::Forest { .. } => f.write_str("FOREST"),
+            Biome::Taiga { .. } => f.write_str("TAIGA"),
+            Biome::Swamp { .. } => f.write_str("SWAMP"),
+            Biome::MangroveSwamp { .. } => f.write_str("MANGROVE_SWAMP"),
+            Biome::River { .. } => f.write_str("RIVER"),
+            Biome::NetherWastes { .. } => f.write_str("NETHER_WASTES"),
+            Biome::TheEnd { .. } => f.write_str("THE_END"),
+            Biome::FrozenOcean { .. } => f.write_str("FROZEN_OCEAN"),
+            Biome::FrozenRiver { .. } => f.write_str("FROZEN_RIVER"),
+            Biome::SnowyPlains { .. } => f.write_str("SNOWY_PLAINS"),
+            Biome::MushroomFields { .. } => f.write_str("MUSHROOM_FIELDS"),
+            Biome::Beach { .. } => f.write_str("BEACH"),
+            Biome::Jungle { .. } => f.write_str("JUNGLE"),
+            Biome::SparseJungle { .. } => f.write_str("SPARSE_JUNGLE"),
+            Biome::DeepOcean { .. } => f.write_str("DEEP_OCEAN"),
+            Biome::StonyShore { .. } => f.write_str("STONY_SHORE"),
+            Biome::SnowyBeach { .. } => f.write_str("SNOWY_BEACH"),
+            Biome::BirchForest { .. } => f.write_str("BIRCH_FOREST"),
+            Biome::DarkForest { .. } => f.write_str("DARK_FOREST"),
+            Biome::SnowyTaiga { .. } => f.write_str("SNOWY_TAIGA"),
+            Biome::OldGrowthPineTaiga { .. } => f.write_str("OLD_GROWTH_PINE_TAIGA"),
+            Biome::WindsweptForest { .. } => f.write_str("WINDSWEPT_FOREST"),
+            Biome::Savanna { .. } => f.write_str("SAVANNA"),
+            Biome::SavannaPlateau { .. } => f.write_str("SAVANNA_PLATEAU"),
+            Biome::Badlands { .. } => f.write_str("BADLANDS"),
+            Biome::WoodedBadlands { .. } => f.write_str("WOODED_BADLANDS"),
+            Biome::SmallEndIslands { .. } => f.write_str("SMALL_END_ISLANDS"),
+            Biome::EndMidlands { .. } => f.write_str("END_MIDLANDS"),
+            Biome::EndHighlands { .. } => f.write_str("END_HIGHLANDS"),
+            Biome::EndBarrens { .. } => f.write_str("END_BARRENS"),
+            Biome::WarmOcean { .. } => f.write_str("WARM_OCEAN"),
+            Biome::LukewarmOcean { .. } => f.write_str("LUKEWARM_OCEAN"),
+            Biome::ColdOcean { .. } => f.write_str("COLD_OCEAN"),
+            Biome::DeepLukewarmOcean { .. } => f.write_str("DEEP_LUKEWARM_OCEAN"),
+            Biome::DeepColdOcean { .. } => f.write_str("DEEP_COLD_OCEAN"),
+            Biome::DeepFrozenOcean { .. } => f.write_str("DEEP_FROZEN_OCEAN"),
+            Biome::TheVoid { .. } => f.write_str("THE_VOID"),
+            Biome::SunflowerPlains { .. } => f.write_str("SUNFLOWER_PLAINS"),
+            Biome::WindsweptGravellyHills { .. } => f.write_str("WINDSWEPT_GRAVELLY_HILLS"),
+            Biome::FlowerForest { .. } => f.write_str("FLOWER_FOREST"),
+            Biome::IceSpikes { .. } => f.write_str("ICE_SPIKES"),
+            Biome::OldGrowthBirchForest { .. } => f.write_str("OLD_GROWTH_BIRCH_FOREST"),
+            Biome::OldGrowthSpruceTaiga { .. } => f.write_str("OLD_GROWTH_SPRUCE_TAIGA"),
+            Biome::WindsweptSavanna { .. } => f.write_str("WINDSWEPT_SAVANNA"),
+            Biome::ErodedBadlands { .. } => f.write_str("ERODED_BADLANDS"),
+            Biome::BambooJungle { .. } => f.write_str("BAMBOO_JUNGLE"),
+            Biome::SoulSandValley { .. } => f.write_str("SOUL_SAND_VALLEY"),
+            Biome::CrimsonForest { .. } => f.write_str("CRIMSON_FOREST"),
+            Biome::WarpedForest { .. } => f.write_str("WARPED_FOREST"),
+            Biome::BasaltDeltas { .. } => f.write_str("BASALT_DELTAS"),
+            Biome::DripstoneCaves { .. } => f.write_str("DRIPSTONE_CAVES"),
+            Biome::LushCaves { .. } => f.write_str("LUSH_CAVES"),
+            Biome::DeepDark { .. } => f.write_str("DEEP_DARK"),
+            Biome::Meadow { .. } => f.write_str("MEADOW"),
+            Biome::Grove { .. } => f.write_str("GROVE"),
+            Biome::SnowySlopes { .. } => f.write_str("SNOWY_SLOPES"),
+            Biome::FrozenPeaks { .. } => f.write_str("FROZEN_PEAKS"),
+            Biome::JaggedPeaks { .. } => f.write_str("JAGGED_PEAKS"),
+            Biome::StonyPeaks { .. } => f.write_str("STONY_PEAKS"),
+            Biome::CherryGrove { .. } => f.write_str("CHERRY_GROVE"),
+            Biome::Custom { .. } => f.write_str("CUSTOM"),
+        }
     }
 }
+
+impl<'mc> Biome<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Biome<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/Biome");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/Biome;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "OCEAN" => Ok(Biome::Ocean {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "PLAINS" => Ok(Biome::Plains {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "DESERT" => Ok(Biome::Desert {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "WINDSWEPT_HILLS" => Ok(Biome::WindsweptHills {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "FOREST" => Ok(Biome::Forest {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "TAIGA" => Ok(Biome::Taiga {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "SWAMP" => Ok(Biome::Swamp {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "MANGROVE_SWAMP" => Ok(Biome::MangroveSwamp {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "RIVER" => Ok(Biome::River {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "NETHER_WASTES" => Ok(Biome::NetherWastes {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "THE_END" => Ok(Biome::TheEnd {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "FROZEN_OCEAN" => Ok(Biome::FrozenOcean {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "FROZEN_RIVER" => Ok(Biome::FrozenRiver {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "SNOWY_PLAINS" => Ok(Biome::SnowyPlains {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "MUSHROOM_FIELDS" => Ok(Biome::MushroomFields {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "BEACH" => Ok(Biome::Beach {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "JUNGLE" => Ok(Biome::Jungle {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "SPARSE_JUNGLE" => Ok(Biome::SparseJungle {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "DEEP_OCEAN" => Ok(Biome::DeepOcean {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "STONY_SHORE" => Ok(Biome::StonyShore {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "SNOWY_BEACH" => Ok(Biome::SnowyBeach {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "BIRCH_FOREST" => Ok(Biome::BirchForest {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "DARK_FOREST" => Ok(Biome::DarkForest {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "SNOWY_TAIGA" => Ok(Biome::SnowyTaiga {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "OLD_GROWTH_PINE_TAIGA" => Ok(Biome::OldGrowthPineTaiga {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "WINDSWEPT_FOREST" => Ok(Biome::WindsweptForest {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "SAVANNA" => Ok(Biome::Savanna {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "SAVANNA_PLATEAU" => Ok(Biome::SavannaPlateau {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "BADLANDS" => Ok(Biome::Badlands {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "WOODED_BADLANDS" => Ok(Biome::WoodedBadlands {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "SMALL_END_ISLANDS" => Ok(Biome::SmallEndIslands {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "END_MIDLANDS" => Ok(Biome::EndMidlands {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "END_HIGHLANDS" => Ok(Biome::EndHighlands {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "END_BARRENS" => Ok(Biome::EndBarrens {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "WARM_OCEAN" => Ok(Biome::WarmOcean {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "LUKEWARM_OCEAN" => Ok(Biome::LukewarmOcean {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "COLD_OCEAN" => Ok(Biome::ColdOcean {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "DEEP_LUKEWARM_OCEAN" => Ok(Biome::DeepLukewarmOcean {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "DEEP_COLD_OCEAN" => Ok(Biome::DeepColdOcean {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "DEEP_FROZEN_OCEAN" => Ok(Biome::DeepFrozenOcean {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "THE_VOID" => Ok(Biome::TheVoid {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "SUNFLOWER_PLAINS" => Ok(Biome::SunflowerPlains {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "WINDSWEPT_GRAVELLY_HILLS" => Ok(Biome::WindsweptGravellyHills {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "FLOWER_FOREST" => Ok(Biome::FlowerForest {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "ICE_SPIKES" => Ok(Biome::IceSpikes {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "OLD_GROWTH_BIRCH_FOREST" => Ok(Biome::OldGrowthBirchForest {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "OLD_GROWTH_SPRUCE_TAIGA" => Ok(Biome::OldGrowthSpruceTaiga {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "WINDSWEPT_SAVANNA" => Ok(Biome::WindsweptSavanna {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "ERODED_BADLANDS" => Ok(Biome::ErodedBadlands {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "BAMBOO_JUNGLE" => Ok(Biome::BambooJungle {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "SOUL_SAND_VALLEY" => Ok(Biome::SoulSandValley {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "CRIMSON_FOREST" => Ok(Biome::CrimsonForest {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "WARPED_FOREST" => Ok(Biome::WarpedForest {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "BASALT_DELTAS" => Ok(Biome::BasaltDeltas {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "DRIPSTONE_CAVES" => Ok(Biome::DripstoneCaves {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "LUSH_CAVES" => Ok(Biome::LushCaves {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "DEEP_DARK" => Ok(Biome::DeepDark {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "MEADOW" => Ok(Biome::Meadow {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "GROVE" => Ok(Biome::Grove {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "SNOWY_SLOPES" => Ok(Biome::SnowySlopes {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "FROZEN_PEAKS" => Ok(Biome::FrozenPeaks {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "JAGGED_PEAKS" => Ok(Biome::JaggedPeaks {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "STONY_PEAKS" => Ok(Biome::StonyPeaks {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "CHERRY_GROVE" => Ok(Biome::CherryGrove {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+            "CUSTOM" => Ok(Biome::Custom {
+                inner: BiomeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Biome<'mc>(
+pub struct BiomeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub BiomeEnum,
 );
-impl<'mc> std::ops::Deref for Biome<'mc> {
-    type Target = BiomeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Biome<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Ocean { inner } => inner.0.clone(),
+            Self::Plains { inner } => inner.0.clone(),
+            Self::Desert { inner } => inner.0.clone(),
+            Self::WindsweptHills { inner } => inner.0.clone(),
+            Self::Forest { inner } => inner.0.clone(),
+            Self::Taiga { inner } => inner.0.clone(),
+            Self::Swamp { inner } => inner.0.clone(),
+            Self::MangroveSwamp { inner } => inner.0.clone(),
+            Self::River { inner } => inner.0.clone(),
+            Self::NetherWastes { inner } => inner.0.clone(),
+            Self::TheEnd { inner } => inner.0.clone(),
+            Self::FrozenOcean { inner } => inner.0.clone(),
+            Self::FrozenRiver { inner } => inner.0.clone(),
+            Self::SnowyPlains { inner } => inner.0.clone(),
+            Self::MushroomFields { inner } => inner.0.clone(),
+            Self::Beach { inner } => inner.0.clone(),
+            Self::Jungle { inner } => inner.0.clone(),
+            Self::SparseJungle { inner } => inner.0.clone(),
+            Self::DeepOcean { inner } => inner.0.clone(),
+            Self::StonyShore { inner } => inner.0.clone(),
+            Self::SnowyBeach { inner } => inner.0.clone(),
+            Self::BirchForest { inner } => inner.0.clone(),
+            Self::DarkForest { inner } => inner.0.clone(),
+            Self::SnowyTaiga { inner } => inner.0.clone(),
+            Self::OldGrowthPineTaiga { inner } => inner.0.clone(),
+            Self::WindsweptForest { inner } => inner.0.clone(),
+            Self::Savanna { inner } => inner.0.clone(),
+            Self::SavannaPlateau { inner } => inner.0.clone(),
+            Self::Badlands { inner } => inner.0.clone(),
+            Self::WoodedBadlands { inner } => inner.0.clone(),
+            Self::SmallEndIslands { inner } => inner.0.clone(),
+            Self::EndMidlands { inner } => inner.0.clone(),
+            Self::EndHighlands { inner } => inner.0.clone(),
+            Self::EndBarrens { inner } => inner.0.clone(),
+            Self::WarmOcean { inner } => inner.0.clone(),
+            Self::LukewarmOcean { inner } => inner.0.clone(),
+            Self::ColdOcean { inner } => inner.0.clone(),
+            Self::DeepLukewarmOcean { inner } => inner.0.clone(),
+            Self::DeepColdOcean { inner } => inner.0.clone(),
+            Self::DeepFrozenOcean { inner } => inner.0.clone(),
+            Self::TheVoid { inner } => inner.0.clone(),
+            Self::SunflowerPlains { inner } => inner.0.clone(),
+            Self::WindsweptGravellyHills { inner } => inner.0.clone(),
+            Self::FlowerForest { inner } => inner.0.clone(),
+            Self::IceSpikes { inner } => inner.0.clone(),
+            Self::OldGrowthBirchForest { inner } => inner.0.clone(),
+            Self::OldGrowthSpruceTaiga { inner } => inner.0.clone(),
+            Self::WindsweptSavanna { inner } => inner.0.clone(),
+            Self::ErodedBadlands { inner } => inner.0.clone(),
+            Self::BambooJungle { inner } => inner.0.clone(),
+            Self::SoulSandValley { inner } => inner.0.clone(),
+            Self::CrimsonForest { inner } => inner.0.clone(),
+            Self::WarpedForest { inner } => inner.0.clone(),
+            Self::BasaltDeltas { inner } => inner.0.clone(),
+            Self::DripstoneCaves { inner } => inner.0.clone(),
+            Self::LushCaves { inner } => inner.0.clone(),
+            Self::DeepDark { inner } => inner.0.clone(),
+            Self::Meadow { inner } => inner.0.clone(),
+            Self::Grove { inner } => inner.0.clone(),
+            Self::SnowySlopes { inner } => inner.0.clone(),
+            Self::FrozenPeaks { inner } => inner.0.clone(),
+            Self::JaggedPeaks { inner } => inner.0.clone(),
+            Self::StonyPeaks { inner } => inner.0.clone(),
+            Self::CherryGrove { inner } => inner.0.clone(),
+            Self::Custom { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Ocean { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Plains { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Desert { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WindsweptHills { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Forest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Taiga { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Swamp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::MangroveSwamp { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::River { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NetherWastes { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::TheEnd { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FrozenOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::FrozenRiver { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SnowyPlains { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::MushroomFields { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Beach { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Jungle { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SparseJungle { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DeepOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::StonyShore { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SnowyBeach { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BirchForest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DarkForest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SnowyTaiga { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::OldGrowthPineTaiga { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WindsweptForest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Savanna { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SavannaPlateau { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Badlands { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WoodedBadlands { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SmallEndIslands { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EndMidlands { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EndHighlands { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EndBarrens { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WarmOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::LukewarmOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ColdOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DeepLukewarmOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DeepColdOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DeepFrozenOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::TheVoid { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SunflowerPlains { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WindsweptGravellyHills { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::FlowerForest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::IceSpikes { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::OldGrowthBirchForest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::OldGrowthSpruceTaiga { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WindsweptSavanna { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ErodedBadlands { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BambooJungle { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SoulSandValley { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CrimsonForest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WarpedForest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BasaltDeltas { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DripstoneCaves { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::LushCaves { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DeepDark { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Meadow { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Grove { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SnowySlopes { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::FrozenPeaks { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::JaggedPeaks { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::StonyPeaks { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CherryGrove { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Custom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Biome<'mc> {
-    type Enum = BiomeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Biome<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Biome from null object.").into());
@@ -14692,186 +14999,247 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Biome<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "OCEAN" => Ok(Biome::Ocean {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "PLAINS" => Ok(Biome::Plains {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "DESERT" => Ok(Biome::Desert {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "WINDSWEPT_HILLS" => Ok(Biome::WindsweptHills {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "FOREST" => Ok(Biome::Forest {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "TAIGA" => Ok(Biome::Taiga {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "SWAMP" => Ok(Biome::Swamp {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "MANGROVE_SWAMP" => Ok(Biome::MangroveSwamp {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "RIVER" => Ok(Biome::River {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "NETHER_WASTES" => Ok(Biome::NetherWastes {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "THE_END" => Ok(Biome::TheEnd {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "FROZEN_OCEAN" => Ok(Biome::FrozenOcean {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "FROZEN_RIVER" => Ok(Biome::FrozenRiver {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "SNOWY_PLAINS" => Ok(Biome::SnowyPlains {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "MUSHROOM_FIELDS" => Ok(Biome::MushroomFields {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "BEACH" => Ok(Biome::Beach {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "JUNGLE" => Ok(Biome::Jungle {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "SPARSE_JUNGLE" => Ok(Biome::SparseJungle {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "DEEP_OCEAN" => Ok(Biome::DeepOcean {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "STONY_SHORE" => Ok(Biome::StonyShore {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "SNOWY_BEACH" => Ok(Biome::SnowyBeach {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "BIRCH_FOREST" => Ok(Biome::BirchForest {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "DARK_FOREST" => Ok(Biome::DarkForest {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "SNOWY_TAIGA" => Ok(Biome::SnowyTaiga {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "OLD_GROWTH_PINE_TAIGA" => Ok(Biome::OldGrowthPineTaiga {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "WINDSWEPT_FOREST" => Ok(Biome::WindsweptForest {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "SAVANNA" => Ok(Biome::Savanna {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "SAVANNA_PLATEAU" => Ok(Biome::SavannaPlateau {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "BADLANDS" => Ok(Biome::Badlands {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "WOODED_BADLANDS" => Ok(Biome::WoodedBadlands {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "SMALL_END_ISLANDS" => Ok(Biome::SmallEndIslands {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "END_MIDLANDS" => Ok(Biome::EndMidlands {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "END_HIGHLANDS" => Ok(Biome::EndHighlands {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "END_BARRENS" => Ok(Biome::EndBarrens {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "WARM_OCEAN" => Ok(Biome::WarmOcean {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "LUKEWARM_OCEAN" => Ok(Biome::LukewarmOcean {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "COLD_OCEAN" => Ok(Biome::ColdOcean {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "DEEP_LUKEWARM_OCEAN" => Ok(Biome::DeepLukewarmOcean {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "DEEP_COLD_OCEAN" => Ok(Biome::DeepColdOcean {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "DEEP_FROZEN_OCEAN" => Ok(Biome::DeepFrozenOcean {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "THE_VOID" => Ok(Biome::TheVoid {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "SUNFLOWER_PLAINS" => Ok(Biome::SunflowerPlains {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "WINDSWEPT_GRAVELLY_HILLS" => Ok(Biome::WindsweptGravellyHills {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "FLOWER_FOREST" => Ok(Biome::FlowerForest {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "ICE_SPIKES" => Ok(Biome::IceSpikes {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "OLD_GROWTH_BIRCH_FOREST" => Ok(Biome::OldGrowthBirchForest {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "OLD_GROWTH_SPRUCE_TAIGA" => Ok(Biome::OldGrowthSpruceTaiga {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "WINDSWEPT_SAVANNA" => Ok(Biome::WindsweptSavanna {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "ERODED_BADLANDS" => Ok(Biome::ErodedBadlands {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "BAMBOO_JUNGLE" => Ok(Biome::BambooJungle {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "SOUL_SAND_VALLEY" => Ok(Biome::SoulSandValley {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "CRIMSON_FOREST" => Ok(Biome::CrimsonForest {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "WARPED_FOREST" => Ok(Biome::WarpedForest {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "BASALT_DELTAS" => Ok(Biome::BasaltDeltas {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "DRIPSTONE_CAVES" => Ok(Biome::DripstoneCaves {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "LUSH_CAVES" => Ok(Biome::LushCaves {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "DEEP_DARK" => Ok(Biome::DeepDark {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "MEADOW" => Ok(Biome::Meadow {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "GROVE" => Ok(Biome::Grove {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "SNOWY_SLOPES" => Ok(Biome::SnowySlopes {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "FROZEN_PEAKS" => Ok(Biome::FrozenPeaks {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "JAGGED_PEAKS" => Ok(Biome::JaggedPeaks {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "STONY_PEAKS" => Ok(Biome::StonyPeaks {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "CHERRY_GROVE" => Ok(Biome::CherryGrove {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                "CUSTOM" => Ok(Biome::Custom {
+                    inner: BiomeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Biome<'mc> {
-    pub const OCEAN: BiomeEnum = BiomeEnum::Ocean;
-    pub const PLAINS: BiomeEnum = BiomeEnum::Plains;
-    pub const DESERT: BiomeEnum = BiomeEnum::Desert;
-    pub const WINDSWEPT_HILLS: BiomeEnum = BiomeEnum::WindsweptHills;
-    pub const FOREST: BiomeEnum = BiomeEnum::Forest;
-    pub const TAIGA: BiomeEnum = BiomeEnum::Taiga;
-    pub const SWAMP: BiomeEnum = BiomeEnum::Swamp;
-    pub const MANGROVE_SWAMP: BiomeEnum = BiomeEnum::MangroveSwamp;
-    pub const RIVER: BiomeEnum = BiomeEnum::River;
-    pub const NETHER_WASTES: BiomeEnum = BiomeEnum::NetherWastes;
-    pub const THE_END: BiomeEnum = BiomeEnum::TheEnd;
-    pub const FROZEN_OCEAN: BiomeEnum = BiomeEnum::FrozenOcean;
-    pub const FROZEN_RIVER: BiomeEnum = BiomeEnum::FrozenRiver;
-    pub const SNOWY_PLAINS: BiomeEnum = BiomeEnum::SnowyPlains;
-    pub const MUSHROOM_FIELDS: BiomeEnum = BiomeEnum::MushroomFields;
-    pub const BEACH: BiomeEnum = BiomeEnum::Beach;
-    pub const JUNGLE: BiomeEnum = BiomeEnum::Jungle;
-    pub const SPARSE_JUNGLE: BiomeEnum = BiomeEnum::SparseJungle;
-    pub const DEEP_OCEAN: BiomeEnum = BiomeEnum::DeepOcean;
-    pub const STONY_SHORE: BiomeEnum = BiomeEnum::StonyShore;
-    pub const SNOWY_BEACH: BiomeEnum = BiomeEnum::SnowyBeach;
-    pub const BIRCH_FOREST: BiomeEnum = BiomeEnum::BirchForest;
-    pub const DARK_FOREST: BiomeEnum = BiomeEnum::DarkForest;
-    pub const SNOWY_TAIGA: BiomeEnum = BiomeEnum::SnowyTaiga;
-    pub const OLD_GROWTH_PINE_TAIGA: BiomeEnum = BiomeEnum::OldGrowthPineTaiga;
-    pub const WINDSWEPT_FOREST: BiomeEnum = BiomeEnum::WindsweptForest;
-    pub const SAVANNA: BiomeEnum = BiomeEnum::Savanna;
-    pub const SAVANNA_PLATEAU: BiomeEnum = BiomeEnum::SavannaPlateau;
-    pub const BADLANDS: BiomeEnum = BiomeEnum::Badlands;
-    pub const WOODED_BADLANDS: BiomeEnum = BiomeEnum::WoodedBadlands;
-    pub const SMALL_END_ISLANDS: BiomeEnum = BiomeEnum::SmallEndIslands;
-    pub const END_MIDLANDS: BiomeEnum = BiomeEnum::EndMidlands;
-    pub const END_HIGHLANDS: BiomeEnum = BiomeEnum::EndHighlands;
-    pub const END_BARRENS: BiomeEnum = BiomeEnum::EndBarrens;
-    pub const WARM_OCEAN: BiomeEnum = BiomeEnum::WarmOcean;
-    pub const LUKEWARM_OCEAN: BiomeEnum = BiomeEnum::LukewarmOcean;
-    pub const COLD_OCEAN: BiomeEnum = BiomeEnum::ColdOcean;
-    pub const DEEP_LUKEWARM_OCEAN: BiomeEnum = BiomeEnum::DeepLukewarmOcean;
-    pub const DEEP_COLD_OCEAN: BiomeEnum = BiomeEnum::DeepColdOcean;
-    pub const DEEP_FROZEN_OCEAN: BiomeEnum = BiomeEnum::DeepFrozenOcean;
-    pub const THE_VOID: BiomeEnum = BiomeEnum::TheVoid;
-    pub const SUNFLOWER_PLAINS: BiomeEnum = BiomeEnum::SunflowerPlains;
-    pub const WINDSWEPT_GRAVELLY_HILLS: BiomeEnum = BiomeEnum::WindsweptGravellyHills;
-    pub const FLOWER_FOREST: BiomeEnum = BiomeEnum::FlowerForest;
-    pub const ICE_SPIKES: BiomeEnum = BiomeEnum::IceSpikes;
-    pub const OLD_GROWTH_BIRCH_FOREST: BiomeEnum = BiomeEnum::OldGrowthBirchForest;
-    pub const OLD_GROWTH_SPRUCE_TAIGA: BiomeEnum = BiomeEnum::OldGrowthSpruceTaiga;
-    pub const WINDSWEPT_SAVANNA: BiomeEnum = BiomeEnum::WindsweptSavanna;
-    pub const ERODED_BADLANDS: BiomeEnum = BiomeEnum::ErodedBadlands;
-    pub const BAMBOO_JUNGLE: BiomeEnum = BiomeEnum::BambooJungle;
-    pub const SOUL_SAND_VALLEY: BiomeEnum = BiomeEnum::SoulSandValley;
-    pub const CRIMSON_FOREST: BiomeEnum = BiomeEnum::CrimsonForest;
-    pub const WARPED_FOREST: BiomeEnum = BiomeEnum::WarpedForest;
-    pub const BASALT_DELTAS: BiomeEnum = BiomeEnum::BasaltDeltas;
-    pub const DRIPSTONE_CAVES: BiomeEnum = BiomeEnum::DripstoneCaves;
-    pub const LUSH_CAVES: BiomeEnum = BiomeEnum::LushCaves;
-    pub const DEEP_DARK: BiomeEnum = BiomeEnum::DeepDark;
-    pub const MEADOW: BiomeEnum = BiomeEnum::Meadow;
-    pub const GROVE: BiomeEnum = BiomeEnum::Grove;
-    pub const SNOWY_SLOPES: BiomeEnum = BiomeEnum::SnowySlopes;
-    pub const FROZEN_PEAKS: BiomeEnum = BiomeEnum::FrozenPeaks;
-    pub const JAGGED_PEAKS: BiomeEnum = BiomeEnum::JaggedPeaks;
-    pub const STONY_PEAKS: BiomeEnum = BiomeEnum::StonyPeaks;
-    pub const CHERRY_GROVE: BiomeEnum = BiomeEnum::CherryGrove;
-    pub const CUSTOM: BiomeEnum = BiomeEnum::Custom;
-    pub fn from_string(str: String) -> std::option::Option<BiomeEnum> {
-        match str.as_str() {
-            "OCEAN" => Some(BiomeEnum::Ocean),
-            "PLAINS" => Some(BiomeEnum::Plains),
-            "DESERT" => Some(BiomeEnum::Desert),
-            "WINDSWEPT_HILLS" => Some(BiomeEnum::WindsweptHills),
-            "FOREST" => Some(BiomeEnum::Forest),
-            "TAIGA" => Some(BiomeEnum::Taiga),
-            "SWAMP" => Some(BiomeEnum::Swamp),
-            "MANGROVE_SWAMP" => Some(BiomeEnum::MangroveSwamp),
-            "RIVER" => Some(BiomeEnum::River),
-            "NETHER_WASTES" => Some(BiomeEnum::NetherWastes),
-            "THE_END" => Some(BiomeEnum::TheEnd),
-            "FROZEN_OCEAN" => Some(BiomeEnum::FrozenOcean),
-            "FROZEN_RIVER" => Some(BiomeEnum::FrozenRiver),
-            "SNOWY_PLAINS" => Some(BiomeEnum::SnowyPlains),
-            "MUSHROOM_FIELDS" => Some(BiomeEnum::MushroomFields),
-            "BEACH" => Some(BiomeEnum::Beach),
-            "JUNGLE" => Some(BiomeEnum::Jungle),
-            "SPARSE_JUNGLE" => Some(BiomeEnum::SparseJungle),
-            "DEEP_OCEAN" => Some(BiomeEnum::DeepOcean),
-            "STONY_SHORE" => Some(BiomeEnum::StonyShore),
-            "SNOWY_BEACH" => Some(BiomeEnum::SnowyBeach),
-            "BIRCH_FOREST" => Some(BiomeEnum::BirchForest),
-            "DARK_FOREST" => Some(BiomeEnum::DarkForest),
-            "SNOWY_TAIGA" => Some(BiomeEnum::SnowyTaiga),
-            "OLD_GROWTH_PINE_TAIGA" => Some(BiomeEnum::OldGrowthPineTaiga),
-            "WINDSWEPT_FOREST" => Some(BiomeEnum::WindsweptForest),
-            "SAVANNA" => Some(BiomeEnum::Savanna),
-            "SAVANNA_PLATEAU" => Some(BiomeEnum::SavannaPlateau),
-            "BADLANDS" => Some(BiomeEnum::Badlands),
-            "WOODED_BADLANDS" => Some(BiomeEnum::WoodedBadlands),
-            "SMALL_END_ISLANDS" => Some(BiomeEnum::SmallEndIslands),
-            "END_MIDLANDS" => Some(BiomeEnum::EndMidlands),
-            "END_HIGHLANDS" => Some(BiomeEnum::EndHighlands),
-            "END_BARRENS" => Some(BiomeEnum::EndBarrens),
-            "WARM_OCEAN" => Some(BiomeEnum::WarmOcean),
-            "LUKEWARM_OCEAN" => Some(BiomeEnum::LukewarmOcean),
-            "COLD_OCEAN" => Some(BiomeEnum::ColdOcean),
-            "DEEP_LUKEWARM_OCEAN" => Some(BiomeEnum::DeepLukewarmOcean),
-            "DEEP_COLD_OCEAN" => Some(BiomeEnum::DeepColdOcean),
-            "DEEP_FROZEN_OCEAN" => Some(BiomeEnum::DeepFrozenOcean),
-            "THE_VOID" => Some(BiomeEnum::TheVoid),
-            "SUNFLOWER_PLAINS" => Some(BiomeEnum::SunflowerPlains),
-            "WINDSWEPT_GRAVELLY_HILLS" => Some(BiomeEnum::WindsweptGravellyHills),
-            "FLOWER_FOREST" => Some(BiomeEnum::FlowerForest),
-            "ICE_SPIKES" => Some(BiomeEnum::IceSpikes),
-            "OLD_GROWTH_BIRCH_FOREST" => Some(BiomeEnum::OldGrowthBirchForest),
-            "OLD_GROWTH_SPRUCE_TAIGA" => Some(BiomeEnum::OldGrowthSpruceTaiga),
-            "WINDSWEPT_SAVANNA" => Some(BiomeEnum::WindsweptSavanna),
-            "ERODED_BADLANDS" => Some(BiomeEnum::ErodedBadlands),
-            "BAMBOO_JUNGLE" => Some(BiomeEnum::BambooJungle),
-            "SOUL_SAND_VALLEY" => Some(BiomeEnum::SoulSandValley),
-            "CRIMSON_FOREST" => Some(BiomeEnum::CrimsonForest),
-            "WARPED_FOREST" => Some(BiomeEnum::WarpedForest),
-            "BASALT_DELTAS" => Some(BiomeEnum::BasaltDeltas),
-            "DRIPSTONE_CAVES" => Some(BiomeEnum::DripstoneCaves),
-            "LUSH_CAVES" => Some(BiomeEnum::LushCaves),
-            "DEEP_DARK" => Some(BiomeEnum::DeepDark),
-            "MEADOW" => Some(BiomeEnum::Meadow),
-            "GROVE" => Some(BiomeEnum::Grove),
-            "SNOWY_SLOPES" => Some(BiomeEnum::SnowySlopes),
-            "FROZEN_PEAKS" => Some(BiomeEnum::FrozenPeaks),
-            "JAGGED_PEAKS" => Some(BiomeEnum::JaggedPeaks),
-            "STONY_PEAKS" => Some(BiomeEnum::StonyPeaks),
-            "CHERRY_GROVE" => Some(BiomeEnum::CherryGrove),
-            "CUSTOM" => Some(BiomeEnum::Custom),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for BiomeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for BiomeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate BiomeStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/Biome")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BiomeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Biome<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/Biome");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/Biome;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Biome::from_raw(
-            &jni,
-            raw_obj,
-            Biome::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> BiomeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a captured state of a smoker.
@@ -14887,12 +15255,10 @@ impl<'mc> JNIRaw<'mc> for Smoker<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Smoker<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15118,12 +15484,7 @@ impl<'mc> Smoker<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -15465,14 +15826,9 @@ impl<'mc> Smoker<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::Furnace<'mc>> for Smoker<'mc> {
@@ -15494,12 +15850,10 @@ impl<'mc> JNIRaw<'mc> for CalibratedSculkSensor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CalibratedSculkSensor<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15641,12 +15995,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -15914,14 +16263,9 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::SculkSensor<'mc>> for CalibratedSculkSensor<'mc> {
@@ -15943,12 +16287,10 @@ impl<'mc> JNIRaw<'mc> for Structure<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Structure<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16011,12 +16353,7 @@ impl<'mc> Structure<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::structure::StructureRotation::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::structure::StructureRotation::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::structure::StructureRotation::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_rotation(
@@ -16262,12 +16599,7 @@ impl<'mc> Structure<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::structure::Mirror::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::structure::Mirror::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::structure::Mirror::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_usage_mode(
@@ -16306,12 +16638,7 @@ impl<'mc> Structure<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::structure::UsageMode::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::structure::UsageMode::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::structure::UsageMode::from_raw(&self.jni_ref(), raw_obj)
     }
     /// While in <a href="structure/UsageMode.html#SAVE"><code>UsageMode.SAVE</code></a> mode, this will ignore any entities when saving the structure.
     ///
@@ -16498,12 +16825,7 @@ impl<'mc> Structure<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -16718,14 +17040,9 @@ impl<'mc> Structure<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Structure<'mc> {
@@ -16747,12 +17064,10 @@ impl<'mc> JNIRaw<'mc> for EnderChest<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EnderChest<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16881,12 +17196,7 @@ impl<'mc> EnderChest<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -17154,14 +17464,9 @@ impl<'mc> EnderChest<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::Lidded<'mc>> for EnderChest<'mc> {
@@ -17189,12 +17494,10 @@ impl<'mc> JNIRaw<'mc> for Bed<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Bed<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -17305,12 +17608,7 @@ impl<'mc> Bed<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -17615,22 +17913,12 @@ impl<'mc> Bed<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        Ok(Some(crate::DyeColor::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::DyeColor::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )?))
+        Ok(Some(crate::DyeColor::from_raw(&self.jni_ref(), raw_obj)?))
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Bed<'mc> {
@@ -17658,12 +17946,10 @@ impl<'mc> JNIRaw<'mc> for Jukebox<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Jukebox<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -17777,12 +18063,7 @@ impl<'mc> Jukebox<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_playing(
@@ -17927,12 +18208,7 @@ impl<'mc> Jukebox<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -18202,14 +18478,9 @@ impl<'mc> Jukebox<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Jukebox<'mc> {
@@ -18224,181 +18495,615 @@ impl<'mc> Into<crate::inventory::BlockInventoryHolder<'mc>> for Jukebox<'mc> {
             .expect("Error converting Jukebox into crate::inventory::BlockInventoryHolder")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum BiomeBiomeEnum {
-    Ocean,
-    Plains,
-    Desert,
-    WindsweptHills,
-    Forest,
-    Taiga,
-    Swamp,
-    MangroveSwamp,
-    River,
-    NetherWastes,
-    TheEnd,
-    FrozenOcean,
-    FrozenRiver,
-    SnowyPlains,
-    MushroomFields,
-    Beach,
-    Jungle,
-    SparseJungle,
-    DeepOcean,
-    StonyShore,
-    SnowyBeach,
-    BirchForest,
-    DarkForest,
-    SnowyTaiga,
-    OldGrowthPineTaiga,
-    WindsweptForest,
-    Savanna,
-    SavannaPlateau,
-    Badlands,
-    WoodedBadlands,
-    SmallEndIslands,
-    EndMidlands,
-    EndHighlands,
-    EndBarrens,
-    WarmOcean,
-    LukewarmOcean,
-    ColdOcean,
-    DeepLukewarmOcean,
-    DeepColdOcean,
-    DeepFrozenOcean,
-    TheVoid,
-    SunflowerPlains,
-    WindsweptGravellyHills,
-    FlowerForest,
-    IceSpikes,
-    OldGrowthBirchForest,
-    OldGrowthSpruceTaiga,
-    WindsweptSavanna,
-    ErodedBadlands,
-    BambooJungle,
-    SoulSandValley,
-    CrimsonForest,
-    WarpedForest,
-    BasaltDeltas,
-    DripstoneCaves,
-    LushCaves,
-    DeepDark,
-    Meadow,
-    Grove,
-    SnowySlopes,
-    FrozenPeaks,
-    JaggedPeaks,
-    StonyPeaks,
-    CherryGrove,
-    Custom,
-}
-impl std::fmt::Display for BiomeBiomeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            BiomeBiomeEnum::Ocean => f.write_str("OCEAN"),
-            BiomeBiomeEnum::Plains => f.write_str("PLAINS"),
-            BiomeBiomeEnum::Desert => f.write_str("DESERT"),
-            BiomeBiomeEnum::WindsweptHills => f.write_str("WINDSWEPT_HILLS"),
-            BiomeBiomeEnum::Forest => f.write_str("FOREST"),
-            BiomeBiomeEnum::Taiga => f.write_str("TAIGA"),
-            BiomeBiomeEnum::Swamp => f.write_str("SWAMP"),
-            BiomeBiomeEnum::MangroveSwamp => f.write_str("MANGROVE_SWAMP"),
-            BiomeBiomeEnum::River => f.write_str("RIVER"),
-            BiomeBiomeEnum::NetherWastes => f.write_str("NETHER_WASTES"),
-            BiomeBiomeEnum::TheEnd => f.write_str("THE_END"),
-            BiomeBiomeEnum::FrozenOcean => f.write_str("FROZEN_OCEAN"),
-            BiomeBiomeEnum::FrozenRiver => f.write_str("FROZEN_RIVER"),
-            BiomeBiomeEnum::SnowyPlains => f.write_str("SNOWY_PLAINS"),
-            BiomeBiomeEnum::MushroomFields => f.write_str("MUSHROOM_FIELDS"),
-            BiomeBiomeEnum::Beach => f.write_str("BEACH"),
-            BiomeBiomeEnum::Jungle => f.write_str("JUNGLE"),
-            BiomeBiomeEnum::SparseJungle => f.write_str("SPARSE_JUNGLE"),
-            BiomeBiomeEnum::DeepOcean => f.write_str("DEEP_OCEAN"),
-            BiomeBiomeEnum::StonyShore => f.write_str("STONY_SHORE"),
-            BiomeBiomeEnum::SnowyBeach => f.write_str("SNOWY_BEACH"),
-            BiomeBiomeEnum::BirchForest => f.write_str("BIRCH_FOREST"),
-            BiomeBiomeEnum::DarkForest => f.write_str("DARK_FOREST"),
-            BiomeBiomeEnum::SnowyTaiga => f.write_str("SNOWY_TAIGA"),
-            BiomeBiomeEnum::OldGrowthPineTaiga => f.write_str("OLD_GROWTH_PINE_TAIGA"),
-            BiomeBiomeEnum::WindsweptForest => f.write_str("WINDSWEPT_FOREST"),
-            BiomeBiomeEnum::Savanna => f.write_str("SAVANNA"),
-            BiomeBiomeEnum::SavannaPlateau => f.write_str("SAVANNA_PLATEAU"),
-            BiomeBiomeEnum::Badlands => f.write_str("BADLANDS"),
-            BiomeBiomeEnum::WoodedBadlands => f.write_str("WOODED_BADLANDS"),
-            BiomeBiomeEnum::SmallEndIslands => f.write_str("SMALL_END_ISLANDS"),
-            BiomeBiomeEnum::EndMidlands => f.write_str("END_MIDLANDS"),
-            BiomeBiomeEnum::EndHighlands => f.write_str("END_HIGHLANDS"),
-            BiomeBiomeEnum::EndBarrens => f.write_str("END_BARRENS"),
-            BiomeBiomeEnum::WarmOcean => f.write_str("WARM_OCEAN"),
-            BiomeBiomeEnum::LukewarmOcean => f.write_str("LUKEWARM_OCEAN"),
-            BiomeBiomeEnum::ColdOcean => f.write_str("COLD_OCEAN"),
-            BiomeBiomeEnum::DeepLukewarmOcean => f.write_str("DEEP_LUKEWARM_OCEAN"),
-            BiomeBiomeEnum::DeepColdOcean => f.write_str("DEEP_COLD_OCEAN"),
-            BiomeBiomeEnum::DeepFrozenOcean => f.write_str("DEEP_FROZEN_OCEAN"),
-            BiomeBiomeEnum::TheVoid => f.write_str("THE_VOID"),
-            BiomeBiomeEnum::SunflowerPlains => f.write_str("SUNFLOWER_PLAINS"),
-            BiomeBiomeEnum::WindsweptGravellyHills => f.write_str("WINDSWEPT_GRAVELLY_HILLS"),
-            BiomeBiomeEnum::FlowerForest => f.write_str("FLOWER_FOREST"),
-            BiomeBiomeEnum::IceSpikes => f.write_str("ICE_SPIKES"),
-            BiomeBiomeEnum::OldGrowthBirchForest => f.write_str("OLD_GROWTH_BIRCH_FOREST"),
-            BiomeBiomeEnum::OldGrowthSpruceTaiga => f.write_str("OLD_GROWTH_SPRUCE_TAIGA"),
-            BiomeBiomeEnum::WindsweptSavanna => f.write_str("WINDSWEPT_SAVANNA"),
-            BiomeBiomeEnum::ErodedBadlands => f.write_str("ERODED_BADLANDS"),
-            BiomeBiomeEnum::BambooJungle => f.write_str("BAMBOO_JUNGLE"),
-            BiomeBiomeEnum::SoulSandValley => f.write_str("SOUL_SAND_VALLEY"),
-            BiomeBiomeEnum::CrimsonForest => f.write_str("CRIMSON_FOREST"),
-            BiomeBiomeEnum::WarpedForest => f.write_str("WARPED_FOREST"),
-            BiomeBiomeEnum::BasaltDeltas => f.write_str("BASALT_DELTAS"),
-            BiomeBiomeEnum::DripstoneCaves => f.write_str("DRIPSTONE_CAVES"),
-            BiomeBiomeEnum::LushCaves => f.write_str("LUSH_CAVES"),
-            BiomeBiomeEnum::DeepDark => f.write_str("DEEP_DARK"),
-            BiomeBiomeEnum::Meadow => f.write_str("MEADOW"),
-            BiomeBiomeEnum::Grove => f.write_str("GROVE"),
-            BiomeBiomeEnum::SnowySlopes => f.write_str("SNOWY_SLOPES"),
-            BiomeBiomeEnum::FrozenPeaks => f.write_str("FROZEN_PEAKS"),
-            BiomeBiomeEnum::JaggedPeaks => f.write_str("JAGGED_PEAKS"),
-            BiomeBiomeEnum::StonyPeaks => f.write_str("STONY_PEAKS"),
-            BiomeBiomeEnum::CherryGrove => f.write_str("CHERRY_GROVE"),
-            BiomeBiomeEnum::Custom => f.write_str("CUSTOM"),
-        }
-    }
+pub enum BiomeBiome<'mc> {
+    Ocean { inner: BiomeBiomeStruct<'mc> },
+    Plains { inner: BiomeBiomeStruct<'mc> },
+    Desert { inner: BiomeBiomeStruct<'mc> },
+    WindsweptHills { inner: BiomeBiomeStruct<'mc> },
+    Forest { inner: BiomeBiomeStruct<'mc> },
+    Taiga { inner: BiomeBiomeStruct<'mc> },
+    Swamp { inner: BiomeBiomeStruct<'mc> },
+    MangroveSwamp { inner: BiomeBiomeStruct<'mc> },
+    River { inner: BiomeBiomeStruct<'mc> },
+    NetherWastes { inner: BiomeBiomeStruct<'mc> },
+    TheEnd { inner: BiomeBiomeStruct<'mc> },
+    FrozenOcean { inner: BiomeBiomeStruct<'mc> },
+    FrozenRiver { inner: BiomeBiomeStruct<'mc> },
+    SnowyPlains { inner: BiomeBiomeStruct<'mc> },
+    MushroomFields { inner: BiomeBiomeStruct<'mc> },
+    Beach { inner: BiomeBiomeStruct<'mc> },
+    Jungle { inner: BiomeBiomeStruct<'mc> },
+    SparseJungle { inner: BiomeBiomeStruct<'mc> },
+    DeepOcean { inner: BiomeBiomeStruct<'mc> },
+    StonyShore { inner: BiomeBiomeStruct<'mc> },
+    SnowyBeach { inner: BiomeBiomeStruct<'mc> },
+    BirchForest { inner: BiomeBiomeStruct<'mc> },
+    DarkForest { inner: BiomeBiomeStruct<'mc> },
+    SnowyTaiga { inner: BiomeBiomeStruct<'mc> },
+    OldGrowthPineTaiga { inner: BiomeBiomeStruct<'mc> },
+    WindsweptForest { inner: BiomeBiomeStruct<'mc> },
+    Savanna { inner: BiomeBiomeStruct<'mc> },
+    SavannaPlateau { inner: BiomeBiomeStruct<'mc> },
+    Badlands { inner: BiomeBiomeStruct<'mc> },
+    WoodedBadlands { inner: BiomeBiomeStruct<'mc> },
+    SmallEndIslands { inner: BiomeBiomeStruct<'mc> },
+    EndMidlands { inner: BiomeBiomeStruct<'mc> },
+    EndHighlands { inner: BiomeBiomeStruct<'mc> },
+    EndBarrens { inner: BiomeBiomeStruct<'mc> },
+    WarmOcean { inner: BiomeBiomeStruct<'mc> },
+    LukewarmOcean { inner: BiomeBiomeStruct<'mc> },
+    ColdOcean { inner: BiomeBiomeStruct<'mc> },
+    DeepLukewarmOcean { inner: BiomeBiomeStruct<'mc> },
+    DeepColdOcean { inner: BiomeBiomeStruct<'mc> },
+    DeepFrozenOcean { inner: BiomeBiomeStruct<'mc> },
+    TheVoid { inner: BiomeBiomeStruct<'mc> },
+    SunflowerPlains { inner: BiomeBiomeStruct<'mc> },
+    WindsweptGravellyHills { inner: BiomeBiomeStruct<'mc> },
+    FlowerForest { inner: BiomeBiomeStruct<'mc> },
+    IceSpikes { inner: BiomeBiomeStruct<'mc> },
+    OldGrowthBirchForest { inner: BiomeBiomeStruct<'mc> },
+    OldGrowthSpruceTaiga { inner: BiomeBiomeStruct<'mc> },
+    WindsweptSavanna { inner: BiomeBiomeStruct<'mc> },
+    ErodedBadlands { inner: BiomeBiomeStruct<'mc> },
+    BambooJungle { inner: BiomeBiomeStruct<'mc> },
+    SoulSandValley { inner: BiomeBiomeStruct<'mc> },
+    CrimsonForest { inner: BiomeBiomeStruct<'mc> },
+    WarpedForest { inner: BiomeBiomeStruct<'mc> },
+    BasaltDeltas { inner: BiomeBiomeStruct<'mc> },
+    DripstoneCaves { inner: BiomeBiomeStruct<'mc> },
+    LushCaves { inner: BiomeBiomeStruct<'mc> },
+    DeepDark { inner: BiomeBiomeStruct<'mc> },
+    Meadow { inner: BiomeBiomeStruct<'mc> },
+    Grove { inner: BiomeBiomeStruct<'mc> },
+    SnowySlopes { inner: BiomeBiomeStruct<'mc> },
+    FrozenPeaks { inner: BiomeBiomeStruct<'mc> },
+    JaggedPeaks { inner: BiomeBiomeStruct<'mc> },
+    StonyPeaks { inner: BiomeBiomeStruct<'mc> },
+    CherryGrove { inner: BiomeBiomeStruct<'mc> },
+    Custom { inner: BiomeBiomeStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for BiomeBiome<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            BiomeBiome::Ocean { .. } => f.write_str("OCEAN"),
+            BiomeBiome::Plains { .. } => f.write_str("PLAINS"),
+            BiomeBiome::Desert { .. } => f.write_str("DESERT"),
+            BiomeBiome::WindsweptHills { .. } => f.write_str("WINDSWEPT_HILLS"),
+            BiomeBiome::Forest { .. } => f.write_str("FOREST"),
+            BiomeBiome::Taiga { .. } => f.write_str("TAIGA"),
+            BiomeBiome::Swamp { .. } => f.write_str("SWAMP"),
+            BiomeBiome::MangroveSwamp { .. } => f.write_str("MANGROVE_SWAMP"),
+            BiomeBiome::River { .. } => f.write_str("RIVER"),
+            BiomeBiome::NetherWastes { .. } => f.write_str("NETHER_WASTES"),
+            BiomeBiome::TheEnd { .. } => f.write_str("THE_END"),
+            BiomeBiome::FrozenOcean { .. } => f.write_str("FROZEN_OCEAN"),
+            BiomeBiome::FrozenRiver { .. } => f.write_str("FROZEN_RIVER"),
+            BiomeBiome::SnowyPlains { .. } => f.write_str("SNOWY_PLAINS"),
+            BiomeBiome::MushroomFields { .. } => f.write_str("MUSHROOM_FIELDS"),
+            BiomeBiome::Beach { .. } => f.write_str("BEACH"),
+            BiomeBiome::Jungle { .. } => f.write_str("JUNGLE"),
+            BiomeBiome::SparseJungle { .. } => f.write_str("SPARSE_JUNGLE"),
+            BiomeBiome::DeepOcean { .. } => f.write_str("DEEP_OCEAN"),
+            BiomeBiome::StonyShore { .. } => f.write_str("STONY_SHORE"),
+            BiomeBiome::SnowyBeach { .. } => f.write_str("SNOWY_BEACH"),
+            BiomeBiome::BirchForest { .. } => f.write_str("BIRCH_FOREST"),
+            BiomeBiome::DarkForest { .. } => f.write_str("DARK_FOREST"),
+            BiomeBiome::SnowyTaiga { .. } => f.write_str("SNOWY_TAIGA"),
+            BiomeBiome::OldGrowthPineTaiga { .. } => f.write_str("OLD_GROWTH_PINE_TAIGA"),
+            BiomeBiome::WindsweptForest { .. } => f.write_str("WINDSWEPT_FOREST"),
+            BiomeBiome::Savanna { .. } => f.write_str("SAVANNA"),
+            BiomeBiome::SavannaPlateau { .. } => f.write_str("SAVANNA_PLATEAU"),
+            BiomeBiome::Badlands { .. } => f.write_str("BADLANDS"),
+            BiomeBiome::WoodedBadlands { .. } => f.write_str("WOODED_BADLANDS"),
+            BiomeBiome::SmallEndIslands { .. } => f.write_str("SMALL_END_ISLANDS"),
+            BiomeBiome::EndMidlands { .. } => f.write_str("END_MIDLANDS"),
+            BiomeBiome::EndHighlands { .. } => f.write_str("END_HIGHLANDS"),
+            BiomeBiome::EndBarrens { .. } => f.write_str("END_BARRENS"),
+            BiomeBiome::WarmOcean { .. } => f.write_str("WARM_OCEAN"),
+            BiomeBiome::LukewarmOcean { .. } => f.write_str("LUKEWARM_OCEAN"),
+            BiomeBiome::ColdOcean { .. } => f.write_str("COLD_OCEAN"),
+            BiomeBiome::DeepLukewarmOcean { .. } => f.write_str("DEEP_LUKEWARM_OCEAN"),
+            BiomeBiome::DeepColdOcean { .. } => f.write_str("DEEP_COLD_OCEAN"),
+            BiomeBiome::DeepFrozenOcean { .. } => f.write_str("DEEP_FROZEN_OCEAN"),
+            BiomeBiome::TheVoid { .. } => f.write_str("THE_VOID"),
+            BiomeBiome::SunflowerPlains { .. } => f.write_str("SUNFLOWER_PLAINS"),
+            BiomeBiome::WindsweptGravellyHills { .. } => f.write_str("WINDSWEPT_GRAVELLY_HILLS"),
+            BiomeBiome::FlowerForest { .. } => f.write_str("FLOWER_FOREST"),
+            BiomeBiome::IceSpikes { .. } => f.write_str("ICE_SPIKES"),
+            BiomeBiome::OldGrowthBirchForest { .. } => f.write_str("OLD_GROWTH_BIRCH_FOREST"),
+            BiomeBiome::OldGrowthSpruceTaiga { .. } => f.write_str("OLD_GROWTH_SPRUCE_TAIGA"),
+            BiomeBiome::WindsweptSavanna { .. } => f.write_str("WINDSWEPT_SAVANNA"),
+            BiomeBiome::ErodedBadlands { .. } => f.write_str("ERODED_BADLANDS"),
+            BiomeBiome::BambooJungle { .. } => f.write_str("BAMBOO_JUNGLE"),
+            BiomeBiome::SoulSandValley { .. } => f.write_str("SOUL_SAND_VALLEY"),
+            BiomeBiome::CrimsonForest { .. } => f.write_str("CRIMSON_FOREST"),
+            BiomeBiome::WarpedForest { .. } => f.write_str("WARPED_FOREST"),
+            BiomeBiome::BasaltDeltas { .. } => f.write_str("BASALT_DELTAS"),
+            BiomeBiome::DripstoneCaves { .. } => f.write_str("DRIPSTONE_CAVES"),
+            BiomeBiome::LushCaves { .. } => f.write_str("LUSH_CAVES"),
+            BiomeBiome::DeepDark { .. } => f.write_str("DEEP_DARK"),
+            BiomeBiome::Meadow { .. } => f.write_str("MEADOW"),
+            BiomeBiome::Grove { .. } => f.write_str("GROVE"),
+            BiomeBiome::SnowySlopes { .. } => f.write_str("SNOWY_SLOPES"),
+            BiomeBiome::FrozenPeaks { .. } => f.write_str("FROZEN_PEAKS"),
+            BiomeBiome::JaggedPeaks { .. } => f.write_str("JAGGED_PEAKS"),
+            BiomeBiome::StonyPeaks { .. } => f.write_str("STONY_PEAKS"),
+            BiomeBiome::CherryGrove { .. } => f.write_str("CHERRY_GROVE"),
+            BiomeBiome::Custom { .. } => f.write_str("CUSTOM"),
+        }
     }
 }
+
+impl<'mc> BiomeBiome<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<BiomeBiome<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/Biome$Biome");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/Biome$Biome;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "OCEAN" => Ok(BiomeBiome::Ocean {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "PLAINS" => Ok(BiomeBiome::Plains {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "DESERT" => Ok(BiomeBiome::Desert {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "WINDSWEPT_HILLS" => Ok(BiomeBiome::WindsweptHills {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "FOREST" => Ok(BiomeBiome::Forest {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "TAIGA" => Ok(BiomeBiome::Taiga {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "SWAMP" => Ok(BiomeBiome::Swamp {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "MANGROVE_SWAMP" => Ok(BiomeBiome::MangroveSwamp {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "RIVER" => Ok(BiomeBiome::River {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "NETHER_WASTES" => Ok(BiomeBiome::NetherWastes {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "THE_END" => Ok(BiomeBiome::TheEnd {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "FROZEN_OCEAN" => Ok(BiomeBiome::FrozenOcean {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "FROZEN_RIVER" => Ok(BiomeBiome::FrozenRiver {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "SNOWY_PLAINS" => Ok(BiomeBiome::SnowyPlains {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "MUSHROOM_FIELDS" => Ok(BiomeBiome::MushroomFields {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "BEACH" => Ok(BiomeBiome::Beach {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "JUNGLE" => Ok(BiomeBiome::Jungle {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "SPARSE_JUNGLE" => Ok(BiomeBiome::SparseJungle {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "DEEP_OCEAN" => Ok(BiomeBiome::DeepOcean {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "STONY_SHORE" => Ok(BiomeBiome::StonyShore {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "SNOWY_BEACH" => Ok(BiomeBiome::SnowyBeach {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "BIRCH_FOREST" => Ok(BiomeBiome::BirchForest {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "DARK_FOREST" => Ok(BiomeBiome::DarkForest {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "SNOWY_TAIGA" => Ok(BiomeBiome::SnowyTaiga {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "OLD_GROWTH_PINE_TAIGA" => Ok(BiomeBiome::OldGrowthPineTaiga {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "WINDSWEPT_FOREST" => Ok(BiomeBiome::WindsweptForest {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "SAVANNA" => Ok(BiomeBiome::Savanna {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "SAVANNA_PLATEAU" => Ok(BiomeBiome::SavannaPlateau {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "BADLANDS" => Ok(BiomeBiome::Badlands {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "WOODED_BADLANDS" => Ok(BiomeBiome::WoodedBadlands {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "SMALL_END_ISLANDS" => Ok(BiomeBiome::SmallEndIslands {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "END_MIDLANDS" => Ok(BiomeBiome::EndMidlands {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "END_HIGHLANDS" => Ok(BiomeBiome::EndHighlands {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "END_BARRENS" => Ok(BiomeBiome::EndBarrens {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "WARM_OCEAN" => Ok(BiomeBiome::WarmOcean {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "LUKEWARM_OCEAN" => Ok(BiomeBiome::LukewarmOcean {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "COLD_OCEAN" => Ok(BiomeBiome::ColdOcean {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "DEEP_LUKEWARM_OCEAN" => Ok(BiomeBiome::DeepLukewarmOcean {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "DEEP_COLD_OCEAN" => Ok(BiomeBiome::DeepColdOcean {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "DEEP_FROZEN_OCEAN" => Ok(BiomeBiome::DeepFrozenOcean {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "THE_VOID" => Ok(BiomeBiome::TheVoid {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "SUNFLOWER_PLAINS" => Ok(BiomeBiome::SunflowerPlains {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "WINDSWEPT_GRAVELLY_HILLS" => Ok(BiomeBiome::WindsweptGravellyHills {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "FLOWER_FOREST" => Ok(BiomeBiome::FlowerForest {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "ICE_SPIKES" => Ok(BiomeBiome::IceSpikes {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "OLD_GROWTH_BIRCH_FOREST" => Ok(BiomeBiome::OldGrowthBirchForest {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "OLD_GROWTH_SPRUCE_TAIGA" => Ok(BiomeBiome::OldGrowthSpruceTaiga {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "WINDSWEPT_SAVANNA" => Ok(BiomeBiome::WindsweptSavanna {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "ERODED_BADLANDS" => Ok(BiomeBiome::ErodedBadlands {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "BAMBOO_JUNGLE" => Ok(BiomeBiome::BambooJungle {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "SOUL_SAND_VALLEY" => Ok(BiomeBiome::SoulSandValley {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "CRIMSON_FOREST" => Ok(BiomeBiome::CrimsonForest {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "WARPED_FOREST" => Ok(BiomeBiome::WarpedForest {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "BASALT_DELTAS" => Ok(BiomeBiome::BasaltDeltas {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "DRIPSTONE_CAVES" => Ok(BiomeBiome::DripstoneCaves {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "LUSH_CAVES" => Ok(BiomeBiome::LushCaves {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "DEEP_DARK" => Ok(BiomeBiome::DeepDark {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "MEADOW" => Ok(BiomeBiome::Meadow {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "GROVE" => Ok(BiomeBiome::Grove {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "SNOWY_SLOPES" => Ok(BiomeBiome::SnowySlopes {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "FROZEN_PEAKS" => Ok(BiomeBiome::FrozenPeaks {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "JAGGED_PEAKS" => Ok(BiomeBiome::JaggedPeaks {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "STONY_PEAKS" => Ok(BiomeBiome::StonyPeaks {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "CHERRY_GROVE" => Ok(BiomeBiome::CherryGrove {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+            "CUSTOM" => Ok(BiomeBiome::Custom {
+                inner: BiomeBiomeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct BiomeBiome<'mc>(
+pub struct BiomeBiomeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub BiomeBiomeEnum,
 );
-impl<'mc> std::ops::Deref for BiomeBiome<'mc> {
-    type Target = BiomeBiomeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for BiomeBiome<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Ocean { inner } => inner.0.clone(),
+            Self::Plains { inner } => inner.0.clone(),
+            Self::Desert { inner } => inner.0.clone(),
+            Self::WindsweptHills { inner } => inner.0.clone(),
+            Self::Forest { inner } => inner.0.clone(),
+            Self::Taiga { inner } => inner.0.clone(),
+            Self::Swamp { inner } => inner.0.clone(),
+            Self::MangroveSwamp { inner } => inner.0.clone(),
+            Self::River { inner } => inner.0.clone(),
+            Self::NetherWastes { inner } => inner.0.clone(),
+            Self::TheEnd { inner } => inner.0.clone(),
+            Self::FrozenOcean { inner } => inner.0.clone(),
+            Self::FrozenRiver { inner } => inner.0.clone(),
+            Self::SnowyPlains { inner } => inner.0.clone(),
+            Self::MushroomFields { inner } => inner.0.clone(),
+            Self::Beach { inner } => inner.0.clone(),
+            Self::Jungle { inner } => inner.0.clone(),
+            Self::SparseJungle { inner } => inner.0.clone(),
+            Self::DeepOcean { inner } => inner.0.clone(),
+            Self::StonyShore { inner } => inner.0.clone(),
+            Self::SnowyBeach { inner } => inner.0.clone(),
+            Self::BirchForest { inner } => inner.0.clone(),
+            Self::DarkForest { inner } => inner.0.clone(),
+            Self::SnowyTaiga { inner } => inner.0.clone(),
+            Self::OldGrowthPineTaiga { inner } => inner.0.clone(),
+            Self::WindsweptForest { inner } => inner.0.clone(),
+            Self::Savanna { inner } => inner.0.clone(),
+            Self::SavannaPlateau { inner } => inner.0.clone(),
+            Self::Badlands { inner } => inner.0.clone(),
+            Self::WoodedBadlands { inner } => inner.0.clone(),
+            Self::SmallEndIslands { inner } => inner.0.clone(),
+            Self::EndMidlands { inner } => inner.0.clone(),
+            Self::EndHighlands { inner } => inner.0.clone(),
+            Self::EndBarrens { inner } => inner.0.clone(),
+            Self::WarmOcean { inner } => inner.0.clone(),
+            Self::LukewarmOcean { inner } => inner.0.clone(),
+            Self::ColdOcean { inner } => inner.0.clone(),
+            Self::DeepLukewarmOcean { inner } => inner.0.clone(),
+            Self::DeepColdOcean { inner } => inner.0.clone(),
+            Self::DeepFrozenOcean { inner } => inner.0.clone(),
+            Self::TheVoid { inner } => inner.0.clone(),
+            Self::SunflowerPlains { inner } => inner.0.clone(),
+            Self::WindsweptGravellyHills { inner } => inner.0.clone(),
+            Self::FlowerForest { inner } => inner.0.clone(),
+            Self::IceSpikes { inner } => inner.0.clone(),
+            Self::OldGrowthBirchForest { inner } => inner.0.clone(),
+            Self::OldGrowthSpruceTaiga { inner } => inner.0.clone(),
+            Self::WindsweptSavanna { inner } => inner.0.clone(),
+            Self::ErodedBadlands { inner } => inner.0.clone(),
+            Self::BambooJungle { inner } => inner.0.clone(),
+            Self::SoulSandValley { inner } => inner.0.clone(),
+            Self::CrimsonForest { inner } => inner.0.clone(),
+            Self::WarpedForest { inner } => inner.0.clone(),
+            Self::BasaltDeltas { inner } => inner.0.clone(),
+            Self::DripstoneCaves { inner } => inner.0.clone(),
+            Self::LushCaves { inner } => inner.0.clone(),
+            Self::DeepDark { inner } => inner.0.clone(),
+            Self::Meadow { inner } => inner.0.clone(),
+            Self::Grove { inner } => inner.0.clone(),
+            Self::SnowySlopes { inner } => inner.0.clone(),
+            Self::FrozenPeaks { inner } => inner.0.clone(),
+            Self::JaggedPeaks { inner } => inner.0.clone(),
+            Self::StonyPeaks { inner } => inner.0.clone(),
+            Self::CherryGrove { inner } => inner.0.clone(),
+            Self::Custom { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Ocean { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Plains { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Desert { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WindsweptHills { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Forest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Taiga { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Swamp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::MangroveSwamp { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::River { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NetherWastes { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::TheEnd { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FrozenOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::FrozenRiver { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SnowyPlains { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::MushroomFields { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Beach { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Jungle { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SparseJungle { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DeepOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::StonyShore { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SnowyBeach { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BirchForest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DarkForest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SnowyTaiga { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::OldGrowthPineTaiga { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WindsweptForest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Savanna { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SavannaPlateau { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Badlands { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WoodedBadlands { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SmallEndIslands { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EndMidlands { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EndHighlands { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EndBarrens { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WarmOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::LukewarmOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ColdOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DeepLukewarmOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DeepColdOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DeepFrozenOcean { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::TheVoid { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SunflowerPlains { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WindsweptGravellyHills { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::FlowerForest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::IceSpikes { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::OldGrowthBirchForest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::OldGrowthSpruceTaiga { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WindsweptSavanna { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ErodedBadlands { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BambooJungle { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SoulSandValley { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CrimsonForest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WarpedForest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BasaltDeltas { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DripstoneCaves { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::LushCaves { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DeepDark { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Meadow { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Grove { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SnowySlopes { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::FrozenPeaks { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::JaggedPeaks { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::StonyPeaks { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CherryGrove { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Custom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for BiomeBiome<'mc> {
-    type Enum = BiomeBiomeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for BiomeBiome<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BiomeBiome from null object.").into());
@@ -18411,186 +19116,249 @@ impl<'mc> JNIInstantiatableEnum<'mc> for BiomeBiome<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "OCEAN" => Ok(BiomeBiome::Ocean {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "PLAINS" => Ok(BiomeBiome::Plains {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "DESERT" => Ok(BiomeBiome::Desert {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "WINDSWEPT_HILLS" => Ok(BiomeBiome::WindsweptHills {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "FOREST" => Ok(BiomeBiome::Forest {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "TAIGA" => Ok(BiomeBiome::Taiga {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "SWAMP" => Ok(BiomeBiome::Swamp {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "MANGROVE_SWAMP" => Ok(BiomeBiome::MangroveSwamp {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "RIVER" => Ok(BiomeBiome::River {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "NETHER_WASTES" => Ok(BiomeBiome::NetherWastes {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "THE_END" => Ok(BiomeBiome::TheEnd {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "FROZEN_OCEAN" => Ok(BiomeBiome::FrozenOcean {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "FROZEN_RIVER" => Ok(BiomeBiome::FrozenRiver {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "SNOWY_PLAINS" => Ok(BiomeBiome::SnowyPlains {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "MUSHROOM_FIELDS" => Ok(BiomeBiome::MushroomFields {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "BEACH" => Ok(BiomeBiome::Beach {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "JUNGLE" => Ok(BiomeBiome::Jungle {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "SPARSE_JUNGLE" => Ok(BiomeBiome::SparseJungle {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "DEEP_OCEAN" => Ok(BiomeBiome::DeepOcean {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "STONY_SHORE" => Ok(BiomeBiome::StonyShore {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "SNOWY_BEACH" => Ok(BiomeBiome::SnowyBeach {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "BIRCH_FOREST" => Ok(BiomeBiome::BirchForest {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "DARK_FOREST" => Ok(BiomeBiome::DarkForest {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "SNOWY_TAIGA" => Ok(BiomeBiome::SnowyTaiga {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "OLD_GROWTH_PINE_TAIGA" => Ok(BiomeBiome::OldGrowthPineTaiga {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "WINDSWEPT_FOREST" => Ok(BiomeBiome::WindsweptForest {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "SAVANNA" => Ok(BiomeBiome::Savanna {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "SAVANNA_PLATEAU" => Ok(BiomeBiome::SavannaPlateau {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "BADLANDS" => Ok(BiomeBiome::Badlands {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "WOODED_BADLANDS" => Ok(BiomeBiome::WoodedBadlands {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "SMALL_END_ISLANDS" => Ok(BiomeBiome::SmallEndIslands {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "END_MIDLANDS" => Ok(BiomeBiome::EndMidlands {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "END_HIGHLANDS" => Ok(BiomeBiome::EndHighlands {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "END_BARRENS" => Ok(BiomeBiome::EndBarrens {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "WARM_OCEAN" => Ok(BiomeBiome::WarmOcean {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "LUKEWARM_OCEAN" => Ok(BiomeBiome::LukewarmOcean {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "COLD_OCEAN" => Ok(BiomeBiome::ColdOcean {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "DEEP_LUKEWARM_OCEAN" => Ok(BiomeBiome::DeepLukewarmOcean {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "DEEP_COLD_OCEAN" => Ok(BiomeBiome::DeepColdOcean {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "DEEP_FROZEN_OCEAN" => Ok(BiomeBiome::DeepFrozenOcean {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "THE_VOID" => Ok(BiomeBiome::TheVoid {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "SUNFLOWER_PLAINS" => Ok(BiomeBiome::SunflowerPlains {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "WINDSWEPT_GRAVELLY_HILLS" => Ok(BiomeBiome::WindsweptGravellyHills {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "FLOWER_FOREST" => Ok(BiomeBiome::FlowerForest {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "ICE_SPIKES" => Ok(BiomeBiome::IceSpikes {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "OLD_GROWTH_BIRCH_FOREST" => Ok(BiomeBiome::OldGrowthBirchForest {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "OLD_GROWTH_SPRUCE_TAIGA" => Ok(BiomeBiome::OldGrowthSpruceTaiga {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "WINDSWEPT_SAVANNA" => Ok(BiomeBiome::WindsweptSavanna {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "ERODED_BADLANDS" => Ok(BiomeBiome::ErodedBadlands {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "BAMBOO_JUNGLE" => Ok(BiomeBiome::BambooJungle {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "SOUL_SAND_VALLEY" => Ok(BiomeBiome::SoulSandValley {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "CRIMSON_FOREST" => Ok(BiomeBiome::CrimsonForest {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "WARPED_FOREST" => Ok(BiomeBiome::WarpedForest {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "BASALT_DELTAS" => Ok(BiomeBiome::BasaltDeltas {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "DRIPSTONE_CAVES" => Ok(BiomeBiome::DripstoneCaves {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "LUSH_CAVES" => Ok(BiomeBiome::LushCaves {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "DEEP_DARK" => Ok(BiomeBiome::DeepDark {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "MEADOW" => Ok(BiomeBiome::Meadow {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "GROVE" => Ok(BiomeBiome::Grove {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "SNOWY_SLOPES" => Ok(BiomeBiome::SnowySlopes {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "FROZEN_PEAKS" => Ok(BiomeBiome::FrozenPeaks {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "JAGGED_PEAKS" => Ok(BiomeBiome::JaggedPeaks {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "STONY_PEAKS" => Ok(BiomeBiome::StonyPeaks {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "CHERRY_GROVE" => Ok(BiomeBiome::CherryGrove {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                "CUSTOM" => Ok(BiomeBiome::Custom {
+                    inner: BiomeBiomeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> BiomeBiome<'mc> {
-    pub const OCEAN: BiomeBiomeEnum = BiomeBiomeEnum::Ocean;
-    pub const PLAINS: BiomeBiomeEnum = BiomeBiomeEnum::Plains;
-    pub const DESERT: BiomeBiomeEnum = BiomeBiomeEnum::Desert;
-    pub const WINDSWEPT_HILLS: BiomeBiomeEnum = BiomeBiomeEnum::WindsweptHills;
-    pub const FOREST: BiomeBiomeEnum = BiomeBiomeEnum::Forest;
-    pub const TAIGA: BiomeBiomeEnum = BiomeBiomeEnum::Taiga;
-    pub const SWAMP: BiomeBiomeEnum = BiomeBiomeEnum::Swamp;
-    pub const MANGROVE_SWAMP: BiomeBiomeEnum = BiomeBiomeEnum::MangroveSwamp;
-    pub const RIVER: BiomeBiomeEnum = BiomeBiomeEnum::River;
-    pub const NETHER_WASTES: BiomeBiomeEnum = BiomeBiomeEnum::NetherWastes;
-    pub const THE_END: BiomeBiomeEnum = BiomeBiomeEnum::TheEnd;
-    pub const FROZEN_OCEAN: BiomeBiomeEnum = BiomeBiomeEnum::FrozenOcean;
-    pub const FROZEN_RIVER: BiomeBiomeEnum = BiomeBiomeEnum::FrozenRiver;
-    pub const SNOWY_PLAINS: BiomeBiomeEnum = BiomeBiomeEnum::SnowyPlains;
-    pub const MUSHROOM_FIELDS: BiomeBiomeEnum = BiomeBiomeEnum::MushroomFields;
-    pub const BEACH: BiomeBiomeEnum = BiomeBiomeEnum::Beach;
-    pub const JUNGLE: BiomeBiomeEnum = BiomeBiomeEnum::Jungle;
-    pub const SPARSE_JUNGLE: BiomeBiomeEnum = BiomeBiomeEnum::SparseJungle;
-    pub const DEEP_OCEAN: BiomeBiomeEnum = BiomeBiomeEnum::DeepOcean;
-    pub const STONY_SHORE: BiomeBiomeEnum = BiomeBiomeEnum::StonyShore;
-    pub const SNOWY_BEACH: BiomeBiomeEnum = BiomeBiomeEnum::SnowyBeach;
-    pub const BIRCH_FOREST: BiomeBiomeEnum = BiomeBiomeEnum::BirchForest;
-    pub const DARK_FOREST: BiomeBiomeEnum = BiomeBiomeEnum::DarkForest;
-    pub const SNOWY_TAIGA: BiomeBiomeEnum = BiomeBiomeEnum::SnowyTaiga;
-    pub const OLD_GROWTH_PINE_TAIGA: BiomeBiomeEnum = BiomeBiomeEnum::OldGrowthPineTaiga;
-    pub const WINDSWEPT_FOREST: BiomeBiomeEnum = BiomeBiomeEnum::WindsweptForest;
-    pub const SAVANNA: BiomeBiomeEnum = BiomeBiomeEnum::Savanna;
-    pub const SAVANNA_PLATEAU: BiomeBiomeEnum = BiomeBiomeEnum::SavannaPlateau;
-    pub const BADLANDS: BiomeBiomeEnum = BiomeBiomeEnum::Badlands;
-    pub const WOODED_BADLANDS: BiomeBiomeEnum = BiomeBiomeEnum::WoodedBadlands;
-    pub const SMALL_END_ISLANDS: BiomeBiomeEnum = BiomeBiomeEnum::SmallEndIslands;
-    pub const END_MIDLANDS: BiomeBiomeEnum = BiomeBiomeEnum::EndMidlands;
-    pub const END_HIGHLANDS: BiomeBiomeEnum = BiomeBiomeEnum::EndHighlands;
-    pub const END_BARRENS: BiomeBiomeEnum = BiomeBiomeEnum::EndBarrens;
-    pub const WARM_OCEAN: BiomeBiomeEnum = BiomeBiomeEnum::WarmOcean;
-    pub const LUKEWARM_OCEAN: BiomeBiomeEnum = BiomeBiomeEnum::LukewarmOcean;
-    pub const COLD_OCEAN: BiomeBiomeEnum = BiomeBiomeEnum::ColdOcean;
-    pub const DEEP_LUKEWARM_OCEAN: BiomeBiomeEnum = BiomeBiomeEnum::DeepLukewarmOcean;
-    pub const DEEP_COLD_OCEAN: BiomeBiomeEnum = BiomeBiomeEnum::DeepColdOcean;
-    pub const DEEP_FROZEN_OCEAN: BiomeBiomeEnum = BiomeBiomeEnum::DeepFrozenOcean;
-    pub const THE_VOID: BiomeBiomeEnum = BiomeBiomeEnum::TheVoid;
-    pub const SUNFLOWER_PLAINS: BiomeBiomeEnum = BiomeBiomeEnum::SunflowerPlains;
-    pub const WINDSWEPT_GRAVELLY_HILLS: BiomeBiomeEnum = BiomeBiomeEnum::WindsweptGravellyHills;
-    pub const FLOWER_FOREST: BiomeBiomeEnum = BiomeBiomeEnum::FlowerForest;
-    pub const ICE_SPIKES: BiomeBiomeEnum = BiomeBiomeEnum::IceSpikes;
-    pub const OLD_GROWTH_BIRCH_FOREST: BiomeBiomeEnum = BiomeBiomeEnum::OldGrowthBirchForest;
-    pub const OLD_GROWTH_SPRUCE_TAIGA: BiomeBiomeEnum = BiomeBiomeEnum::OldGrowthSpruceTaiga;
-    pub const WINDSWEPT_SAVANNA: BiomeBiomeEnum = BiomeBiomeEnum::WindsweptSavanna;
-    pub const ERODED_BADLANDS: BiomeBiomeEnum = BiomeBiomeEnum::ErodedBadlands;
-    pub const BAMBOO_JUNGLE: BiomeBiomeEnum = BiomeBiomeEnum::BambooJungle;
-    pub const SOUL_SAND_VALLEY: BiomeBiomeEnum = BiomeBiomeEnum::SoulSandValley;
-    pub const CRIMSON_FOREST: BiomeBiomeEnum = BiomeBiomeEnum::CrimsonForest;
-    pub const WARPED_FOREST: BiomeBiomeEnum = BiomeBiomeEnum::WarpedForest;
-    pub const BASALT_DELTAS: BiomeBiomeEnum = BiomeBiomeEnum::BasaltDeltas;
-    pub const DRIPSTONE_CAVES: BiomeBiomeEnum = BiomeBiomeEnum::DripstoneCaves;
-    pub const LUSH_CAVES: BiomeBiomeEnum = BiomeBiomeEnum::LushCaves;
-    pub const DEEP_DARK: BiomeBiomeEnum = BiomeBiomeEnum::DeepDark;
-    pub const MEADOW: BiomeBiomeEnum = BiomeBiomeEnum::Meadow;
-    pub const GROVE: BiomeBiomeEnum = BiomeBiomeEnum::Grove;
-    pub const SNOWY_SLOPES: BiomeBiomeEnum = BiomeBiomeEnum::SnowySlopes;
-    pub const FROZEN_PEAKS: BiomeBiomeEnum = BiomeBiomeEnum::FrozenPeaks;
-    pub const JAGGED_PEAKS: BiomeBiomeEnum = BiomeBiomeEnum::JaggedPeaks;
-    pub const STONY_PEAKS: BiomeBiomeEnum = BiomeBiomeEnum::StonyPeaks;
-    pub const CHERRY_GROVE: BiomeBiomeEnum = BiomeBiomeEnum::CherryGrove;
-    pub const CUSTOM: BiomeBiomeEnum = BiomeBiomeEnum::Custom;
-    pub fn from_string(str: String) -> std::option::Option<BiomeBiomeEnum> {
-        match str.as_str() {
-            "OCEAN" => Some(BiomeBiomeEnum::Ocean),
-            "PLAINS" => Some(BiomeBiomeEnum::Plains),
-            "DESERT" => Some(BiomeBiomeEnum::Desert),
-            "WINDSWEPT_HILLS" => Some(BiomeBiomeEnum::WindsweptHills),
-            "FOREST" => Some(BiomeBiomeEnum::Forest),
-            "TAIGA" => Some(BiomeBiomeEnum::Taiga),
-            "SWAMP" => Some(BiomeBiomeEnum::Swamp),
-            "MANGROVE_SWAMP" => Some(BiomeBiomeEnum::MangroveSwamp),
-            "RIVER" => Some(BiomeBiomeEnum::River),
-            "NETHER_WASTES" => Some(BiomeBiomeEnum::NetherWastes),
-            "THE_END" => Some(BiomeBiomeEnum::TheEnd),
-            "FROZEN_OCEAN" => Some(BiomeBiomeEnum::FrozenOcean),
-            "FROZEN_RIVER" => Some(BiomeBiomeEnum::FrozenRiver),
-            "SNOWY_PLAINS" => Some(BiomeBiomeEnum::SnowyPlains),
-            "MUSHROOM_FIELDS" => Some(BiomeBiomeEnum::MushroomFields),
-            "BEACH" => Some(BiomeBiomeEnum::Beach),
-            "JUNGLE" => Some(BiomeBiomeEnum::Jungle),
-            "SPARSE_JUNGLE" => Some(BiomeBiomeEnum::SparseJungle),
-            "DEEP_OCEAN" => Some(BiomeBiomeEnum::DeepOcean),
-            "STONY_SHORE" => Some(BiomeBiomeEnum::StonyShore),
-            "SNOWY_BEACH" => Some(BiomeBiomeEnum::SnowyBeach),
-            "BIRCH_FOREST" => Some(BiomeBiomeEnum::BirchForest),
-            "DARK_FOREST" => Some(BiomeBiomeEnum::DarkForest),
-            "SNOWY_TAIGA" => Some(BiomeBiomeEnum::SnowyTaiga),
-            "OLD_GROWTH_PINE_TAIGA" => Some(BiomeBiomeEnum::OldGrowthPineTaiga),
-            "WINDSWEPT_FOREST" => Some(BiomeBiomeEnum::WindsweptForest),
-            "SAVANNA" => Some(BiomeBiomeEnum::Savanna),
-            "SAVANNA_PLATEAU" => Some(BiomeBiomeEnum::SavannaPlateau),
-            "BADLANDS" => Some(BiomeBiomeEnum::Badlands),
-            "WOODED_BADLANDS" => Some(BiomeBiomeEnum::WoodedBadlands),
-            "SMALL_END_ISLANDS" => Some(BiomeBiomeEnum::SmallEndIslands),
-            "END_MIDLANDS" => Some(BiomeBiomeEnum::EndMidlands),
-            "END_HIGHLANDS" => Some(BiomeBiomeEnum::EndHighlands),
-            "END_BARRENS" => Some(BiomeBiomeEnum::EndBarrens),
-            "WARM_OCEAN" => Some(BiomeBiomeEnum::WarmOcean),
-            "LUKEWARM_OCEAN" => Some(BiomeBiomeEnum::LukewarmOcean),
-            "COLD_OCEAN" => Some(BiomeBiomeEnum::ColdOcean),
-            "DEEP_LUKEWARM_OCEAN" => Some(BiomeBiomeEnum::DeepLukewarmOcean),
-            "DEEP_COLD_OCEAN" => Some(BiomeBiomeEnum::DeepColdOcean),
-            "DEEP_FROZEN_OCEAN" => Some(BiomeBiomeEnum::DeepFrozenOcean),
-            "THE_VOID" => Some(BiomeBiomeEnum::TheVoid),
-            "SUNFLOWER_PLAINS" => Some(BiomeBiomeEnum::SunflowerPlains),
-            "WINDSWEPT_GRAVELLY_HILLS" => Some(BiomeBiomeEnum::WindsweptGravellyHills),
-            "FLOWER_FOREST" => Some(BiomeBiomeEnum::FlowerForest),
-            "ICE_SPIKES" => Some(BiomeBiomeEnum::IceSpikes),
-            "OLD_GROWTH_BIRCH_FOREST" => Some(BiomeBiomeEnum::OldGrowthBirchForest),
-            "OLD_GROWTH_SPRUCE_TAIGA" => Some(BiomeBiomeEnum::OldGrowthSpruceTaiga),
-            "WINDSWEPT_SAVANNA" => Some(BiomeBiomeEnum::WindsweptSavanna),
-            "ERODED_BADLANDS" => Some(BiomeBiomeEnum::ErodedBadlands),
-            "BAMBOO_JUNGLE" => Some(BiomeBiomeEnum::BambooJungle),
-            "SOUL_SAND_VALLEY" => Some(BiomeBiomeEnum::SoulSandValley),
-            "CRIMSON_FOREST" => Some(BiomeBiomeEnum::CrimsonForest),
-            "WARPED_FOREST" => Some(BiomeBiomeEnum::WarpedForest),
-            "BASALT_DELTAS" => Some(BiomeBiomeEnum::BasaltDeltas),
-            "DRIPSTONE_CAVES" => Some(BiomeBiomeEnum::DripstoneCaves),
-            "LUSH_CAVES" => Some(BiomeBiomeEnum::LushCaves),
-            "DEEP_DARK" => Some(BiomeBiomeEnum::DeepDark),
-            "MEADOW" => Some(BiomeBiomeEnum::Meadow),
-            "GROVE" => Some(BiomeBiomeEnum::Grove),
-            "SNOWY_SLOPES" => Some(BiomeBiomeEnum::SnowySlopes),
-            "FROZEN_PEAKS" => Some(BiomeBiomeEnum::FrozenPeaks),
-            "JAGGED_PEAKS" => Some(BiomeBiomeEnum::JaggedPeaks),
-            "STONY_PEAKS" => Some(BiomeBiomeEnum::StonyPeaks),
-            "CHERRY_GROVE" => Some(BiomeBiomeEnum::CherryGrove),
-            "CUSTOM" => Some(BiomeBiomeEnum::Custom),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for BiomeBiomeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for BiomeBiomeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate BiomeBiomeStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/Biome$Biome")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BiomeBiomeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<BiomeBiome<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/Biome$Biome");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/Biome$Biome;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        BiomeBiome::from_raw(
-            &jni,
-            raw_obj,
-            BiomeBiome::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> BiomeBiomeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a captured state of a banner.
@@ -18606,12 +19374,10 @@ impl<'mc> JNIRaw<'mc> for Banner<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Banner<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -18655,12 +19421,7 @@ impl<'mc> Banner<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        Ok(Some(crate::DyeColor::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::DyeColor::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )?))
+        Ok(Some(crate::DyeColor::from_raw(&self.jni_ref(), raw_obj)?))
     }
 
     pub fn set_base_color(
@@ -18879,12 +19640,7 @@ impl<'mc> Banner<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -19152,14 +19908,9 @@ impl<'mc> Banner<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Banner<'mc> {
@@ -19181,12 +19932,10 @@ impl<'mc> JNIRaw<'mc> for Barrel<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Barrel<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19326,12 +20075,7 @@ impl<'mc> Barrel<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -19748,14 +20492,9 @@ impl<'mc> Barrel<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for Barrel<'mc> {
@@ -19789,12 +20528,10 @@ impl<'mc> JNIRaw<'mc> for CommandBlock<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CommandBlock<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19961,12 +20698,7 @@ impl<'mc> CommandBlock<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -20234,14 +20966,9 @@ impl<'mc> CommandBlock<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for CommandBlock<'mc> {
@@ -20263,12 +20990,10 @@ impl<'mc> JNIRaw<'mc> for SculkSensor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SculkSensor<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20407,12 +21132,7 @@ impl<'mc> SculkSensor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -20680,14 +21400,9 @@ impl<'mc> SculkSensor<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for SculkSensor<'mc> {
@@ -20709,12 +21424,10 @@ impl<'mc> JNIRaw<'mc> for HangingSign<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for HangingSign<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20885,12 +21598,7 @@ impl<'mc> HangingSign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        Ok(Some(crate::DyeColor::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::DyeColor::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )?))
+        Ok(Some(crate::DyeColor::from_raw(&self.jni_ref(), raw_obj)?))
     }
 
     pub fn get_side(
@@ -21001,12 +21709,7 @@ impl<'mc> HangingSign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -21274,14 +21977,9 @@ impl<'mc> HangingSign<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::Sign<'mc>> for HangingSign<'mc> {
@@ -21303,12 +22001,10 @@ impl<'mc> JNIRaw<'mc> for ChiseledBookshelf<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ChiseledBookshelf<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21495,12 +22191,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -21770,14 +22461,9 @@ impl<'mc> ChiseledBookshelf<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for ChiseledBookshelf<'mc> {
@@ -21806,12 +22492,10 @@ impl<'mc> JNIRaw<'mc> for TileState<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for TileState<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21922,12 +22606,7 @@ impl<'mc> TileState<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -22195,14 +22874,9 @@ impl<'mc> TileState<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::BlockState<'mc>> for TileState<'mc> {
@@ -22231,12 +22905,10 @@ impl<'mc> JNIRaw<'mc> for BlockState<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockState<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22335,12 +23007,7 @@ impl<'mc> BlockState<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -22608,14 +23275,9 @@ impl<'mc> BlockState<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::metadata::Metadatable<'mc>> for BlockState<'mc> {
@@ -22637,12 +23299,10 @@ impl<'mc> JNIRaw<'mc> for BrewingStand<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BrewingStand<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22830,12 +23490,7 @@ impl<'mc> BrewingStand<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -23177,14 +23832,9 @@ impl<'mc> BrewingStand<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for BrewingStand<'mc> {
@@ -23206,12 +23856,10 @@ impl<'mc> JNIRaw<'mc> for Skull<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Skull<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23282,12 +23930,7 @@ impl<'mc> Skull<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_rotation(
@@ -23442,12 +24085,7 @@ impl<'mc> Skull<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::SkullType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::SkullType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::SkullType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_skull_type(
@@ -23556,12 +24194,7 @@ impl<'mc> Skull<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -23829,14 +24462,9 @@ impl<'mc> Skull<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Skull<'mc> {
@@ -23858,12 +24486,10 @@ impl<'mc> JNIRaw<'mc> for Hopper<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Hopper<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24003,12 +24629,7 @@ impl<'mc> Hopper<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -24407,14 +25028,9 @@ impl<'mc> Hopper<'mc> {
         )?))
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::Container<'mc>> for Hopper<'mc> {
@@ -24442,12 +25058,10 @@ impl<'mc> JNIRaw<'mc> for Sign<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Sign<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24618,12 +25232,7 @@ impl<'mc> Sign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        Ok(Some(crate::DyeColor::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::DyeColor::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )?))
+        Ok(Some(crate::DyeColor::from_raw(&self.jni_ref(), raw_obj)?))
     }
 
     pub fn get_side(
@@ -24734,12 +25343,7 @@ impl<'mc> Sign<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -25007,14 +25611,9 @@ impl<'mc> Sign<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::block::TileState<'mc>> for Sign<'mc> {
@@ -25040,12 +25639,10 @@ impl<'mc> JNIRaw<'mc> for DoubleChest<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for DoubleChest<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -25266,14 +25863,9 @@ impl<'mc> DoubleChest<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -25292,57 +25884,85 @@ impl<'mc> Into<crate::inventory::InventoryHolder<'mc>> for DoubleChest<'mc> {
             .expect("Error converting DoubleChest into crate::inventory::InventoryHolder")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum BlockSupportEnum {
-    Full,
-    Center,
-    Rigid,
-}
-impl std::fmt::Display for BlockSupportEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            BlockSupportEnum::Full => f.write_str("FULL"),
-            BlockSupportEnum::Center => f.write_str("CENTER"),
-            BlockSupportEnum::Rigid => f.write_str("RIGID"),
-        }
-    }
+pub enum BlockSupport<'mc> {
+    Full { inner: BlockSupportStruct<'mc> },
+    Center { inner: BlockSupportStruct<'mc> },
+    Rigid { inner: BlockSupportStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for BlockSupport<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            BlockSupport::Full { .. } => f.write_str("FULL"),
+            BlockSupport::Center { .. } => f.write_str("CENTER"),
+            BlockSupport::Rigid { .. } => f.write_str("RIGID"),
+        }
     }
 }
+
+impl<'mc> BlockSupport<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<BlockSupport<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/BlockSupport");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/BlockSupport;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "FULL" => Ok(BlockSupport::Full {
+                inner: BlockSupportStruct::from_raw(env, obj)?,
+            }),
+            "CENTER" => Ok(BlockSupport::Center {
+                inner: BlockSupportStruct::from_raw(env, obj)?,
+            }),
+            "RIGID" => Ok(BlockSupport::Rigid {
+                inner: BlockSupportStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct BlockSupport<'mc>(
+pub struct BlockSupportStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub BlockSupportEnum,
 );
-impl<'mc> std::ops::Deref for BlockSupport<'mc> {
-    type Target = BlockSupportEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for BlockSupport<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Full { inner } => inner.0.clone(),
+            Self::Center { inner } => inner.0.clone(),
+            Self::Rigid { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Full { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Center { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Rigid { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for BlockSupport<'mc> {
-    type Enum = BlockSupportEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for BlockSupport<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BlockSupport from null object.").into());
@@ -25355,62 +25975,63 @@ impl<'mc> JNIInstantiatableEnum<'mc> for BlockSupport<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "FULL" => Ok(BlockSupport::Full {
+                    inner: BlockSupportStruct::from_raw(env, obj)?,
+                }),
+                "CENTER" => Ok(BlockSupport::Center {
+                    inner: BlockSupportStruct::from_raw(env, obj)?,
+                }),
+                "RIGID" => Ok(BlockSupport::Rigid {
+                    inner: BlockSupportStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> BlockSupport<'mc> {
-    pub const FULL: BlockSupportEnum = BlockSupportEnum::Full;
-    pub const CENTER: BlockSupportEnum = BlockSupportEnum::Center;
-    pub const RIGID: BlockSupportEnum = BlockSupportEnum::Rigid;
-    pub fn from_string(str: String) -> std::option::Option<BlockSupportEnum> {
-        match str.as_str() {
-            "FULL" => Some(BlockSupportEnum::Full),
-            "CENTER" => Some(BlockSupportEnum::Center),
-            "RIGID" => Some(BlockSupportEnum::Rigid),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for BlockSupportStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for BlockSupportStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate BlockSupportStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/BlockSupport")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BlockSupportStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<BlockSupport<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/BlockSupport");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/BlockSupport;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        BlockSupport::from_raw(
-            &jni,
-            raw_obj,
-            BlockSupport::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> BlockSupportStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 pub mod banner;

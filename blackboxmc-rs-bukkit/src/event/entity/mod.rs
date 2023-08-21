@@ -3,57 +3,87 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-#[derive(PartialEq, Eq)]
-pub enum PowerCauseEnum {
-    Lightning,
-    SetOn,
-    SetOff,
-}
-impl std::fmt::Display for PowerCauseEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PowerCauseEnum::Lightning => f.write_str("LIGHTNING"),
-            PowerCauseEnum::SetOn => f.write_str("SET_ON"),
-            PowerCauseEnum::SetOff => f.write_str("SET_OFF"),
-        }
-    }
+pub enum PowerCause<'mc> {
+    Lightning { inner: PowerCauseStruct<'mc> },
+    SetOn { inner: PowerCauseStruct<'mc> },
+    SetOff { inner: PowerCauseStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for PowerCause<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            PowerCause::Lightning { .. } => f.write_str("LIGHTNING"),
+            PowerCause::SetOn { .. } => f.write_str("SET_ON"),
+            PowerCause::SetOff { .. } => f.write_str("SET_OFF"),
+        }
     }
 }
+
+impl<'mc> PowerCause<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PowerCause<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/PowerCause");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/PowerCause;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "LIGHTNING" => Ok(PowerCause::Lightning {
+                inner: PowerCauseStruct::from_raw(env, obj)?,
+            }),
+            "SET_ON" => Ok(PowerCause::SetOn {
+                inner: PowerCauseStruct::from_raw(env, obj)?,
+            }),
+            "SET_OFF" => Ok(PowerCause::SetOff {
+                inner: PowerCauseStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct PowerCause<'mc>(
+pub struct PowerCauseStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub PowerCauseEnum,
 );
-impl<'mc> std::ops::Deref for PowerCause<'mc> {
-    type Target = PowerCauseEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for PowerCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Lightning { inner } => inner.0.clone(),
+            Self::SetOn { inner } => inner.0.clone(),
+            Self::SetOff { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Lightning { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SetOn { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SetOff { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for PowerCause<'mc> {
-    type Enum = PowerCauseEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for PowerCause<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate PowerCause from null object.").into());
@@ -66,62 +96,63 @@ impl<'mc> JNIInstantiatableEnum<'mc> for PowerCause<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "LIGHTNING" => Ok(PowerCause::Lightning {
+                    inner: PowerCauseStruct::from_raw(env, obj)?,
+                }),
+                "SET_ON" => Ok(PowerCause::SetOn {
+                    inner: PowerCauseStruct::from_raw(env, obj)?,
+                }),
+                "SET_OFF" => Ok(PowerCause::SetOff {
+                    inner: PowerCauseStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> PowerCause<'mc> {
-    pub const LIGHTNING: PowerCauseEnum = PowerCauseEnum::Lightning;
-    pub const SET_ON: PowerCauseEnum = PowerCauseEnum::SetOn;
-    pub const SET_OFF: PowerCauseEnum = PowerCauseEnum::SetOff;
-    pub fn from_string(str: String) -> std::option::Option<PowerCauseEnum> {
-        match str.as_str() {
-            "LIGHTNING" => Some(PowerCauseEnum::Lightning),
-            "SET_ON" => Some(PowerCauseEnum::SetOn),
-            "SET_OFF" => Some(PowerCauseEnum::SetOff),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for PowerCauseStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PowerCauseStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PowerCauseStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/PowerCause")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PowerCauseStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<PowerCause<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/PowerCause");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/PowerCause;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        PowerCause::from_raw(
-            &jni,
-            raw_obj,
-            PowerCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> PowerCauseStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Called when an entity explodes
@@ -135,12 +166,10 @@ impl<'mc> JNIRaw<'mc> for EntityExplodeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityExplodeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -290,12 +319,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -411,14 +435,9 @@ impl<'mc> EntityExplodeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -455,12 +474,10 @@ impl<'mc> JNIRaw<'mc> for EntityPortalEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityPortalEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -679,12 +696,7 @@ impl<'mc> EntityPortalEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -800,14 +812,9 @@ impl<'mc> EntityPortalEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -838,12 +845,10 @@ impl<'mc> JNIRaw<'mc> for StriderTemperatureChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for StriderTemperatureChangeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -983,12 +988,7 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1104,14 +1104,9 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1151,12 +1146,10 @@ impl<'mc> JNIRaw<'mc> for EntityDamageByBlockEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityDamageByBlockEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1283,12 +1276,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::entity::EntityDamageEventDamageCause::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::entity::EntityDamageEventDamageCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::entity::EntityDamageEventDamageCause::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_damage_with_entity_damage_eventdamage_modifier(
@@ -1433,12 +1421,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1554,14 +1537,9 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1579,130 +1557,456 @@ impl<'mc> Into<crate::event::entity::EntityDamageEvent<'mc>> for EntityDamageByB
         crate::event::entity::EntityDamageEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting EntityDamageByBlockEvent into crate::event::entity::EntityDamageEvent")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum SpawnReasonEnum {
-    Natural,
-    Jockey,
+pub enum SpawnReason<'mc> {
+    Natural {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Jockey {
+        inner: SpawnReasonStruct<'mc>,
+    },
     #[deprecated]
-    ChunkGen,
-    Spawner,
-    Egg,
-    SpawnerEgg,
-    Lightning,
-    BuildSnowman,
-    BuildIrongolem,
-    BuildWither,
-    VillageDefense,
-    VillageInvasion,
-    Breeding,
-    SlimeSplit,
-    Reinforcements,
-    NetherPortal,
-    DispenseEgg,
-    Infection,
-    Cured,
-    OcelotBaby,
-    SilverfishBlock,
-    Mount,
-    Trap,
-    EnderPearl,
-    ShoulderEntity,
-    Drowned,
-    Sheared,
-    Explosion,
-    Raid,
-    Patrol,
-    Beehive,
-    PiglinZombified,
-    Spell,
-    Frozen,
-    Metamorphosis,
-    Duplication,
-    Command,
-    Custom,
-    Default,
-}
-impl std::fmt::Display for SpawnReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            SpawnReasonEnum::Natural => f.write_str("NATURAL"),
-            SpawnReasonEnum::Jockey => f.write_str("JOCKEY"),
-            SpawnReasonEnum::ChunkGen => f.write_str("CHUNK_GEN"),
-            SpawnReasonEnum::Spawner => f.write_str("SPAWNER"),
-            SpawnReasonEnum::Egg => f.write_str("EGG"),
-            SpawnReasonEnum::SpawnerEgg => f.write_str("SPAWNER_EGG"),
-            SpawnReasonEnum::Lightning => f.write_str("LIGHTNING"),
-            SpawnReasonEnum::BuildSnowman => f.write_str("BUILD_SNOWMAN"),
-            SpawnReasonEnum::BuildIrongolem => f.write_str("BUILD_IRONGOLEM"),
-            SpawnReasonEnum::BuildWither => f.write_str("BUILD_WITHER"),
-            SpawnReasonEnum::VillageDefense => f.write_str("VILLAGE_DEFENSE"),
-            SpawnReasonEnum::VillageInvasion => f.write_str("VILLAGE_INVASION"),
-            SpawnReasonEnum::Breeding => f.write_str("BREEDING"),
-            SpawnReasonEnum::SlimeSplit => f.write_str("SLIME_SPLIT"),
-            SpawnReasonEnum::Reinforcements => f.write_str("REINFORCEMENTS"),
-            SpawnReasonEnum::NetherPortal => f.write_str("NETHER_PORTAL"),
-            SpawnReasonEnum::DispenseEgg => f.write_str("DISPENSE_EGG"),
-            SpawnReasonEnum::Infection => f.write_str("INFECTION"),
-            SpawnReasonEnum::Cured => f.write_str("CURED"),
-            SpawnReasonEnum::OcelotBaby => f.write_str("OCELOT_BABY"),
-            SpawnReasonEnum::SilverfishBlock => f.write_str("SILVERFISH_BLOCK"),
-            SpawnReasonEnum::Mount => f.write_str("MOUNT"),
-            SpawnReasonEnum::Trap => f.write_str("TRAP"),
-            SpawnReasonEnum::EnderPearl => f.write_str("ENDER_PEARL"),
-            SpawnReasonEnum::ShoulderEntity => f.write_str("SHOULDER_ENTITY"),
-            SpawnReasonEnum::Drowned => f.write_str("DROWNED"),
-            SpawnReasonEnum::Sheared => f.write_str("SHEARED"),
-            SpawnReasonEnum::Explosion => f.write_str("EXPLOSION"),
-            SpawnReasonEnum::Raid => f.write_str("RAID"),
-            SpawnReasonEnum::Patrol => f.write_str("PATROL"),
-            SpawnReasonEnum::Beehive => f.write_str("BEEHIVE"),
-            SpawnReasonEnum::PiglinZombified => f.write_str("PIGLIN_ZOMBIFIED"),
-            SpawnReasonEnum::Spell => f.write_str("SPELL"),
-            SpawnReasonEnum::Frozen => f.write_str("FROZEN"),
-            SpawnReasonEnum::Metamorphosis => f.write_str("METAMORPHOSIS"),
-            SpawnReasonEnum::Duplication => f.write_str("DUPLICATION"),
-            SpawnReasonEnum::Command => f.write_str("COMMAND"),
-            SpawnReasonEnum::Custom => f.write_str("CUSTOM"),
-            SpawnReasonEnum::Default => f.write_str("DEFAULT"),
-        }
-    }
+    ChunkGen {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Spawner {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Egg {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    SpawnerEgg {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Lightning {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    BuildSnowman {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    BuildIrongolem {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    BuildWither {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    VillageDefense {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    VillageInvasion {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Breeding {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    SlimeSplit {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Reinforcements {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    NetherPortal {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    DispenseEgg {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Infection {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Cured {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    OcelotBaby {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    SilverfishBlock {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Mount {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Trap {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    EnderPearl {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    ShoulderEntity {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Drowned {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Sheared {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Explosion {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Raid {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Patrol {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Beehive {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    PiglinZombified {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Spell {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Frozen {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Metamorphosis {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Duplication {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Command {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Custom {
+        inner: SpawnReasonStruct<'mc>,
+    },
+    Default {
+        inner: SpawnReasonStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for SpawnReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            SpawnReason::Natural { .. } => f.write_str("NATURAL"),
+            SpawnReason::Jockey { .. } => f.write_str("JOCKEY"),
+            SpawnReason::ChunkGen { .. } => f.write_str("CHUNK_GEN"),
+            SpawnReason::Spawner { .. } => f.write_str("SPAWNER"),
+            SpawnReason::Egg { .. } => f.write_str("EGG"),
+            SpawnReason::SpawnerEgg { .. } => f.write_str("SPAWNER_EGG"),
+            SpawnReason::Lightning { .. } => f.write_str("LIGHTNING"),
+            SpawnReason::BuildSnowman { .. } => f.write_str("BUILD_SNOWMAN"),
+            SpawnReason::BuildIrongolem { .. } => f.write_str("BUILD_IRONGOLEM"),
+            SpawnReason::BuildWither { .. } => f.write_str("BUILD_WITHER"),
+            SpawnReason::VillageDefense { .. } => f.write_str("VILLAGE_DEFENSE"),
+            SpawnReason::VillageInvasion { .. } => f.write_str("VILLAGE_INVASION"),
+            SpawnReason::Breeding { .. } => f.write_str("BREEDING"),
+            SpawnReason::SlimeSplit { .. } => f.write_str("SLIME_SPLIT"),
+            SpawnReason::Reinforcements { .. } => f.write_str("REINFORCEMENTS"),
+            SpawnReason::NetherPortal { .. } => f.write_str("NETHER_PORTAL"),
+            SpawnReason::DispenseEgg { .. } => f.write_str("DISPENSE_EGG"),
+            SpawnReason::Infection { .. } => f.write_str("INFECTION"),
+            SpawnReason::Cured { .. } => f.write_str("CURED"),
+            SpawnReason::OcelotBaby { .. } => f.write_str("OCELOT_BABY"),
+            SpawnReason::SilverfishBlock { .. } => f.write_str("SILVERFISH_BLOCK"),
+            SpawnReason::Mount { .. } => f.write_str("MOUNT"),
+            SpawnReason::Trap { .. } => f.write_str("TRAP"),
+            SpawnReason::EnderPearl { .. } => f.write_str("ENDER_PEARL"),
+            SpawnReason::ShoulderEntity { .. } => f.write_str("SHOULDER_ENTITY"),
+            SpawnReason::Drowned { .. } => f.write_str("DROWNED"),
+            SpawnReason::Sheared { .. } => f.write_str("SHEARED"),
+            SpawnReason::Explosion { .. } => f.write_str("EXPLOSION"),
+            SpawnReason::Raid { .. } => f.write_str("RAID"),
+            SpawnReason::Patrol { .. } => f.write_str("PATROL"),
+            SpawnReason::Beehive { .. } => f.write_str("BEEHIVE"),
+            SpawnReason::PiglinZombified { .. } => f.write_str("PIGLIN_ZOMBIFIED"),
+            SpawnReason::Spell { .. } => f.write_str("SPELL"),
+            SpawnReason::Frozen { .. } => f.write_str("FROZEN"),
+            SpawnReason::Metamorphosis { .. } => f.write_str("METAMORPHOSIS"),
+            SpawnReason::Duplication { .. } => f.write_str("DUPLICATION"),
+            SpawnReason::Command { .. } => f.write_str("COMMAND"),
+            SpawnReason::Custom { .. } => f.write_str("CUSTOM"),
+            SpawnReason::Default { .. } => f.write_str("DEFAULT"),
+        }
     }
 }
+
+impl<'mc> SpawnReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<SpawnReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/SpawnReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/SpawnReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "NATURAL" => Ok(SpawnReason::Natural {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "JOCKEY" => Ok(SpawnReason::Jockey {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "CHUNK_GEN" => Ok(SpawnReason::ChunkGen {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "SPAWNER" => Ok(SpawnReason::Spawner {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "EGG" => Ok(SpawnReason::Egg {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "SPAWNER_EGG" => Ok(SpawnReason::SpawnerEgg {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "LIGHTNING" => Ok(SpawnReason::Lightning {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "BUILD_SNOWMAN" => Ok(SpawnReason::BuildSnowman {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "BUILD_IRONGOLEM" => Ok(SpawnReason::BuildIrongolem {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "BUILD_WITHER" => Ok(SpawnReason::BuildWither {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "VILLAGE_DEFENSE" => Ok(SpawnReason::VillageDefense {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "VILLAGE_INVASION" => Ok(SpawnReason::VillageInvasion {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "BREEDING" => Ok(SpawnReason::Breeding {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "SLIME_SPLIT" => Ok(SpawnReason::SlimeSplit {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "REINFORCEMENTS" => Ok(SpawnReason::Reinforcements {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "NETHER_PORTAL" => Ok(SpawnReason::NetherPortal {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "DISPENSE_EGG" => Ok(SpawnReason::DispenseEgg {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "INFECTION" => Ok(SpawnReason::Infection {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "CURED" => Ok(SpawnReason::Cured {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "OCELOT_BABY" => Ok(SpawnReason::OcelotBaby {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "SILVERFISH_BLOCK" => Ok(SpawnReason::SilverfishBlock {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "MOUNT" => Ok(SpawnReason::Mount {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "TRAP" => Ok(SpawnReason::Trap {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "ENDER_PEARL" => Ok(SpawnReason::EnderPearl {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "SHOULDER_ENTITY" => Ok(SpawnReason::ShoulderEntity {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "DROWNED" => Ok(SpawnReason::Drowned {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "SHEARED" => Ok(SpawnReason::Sheared {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "EXPLOSION" => Ok(SpawnReason::Explosion {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "RAID" => Ok(SpawnReason::Raid {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "PATROL" => Ok(SpawnReason::Patrol {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "BEEHIVE" => Ok(SpawnReason::Beehive {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "PIGLIN_ZOMBIFIED" => Ok(SpawnReason::PiglinZombified {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "SPELL" => Ok(SpawnReason::Spell {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "FROZEN" => Ok(SpawnReason::Frozen {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "METAMORPHOSIS" => Ok(SpawnReason::Metamorphosis {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "DUPLICATION" => Ok(SpawnReason::Duplication {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "COMMAND" => Ok(SpawnReason::Command {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "CUSTOM" => Ok(SpawnReason::Custom {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "DEFAULT" => Ok(SpawnReason::Default {
+                inner: SpawnReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct SpawnReason<'mc>(
+pub struct SpawnReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub SpawnReasonEnum,
 );
-impl<'mc> std::ops::Deref for SpawnReason<'mc> {
-    type Target = SpawnReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for SpawnReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Natural { inner } => inner.0.clone(),
+            Self::Jockey { inner } => inner.0.clone(),
+            Self::ChunkGen { inner } => inner.0.clone(),
+            Self::Spawner { inner } => inner.0.clone(),
+            Self::Egg { inner } => inner.0.clone(),
+            Self::SpawnerEgg { inner } => inner.0.clone(),
+            Self::Lightning { inner } => inner.0.clone(),
+            Self::BuildSnowman { inner } => inner.0.clone(),
+            Self::BuildIrongolem { inner } => inner.0.clone(),
+            Self::BuildWither { inner } => inner.0.clone(),
+            Self::VillageDefense { inner } => inner.0.clone(),
+            Self::VillageInvasion { inner } => inner.0.clone(),
+            Self::Breeding { inner } => inner.0.clone(),
+            Self::SlimeSplit { inner } => inner.0.clone(),
+            Self::Reinforcements { inner } => inner.0.clone(),
+            Self::NetherPortal { inner } => inner.0.clone(),
+            Self::DispenseEgg { inner } => inner.0.clone(),
+            Self::Infection { inner } => inner.0.clone(),
+            Self::Cured { inner } => inner.0.clone(),
+            Self::OcelotBaby { inner } => inner.0.clone(),
+            Self::SilverfishBlock { inner } => inner.0.clone(),
+            Self::Mount { inner } => inner.0.clone(),
+            Self::Trap { inner } => inner.0.clone(),
+            Self::EnderPearl { inner } => inner.0.clone(),
+            Self::ShoulderEntity { inner } => inner.0.clone(),
+            Self::Drowned { inner } => inner.0.clone(),
+            Self::Sheared { inner } => inner.0.clone(),
+            Self::Explosion { inner } => inner.0.clone(),
+            Self::Raid { inner } => inner.0.clone(),
+            Self::Patrol { inner } => inner.0.clone(),
+            Self::Beehive { inner } => inner.0.clone(),
+            Self::PiglinZombified { inner } => inner.0.clone(),
+            Self::Spell { inner } => inner.0.clone(),
+            Self::Frozen { inner } => inner.0.clone(),
+            Self::Metamorphosis { inner } => inner.0.clone(),
+            Self::Duplication { inner } => inner.0.clone(),
+            Self::Command { inner } => inner.0.clone(),
+            Self::Custom { inner } => inner.0.clone(),
+            Self::Default { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Natural { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Jockey { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ChunkGen { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Spawner { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Egg { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SpawnerEgg { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Lightning { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BuildSnowman { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BuildIrongolem { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BuildWither { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::VillageDefense { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::VillageInvasion { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Breeding { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SlimeSplit { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Reinforcements { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NetherPortal { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DispenseEgg { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Infection { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Cured { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::OcelotBaby { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SilverfishBlock { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Mount { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Trap { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::EnderPearl { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ShoulderEntity { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Drowned { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Sheared { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Explosion { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Raid { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Patrol { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Beehive { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::PiglinZombified { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Spell { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Frozen { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Metamorphosis { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Duplication { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Command { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Custom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Default { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for SpawnReason<'mc> {
-    type Enum = SpawnReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for SpawnReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SpawnReason from null object.").into());
@@ -1715,134 +2019,171 @@ impl<'mc> JNIInstantiatableEnum<'mc> for SpawnReason<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "NATURAL" => Ok(SpawnReason::Natural {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "JOCKEY" => Ok(SpawnReason::Jockey {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "CHUNK_GEN" => Ok(SpawnReason::ChunkGen {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "SPAWNER" => Ok(SpawnReason::Spawner {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "EGG" => Ok(SpawnReason::Egg {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "SPAWNER_EGG" => Ok(SpawnReason::SpawnerEgg {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "LIGHTNING" => Ok(SpawnReason::Lightning {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "BUILD_SNOWMAN" => Ok(SpawnReason::BuildSnowman {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "BUILD_IRONGOLEM" => Ok(SpawnReason::BuildIrongolem {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "BUILD_WITHER" => Ok(SpawnReason::BuildWither {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "VILLAGE_DEFENSE" => Ok(SpawnReason::VillageDefense {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "VILLAGE_INVASION" => Ok(SpawnReason::VillageInvasion {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "BREEDING" => Ok(SpawnReason::Breeding {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "SLIME_SPLIT" => Ok(SpawnReason::SlimeSplit {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "REINFORCEMENTS" => Ok(SpawnReason::Reinforcements {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "NETHER_PORTAL" => Ok(SpawnReason::NetherPortal {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "DISPENSE_EGG" => Ok(SpawnReason::DispenseEgg {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "INFECTION" => Ok(SpawnReason::Infection {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "CURED" => Ok(SpawnReason::Cured {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "OCELOT_BABY" => Ok(SpawnReason::OcelotBaby {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "SILVERFISH_BLOCK" => Ok(SpawnReason::SilverfishBlock {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "MOUNT" => Ok(SpawnReason::Mount {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "TRAP" => Ok(SpawnReason::Trap {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "ENDER_PEARL" => Ok(SpawnReason::EnderPearl {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "SHOULDER_ENTITY" => Ok(SpawnReason::ShoulderEntity {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "DROWNED" => Ok(SpawnReason::Drowned {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "SHEARED" => Ok(SpawnReason::Sheared {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "EXPLOSION" => Ok(SpawnReason::Explosion {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "RAID" => Ok(SpawnReason::Raid {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "PATROL" => Ok(SpawnReason::Patrol {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "BEEHIVE" => Ok(SpawnReason::Beehive {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "PIGLIN_ZOMBIFIED" => Ok(SpawnReason::PiglinZombified {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "SPELL" => Ok(SpawnReason::Spell {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "FROZEN" => Ok(SpawnReason::Frozen {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "METAMORPHOSIS" => Ok(SpawnReason::Metamorphosis {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "DUPLICATION" => Ok(SpawnReason::Duplication {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "COMMAND" => Ok(SpawnReason::Command {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "CUSTOM" => Ok(SpawnReason::Custom {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "DEFAULT" => Ok(SpawnReason::Default {
+                    inner: SpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> SpawnReason<'mc> {
-    pub const NATURAL: SpawnReasonEnum = SpawnReasonEnum::Natural;
-    pub const JOCKEY: SpawnReasonEnum = SpawnReasonEnum::Jockey;
-    pub const CHUNK_GEN: SpawnReasonEnum = SpawnReasonEnum::ChunkGen;
-    pub const SPAWNER: SpawnReasonEnum = SpawnReasonEnum::Spawner;
-    pub const EGG: SpawnReasonEnum = SpawnReasonEnum::Egg;
-    pub const SPAWNER_EGG: SpawnReasonEnum = SpawnReasonEnum::SpawnerEgg;
-    pub const LIGHTNING: SpawnReasonEnum = SpawnReasonEnum::Lightning;
-    pub const BUILD_SNOWMAN: SpawnReasonEnum = SpawnReasonEnum::BuildSnowman;
-    pub const BUILD_IRONGOLEM: SpawnReasonEnum = SpawnReasonEnum::BuildIrongolem;
-    pub const BUILD_WITHER: SpawnReasonEnum = SpawnReasonEnum::BuildWither;
-    pub const VILLAGE_DEFENSE: SpawnReasonEnum = SpawnReasonEnum::VillageDefense;
-    pub const VILLAGE_INVASION: SpawnReasonEnum = SpawnReasonEnum::VillageInvasion;
-    pub const BREEDING: SpawnReasonEnum = SpawnReasonEnum::Breeding;
-    pub const SLIME_SPLIT: SpawnReasonEnum = SpawnReasonEnum::SlimeSplit;
-    pub const REINFORCEMENTS: SpawnReasonEnum = SpawnReasonEnum::Reinforcements;
-    pub const NETHER_PORTAL: SpawnReasonEnum = SpawnReasonEnum::NetherPortal;
-    pub const DISPENSE_EGG: SpawnReasonEnum = SpawnReasonEnum::DispenseEgg;
-    pub const INFECTION: SpawnReasonEnum = SpawnReasonEnum::Infection;
-    pub const CURED: SpawnReasonEnum = SpawnReasonEnum::Cured;
-    pub const OCELOT_BABY: SpawnReasonEnum = SpawnReasonEnum::OcelotBaby;
-    pub const SILVERFISH_BLOCK: SpawnReasonEnum = SpawnReasonEnum::SilverfishBlock;
-    pub const MOUNT: SpawnReasonEnum = SpawnReasonEnum::Mount;
-    pub const TRAP: SpawnReasonEnum = SpawnReasonEnum::Trap;
-    pub const ENDER_PEARL: SpawnReasonEnum = SpawnReasonEnum::EnderPearl;
-    pub const SHOULDER_ENTITY: SpawnReasonEnum = SpawnReasonEnum::ShoulderEntity;
-    pub const DROWNED: SpawnReasonEnum = SpawnReasonEnum::Drowned;
-    pub const SHEARED: SpawnReasonEnum = SpawnReasonEnum::Sheared;
-    pub const EXPLOSION: SpawnReasonEnum = SpawnReasonEnum::Explosion;
-    pub const RAID: SpawnReasonEnum = SpawnReasonEnum::Raid;
-    pub const PATROL: SpawnReasonEnum = SpawnReasonEnum::Patrol;
-    pub const BEEHIVE: SpawnReasonEnum = SpawnReasonEnum::Beehive;
-    pub const PIGLIN_ZOMBIFIED: SpawnReasonEnum = SpawnReasonEnum::PiglinZombified;
-    pub const SPELL: SpawnReasonEnum = SpawnReasonEnum::Spell;
-    pub const FROZEN: SpawnReasonEnum = SpawnReasonEnum::Frozen;
-    pub const METAMORPHOSIS: SpawnReasonEnum = SpawnReasonEnum::Metamorphosis;
-    pub const DUPLICATION: SpawnReasonEnum = SpawnReasonEnum::Duplication;
-    pub const COMMAND: SpawnReasonEnum = SpawnReasonEnum::Command;
-    pub const CUSTOM: SpawnReasonEnum = SpawnReasonEnum::Custom;
-    pub const DEFAULT: SpawnReasonEnum = SpawnReasonEnum::Default;
-    pub fn from_string(str: String) -> std::option::Option<SpawnReasonEnum> {
-        match str.as_str() {
-            "NATURAL" => Some(SpawnReasonEnum::Natural),
-            "JOCKEY" => Some(SpawnReasonEnum::Jockey),
-            "CHUNK_GEN" => Some(SpawnReasonEnum::ChunkGen),
-            "SPAWNER" => Some(SpawnReasonEnum::Spawner),
-            "EGG" => Some(SpawnReasonEnum::Egg),
-            "SPAWNER_EGG" => Some(SpawnReasonEnum::SpawnerEgg),
-            "LIGHTNING" => Some(SpawnReasonEnum::Lightning),
-            "BUILD_SNOWMAN" => Some(SpawnReasonEnum::BuildSnowman),
-            "BUILD_IRONGOLEM" => Some(SpawnReasonEnum::BuildIrongolem),
-            "BUILD_WITHER" => Some(SpawnReasonEnum::BuildWither),
-            "VILLAGE_DEFENSE" => Some(SpawnReasonEnum::VillageDefense),
-            "VILLAGE_INVASION" => Some(SpawnReasonEnum::VillageInvasion),
-            "BREEDING" => Some(SpawnReasonEnum::Breeding),
-            "SLIME_SPLIT" => Some(SpawnReasonEnum::SlimeSplit),
-            "REINFORCEMENTS" => Some(SpawnReasonEnum::Reinforcements),
-            "NETHER_PORTAL" => Some(SpawnReasonEnum::NetherPortal),
-            "DISPENSE_EGG" => Some(SpawnReasonEnum::DispenseEgg),
-            "INFECTION" => Some(SpawnReasonEnum::Infection),
-            "CURED" => Some(SpawnReasonEnum::Cured),
-            "OCELOT_BABY" => Some(SpawnReasonEnum::OcelotBaby),
-            "SILVERFISH_BLOCK" => Some(SpawnReasonEnum::SilverfishBlock),
-            "MOUNT" => Some(SpawnReasonEnum::Mount),
-            "TRAP" => Some(SpawnReasonEnum::Trap),
-            "ENDER_PEARL" => Some(SpawnReasonEnum::EnderPearl),
-            "SHOULDER_ENTITY" => Some(SpawnReasonEnum::ShoulderEntity),
-            "DROWNED" => Some(SpawnReasonEnum::Drowned),
-            "SHEARED" => Some(SpawnReasonEnum::Sheared),
-            "EXPLOSION" => Some(SpawnReasonEnum::Explosion),
-            "RAID" => Some(SpawnReasonEnum::Raid),
-            "PATROL" => Some(SpawnReasonEnum::Patrol),
-            "BEEHIVE" => Some(SpawnReasonEnum::Beehive),
-            "PIGLIN_ZOMBIFIED" => Some(SpawnReasonEnum::PiglinZombified),
-            "SPELL" => Some(SpawnReasonEnum::Spell),
-            "FROZEN" => Some(SpawnReasonEnum::Frozen),
-            "METAMORPHOSIS" => Some(SpawnReasonEnum::Metamorphosis),
-            "DUPLICATION" => Some(SpawnReasonEnum::Duplication),
-            "COMMAND" => Some(SpawnReasonEnum::Command),
-            "CUSTOM" => Some(SpawnReasonEnum::Custom),
-            "DEFAULT" => Some(SpawnReasonEnum::Default),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for SpawnReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for SpawnReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate SpawnReasonStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/SpawnReason")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a SpawnReasonStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<SpawnReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/SpawnReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/SpawnReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        SpawnReason::from_raw(
-            &jni,
-            raw_obj,
-            SpawnReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> SpawnReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Called when a sheep regrows its wool
@@ -1856,12 +2197,10 @@ impl<'mc> JNIRaw<'mc> for SheepRegrowWoolEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SheepRegrowWoolEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1983,12 +2322,7 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2104,14 +2438,9 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2150,12 +2479,10 @@ impl<'mc> JNIRaw<'mc> for EntityEnterBlockEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityEnterBlockEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2294,12 +2621,7 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2415,14 +2737,9 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2458,12 +2775,10 @@ impl<'mc> JNIRaw<'mc> for EntityPickupItemEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityPickupItemEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2616,12 +2931,7 @@ impl<'mc> EntityPickupItemEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2737,14 +3047,9 @@ impl<'mc> EntityPickupItemEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2780,12 +3085,10 @@ impl<'mc> JNIRaw<'mc> for HorseJumpEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for HorseJumpEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2940,12 +3243,7 @@ impl<'mc> HorseJumpEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3061,14 +3359,9 @@ impl<'mc> HorseJumpEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3104,12 +3397,10 @@ impl<'mc> JNIRaw<'mc> for ExplosionPrimeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ExplosionPrimeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3285,12 +3576,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3406,14 +3692,9 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3445,129 +3726,461 @@ pub struct CreatureSpawnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum CreatureSpawnEventSpawnReasonEnum {
-    Natural,
-    Jockey,
-    ChunkGen,
-    Spawner,
-    Egg,
-    SpawnerEgg,
-    Lightning,
-    BuildSnowman,
-    BuildIrongolem,
-    BuildWither,
-    VillageDefense,
-    VillageInvasion,
-    Breeding,
-    SlimeSplit,
-    Reinforcements,
-    NetherPortal,
-    DispenseEgg,
-    Infection,
-    Cured,
-    OcelotBaby,
-    SilverfishBlock,
-    Mount,
-    Trap,
-    EnderPearl,
-    ShoulderEntity,
-    Drowned,
-    Sheared,
-    Explosion,
-    Raid,
-    Patrol,
-    Beehive,
-    PiglinZombified,
-    Spell,
-    Frozen,
-    Metamorphosis,
-    Duplication,
-    Command,
-    Custom,
-    Default,
-}
-impl std::fmt::Display for CreatureSpawnEventSpawnReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            CreatureSpawnEventSpawnReasonEnum::Natural => f.write_str("NATURAL"),
-            CreatureSpawnEventSpawnReasonEnum::Jockey => f.write_str("JOCKEY"),
-            CreatureSpawnEventSpawnReasonEnum::ChunkGen => f.write_str("CHUNK_GEN"),
-            CreatureSpawnEventSpawnReasonEnum::Spawner => f.write_str("SPAWNER"),
-            CreatureSpawnEventSpawnReasonEnum::Egg => f.write_str("EGG"),
-            CreatureSpawnEventSpawnReasonEnum::SpawnerEgg => f.write_str("SPAWNER_EGG"),
-            CreatureSpawnEventSpawnReasonEnum::Lightning => f.write_str("LIGHTNING"),
-            CreatureSpawnEventSpawnReasonEnum::BuildSnowman => f.write_str("BUILD_SNOWMAN"),
-            CreatureSpawnEventSpawnReasonEnum::BuildIrongolem => f.write_str("BUILD_IRONGOLEM"),
-            CreatureSpawnEventSpawnReasonEnum::BuildWither => f.write_str("BUILD_WITHER"),
-            CreatureSpawnEventSpawnReasonEnum::VillageDefense => f.write_str("VILLAGE_DEFENSE"),
-            CreatureSpawnEventSpawnReasonEnum::VillageInvasion => f.write_str("VILLAGE_INVASION"),
-            CreatureSpawnEventSpawnReasonEnum::Breeding => f.write_str("BREEDING"),
-            CreatureSpawnEventSpawnReasonEnum::SlimeSplit => f.write_str("SLIME_SPLIT"),
-            CreatureSpawnEventSpawnReasonEnum::Reinforcements => f.write_str("REINFORCEMENTS"),
-            CreatureSpawnEventSpawnReasonEnum::NetherPortal => f.write_str("NETHER_PORTAL"),
-            CreatureSpawnEventSpawnReasonEnum::DispenseEgg => f.write_str("DISPENSE_EGG"),
-            CreatureSpawnEventSpawnReasonEnum::Infection => f.write_str("INFECTION"),
-            CreatureSpawnEventSpawnReasonEnum::Cured => f.write_str("CURED"),
-            CreatureSpawnEventSpawnReasonEnum::OcelotBaby => f.write_str("OCELOT_BABY"),
-            CreatureSpawnEventSpawnReasonEnum::SilverfishBlock => f.write_str("SILVERFISH_BLOCK"),
-            CreatureSpawnEventSpawnReasonEnum::Mount => f.write_str("MOUNT"),
-            CreatureSpawnEventSpawnReasonEnum::Trap => f.write_str("TRAP"),
-            CreatureSpawnEventSpawnReasonEnum::EnderPearl => f.write_str("ENDER_PEARL"),
-            CreatureSpawnEventSpawnReasonEnum::ShoulderEntity => f.write_str("SHOULDER_ENTITY"),
-            CreatureSpawnEventSpawnReasonEnum::Drowned => f.write_str("DROWNED"),
-            CreatureSpawnEventSpawnReasonEnum::Sheared => f.write_str("SHEARED"),
-            CreatureSpawnEventSpawnReasonEnum::Explosion => f.write_str("EXPLOSION"),
-            CreatureSpawnEventSpawnReasonEnum::Raid => f.write_str("RAID"),
-            CreatureSpawnEventSpawnReasonEnum::Patrol => f.write_str("PATROL"),
-            CreatureSpawnEventSpawnReasonEnum::Beehive => f.write_str("BEEHIVE"),
-            CreatureSpawnEventSpawnReasonEnum::PiglinZombified => f.write_str("PIGLIN_ZOMBIFIED"),
-            CreatureSpawnEventSpawnReasonEnum::Spell => f.write_str("SPELL"),
-            CreatureSpawnEventSpawnReasonEnum::Frozen => f.write_str("FROZEN"),
-            CreatureSpawnEventSpawnReasonEnum::Metamorphosis => f.write_str("METAMORPHOSIS"),
-            CreatureSpawnEventSpawnReasonEnum::Duplication => f.write_str("DUPLICATION"),
-            CreatureSpawnEventSpawnReasonEnum::Command => f.write_str("COMMAND"),
-            CreatureSpawnEventSpawnReasonEnum::Custom => f.write_str("CUSTOM"),
-            CreatureSpawnEventSpawnReasonEnum::Default => f.write_str("DEFAULT"),
-        }
-    }
+pub enum CreatureSpawnEventSpawnReason<'mc> {
+    Natural {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Jockey {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    ChunkGen {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Spawner {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Egg {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    SpawnerEgg {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Lightning {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    BuildSnowman {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    BuildIrongolem {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    BuildWither {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    VillageDefense {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    VillageInvasion {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Breeding {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    SlimeSplit {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Reinforcements {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    NetherPortal {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    DispenseEgg {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Infection {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Cured {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    OcelotBaby {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    SilverfishBlock {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Mount {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Trap {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    EnderPearl {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    ShoulderEntity {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Drowned {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Sheared {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Explosion {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Raid {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Patrol {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Beehive {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    PiglinZombified {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Spell {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Frozen {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Metamorphosis {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Duplication {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Command {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Custom {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
+    Default {
+        inner: CreatureSpawnEventSpawnReasonStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for CreatureSpawnEventSpawnReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            CreatureSpawnEventSpawnReason::Natural { .. } => f.write_str("NATURAL"),
+            CreatureSpawnEventSpawnReason::Jockey { .. } => f.write_str("JOCKEY"),
+            CreatureSpawnEventSpawnReason::ChunkGen { .. } => f.write_str("CHUNK_GEN"),
+            CreatureSpawnEventSpawnReason::Spawner { .. } => f.write_str("SPAWNER"),
+            CreatureSpawnEventSpawnReason::Egg { .. } => f.write_str("EGG"),
+            CreatureSpawnEventSpawnReason::SpawnerEgg { .. } => f.write_str("SPAWNER_EGG"),
+            CreatureSpawnEventSpawnReason::Lightning { .. } => f.write_str("LIGHTNING"),
+            CreatureSpawnEventSpawnReason::BuildSnowman { .. } => f.write_str("BUILD_SNOWMAN"),
+            CreatureSpawnEventSpawnReason::BuildIrongolem { .. } => f.write_str("BUILD_IRONGOLEM"),
+            CreatureSpawnEventSpawnReason::BuildWither { .. } => f.write_str("BUILD_WITHER"),
+            CreatureSpawnEventSpawnReason::VillageDefense { .. } => f.write_str("VILLAGE_DEFENSE"),
+            CreatureSpawnEventSpawnReason::VillageInvasion { .. } => {
+                f.write_str("VILLAGE_INVASION")
+            }
+            CreatureSpawnEventSpawnReason::Breeding { .. } => f.write_str("BREEDING"),
+            CreatureSpawnEventSpawnReason::SlimeSplit { .. } => f.write_str("SLIME_SPLIT"),
+            CreatureSpawnEventSpawnReason::Reinforcements { .. } => f.write_str("REINFORCEMENTS"),
+            CreatureSpawnEventSpawnReason::NetherPortal { .. } => f.write_str("NETHER_PORTAL"),
+            CreatureSpawnEventSpawnReason::DispenseEgg { .. } => f.write_str("DISPENSE_EGG"),
+            CreatureSpawnEventSpawnReason::Infection { .. } => f.write_str("INFECTION"),
+            CreatureSpawnEventSpawnReason::Cured { .. } => f.write_str("CURED"),
+            CreatureSpawnEventSpawnReason::OcelotBaby { .. } => f.write_str("OCELOT_BABY"),
+            CreatureSpawnEventSpawnReason::SilverfishBlock { .. } => {
+                f.write_str("SILVERFISH_BLOCK")
+            }
+            CreatureSpawnEventSpawnReason::Mount { .. } => f.write_str("MOUNT"),
+            CreatureSpawnEventSpawnReason::Trap { .. } => f.write_str("TRAP"),
+            CreatureSpawnEventSpawnReason::EnderPearl { .. } => f.write_str("ENDER_PEARL"),
+            CreatureSpawnEventSpawnReason::ShoulderEntity { .. } => f.write_str("SHOULDER_ENTITY"),
+            CreatureSpawnEventSpawnReason::Drowned { .. } => f.write_str("DROWNED"),
+            CreatureSpawnEventSpawnReason::Sheared { .. } => f.write_str("SHEARED"),
+            CreatureSpawnEventSpawnReason::Explosion { .. } => f.write_str("EXPLOSION"),
+            CreatureSpawnEventSpawnReason::Raid { .. } => f.write_str("RAID"),
+            CreatureSpawnEventSpawnReason::Patrol { .. } => f.write_str("PATROL"),
+            CreatureSpawnEventSpawnReason::Beehive { .. } => f.write_str("BEEHIVE"),
+            CreatureSpawnEventSpawnReason::PiglinZombified { .. } => {
+                f.write_str("PIGLIN_ZOMBIFIED")
+            }
+            CreatureSpawnEventSpawnReason::Spell { .. } => f.write_str("SPELL"),
+            CreatureSpawnEventSpawnReason::Frozen { .. } => f.write_str("FROZEN"),
+            CreatureSpawnEventSpawnReason::Metamorphosis { .. } => f.write_str("METAMORPHOSIS"),
+            CreatureSpawnEventSpawnReason::Duplication { .. } => f.write_str("DUPLICATION"),
+            CreatureSpawnEventSpawnReason::Command { .. } => f.write_str("COMMAND"),
+            CreatureSpawnEventSpawnReason::Custom { .. } => f.write_str("CUSTOM"),
+            CreatureSpawnEventSpawnReason::Default { .. } => f.write_str("DEFAULT"),
+        }
     }
 }
+
+impl<'mc> CreatureSpawnEventSpawnReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<CreatureSpawnEventSpawnReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/CreatureSpawnEvent$SpawnReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/CreatureSpawnEvent$SpawnReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "NATURAL" => Ok(CreatureSpawnEventSpawnReason::Natural {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "JOCKEY" => Ok(CreatureSpawnEventSpawnReason::Jockey {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "CHUNK_GEN" => Ok(CreatureSpawnEventSpawnReason::ChunkGen {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "SPAWNER" => Ok(CreatureSpawnEventSpawnReason::Spawner {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "EGG" => Ok(CreatureSpawnEventSpawnReason::Egg {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "SPAWNER_EGG" => Ok(CreatureSpawnEventSpawnReason::SpawnerEgg {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "LIGHTNING" => Ok(CreatureSpawnEventSpawnReason::Lightning {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "BUILD_SNOWMAN" => Ok(CreatureSpawnEventSpawnReason::BuildSnowman {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "BUILD_IRONGOLEM" => Ok(CreatureSpawnEventSpawnReason::BuildIrongolem {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "BUILD_WITHER" => Ok(CreatureSpawnEventSpawnReason::BuildWither {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "VILLAGE_DEFENSE" => Ok(CreatureSpawnEventSpawnReason::VillageDefense {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "VILLAGE_INVASION" => Ok(CreatureSpawnEventSpawnReason::VillageInvasion {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "BREEDING" => Ok(CreatureSpawnEventSpawnReason::Breeding {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "SLIME_SPLIT" => Ok(CreatureSpawnEventSpawnReason::SlimeSplit {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "REINFORCEMENTS" => Ok(CreatureSpawnEventSpawnReason::Reinforcements {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "NETHER_PORTAL" => Ok(CreatureSpawnEventSpawnReason::NetherPortal {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "DISPENSE_EGG" => Ok(CreatureSpawnEventSpawnReason::DispenseEgg {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "INFECTION" => Ok(CreatureSpawnEventSpawnReason::Infection {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "CURED" => Ok(CreatureSpawnEventSpawnReason::Cured {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "OCELOT_BABY" => Ok(CreatureSpawnEventSpawnReason::OcelotBaby {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "SILVERFISH_BLOCK" => Ok(CreatureSpawnEventSpawnReason::SilverfishBlock {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "MOUNT" => Ok(CreatureSpawnEventSpawnReason::Mount {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "TRAP" => Ok(CreatureSpawnEventSpawnReason::Trap {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "ENDER_PEARL" => Ok(CreatureSpawnEventSpawnReason::EnderPearl {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "SHOULDER_ENTITY" => Ok(CreatureSpawnEventSpawnReason::ShoulderEntity {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "DROWNED" => Ok(CreatureSpawnEventSpawnReason::Drowned {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "SHEARED" => Ok(CreatureSpawnEventSpawnReason::Sheared {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "EXPLOSION" => Ok(CreatureSpawnEventSpawnReason::Explosion {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "RAID" => Ok(CreatureSpawnEventSpawnReason::Raid {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "PATROL" => Ok(CreatureSpawnEventSpawnReason::Patrol {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "BEEHIVE" => Ok(CreatureSpawnEventSpawnReason::Beehive {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "PIGLIN_ZOMBIFIED" => Ok(CreatureSpawnEventSpawnReason::PiglinZombified {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "SPELL" => Ok(CreatureSpawnEventSpawnReason::Spell {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "FROZEN" => Ok(CreatureSpawnEventSpawnReason::Frozen {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "METAMORPHOSIS" => Ok(CreatureSpawnEventSpawnReason::Metamorphosis {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "DUPLICATION" => Ok(CreatureSpawnEventSpawnReason::Duplication {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "COMMAND" => Ok(CreatureSpawnEventSpawnReason::Command {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "CUSTOM" => Ok(CreatureSpawnEventSpawnReason::Custom {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "DEFAULT" => Ok(CreatureSpawnEventSpawnReason::Default {
+                inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct CreatureSpawnEventSpawnReason<'mc>(
+pub struct CreatureSpawnEventSpawnReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub CreatureSpawnEventSpawnReasonEnum,
 );
-impl<'mc> std::ops::Deref for CreatureSpawnEventSpawnReason<'mc> {
-    type Target = CreatureSpawnEventSpawnReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for CreatureSpawnEventSpawnReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Natural { inner } => inner.0.clone(),
+            Self::Jockey { inner } => inner.0.clone(),
+            Self::ChunkGen { inner } => inner.0.clone(),
+            Self::Spawner { inner } => inner.0.clone(),
+            Self::Egg { inner } => inner.0.clone(),
+            Self::SpawnerEgg { inner } => inner.0.clone(),
+            Self::Lightning { inner } => inner.0.clone(),
+            Self::BuildSnowman { inner } => inner.0.clone(),
+            Self::BuildIrongolem { inner } => inner.0.clone(),
+            Self::BuildWither { inner } => inner.0.clone(),
+            Self::VillageDefense { inner } => inner.0.clone(),
+            Self::VillageInvasion { inner } => inner.0.clone(),
+            Self::Breeding { inner } => inner.0.clone(),
+            Self::SlimeSplit { inner } => inner.0.clone(),
+            Self::Reinforcements { inner } => inner.0.clone(),
+            Self::NetherPortal { inner } => inner.0.clone(),
+            Self::DispenseEgg { inner } => inner.0.clone(),
+            Self::Infection { inner } => inner.0.clone(),
+            Self::Cured { inner } => inner.0.clone(),
+            Self::OcelotBaby { inner } => inner.0.clone(),
+            Self::SilverfishBlock { inner } => inner.0.clone(),
+            Self::Mount { inner } => inner.0.clone(),
+            Self::Trap { inner } => inner.0.clone(),
+            Self::EnderPearl { inner } => inner.0.clone(),
+            Self::ShoulderEntity { inner } => inner.0.clone(),
+            Self::Drowned { inner } => inner.0.clone(),
+            Self::Sheared { inner } => inner.0.clone(),
+            Self::Explosion { inner } => inner.0.clone(),
+            Self::Raid { inner } => inner.0.clone(),
+            Self::Patrol { inner } => inner.0.clone(),
+            Self::Beehive { inner } => inner.0.clone(),
+            Self::PiglinZombified { inner } => inner.0.clone(),
+            Self::Spell { inner } => inner.0.clone(),
+            Self::Frozen { inner } => inner.0.clone(),
+            Self::Metamorphosis { inner } => inner.0.clone(),
+            Self::Duplication { inner } => inner.0.clone(),
+            Self::Command { inner } => inner.0.clone(),
+            Self::Custom { inner } => inner.0.clone(),
+            Self::Default { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Natural { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Jockey { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ChunkGen { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Spawner { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Egg { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SpawnerEgg { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Lightning { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BuildSnowman { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BuildIrongolem { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BuildWither { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::VillageDefense { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::VillageInvasion { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Breeding { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SlimeSplit { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Reinforcements { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NetherPortal { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DispenseEgg { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Infection { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Cured { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::OcelotBaby { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SilverfishBlock { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Mount { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Trap { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::EnderPearl { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ShoulderEntity { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Drowned { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Sheared { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Explosion { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Raid { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Patrol { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Beehive { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::PiglinZombified { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Spell { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Frozen { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Metamorphosis { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Duplication { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Command { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Custom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Default { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for CreatureSpawnEventSpawnReason<'mc> {
-    type Enum = CreatureSpawnEventSpawnReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for CreatureSpawnEventSpawnReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -3586,163 +4199,175 @@ impl<'mc> JNIInstantiatableEnum<'mc> for CreatureSpawnEventSpawnReason<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "NATURAL" => Ok(CreatureSpawnEventSpawnReason::Natural {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "JOCKEY" => Ok(CreatureSpawnEventSpawnReason::Jockey {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "CHUNK_GEN" => Ok(CreatureSpawnEventSpawnReason::ChunkGen {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "SPAWNER" => Ok(CreatureSpawnEventSpawnReason::Spawner {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "EGG" => Ok(CreatureSpawnEventSpawnReason::Egg {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "SPAWNER_EGG" => Ok(CreatureSpawnEventSpawnReason::SpawnerEgg {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "LIGHTNING" => Ok(CreatureSpawnEventSpawnReason::Lightning {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "BUILD_SNOWMAN" => Ok(CreatureSpawnEventSpawnReason::BuildSnowman {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "BUILD_IRONGOLEM" => Ok(CreatureSpawnEventSpawnReason::BuildIrongolem {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "BUILD_WITHER" => Ok(CreatureSpawnEventSpawnReason::BuildWither {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "VILLAGE_DEFENSE" => Ok(CreatureSpawnEventSpawnReason::VillageDefense {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "VILLAGE_INVASION" => Ok(CreatureSpawnEventSpawnReason::VillageInvasion {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "BREEDING" => Ok(CreatureSpawnEventSpawnReason::Breeding {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "SLIME_SPLIT" => Ok(CreatureSpawnEventSpawnReason::SlimeSplit {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "REINFORCEMENTS" => Ok(CreatureSpawnEventSpawnReason::Reinforcements {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "NETHER_PORTAL" => Ok(CreatureSpawnEventSpawnReason::NetherPortal {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "DISPENSE_EGG" => Ok(CreatureSpawnEventSpawnReason::DispenseEgg {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "INFECTION" => Ok(CreatureSpawnEventSpawnReason::Infection {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "CURED" => Ok(CreatureSpawnEventSpawnReason::Cured {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "OCELOT_BABY" => Ok(CreatureSpawnEventSpawnReason::OcelotBaby {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "SILVERFISH_BLOCK" => Ok(CreatureSpawnEventSpawnReason::SilverfishBlock {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "MOUNT" => Ok(CreatureSpawnEventSpawnReason::Mount {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "TRAP" => Ok(CreatureSpawnEventSpawnReason::Trap {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "ENDER_PEARL" => Ok(CreatureSpawnEventSpawnReason::EnderPearl {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "SHOULDER_ENTITY" => Ok(CreatureSpawnEventSpawnReason::ShoulderEntity {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "DROWNED" => Ok(CreatureSpawnEventSpawnReason::Drowned {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "SHEARED" => Ok(CreatureSpawnEventSpawnReason::Sheared {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "EXPLOSION" => Ok(CreatureSpawnEventSpawnReason::Explosion {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "RAID" => Ok(CreatureSpawnEventSpawnReason::Raid {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "PATROL" => Ok(CreatureSpawnEventSpawnReason::Patrol {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "BEEHIVE" => Ok(CreatureSpawnEventSpawnReason::Beehive {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "PIGLIN_ZOMBIFIED" => Ok(CreatureSpawnEventSpawnReason::PiglinZombified {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "SPELL" => Ok(CreatureSpawnEventSpawnReason::Spell {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "FROZEN" => Ok(CreatureSpawnEventSpawnReason::Frozen {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "METAMORPHOSIS" => Ok(CreatureSpawnEventSpawnReason::Metamorphosis {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "DUPLICATION" => Ok(CreatureSpawnEventSpawnReason::Duplication {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "COMMAND" => Ok(CreatureSpawnEventSpawnReason::Command {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "CUSTOM" => Ok(CreatureSpawnEventSpawnReason::Custom {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "DEFAULT" => Ok(CreatureSpawnEventSpawnReason::Default {
+                    inner: CreatureSpawnEventSpawnReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> CreatureSpawnEventSpawnReason<'mc> {
-    pub const NATURAL: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::Natural;
-    pub const JOCKEY: CreatureSpawnEventSpawnReasonEnum = CreatureSpawnEventSpawnReasonEnum::Jockey;
-    pub const CHUNK_GEN: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::ChunkGen;
-    pub const SPAWNER: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::Spawner;
-    pub const EGG: CreatureSpawnEventSpawnReasonEnum = CreatureSpawnEventSpawnReasonEnum::Egg;
-    pub const SPAWNER_EGG: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::SpawnerEgg;
-    pub const LIGHTNING: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::Lightning;
-    pub const BUILD_SNOWMAN: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::BuildSnowman;
-    pub const BUILD_IRONGOLEM: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::BuildIrongolem;
-    pub const BUILD_WITHER: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::BuildWither;
-    pub const VILLAGE_DEFENSE: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::VillageDefense;
-    pub const VILLAGE_INVASION: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::VillageInvasion;
-    pub const BREEDING: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::Breeding;
-    pub const SLIME_SPLIT: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::SlimeSplit;
-    pub const REINFORCEMENTS: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::Reinforcements;
-    pub const NETHER_PORTAL: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::NetherPortal;
-    pub const DISPENSE_EGG: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::DispenseEgg;
-    pub const INFECTION: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::Infection;
-    pub const CURED: CreatureSpawnEventSpawnReasonEnum = CreatureSpawnEventSpawnReasonEnum::Cured;
-    pub const OCELOT_BABY: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::OcelotBaby;
-    pub const SILVERFISH_BLOCK: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::SilverfishBlock;
-    pub const MOUNT: CreatureSpawnEventSpawnReasonEnum = CreatureSpawnEventSpawnReasonEnum::Mount;
-    pub const TRAP: CreatureSpawnEventSpawnReasonEnum = CreatureSpawnEventSpawnReasonEnum::Trap;
-    pub const ENDER_PEARL: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::EnderPearl;
-    pub const SHOULDER_ENTITY: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::ShoulderEntity;
-    pub const DROWNED: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::Drowned;
-    pub const SHEARED: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::Sheared;
-    pub const EXPLOSION: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::Explosion;
-    pub const RAID: CreatureSpawnEventSpawnReasonEnum = CreatureSpawnEventSpawnReasonEnum::Raid;
-    pub const PATROL: CreatureSpawnEventSpawnReasonEnum = CreatureSpawnEventSpawnReasonEnum::Patrol;
-    pub const BEEHIVE: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::Beehive;
-    pub const PIGLIN_ZOMBIFIED: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::PiglinZombified;
-    pub const SPELL: CreatureSpawnEventSpawnReasonEnum = CreatureSpawnEventSpawnReasonEnum::Spell;
-    pub const FROZEN: CreatureSpawnEventSpawnReasonEnum = CreatureSpawnEventSpawnReasonEnum::Frozen;
-    pub const METAMORPHOSIS: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::Metamorphosis;
-    pub const DUPLICATION: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::Duplication;
-    pub const COMMAND: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::Command;
-    pub const CUSTOM: CreatureSpawnEventSpawnReasonEnum = CreatureSpawnEventSpawnReasonEnum::Custom;
-    pub const DEFAULT: CreatureSpawnEventSpawnReasonEnum =
-        CreatureSpawnEventSpawnReasonEnum::Default;
-    pub fn from_string(str: String) -> std::option::Option<CreatureSpawnEventSpawnReasonEnum> {
-        match str.as_str() {
-            "NATURAL" => Some(CreatureSpawnEventSpawnReasonEnum::Natural),
-            "JOCKEY" => Some(CreatureSpawnEventSpawnReasonEnum::Jockey),
-            "CHUNK_GEN" => Some(CreatureSpawnEventSpawnReasonEnum::ChunkGen),
-            "SPAWNER" => Some(CreatureSpawnEventSpawnReasonEnum::Spawner),
-            "EGG" => Some(CreatureSpawnEventSpawnReasonEnum::Egg),
-            "SPAWNER_EGG" => Some(CreatureSpawnEventSpawnReasonEnum::SpawnerEgg),
-            "LIGHTNING" => Some(CreatureSpawnEventSpawnReasonEnum::Lightning),
-            "BUILD_SNOWMAN" => Some(CreatureSpawnEventSpawnReasonEnum::BuildSnowman),
-            "BUILD_IRONGOLEM" => Some(CreatureSpawnEventSpawnReasonEnum::BuildIrongolem),
-            "BUILD_WITHER" => Some(CreatureSpawnEventSpawnReasonEnum::BuildWither),
-            "VILLAGE_DEFENSE" => Some(CreatureSpawnEventSpawnReasonEnum::VillageDefense),
-            "VILLAGE_INVASION" => Some(CreatureSpawnEventSpawnReasonEnum::VillageInvasion),
-            "BREEDING" => Some(CreatureSpawnEventSpawnReasonEnum::Breeding),
-            "SLIME_SPLIT" => Some(CreatureSpawnEventSpawnReasonEnum::SlimeSplit),
-            "REINFORCEMENTS" => Some(CreatureSpawnEventSpawnReasonEnum::Reinforcements),
-            "NETHER_PORTAL" => Some(CreatureSpawnEventSpawnReasonEnum::NetherPortal),
-            "DISPENSE_EGG" => Some(CreatureSpawnEventSpawnReasonEnum::DispenseEgg),
-            "INFECTION" => Some(CreatureSpawnEventSpawnReasonEnum::Infection),
-            "CURED" => Some(CreatureSpawnEventSpawnReasonEnum::Cured),
-            "OCELOT_BABY" => Some(CreatureSpawnEventSpawnReasonEnum::OcelotBaby),
-            "SILVERFISH_BLOCK" => Some(CreatureSpawnEventSpawnReasonEnum::SilverfishBlock),
-            "MOUNT" => Some(CreatureSpawnEventSpawnReasonEnum::Mount),
-            "TRAP" => Some(CreatureSpawnEventSpawnReasonEnum::Trap),
-            "ENDER_PEARL" => Some(CreatureSpawnEventSpawnReasonEnum::EnderPearl),
-            "SHOULDER_ENTITY" => Some(CreatureSpawnEventSpawnReasonEnum::ShoulderEntity),
-            "DROWNED" => Some(CreatureSpawnEventSpawnReasonEnum::Drowned),
-            "SHEARED" => Some(CreatureSpawnEventSpawnReasonEnum::Sheared),
-            "EXPLOSION" => Some(CreatureSpawnEventSpawnReasonEnum::Explosion),
-            "RAID" => Some(CreatureSpawnEventSpawnReasonEnum::Raid),
-            "PATROL" => Some(CreatureSpawnEventSpawnReasonEnum::Patrol),
-            "BEEHIVE" => Some(CreatureSpawnEventSpawnReasonEnum::Beehive),
-            "PIGLIN_ZOMBIFIED" => Some(CreatureSpawnEventSpawnReasonEnum::PiglinZombified),
-            "SPELL" => Some(CreatureSpawnEventSpawnReasonEnum::Spell),
-            "FROZEN" => Some(CreatureSpawnEventSpawnReasonEnum::Frozen),
-            "METAMORPHOSIS" => Some(CreatureSpawnEventSpawnReasonEnum::Metamorphosis),
-            "DUPLICATION" => Some(CreatureSpawnEventSpawnReasonEnum::Duplication),
-            "COMMAND" => Some(CreatureSpawnEventSpawnReasonEnum::Command),
-            "CUSTOM" => Some(CreatureSpawnEventSpawnReasonEnum::Custom),
-            "DEFAULT" => Some(CreatureSpawnEventSpawnReasonEnum::Default),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for CreatureSpawnEventSpawnReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for CreatureSpawnEventSpawnReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate CreatureSpawnEventSpawnReasonStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/CreatureSpawnEvent$SpawnReason",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a CreatureSpawnEventSpawnReasonStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<CreatureSpawnEventSpawnReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/CreatureSpawnEvent$SpawnReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/CreatureSpawnEvent$SpawnReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        CreatureSpawnEventSpawnReason::from_raw(
-            &jni,
-            raw_obj,
-            CreatureSpawnEventSpawnReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> CreatureSpawnEventSpawnReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3750,12 +4375,10 @@ impl<'mc> JNIRaw<'mc> for CreatureSpawnEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CreatureSpawnEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3839,12 +4462,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::entity::CreatureSpawnEventSpawnReason::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::entity::CreatureSpawnEventSpawnReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::entity::CreatureSpawnEventSpawnReason::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3921,12 +4539,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4042,14 +4655,9 @@ impl<'mc> CreatureSpawnEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -4080,12 +4688,10 @@ impl<'mc> JNIRaw<'mc> for ItemSpawnEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ItemSpawnEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4226,12 +4832,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4347,14 +4948,9 @@ impl<'mc> ItemSpawnEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -4373,65 +4969,117 @@ impl<'mc> Into<crate::event::entity::EntitySpawnEvent<'mc>> for ItemSpawnEvent<'
             .expect("Error converting ItemSpawnEvent into crate::event::entity::EntitySpawnEvent")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum DamageModifierEnum {
-    Base,
-    HardHat,
-    Blocking,
-    Armor,
-    Resistance,
-    Magic,
-    Absorption,
-}
-impl std::fmt::Display for DamageModifierEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            DamageModifierEnum::Base => f.write_str("BASE"),
-            DamageModifierEnum::HardHat => f.write_str("HARD_HAT"),
-            DamageModifierEnum::Blocking => f.write_str("BLOCKING"),
-            DamageModifierEnum::Armor => f.write_str("ARMOR"),
-            DamageModifierEnum::Resistance => f.write_str("RESISTANCE"),
-            DamageModifierEnum::Magic => f.write_str("MAGIC"),
-            DamageModifierEnum::Absorption => f.write_str("ABSORPTION"),
-        }
-    }
+pub enum DamageModifier<'mc> {
+    Base { inner: DamageModifierStruct<'mc> },
+    HardHat { inner: DamageModifierStruct<'mc> },
+    Blocking { inner: DamageModifierStruct<'mc> },
+    Armor { inner: DamageModifierStruct<'mc> },
+    Resistance { inner: DamageModifierStruct<'mc> },
+    Magic { inner: DamageModifierStruct<'mc> },
+    Absorption { inner: DamageModifierStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for DamageModifier<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            DamageModifier::Base { .. } => f.write_str("BASE"),
+            DamageModifier::HardHat { .. } => f.write_str("HARD_HAT"),
+            DamageModifier::Blocking { .. } => f.write_str("BLOCKING"),
+            DamageModifier::Armor { .. } => f.write_str("ARMOR"),
+            DamageModifier::Resistance { .. } => f.write_str("RESISTANCE"),
+            DamageModifier::Magic { .. } => f.write_str("MAGIC"),
+            DamageModifier::Absorption { .. } => f.write_str("ABSORPTION"),
+        }
     }
 }
+
+impl<'mc> DamageModifier<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<DamageModifier<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/DamageModifier");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/DamageModifier;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "BASE" => Ok(DamageModifier::Base {
+                inner: DamageModifierStruct::from_raw(env, obj)?,
+            }),
+            "HARD_HAT" => Ok(DamageModifier::HardHat {
+                inner: DamageModifierStruct::from_raw(env, obj)?,
+            }),
+            "BLOCKING" => Ok(DamageModifier::Blocking {
+                inner: DamageModifierStruct::from_raw(env, obj)?,
+            }),
+            "ARMOR" => Ok(DamageModifier::Armor {
+                inner: DamageModifierStruct::from_raw(env, obj)?,
+            }),
+            "RESISTANCE" => Ok(DamageModifier::Resistance {
+                inner: DamageModifierStruct::from_raw(env, obj)?,
+            }),
+            "MAGIC" => Ok(DamageModifier::Magic {
+                inner: DamageModifierStruct::from_raw(env, obj)?,
+            }),
+            "ABSORPTION" => Ok(DamageModifier::Absorption {
+                inner: DamageModifierStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct DamageModifier<'mc>(
+pub struct DamageModifierStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub DamageModifierEnum,
 );
-impl<'mc> std::ops::Deref for DamageModifier<'mc> {
-    type Target = DamageModifierEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for DamageModifier<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Base { inner } => inner.0.clone(),
+            Self::HardHat { inner } => inner.0.clone(),
+            Self::Blocking { inner } => inner.0.clone(),
+            Self::Armor { inner } => inner.0.clone(),
+            Self::Resistance { inner } => inner.0.clone(),
+            Self::Magic { inner } => inner.0.clone(),
+            Self::Absorption { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Base { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::HardHat { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Blocking { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Armor { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Resistance { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Magic { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Absorption { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for DamageModifier<'mc> {
-    type Enum = DamageModifierEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for DamageModifier<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -4446,70 +5094,75 @@ impl<'mc> JNIInstantiatableEnum<'mc> for DamageModifier<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "BASE" => Ok(DamageModifier::Base {
+                    inner: DamageModifierStruct::from_raw(env, obj)?,
+                }),
+                "HARD_HAT" => Ok(DamageModifier::HardHat {
+                    inner: DamageModifierStruct::from_raw(env, obj)?,
+                }),
+                "BLOCKING" => Ok(DamageModifier::Blocking {
+                    inner: DamageModifierStruct::from_raw(env, obj)?,
+                }),
+                "ARMOR" => Ok(DamageModifier::Armor {
+                    inner: DamageModifierStruct::from_raw(env, obj)?,
+                }),
+                "RESISTANCE" => Ok(DamageModifier::Resistance {
+                    inner: DamageModifierStruct::from_raw(env, obj)?,
+                }),
+                "MAGIC" => Ok(DamageModifier::Magic {
+                    inner: DamageModifierStruct::from_raw(env, obj)?,
+                }),
+                "ABSORPTION" => Ok(DamageModifier::Absorption {
+                    inner: DamageModifierStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> DamageModifier<'mc> {
-    pub const BASE: DamageModifierEnum = DamageModifierEnum::Base;
-    pub const HARD_HAT: DamageModifierEnum = DamageModifierEnum::HardHat;
-    pub const BLOCKING: DamageModifierEnum = DamageModifierEnum::Blocking;
-    pub const ARMOR: DamageModifierEnum = DamageModifierEnum::Armor;
-    pub const RESISTANCE: DamageModifierEnum = DamageModifierEnum::Resistance;
-    pub const MAGIC: DamageModifierEnum = DamageModifierEnum::Magic;
-    pub const ABSORPTION: DamageModifierEnum = DamageModifierEnum::Absorption;
-    pub fn from_string(str: String) -> std::option::Option<DamageModifierEnum> {
-        match str.as_str() {
-            "BASE" => Some(DamageModifierEnum::Base),
-            "HARD_HAT" => Some(DamageModifierEnum::HardHat),
-            "BLOCKING" => Some(DamageModifierEnum::Blocking),
-            "ARMOR" => Some(DamageModifierEnum::Armor),
-            "RESISTANCE" => Some(DamageModifierEnum::Resistance),
-            "MAGIC" => Some(DamageModifierEnum::Magic),
-            "ABSORPTION" => Some(DamageModifierEnum::Absorption),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for DamageModifierStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for DamageModifierStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate DamageModifierStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/DamageModifier")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a DamageModifierStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<DamageModifier<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/DamageModifier");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/DamageModifier;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        DamageModifier::from_raw(
-            &jni,
-            raw_obj,
-            DamageModifier::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> DamageModifierStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Thrown when an entity creates an item drop.
@@ -4523,12 +5176,10 @@ impl<'mc> JNIRaw<'mc> for EntityDropItemEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityDropItemEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4666,12 +5317,7 @@ impl<'mc> EntityDropItemEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4787,14 +5433,9 @@ impl<'mc> EntityDropItemEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -4819,101 +5460,259 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityDropItemEvent<'
             .expect("Error converting EntityDropItemEvent into crate::event::entity::EntityEvent")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum CauseEnum {
-    AreaEffectCloud,
-    Arrow,
-    Attack,
-    Axolotl,
-    Beacon,
-    Command,
-    Conduit,
-    Conversion,
-    Death,
-    Dolphin,
-    Expiration,
-    Food,
-    Illusion,
-    Milk,
-    PatrolCaptain,
-    Plugin,
-    PotionDrink,
-    PotionSplash,
-    SpiderSpawn,
-    Totem,
-    TurtleHelmet,
-    Unknown,
-    VillagerTrade,
-    Warden,
-    WitherRose,
-}
-impl std::fmt::Display for CauseEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            CauseEnum::AreaEffectCloud => f.write_str("AREA_EFFECT_CLOUD"),
-            CauseEnum::Arrow => f.write_str("ARROW"),
-            CauseEnum::Attack => f.write_str("ATTACK"),
-            CauseEnum::Axolotl => f.write_str("AXOLOTL"),
-            CauseEnum::Beacon => f.write_str("BEACON"),
-            CauseEnum::Command => f.write_str("COMMAND"),
-            CauseEnum::Conduit => f.write_str("CONDUIT"),
-            CauseEnum::Conversion => f.write_str("CONVERSION"),
-            CauseEnum::Death => f.write_str("DEATH"),
-            CauseEnum::Dolphin => f.write_str("DOLPHIN"),
-            CauseEnum::Expiration => f.write_str("EXPIRATION"),
-            CauseEnum::Food => f.write_str("FOOD"),
-            CauseEnum::Illusion => f.write_str("ILLUSION"),
-            CauseEnum::Milk => f.write_str("MILK"),
-            CauseEnum::PatrolCaptain => f.write_str("PATROL_CAPTAIN"),
-            CauseEnum::Plugin => f.write_str("PLUGIN"),
-            CauseEnum::PotionDrink => f.write_str("POTION_DRINK"),
-            CauseEnum::PotionSplash => f.write_str("POTION_SPLASH"),
-            CauseEnum::SpiderSpawn => f.write_str("SPIDER_SPAWN"),
-            CauseEnum::Totem => f.write_str("TOTEM"),
-            CauseEnum::TurtleHelmet => f.write_str("TURTLE_HELMET"),
-            CauseEnum::Unknown => f.write_str("UNKNOWN"),
-            CauseEnum::VillagerTrade => f.write_str("VILLAGER_TRADE"),
-            CauseEnum::Warden => f.write_str("WARDEN"),
-            CauseEnum::WitherRose => f.write_str("WITHER_ROSE"),
-        }
-    }
+pub enum Cause<'mc> {
+    AreaEffectCloud { inner: CauseStruct<'mc> },
+    Arrow { inner: CauseStruct<'mc> },
+    Attack { inner: CauseStruct<'mc> },
+    Axolotl { inner: CauseStruct<'mc> },
+    Beacon { inner: CauseStruct<'mc> },
+    Command { inner: CauseStruct<'mc> },
+    Conduit { inner: CauseStruct<'mc> },
+    Conversion { inner: CauseStruct<'mc> },
+    Death { inner: CauseStruct<'mc> },
+    Dolphin { inner: CauseStruct<'mc> },
+    Expiration { inner: CauseStruct<'mc> },
+    Food { inner: CauseStruct<'mc> },
+    Illusion { inner: CauseStruct<'mc> },
+    Milk { inner: CauseStruct<'mc> },
+    PatrolCaptain { inner: CauseStruct<'mc> },
+    Plugin { inner: CauseStruct<'mc> },
+    PotionDrink { inner: CauseStruct<'mc> },
+    PotionSplash { inner: CauseStruct<'mc> },
+    SpiderSpawn { inner: CauseStruct<'mc> },
+    Totem { inner: CauseStruct<'mc> },
+    TurtleHelmet { inner: CauseStruct<'mc> },
+    Unknown { inner: CauseStruct<'mc> },
+    VillagerTrade { inner: CauseStruct<'mc> },
+    Warden { inner: CauseStruct<'mc> },
+    WitherRose { inner: CauseStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Cause<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Cause::AreaEffectCloud { .. } => f.write_str("AREA_EFFECT_CLOUD"),
+            Cause::Arrow { .. } => f.write_str("ARROW"),
+            Cause::Attack { .. } => f.write_str("ATTACK"),
+            Cause::Axolotl { .. } => f.write_str("AXOLOTL"),
+            Cause::Beacon { .. } => f.write_str("BEACON"),
+            Cause::Command { .. } => f.write_str("COMMAND"),
+            Cause::Conduit { .. } => f.write_str("CONDUIT"),
+            Cause::Conversion { .. } => f.write_str("CONVERSION"),
+            Cause::Death { .. } => f.write_str("DEATH"),
+            Cause::Dolphin { .. } => f.write_str("DOLPHIN"),
+            Cause::Expiration { .. } => f.write_str("EXPIRATION"),
+            Cause::Food { .. } => f.write_str("FOOD"),
+            Cause::Illusion { .. } => f.write_str("ILLUSION"),
+            Cause::Milk { .. } => f.write_str("MILK"),
+            Cause::PatrolCaptain { .. } => f.write_str("PATROL_CAPTAIN"),
+            Cause::Plugin { .. } => f.write_str("PLUGIN"),
+            Cause::PotionDrink { .. } => f.write_str("POTION_DRINK"),
+            Cause::PotionSplash { .. } => f.write_str("POTION_SPLASH"),
+            Cause::SpiderSpawn { .. } => f.write_str("SPIDER_SPAWN"),
+            Cause::Totem { .. } => f.write_str("TOTEM"),
+            Cause::TurtleHelmet { .. } => f.write_str("TURTLE_HELMET"),
+            Cause::Unknown { .. } => f.write_str("UNKNOWN"),
+            Cause::VillagerTrade { .. } => f.write_str("VILLAGER_TRADE"),
+            Cause::Warden { .. } => f.write_str("WARDEN"),
+            Cause::WitherRose { .. } => f.write_str("WITHER_ROSE"),
+        }
     }
 }
+
+impl<'mc> Cause<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Cause<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/Cause");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/Cause;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "AREA_EFFECT_CLOUD" => Ok(Cause::AreaEffectCloud {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "ARROW" => Ok(Cause::Arrow {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "ATTACK" => Ok(Cause::Attack {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "AXOLOTL" => Ok(Cause::Axolotl {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "BEACON" => Ok(Cause::Beacon {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "COMMAND" => Ok(Cause::Command {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "CONDUIT" => Ok(Cause::Conduit {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "CONVERSION" => Ok(Cause::Conversion {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "DEATH" => Ok(Cause::Death {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "DOLPHIN" => Ok(Cause::Dolphin {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "EXPIRATION" => Ok(Cause::Expiration {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "FOOD" => Ok(Cause::Food {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "ILLUSION" => Ok(Cause::Illusion {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "MILK" => Ok(Cause::Milk {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "PATROL_CAPTAIN" => Ok(Cause::PatrolCaptain {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "PLUGIN" => Ok(Cause::Plugin {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "POTION_DRINK" => Ok(Cause::PotionDrink {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "POTION_SPLASH" => Ok(Cause::PotionSplash {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "SPIDER_SPAWN" => Ok(Cause::SpiderSpawn {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "TOTEM" => Ok(Cause::Totem {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "TURTLE_HELMET" => Ok(Cause::TurtleHelmet {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(Cause::Unknown {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "VILLAGER_TRADE" => Ok(Cause::VillagerTrade {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "WARDEN" => Ok(Cause::Warden {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+            "WITHER_ROSE" => Ok(Cause::WitherRose {
+                inner: CauseStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Cause<'mc>(
+pub struct CauseStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub CauseEnum,
 );
-impl<'mc> std::ops::Deref for Cause<'mc> {
-    type Target = CauseEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Cause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::AreaEffectCloud { inner } => inner.0.clone(),
+            Self::Arrow { inner } => inner.0.clone(),
+            Self::Attack { inner } => inner.0.clone(),
+            Self::Axolotl { inner } => inner.0.clone(),
+            Self::Beacon { inner } => inner.0.clone(),
+            Self::Command { inner } => inner.0.clone(),
+            Self::Conduit { inner } => inner.0.clone(),
+            Self::Conversion { inner } => inner.0.clone(),
+            Self::Death { inner } => inner.0.clone(),
+            Self::Dolphin { inner } => inner.0.clone(),
+            Self::Expiration { inner } => inner.0.clone(),
+            Self::Food { inner } => inner.0.clone(),
+            Self::Illusion { inner } => inner.0.clone(),
+            Self::Milk { inner } => inner.0.clone(),
+            Self::PatrolCaptain { inner } => inner.0.clone(),
+            Self::Plugin { inner } => inner.0.clone(),
+            Self::PotionDrink { inner } => inner.0.clone(),
+            Self::PotionSplash { inner } => inner.0.clone(),
+            Self::SpiderSpawn { inner } => inner.0.clone(),
+            Self::Totem { inner } => inner.0.clone(),
+            Self::TurtleHelmet { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+            Self::VillagerTrade { inner } => inner.0.clone(),
+            Self::Warden { inner } => inner.0.clone(),
+            Self::WitherRose { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::AreaEffectCloud { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Arrow { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Attack { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Axolotl { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Beacon { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Command { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Conduit { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Conversion { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Death { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Dolphin { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Expiration { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Food { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Illusion { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Milk { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::PatrolCaptain { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Plugin { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::PotionDrink { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::PotionSplash { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SpiderSpawn { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Totem { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::TurtleHelmet { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::VillagerTrade { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Warden { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WitherRose { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Cause<'mc> {
-    type Enum = CauseEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Cause<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Cause from null object.").into());
@@ -4926,106 +5725,127 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Cause<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "AREA_EFFECT_CLOUD" => Ok(Cause::AreaEffectCloud {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "ARROW" => Ok(Cause::Arrow {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "ATTACK" => Ok(Cause::Attack {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "AXOLOTL" => Ok(Cause::Axolotl {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "BEACON" => Ok(Cause::Beacon {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "COMMAND" => Ok(Cause::Command {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "CONDUIT" => Ok(Cause::Conduit {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "CONVERSION" => Ok(Cause::Conversion {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "DEATH" => Ok(Cause::Death {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "DOLPHIN" => Ok(Cause::Dolphin {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "EXPIRATION" => Ok(Cause::Expiration {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "FOOD" => Ok(Cause::Food {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "ILLUSION" => Ok(Cause::Illusion {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "MILK" => Ok(Cause::Milk {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "PATROL_CAPTAIN" => Ok(Cause::PatrolCaptain {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "PLUGIN" => Ok(Cause::Plugin {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "POTION_DRINK" => Ok(Cause::PotionDrink {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "POTION_SPLASH" => Ok(Cause::PotionSplash {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "SPIDER_SPAWN" => Ok(Cause::SpiderSpawn {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "TOTEM" => Ok(Cause::Totem {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "TURTLE_HELMET" => Ok(Cause::TurtleHelmet {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(Cause::Unknown {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "VILLAGER_TRADE" => Ok(Cause::VillagerTrade {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "WARDEN" => Ok(Cause::Warden {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                "WITHER_ROSE" => Ok(Cause::WitherRose {
+                    inner: CauseStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Cause<'mc> {
-    pub const AREA_EFFECT_CLOUD: CauseEnum = CauseEnum::AreaEffectCloud;
-    pub const ARROW: CauseEnum = CauseEnum::Arrow;
-    pub const ATTACK: CauseEnum = CauseEnum::Attack;
-    pub const AXOLOTL: CauseEnum = CauseEnum::Axolotl;
-    pub const BEACON: CauseEnum = CauseEnum::Beacon;
-    pub const COMMAND: CauseEnum = CauseEnum::Command;
-    pub const CONDUIT: CauseEnum = CauseEnum::Conduit;
-    pub const CONVERSION: CauseEnum = CauseEnum::Conversion;
-    pub const DEATH: CauseEnum = CauseEnum::Death;
-    pub const DOLPHIN: CauseEnum = CauseEnum::Dolphin;
-    pub const EXPIRATION: CauseEnum = CauseEnum::Expiration;
-    pub const FOOD: CauseEnum = CauseEnum::Food;
-    pub const ILLUSION: CauseEnum = CauseEnum::Illusion;
-    pub const MILK: CauseEnum = CauseEnum::Milk;
-    pub const PATROL_CAPTAIN: CauseEnum = CauseEnum::PatrolCaptain;
-    pub const PLUGIN: CauseEnum = CauseEnum::Plugin;
-    pub const POTION_DRINK: CauseEnum = CauseEnum::PotionDrink;
-    pub const POTION_SPLASH: CauseEnum = CauseEnum::PotionSplash;
-    pub const SPIDER_SPAWN: CauseEnum = CauseEnum::SpiderSpawn;
-    pub const TOTEM: CauseEnum = CauseEnum::Totem;
-    pub const TURTLE_HELMET: CauseEnum = CauseEnum::TurtleHelmet;
-    pub const UNKNOWN: CauseEnum = CauseEnum::Unknown;
-    pub const VILLAGER_TRADE: CauseEnum = CauseEnum::VillagerTrade;
-    pub const WARDEN: CauseEnum = CauseEnum::Warden;
-    pub const WITHER_ROSE: CauseEnum = CauseEnum::WitherRose;
-    pub fn from_string(str: String) -> std::option::Option<CauseEnum> {
-        match str.as_str() {
-            "AREA_EFFECT_CLOUD" => Some(CauseEnum::AreaEffectCloud),
-            "ARROW" => Some(CauseEnum::Arrow),
-            "ATTACK" => Some(CauseEnum::Attack),
-            "AXOLOTL" => Some(CauseEnum::Axolotl),
-            "BEACON" => Some(CauseEnum::Beacon),
-            "COMMAND" => Some(CauseEnum::Command),
-            "CONDUIT" => Some(CauseEnum::Conduit),
-            "CONVERSION" => Some(CauseEnum::Conversion),
-            "DEATH" => Some(CauseEnum::Death),
-            "DOLPHIN" => Some(CauseEnum::Dolphin),
-            "EXPIRATION" => Some(CauseEnum::Expiration),
-            "FOOD" => Some(CauseEnum::Food),
-            "ILLUSION" => Some(CauseEnum::Illusion),
-            "MILK" => Some(CauseEnum::Milk),
-            "PATROL_CAPTAIN" => Some(CauseEnum::PatrolCaptain),
-            "PLUGIN" => Some(CauseEnum::Plugin),
-            "POTION_DRINK" => Some(CauseEnum::PotionDrink),
-            "POTION_SPLASH" => Some(CauseEnum::PotionSplash),
-            "SPIDER_SPAWN" => Some(CauseEnum::SpiderSpawn),
-            "TOTEM" => Some(CauseEnum::Totem),
-            "TURTLE_HELMET" => Some(CauseEnum::TurtleHelmet),
-            "UNKNOWN" => Some(CauseEnum::Unknown),
-            "VILLAGER_TRADE" => Some(CauseEnum::VillagerTrade),
-            "WARDEN" => Some(CauseEnum::Warden),
-            "WITHER_ROSE" => Some(CauseEnum::WitherRose),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for CauseStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for CauseStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate CauseStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/Cause")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a CauseStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Cause<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/Cause");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/Cause;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Cause::from_raw(
-            &jni,
-            raw_obj,
-            Cause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> CauseStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Called when a Slime splits into smaller Slimes upon death
@@ -5039,12 +5859,10 @@ impl<'mc> JNIRaw<'mc> for SlimeSplitEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SlimeSplitEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5192,12 +6010,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -5313,14 +6126,9 @@ impl<'mc> SlimeSplitEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -5356,12 +6164,10 @@ impl<'mc> JNIRaw<'mc> for FoodLevelChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for FoodLevelChangeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5528,12 +6334,7 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -5649,14 +6450,9 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -5692,12 +6488,10 @@ impl<'mc> JNIRaw<'mc> for EntityTargetLivingEntityEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityTargetLivingEntityEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5832,8 +6626,6 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
             crate::event::entity::EntityTargetEventTargetReason::from_raw(
                 &self.jni_ref(),
                 raw_obj,
-                crate::event::entity::EntityTargetEventTargetReason::from_string(variant_str)
-                    .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
             )?,
         ))
     }
@@ -5903,12 +6695,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -6024,14 +6811,9 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -6065,12 +6847,10 @@ impl<'mc> JNIRaw<'mc> for EntityShootBowEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityShootBowEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6218,12 +6998,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::inventory::EquipmentSlot::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::inventory::EquipmentSlot::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn bow(
@@ -6342,12 +7117,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -6463,14 +7233,9 @@ impl<'mc> EntityShootBowEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -6506,12 +7271,10 @@ impl<'mc> JNIRaw<'mc> for EntityResurrectEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityResurrectEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6639,12 +7402,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::inventory::EquipmentSlot::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::inventory::EquipmentSlot::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn entity_type(
@@ -6665,12 +7423,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -6786,14 +7539,9 @@ impl<'mc> EntityResurrectEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -6829,12 +7577,10 @@ impl<'mc> JNIRaw<'mc> for PiglinBarterEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PiglinBarterEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6965,12 +7711,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -7086,14 +7827,9 @@ impl<'mc> PiglinBarterEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -7130,12 +7866,10 @@ impl<'mc> JNIRaw<'mc> for PigZombieAngerEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PigZombieAngerEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7304,12 +8038,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -7425,14 +8154,9 @@ impl<'mc> PigZombieAngerEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -7468,12 +8192,10 @@ impl<'mc> JNIRaw<'mc> for EntityCreatePortalEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityCreatePortalEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7592,12 +8314,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::PortalType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::PortalType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::PortalType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn entity_type(
@@ -7618,12 +8335,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -7739,14 +8451,9 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -7783,12 +8490,10 @@ impl<'mc> JNIRaw<'mc> for EntityToggleSwimEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityToggleSwimEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7923,12 +8628,7 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -8044,14 +8744,9 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -8089,12 +8784,10 @@ impl<'mc> JNIRaw<'mc> for EntityTeleportEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityTeleportEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8288,12 +8981,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -8409,14 +9097,9 @@ impl<'mc> EntityTeleportEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -8454,12 +9137,10 @@ impl<'mc> JNIRaw<'mc> for EntityEnterLoveModeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityEnterLoveModeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8632,12 +9313,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -8753,14 +9429,9 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -8797,12 +9468,10 @@ impl<'mc> JNIRaw<'mc> for SheepDyeWoolEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SheepDyeWoolEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8917,12 +9586,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        Ok(Some(crate::DyeColor::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::DyeColor::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )?))
+        Ok(Some(crate::DyeColor::from_raw(&self.jni_ref(), raw_obj)?))
     }
 
     pub fn player(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
@@ -8997,12 +9661,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -9118,14 +9777,9 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -9161,12 +9815,10 @@ impl<'mc> JNIRaw<'mc> for EntityPoseChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityPoseChangeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9246,12 +9898,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::Pose::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::Pose::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::Pose::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn handler_list(
@@ -9295,12 +9942,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -9416,14 +10058,9 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -9453,12 +10090,10 @@ impl<'mc> JNIRaw<'mc> for EntityDamageByEntityEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityDamageByEntityEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9587,12 +10222,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::entity::EntityDamageEventDamageCause::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::entity::EntityDamageEventDamageCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::entity::EntityDamageEventDamageCause::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_damage_with_entity_damage_eventdamage_modifier(
@@ -9737,12 +10367,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -9858,14 +10483,9 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -9889,55 +10509,84 @@ pub struct VillagerCareerChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum VillagerCareerChangeEventChangeReasonEnum {
-    LosingJob,
-    Employed,
-}
-impl std::fmt::Display for VillagerCareerChangeEventChangeReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            VillagerCareerChangeEventChangeReasonEnum::LosingJob => f.write_str("LOSING_JOB"),
-            VillagerCareerChangeEventChangeReasonEnum::Employed => f.write_str("EMPLOYED"),
-        }
-    }
+pub enum VillagerCareerChangeEventChangeReason<'mc> {
+    LosingJob {
+        inner: VillagerCareerChangeEventChangeReasonStruct<'mc>,
+    },
+    Employed {
+        inner: VillagerCareerChangeEventChangeReasonStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for VillagerCareerChangeEventChangeReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            VillagerCareerChangeEventChangeReason::LosingJob { .. } => f.write_str("LOSING_JOB"),
+            VillagerCareerChangeEventChangeReason::Employed { .. } => f.write_str("EMPLOYED"),
+        }
     }
 }
+
+impl<'mc> VillagerCareerChangeEventChangeReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<VillagerCareerChangeEventChangeReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/VillagerCareerChangeEvent$ChangeReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/VillagerCareerChangeEvent$ChangeReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "LOSING_JOB" => Ok(VillagerCareerChangeEventChangeReason::LosingJob {
+                inner: VillagerCareerChangeEventChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "EMPLOYED" => Ok(VillagerCareerChangeEventChangeReason::Employed {
+                inner: VillagerCareerChangeEventChangeReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct VillagerCareerChangeEventChangeReason<'mc>(
+pub struct VillagerCareerChangeEventChangeReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub VillagerCareerChangeEventChangeReasonEnum,
 );
-impl<'mc> std::ops::Deref for VillagerCareerChangeEventChangeReason<'mc> {
-    type Target = VillagerCareerChangeEventChangeReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for VillagerCareerChangeEventChangeReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::LosingJob { inner } => inner.0.clone(),
+            Self::Employed { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::LosingJob { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Employed { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for VillagerCareerChangeEventChangeReason<'mc> {
-    type Enum = VillagerCareerChangeEventChangeReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for VillagerCareerChangeEventChangeReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -9956,64 +10605,63 @@ impl<'mc> JNIInstantiatableEnum<'mc> for VillagerCareerChangeEventChangeReason<'
                 )
                 .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "LOSING_JOB" => Ok(VillagerCareerChangeEventChangeReason::LosingJob {
+                    inner: VillagerCareerChangeEventChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "EMPLOYED" => Ok(VillagerCareerChangeEventChangeReason::Employed {
+                    inner: VillagerCareerChangeEventChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> VillagerCareerChangeEventChangeReason<'mc> {
-    pub const LOSING_JOB: VillagerCareerChangeEventChangeReasonEnum =
-        VillagerCareerChangeEventChangeReasonEnum::LosingJob;
-    pub const EMPLOYED: VillagerCareerChangeEventChangeReasonEnum =
-        VillagerCareerChangeEventChangeReasonEnum::Employed;
-    pub fn from_string(
-        str: String,
-    ) -> std::option::Option<VillagerCareerChangeEventChangeReasonEnum> {
-        match str.as_str() {
-            "LOSING_JOB" => Some(VillagerCareerChangeEventChangeReasonEnum::LosingJob),
-            "EMPLOYED" => Some(VillagerCareerChangeEventChangeReasonEnum::Employed),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for VillagerCareerChangeEventChangeReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for VillagerCareerChangeEventChangeReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                    "Tried to instantiate VillagerCareerChangeEventChangeReasonStruct from null object.")
+                .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/VillagerCareerChangeEvent$ChangeReason",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a VillagerCareerChangeEventChangeReasonStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<VillagerCareerChangeEventChangeReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/VillagerCareerChangeEvent$ChangeReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/VillagerCareerChangeEvent$ChangeReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        VillagerCareerChangeEventChangeReason::from_raw(
-            &jni,
-            raw_obj,
-            VillagerCareerChangeEventChangeReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> VillagerCareerChangeEventChangeReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -10021,12 +10669,10 @@ impl<'mc> JNIRaw<'mc> for VillagerCareerChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for VillagerCareerChangeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10123,10 +10769,6 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
             crate::event::entity::VillagerCareerChangeEventChangeReason::from_raw(
                 &self.jni_ref(),
                 raw_obj,
-                crate::event::entity::VillagerCareerChangeEventChangeReason::from_string(
-                    variant_str,
-                )
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
             )?,
         ))
     }
@@ -10173,12 +10815,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::VillagerProfession::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::VillagerProfession::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::VillagerProfession::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_profession(
@@ -10243,12 +10880,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -10364,14 +10996,9 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -10408,12 +11035,10 @@ impl<'mc> JNIRaw<'mc> for EntityEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10484,12 +11109,7 @@ impl<'mc> EntityEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -10616,14 +11236,9 @@ impl<'mc> EntityEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -10649,59 +11264,100 @@ pub struct EntityPotionEffectEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum EntityPotionEffectEventActionEnum {
-    Added,
-    Changed,
-    Cleared,
-    Removed,
-}
-impl std::fmt::Display for EntityPotionEffectEventActionEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            EntityPotionEffectEventActionEnum::Added => f.write_str("ADDED"),
-            EntityPotionEffectEventActionEnum::Changed => f.write_str("CHANGED"),
-            EntityPotionEffectEventActionEnum::Cleared => f.write_str("CLEARED"),
-            EntityPotionEffectEventActionEnum::Removed => f.write_str("REMOVED"),
-        }
-    }
+pub enum EntityPotionEffectEventAction<'mc> {
+    Added {
+        inner: EntityPotionEffectEventActionStruct<'mc>,
+    },
+    Changed {
+        inner: EntityPotionEffectEventActionStruct<'mc>,
+    },
+    Cleared {
+        inner: EntityPotionEffectEventActionStruct<'mc>,
+    },
+    Removed {
+        inner: EntityPotionEffectEventActionStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for EntityPotionEffectEventAction<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            EntityPotionEffectEventAction::Added { .. } => f.write_str("ADDED"),
+            EntityPotionEffectEventAction::Changed { .. } => f.write_str("CHANGED"),
+            EntityPotionEffectEventAction::Cleared { .. } => f.write_str("CLEARED"),
+            EntityPotionEffectEventAction::Removed { .. } => f.write_str("REMOVED"),
+        }
     }
 }
+
+impl<'mc> EntityPotionEffectEventAction<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<EntityPotionEffectEventAction<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/EntityPotionEffectEvent$Action");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityPotionEffectEvent$Action;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "ADDED" => Ok(EntityPotionEffectEventAction::Added {
+                inner: EntityPotionEffectEventActionStruct::from_raw(env, obj)?,
+            }),
+            "CHANGED" => Ok(EntityPotionEffectEventAction::Changed {
+                inner: EntityPotionEffectEventActionStruct::from_raw(env, obj)?,
+            }),
+            "CLEARED" => Ok(EntityPotionEffectEventAction::Cleared {
+                inner: EntityPotionEffectEventActionStruct::from_raw(env, obj)?,
+            }),
+            "REMOVED" => Ok(EntityPotionEffectEventAction::Removed {
+                inner: EntityPotionEffectEventActionStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct EntityPotionEffectEventAction<'mc>(
+pub struct EntityPotionEffectEventActionStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub EntityPotionEffectEventActionEnum,
 );
-impl<'mc> std::ops::Deref for EntityPotionEffectEventAction<'mc> {
-    type Target = EntityPotionEffectEventActionEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for EntityPotionEffectEventAction<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Added { inner } => inner.0.clone(),
+            Self::Changed { inner } => inner.0.clone(),
+            Self::Cleared { inner } => inner.0.clone(),
+            Self::Removed { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Added { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Changed { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Cleared { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Removed { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for EntityPotionEffectEventAction<'mc> {
-    type Enum = EntityPotionEffectEventActionEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for EntityPotionEffectEventAction<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -10720,164 +11376,377 @@ impl<'mc> JNIInstantiatableEnum<'mc> for EntityPotionEffectEventAction<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "ADDED" => Ok(EntityPotionEffectEventAction::Added {
+                    inner: EntityPotionEffectEventActionStruct::from_raw(env, obj)?,
+                }),
+                "CHANGED" => Ok(EntityPotionEffectEventAction::Changed {
+                    inner: EntityPotionEffectEventActionStruct::from_raw(env, obj)?,
+                }),
+                "CLEARED" => Ok(EntityPotionEffectEventAction::Cleared {
+                    inner: EntityPotionEffectEventActionStruct::from_raw(env, obj)?,
+                }),
+                "REMOVED" => Ok(EntityPotionEffectEventAction::Removed {
+                    inner: EntityPotionEffectEventActionStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> EntityPotionEffectEventAction<'mc> {
-    pub const ADDED: EntityPotionEffectEventActionEnum = EntityPotionEffectEventActionEnum::Added;
-    pub const CHANGED: EntityPotionEffectEventActionEnum =
-        EntityPotionEffectEventActionEnum::Changed;
-    pub const CLEARED: EntityPotionEffectEventActionEnum =
-        EntityPotionEffectEventActionEnum::Cleared;
-    pub const REMOVED: EntityPotionEffectEventActionEnum =
-        EntityPotionEffectEventActionEnum::Removed;
-    pub fn from_string(str: String) -> std::option::Option<EntityPotionEffectEventActionEnum> {
-        match str.as_str() {
-            "ADDED" => Some(EntityPotionEffectEventActionEnum::Added),
-            "CHANGED" => Some(EntityPotionEffectEventActionEnum::Changed),
-            "CLEARED" => Some(EntityPotionEffectEventActionEnum::Cleared),
-            "REMOVED" => Some(EntityPotionEffectEventActionEnum::Removed),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<EntityPotionEffectEventAction<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/EntityPotionEffectEvent$Action");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityPotionEffectEvent$Action;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        EntityPotionEffectEventAction::from_raw(
-            &jni,
-            raw_obj,
-            EntityPotionEffectEventAction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-#[derive(PartialEq, Eq)]
-pub enum EntityPotionEffectEventCauseEnum {
-    AreaEffectCloud,
-    Arrow,
-    Attack,
-    Axolotl,
-    Beacon,
-    Command,
-    Conduit,
-    Conversion,
-    Death,
-    Dolphin,
-    Expiration,
-    Food,
-    Illusion,
-    Milk,
-    PatrolCaptain,
-    Plugin,
-    PotionDrink,
-    PotionSplash,
-    SpiderSpawn,
-    Totem,
-    TurtleHelmet,
-    Unknown,
-    VillagerTrade,
-    Warden,
-    WitherRose,
-}
-impl std::fmt::Display for EntityPotionEffectEventCauseEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            EntityPotionEffectEventCauseEnum::AreaEffectCloud => f.write_str("AREA_EFFECT_CLOUD"),
-            EntityPotionEffectEventCauseEnum::Arrow => f.write_str("ARROW"),
-            EntityPotionEffectEventCauseEnum::Attack => f.write_str("ATTACK"),
-            EntityPotionEffectEventCauseEnum::Axolotl => f.write_str("AXOLOTL"),
-            EntityPotionEffectEventCauseEnum::Beacon => f.write_str("BEACON"),
-            EntityPotionEffectEventCauseEnum::Command => f.write_str("COMMAND"),
-            EntityPotionEffectEventCauseEnum::Conduit => f.write_str("CONDUIT"),
-            EntityPotionEffectEventCauseEnum::Conversion => f.write_str("CONVERSION"),
-            EntityPotionEffectEventCauseEnum::Death => f.write_str("DEATH"),
-            EntityPotionEffectEventCauseEnum::Dolphin => f.write_str("DOLPHIN"),
-            EntityPotionEffectEventCauseEnum::Expiration => f.write_str("EXPIRATION"),
-            EntityPotionEffectEventCauseEnum::Food => f.write_str("FOOD"),
-            EntityPotionEffectEventCauseEnum::Illusion => f.write_str("ILLUSION"),
-            EntityPotionEffectEventCauseEnum::Milk => f.write_str("MILK"),
-            EntityPotionEffectEventCauseEnum::PatrolCaptain => f.write_str("PATROL_CAPTAIN"),
-            EntityPotionEffectEventCauseEnum::Plugin => f.write_str("PLUGIN"),
-            EntityPotionEffectEventCauseEnum::PotionDrink => f.write_str("POTION_DRINK"),
-            EntityPotionEffectEventCauseEnum::PotionSplash => f.write_str("POTION_SPLASH"),
-            EntityPotionEffectEventCauseEnum::SpiderSpawn => f.write_str("SPIDER_SPAWN"),
-            EntityPotionEffectEventCauseEnum::Totem => f.write_str("TOTEM"),
-            EntityPotionEffectEventCauseEnum::TurtleHelmet => f.write_str("TURTLE_HELMET"),
-            EntityPotionEffectEventCauseEnum::Unknown => f.write_str("UNKNOWN"),
-            EntityPotionEffectEventCauseEnum::VillagerTrade => f.write_str("VILLAGER_TRADE"),
-            EntityPotionEffectEventCauseEnum::Warden => f.write_str("WARDEN"),
-            EntityPotionEffectEventCauseEnum::WitherRose => f.write_str("WITHER_ROSE"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for EntityPotionEffectEventCause<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct EntityPotionEffectEventCause<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub EntityPotionEffectEventCauseEnum,
-);
-impl<'mc> std::ops::Deref for EntityPotionEffectEventCause<'mc> {
-    type Target = EntityPotionEffectEventCauseEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for EntityPotionEffectEventCause<'mc> {
+impl<'mc> JNIRaw<'mc> for EntityPotionEffectEventActionStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for EntityPotionEffectEventCause<'mc> {
-    type Enum = EntityPotionEffectEventCauseEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for EntityPotionEffectEventActionStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate EntityPotionEffectEventActionStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityPotionEffectEvent$Action",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a EntityPotionEffectEventActionStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> EntityPotionEffectEventActionStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+pub enum EntityPotionEffectEventCause<'mc> {
+    AreaEffectCloud {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Arrow {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Attack {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Axolotl {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Beacon {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Command {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Conduit {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Conversion {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Death {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Dolphin {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Expiration {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Food {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Illusion {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Milk {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    PatrolCaptain {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Plugin {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    PotionDrink {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    PotionSplash {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    SpiderSpawn {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Totem {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    TurtleHelmet {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Unknown {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    VillagerTrade {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    Warden {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+    WitherRose {
+        inner: EntityPotionEffectEventCauseStruct<'mc>,
+    },
+}
+impl<'mc> std::fmt::Display for EntityPotionEffectEventCause<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            EntityPotionEffectEventCause::AreaEffectCloud { .. } => {
+                f.write_str("AREA_EFFECT_CLOUD")
+            }
+            EntityPotionEffectEventCause::Arrow { .. } => f.write_str("ARROW"),
+            EntityPotionEffectEventCause::Attack { .. } => f.write_str("ATTACK"),
+            EntityPotionEffectEventCause::Axolotl { .. } => f.write_str("AXOLOTL"),
+            EntityPotionEffectEventCause::Beacon { .. } => f.write_str("BEACON"),
+            EntityPotionEffectEventCause::Command { .. } => f.write_str("COMMAND"),
+            EntityPotionEffectEventCause::Conduit { .. } => f.write_str("CONDUIT"),
+            EntityPotionEffectEventCause::Conversion { .. } => f.write_str("CONVERSION"),
+            EntityPotionEffectEventCause::Death { .. } => f.write_str("DEATH"),
+            EntityPotionEffectEventCause::Dolphin { .. } => f.write_str("DOLPHIN"),
+            EntityPotionEffectEventCause::Expiration { .. } => f.write_str("EXPIRATION"),
+            EntityPotionEffectEventCause::Food { .. } => f.write_str("FOOD"),
+            EntityPotionEffectEventCause::Illusion { .. } => f.write_str("ILLUSION"),
+            EntityPotionEffectEventCause::Milk { .. } => f.write_str("MILK"),
+            EntityPotionEffectEventCause::PatrolCaptain { .. } => f.write_str("PATROL_CAPTAIN"),
+            EntityPotionEffectEventCause::Plugin { .. } => f.write_str("PLUGIN"),
+            EntityPotionEffectEventCause::PotionDrink { .. } => f.write_str("POTION_DRINK"),
+            EntityPotionEffectEventCause::PotionSplash { .. } => f.write_str("POTION_SPLASH"),
+            EntityPotionEffectEventCause::SpiderSpawn { .. } => f.write_str("SPIDER_SPAWN"),
+            EntityPotionEffectEventCause::Totem { .. } => f.write_str("TOTEM"),
+            EntityPotionEffectEventCause::TurtleHelmet { .. } => f.write_str("TURTLE_HELMET"),
+            EntityPotionEffectEventCause::Unknown { .. } => f.write_str("UNKNOWN"),
+            EntityPotionEffectEventCause::VillagerTrade { .. } => f.write_str("VILLAGER_TRADE"),
+            EntityPotionEffectEventCause::Warden { .. } => f.write_str("WARDEN"),
+            EntityPotionEffectEventCause::WitherRose { .. } => f.write_str("WITHER_ROSE"),
+        }
+    }
+}
+
+impl<'mc> EntityPotionEffectEventCause<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<EntityPotionEffectEventCause<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/EntityPotionEffectEvent$Cause");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityPotionEffectEvent$Cause;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "AREA_EFFECT_CLOUD" => Ok(EntityPotionEffectEventCause::AreaEffectCloud {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "ARROW" => Ok(EntityPotionEffectEventCause::Arrow {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "ATTACK" => Ok(EntityPotionEffectEventCause::Attack {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "AXOLOTL" => Ok(EntityPotionEffectEventCause::Axolotl {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "BEACON" => Ok(EntityPotionEffectEventCause::Beacon {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "COMMAND" => Ok(EntityPotionEffectEventCause::Command {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "CONDUIT" => Ok(EntityPotionEffectEventCause::Conduit {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "CONVERSION" => Ok(EntityPotionEffectEventCause::Conversion {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "DEATH" => Ok(EntityPotionEffectEventCause::Death {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "DOLPHIN" => Ok(EntityPotionEffectEventCause::Dolphin {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "EXPIRATION" => Ok(EntityPotionEffectEventCause::Expiration {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "FOOD" => Ok(EntityPotionEffectEventCause::Food {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "ILLUSION" => Ok(EntityPotionEffectEventCause::Illusion {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "MILK" => Ok(EntityPotionEffectEventCause::Milk {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "PATROL_CAPTAIN" => Ok(EntityPotionEffectEventCause::PatrolCaptain {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "PLUGIN" => Ok(EntityPotionEffectEventCause::Plugin {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "POTION_DRINK" => Ok(EntityPotionEffectEventCause::PotionDrink {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "POTION_SPLASH" => Ok(EntityPotionEffectEventCause::PotionSplash {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "SPIDER_SPAWN" => Ok(EntityPotionEffectEventCause::SpiderSpawn {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "TOTEM" => Ok(EntityPotionEffectEventCause::Totem {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "TURTLE_HELMET" => Ok(EntityPotionEffectEventCause::TurtleHelmet {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(EntityPotionEffectEventCause::Unknown {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "VILLAGER_TRADE" => Ok(EntityPotionEffectEventCause::VillagerTrade {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "WARDEN" => Ok(EntityPotionEffectEventCause::Warden {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "WITHER_ROSE" => Ok(EntityPotionEffectEventCause::WitherRose {
+                inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct EntityPotionEffectEventCauseStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for EntityPotionEffectEventCause<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::AreaEffectCloud { inner } => inner.0.clone(),
+            Self::Arrow { inner } => inner.0.clone(),
+            Self::Attack { inner } => inner.0.clone(),
+            Self::Axolotl { inner } => inner.0.clone(),
+            Self::Beacon { inner } => inner.0.clone(),
+            Self::Command { inner } => inner.0.clone(),
+            Self::Conduit { inner } => inner.0.clone(),
+            Self::Conversion { inner } => inner.0.clone(),
+            Self::Death { inner } => inner.0.clone(),
+            Self::Dolphin { inner } => inner.0.clone(),
+            Self::Expiration { inner } => inner.0.clone(),
+            Self::Food { inner } => inner.0.clone(),
+            Self::Illusion { inner } => inner.0.clone(),
+            Self::Milk { inner } => inner.0.clone(),
+            Self::PatrolCaptain { inner } => inner.0.clone(),
+            Self::Plugin { inner } => inner.0.clone(),
+            Self::PotionDrink { inner } => inner.0.clone(),
+            Self::PotionSplash { inner } => inner.0.clone(),
+            Self::SpiderSpawn { inner } => inner.0.clone(),
+            Self::Totem { inner } => inner.0.clone(),
+            Self::TurtleHelmet { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+            Self::VillagerTrade { inner } => inner.0.clone(),
+            Self::Warden { inner } => inner.0.clone(),
+            Self::WitherRose { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::AreaEffectCloud { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Arrow { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Attack { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Axolotl { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Beacon { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Command { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Conduit { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Conversion { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Death { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Dolphin { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Expiration { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Food { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Illusion { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Milk { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::PatrolCaptain { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Plugin { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::PotionDrink { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::PotionSplash { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SpiderSpawn { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Totem { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::TurtleHelmet { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::VillagerTrade { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Warden { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WitherRose { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EntityPotionEffectEventCause<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -10896,117 +11765,133 @@ impl<'mc> JNIInstantiatableEnum<'mc> for EntityPotionEffectEventCause<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "AREA_EFFECT_CLOUD" => Ok(EntityPotionEffectEventCause::AreaEffectCloud {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "ARROW" => Ok(EntityPotionEffectEventCause::Arrow {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "ATTACK" => Ok(EntityPotionEffectEventCause::Attack {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "AXOLOTL" => Ok(EntityPotionEffectEventCause::Axolotl {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "BEACON" => Ok(EntityPotionEffectEventCause::Beacon {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "COMMAND" => Ok(EntityPotionEffectEventCause::Command {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "CONDUIT" => Ok(EntityPotionEffectEventCause::Conduit {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "CONVERSION" => Ok(EntityPotionEffectEventCause::Conversion {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "DEATH" => Ok(EntityPotionEffectEventCause::Death {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "DOLPHIN" => Ok(EntityPotionEffectEventCause::Dolphin {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "EXPIRATION" => Ok(EntityPotionEffectEventCause::Expiration {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "FOOD" => Ok(EntityPotionEffectEventCause::Food {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "ILLUSION" => Ok(EntityPotionEffectEventCause::Illusion {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "MILK" => Ok(EntityPotionEffectEventCause::Milk {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "PATROL_CAPTAIN" => Ok(EntityPotionEffectEventCause::PatrolCaptain {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "PLUGIN" => Ok(EntityPotionEffectEventCause::Plugin {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "POTION_DRINK" => Ok(EntityPotionEffectEventCause::PotionDrink {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "POTION_SPLASH" => Ok(EntityPotionEffectEventCause::PotionSplash {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "SPIDER_SPAWN" => Ok(EntityPotionEffectEventCause::SpiderSpawn {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "TOTEM" => Ok(EntityPotionEffectEventCause::Totem {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "TURTLE_HELMET" => Ok(EntityPotionEffectEventCause::TurtleHelmet {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(EntityPotionEffectEventCause::Unknown {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "VILLAGER_TRADE" => Ok(EntityPotionEffectEventCause::VillagerTrade {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "WARDEN" => Ok(EntityPotionEffectEventCause::Warden {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "WITHER_ROSE" => Ok(EntityPotionEffectEventCause::WitherRose {
+                    inner: EntityPotionEffectEventCauseStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> EntityPotionEffectEventCause<'mc> {
-    pub const AREA_EFFECT_CLOUD: EntityPotionEffectEventCauseEnum =
-        EntityPotionEffectEventCauseEnum::AreaEffectCloud;
-    pub const ARROW: EntityPotionEffectEventCauseEnum = EntityPotionEffectEventCauseEnum::Arrow;
-    pub const ATTACK: EntityPotionEffectEventCauseEnum = EntityPotionEffectEventCauseEnum::Attack;
-    pub const AXOLOTL: EntityPotionEffectEventCauseEnum = EntityPotionEffectEventCauseEnum::Axolotl;
-    pub const BEACON: EntityPotionEffectEventCauseEnum = EntityPotionEffectEventCauseEnum::Beacon;
-    pub const COMMAND: EntityPotionEffectEventCauseEnum = EntityPotionEffectEventCauseEnum::Command;
-    pub const CONDUIT: EntityPotionEffectEventCauseEnum = EntityPotionEffectEventCauseEnum::Conduit;
-    pub const CONVERSION: EntityPotionEffectEventCauseEnum =
-        EntityPotionEffectEventCauseEnum::Conversion;
-    pub const DEATH: EntityPotionEffectEventCauseEnum = EntityPotionEffectEventCauseEnum::Death;
-    pub const DOLPHIN: EntityPotionEffectEventCauseEnum = EntityPotionEffectEventCauseEnum::Dolphin;
-    pub const EXPIRATION: EntityPotionEffectEventCauseEnum =
-        EntityPotionEffectEventCauseEnum::Expiration;
-    pub const FOOD: EntityPotionEffectEventCauseEnum = EntityPotionEffectEventCauseEnum::Food;
-    pub const ILLUSION: EntityPotionEffectEventCauseEnum =
-        EntityPotionEffectEventCauseEnum::Illusion;
-    pub const MILK: EntityPotionEffectEventCauseEnum = EntityPotionEffectEventCauseEnum::Milk;
-    pub const PATROL_CAPTAIN: EntityPotionEffectEventCauseEnum =
-        EntityPotionEffectEventCauseEnum::PatrolCaptain;
-    pub const PLUGIN: EntityPotionEffectEventCauseEnum = EntityPotionEffectEventCauseEnum::Plugin;
-    pub const POTION_DRINK: EntityPotionEffectEventCauseEnum =
-        EntityPotionEffectEventCauseEnum::PotionDrink;
-    pub const POTION_SPLASH: EntityPotionEffectEventCauseEnum =
-        EntityPotionEffectEventCauseEnum::PotionSplash;
-    pub const SPIDER_SPAWN: EntityPotionEffectEventCauseEnum =
-        EntityPotionEffectEventCauseEnum::SpiderSpawn;
-    pub const TOTEM: EntityPotionEffectEventCauseEnum = EntityPotionEffectEventCauseEnum::Totem;
-    pub const TURTLE_HELMET: EntityPotionEffectEventCauseEnum =
-        EntityPotionEffectEventCauseEnum::TurtleHelmet;
-    pub const UNKNOWN: EntityPotionEffectEventCauseEnum = EntityPotionEffectEventCauseEnum::Unknown;
-    pub const VILLAGER_TRADE: EntityPotionEffectEventCauseEnum =
-        EntityPotionEffectEventCauseEnum::VillagerTrade;
-    pub const WARDEN: EntityPotionEffectEventCauseEnum = EntityPotionEffectEventCauseEnum::Warden;
-    pub const WITHER_ROSE: EntityPotionEffectEventCauseEnum =
-        EntityPotionEffectEventCauseEnum::WitherRose;
-    pub fn from_string(str: String) -> std::option::Option<EntityPotionEffectEventCauseEnum> {
-        match str.as_str() {
-            "AREA_EFFECT_CLOUD" => Some(EntityPotionEffectEventCauseEnum::AreaEffectCloud),
-            "ARROW" => Some(EntityPotionEffectEventCauseEnum::Arrow),
-            "ATTACK" => Some(EntityPotionEffectEventCauseEnum::Attack),
-            "AXOLOTL" => Some(EntityPotionEffectEventCauseEnum::Axolotl),
-            "BEACON" => Some(EntityPotionEffectEventCauseEnum::Beacon),
-            "COMMAND" => Some(EntityPotionEffectEventCauseEnum::Command),
-            "CONDUIT" => Some(EntityPotionEffectEventCauseEnum::Conduit),
-            "CONVERSION" => Some(EntityPotionEffectEventCauseEnum::Conversion),
-            "DEATH" => Some(EntityPotionEffectEventCauseEnum::Death),
-            "DOLPHIN" => Some(EntityPotionEffectEventCauseEnum::Dolphin),
-            "EXPIRATION" => Some(EntityPotionEffectEventCauseEnum::Expiration),
-            "FOOD" => Some(EntityPotionEffectEventCauseEnum::Food),
-            "ILLUSION" => Some(EntityPotionEffectEventCauseEnum::Illusion),
-            "MILK" => Some(EntityPotionEffectEventCauseEnum::Milk),
-            "PATROL_CAPTAIN" => Some(EntityPotionEffectEventCauseEnum::PatrolCaptain),
-            "PLUGIN" => Some(EntityPotionEffectEventCauseEnum::Plugin),
-            "POTION_DRINK" => Some(EntityPotionEffectEventCauseEnum::PotionDrink),
-            "POTION_SPLASH" => Some(EntityPotionEffectEventCauseEnum::PotionSplash),
-            "SPIDER_SPAWN" => Some(EntityPotionEffectEventCauseEnum::SpiderSpawn),
-            "TOTEM" => Some(EntityPotionEffectEventCauseEnum::Totem),
-            "TURTLE_HELMET" => Some(EntityPotionEffectEventCauseEnum::TurtleHelmet),
-            "UNKNOWN" => Some(EntityPotionEffectEventCauseEnum::Unknown),
-            "VILLAGER_TRADE" => Some(EntityPotionEffectEventCauseEnum::VillagerTrade),
-            "WARDEN" => Some(EntityPotionEffectEventCauseEnum::Warden),
-            "WITHER_ROSE" => Some(EntityPotionEffectEventCauseEnum::WitherRose),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for EntityPotionEffectEventCauseStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EntityPotionEffectEventCauseStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate EntityPotionEffectEventCauseStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityPotionEffectEvent$Cause",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a EntityPotionEffectEventCauseStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<EntityPotionEffectEventCause<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/EntityPotionEffectEvent$Cause");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityPotionEffectEvent$Cause;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        EntityPotionEffectEventCause::from_raw(
-            &jni,
-            raw_obj,
-            EntityPotionEffectEventCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> EntityPotionEffectEventCauseStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -11014,12 +11899,10 @@ impl<'mc> JNIRaw<'mc> for EntityPotionEffectEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityPotionEffectEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11130,12 +12013,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::entity::EntityPotionEffectEventCause::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::entity::EntityPotionEffectEventCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::entity::EntityPotionEffectEventCause::from_raw(&self.jni_ref(), raw_obj)
     }
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
@@ -11183,12 +12061,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::entity::EntityPotionEffectEventAction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::entity::EntityPotionEffectEventAction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::entity::EntityPotionEffectEventAction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn old_effect(
@@ -11289,12 +12162,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -11410,14 +12278,9 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -11443,69 +12306,133 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityPotionEffectEve
         )
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum RegainReasonEnum {
-    Regen,
-    Satiated,
-    Eating,
-    EnderCrystal,
-    Magic,
-    MagicRegen,
-    WitherSpawn,
-    Wither,
-    Custom,
-}
-impl std::fmt::Display for RegainReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            RegainReasonEnum::Regen => f.write_str("REGEN"),
-            RegainReasonEnum::Satiated => f.write_str("SATIATED"),
-            RegainReasonEnum::Eating => f.write_str("EATING"),
-            RegainReasonEnum::EnderCrystal => f.write_str("ENDER_CRYSTAL"),
-            RegainReasonEnum::Magic => f.write_str("MAGIC"),
-            RegainReasonEnum::MagicRegen => f.write_str("MAGIC_REGEN"),
-            RegainReasonEnum::WitherSpawn => f.write_str("WITHER_SPAWN"),
-            RegainReasonEnum::Wither => f.write_str("WITHER"),
-            RegainReasonEnum::Custom => f.write_str("CUSTOM"),
-        }
-    }
+pub enum RegainReason<'mc> {
+    Regen { inner: RegainReasonStruct<'mc> },
+    Satiated { inner: RegainReasonStruct<'mc> },
+    Eating { inner: RegainReasonStruct<'mc> },
+    EnderCrystal { inner: RegainReasonStruct<'mc> },
+    Magic { inner: RegainReasonStruct<'mc> },
+    MagicRegen { inner: RegainReasonStruct<'mc> },
+    WitherSpawn { inner: RegainReasonStruct<'mc> },
+    Wither { inner: RegainReasonStruct<'mc> },
+    Custom { inner: RegainReasonStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for RegainReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            RegainReason::Regen { .. } => f.write_str("REGEN"),
+            RegainReason::Satiated { .. } => f.write_str("SATIATED"),
+            RegainReason::Eating { .. } => f.write_str("EATING"),
+            RegainReason::EnderCrystal { .. } => f.write_str("ENDER_CRYSTAL"),
+            RegainReason::Magic { .. } => f.write_str("MAGIC"),
+            RegainReason::MagicRegen { .. } => f.write_str("MAGIC_REGEN"),
+            RegainReason::WitherSpawn { .. } => f.write_str("WITHER_SPAWN"),
+            RegainReason::Wither { .. } => f.write_str("WITHER"),
+            RegainReason::Custom { .. } => f.write_str("CUSTOM"),
+        }
     }
 }
+
+impl<'mc> RegainReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<RegainReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/RegainReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/RegainReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "REGEN" => Ok(RegainReason::Regen {
+                inner: RegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "SATIATED" => Ok(RegainReason::Satiated {
+                inner: RegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "EATING" => Ok(RegainReason::Eating {
+                inner: RegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "ENDER_CRYSTAL" => Ok(RegainReason::EnderCrystal {
+                inner: RegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "MAGIC" => Ok(RegainReason::Magic {
+                inner: RegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "MAGIC_REGEN" => Ok(RegainReason::MagicRegen {
+                inner: RegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "WITHER_SPAWN" => Ok(RegainReason::WitherSpawn {
+                inner: RegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "WITHER" => Ok(RegainReason::Wither {
+                inner: RegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "CUSTOM" => Ok(RegainReason::Custom {
+                inner: RegainReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct RegainReason<'mc>(
+pub struct RegainReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub RegainReasonEnum,
 );
-impl<'mc> std::ops::Deref for RegainReason<'mc> {
-    type Target = RegainReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for RegainReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Regen { inner } => inner.0.clone(),
+            Self::Satiated { inner } => inner.0.clone(),
+            Self::Eating { inner } => inner.0.clone(),
+            Self::EnderCrystal { inner } => inner.0.clone(),
+            Self::Magic { inner } => inner.0.clone(),
+            Self::MagicRegen { inner } => inner.0.clone(),
+            Self::WitherSpawn { inner } => inner.0.clone(),
+            Self::Wither { inner } => inner.0.clone(),
+            Self::Custom { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Regen { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Satiated { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Eating { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::EnderCrystal { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Magic { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::MagicRegen { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WitherSpawn { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Wither { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Custom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for RegainReason<'mc> {
-    type Enum = RegainReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for RegainReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate RegainReason from null object.").into());
@@ -11518,74 +12445,81 @@ impl<'mc> JNIInstantiatableEnum<'mc> for RegainReason<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "REGEN" => Ok(RegainReason::Regen {
+                    inner: RegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "SATIATED" => Ok(RegainReason::Satiated {
+                    inner: RegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "EATING" => Ok(RegainReason::Eating {
+                    inner: RegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "ENDER_CRYSTAL" => Ok(RegainReason::EnderCrystal {
+                    inner: RegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "MAGIC" => Ok(RegainReason::Magic {
+                    inner: RegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "MAGIC_REGEN" => Ok(RegainReason::MagicRegen {
+                    inner: RegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "WITHER_SPAWN" => Ok(RegainReason::WitherSpawn {
+                    inner: RegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "WITHER" => Ok(RegainReason::Wither {
+                    inner: RegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "CUSTOM" => Ok(RegainReason::Custom {
+                    inner: RegainReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> RegainReason<'mc> {
-    pub const REGEN: RegainReasonEnum = RegainReasonEnum::Regen;
-    pub const SATIATED: RegainReasonEnum = RegainReasonEnum::Satiated;
-    pub const EATING: RegainReasonEnum = RegainReasonEnum::Eating;
-    pub const ENDER_CRYSTAL: RegainReasonEnum = RegainReasonEnum::EnderCrystal;
-    pub const MAGIC: RegainReasonEnum = RegainReasonEnum::Magic;
-    pub const MAGIC_REGEN: RegainReasonEnum = RegainReasonEnum::MagicRegen;
-    pub const WITHER_SPAWN: RegainReasonEnum = RegainReasonEnum::WitherSpawn;
-    pub const WITHER: RegainReasonEnum = RegainReasonEnum::Wither;
-    pub const CUSTOM: RegainReasonEnum = RegainReasonEnum::Custom;
-    pub fn from_string(str: String) -> std::option::Option<RegainReasonEnum> {
-        match str.as_str() {
-            "REGEN" => Some(RegainReasonEnum::Regen),
-            "SATIATED" => Some(RegainReasonEnum::Satiated),
-            "EATING" => Some(RegainReasonEnum::Eating),
-            "ENDER_CRYSTAL" => Some(RegainReasonEnum::EnderCrystal),
-            "MAGIC" => Some(RegainReasonEnum::Magic),
-            "MAGIC_REGEN" => Some(RegainReasonEnum::MagicRegen),
-            "WITHER_SPAWN" => Some(RegainReasonEnum::WitherSpawn),
-            "WITHER" => Some(RegainReasonEnum::Wither),
-            "CUSTOM" => Some(RegainReasonEnum::Custom),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for RegainReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for RegainReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate RegainReasonStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/RegainReason")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a RegainReasonStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<RegainReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/RegainReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/RegainReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        RegainReason::from_raw(
-            &jni,
-            raw_obj,
-            RegainReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> RegainReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -11599,12 +12533,10 @@ impl<'mc> JNIRaw<'mc> for ItemMergeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ItemMergeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11747,12 +12679,7 @@ impl<'mc> ItemMergeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -11868,14 +12795,9 @@ impl<'mc> ItemMergeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -11911,12 +12833,10 @@ impl<'mc> JNIRaw<'mc> for VillagerAcquireTradeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for VillagerAcquireTradeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12084,12 +13004,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -12205,14 +13120,9 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -12249,12 +13159,10 @@ impl<'mc> JNIRaw<'mc> for LingeringPotionSplashEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for LingeringPotionSplashEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12429,8 +13337,6 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
         Ok(Some(crate::block::BlockFace::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
 
@@ -12469,12 +13375,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -12590,14 +13491,9 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -12621,59 +13517,96 @@ impl<'mc> Into<crate::event::entity::ProjectileHitEvent<'mc>> for LingeringPotio
         crate::event::entity::ProjectileHitEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting LingeringPotionSplashEvent into crate::event::entity::ProjectileHitEvent")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum UnleashReasonEnum {
-    HolderGone,
-    PlayerUnleash,
-    Distance,
-    Unknown,
-}
-impl std::fmt::Display for UnleashReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            UnleashReasonEnum::HolderGone => f.write_str("HOLDER_GONE"),
-            UnleashReasonEnum::PlayerUnleash => f.write_str("PLAYER_UNLEASH"),
-            UnleashReasonEnum::Distance => f.write_str("DISTANCE"),
-            UnleashReasonEnum::Unknown => f.write_str("UNKNOWN"),
-        }
-    }
+pub enum UnleashReason<'mc> {
+    HolderGone { inner: UnleashReasonStruct<'mc> },
+    PlayerUnleash { inner: UnleashReasonStruct<'mc> },
+    Distance { inner: UnleashReasonStruct<'mc> },
+    Unknown { inner: UnleashReasonStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for UnleashReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            UnleashReason::HolderGone { .. } => f.write_str("HOLDER_GONE"),
+            UnleashReason::PlayerUnleash { .. } => f.write_str("PLAYER_UNLEASH"),
+            UnleashReason::Distance { .. } => f.write_str("DISTANCE"),
+            UnleashReason::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
     }
 }
+
+impl<'mc> UnleashReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<UnleashReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/UnleashReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/UnleashReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "HOLDER_GONE" => Ok(UnleashReason::HolderGone {
+                inner: UnleashReasonStruct::from_raw(env, obj)?,
+            }),
+            "PLAYER_UNLEASH" => Ok(UnleashReason::PlayerUnleash {
+                inner: UnleashReasonStruct::from_raw(env, obj)?,
+            }),
+            "DISTANCE" => Ok(UnleashReason::Distance {
+                inner: UnleashReasonStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(UnleashReason::Unknown {
+                inner: UnleashReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct UnleashReason<'mc>(
+pub struct UnleashReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub UnleashReasonEnum,
 );
-impl<'mc> std::ops::Deref for UnleashReason<'mc> {
-    type Target = UnleashReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for UnleashReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::HolderGone { inner } => inner.0.clone(),
+            Self::PlayerUnleash { inner } => inner.0.clone(),
+            Self::Distance { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::HolderGone { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::PlayerUnleash { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Distance { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for UnleashReason<'mc> {
-    type Enum = UnleashReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for UnleashReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate UnleashReason from null object.").into());
@@ -12686,64 +13619,66 @@ impl<'mc> JNIInstantiatableEnum<'mc> for UnleashReason<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "HOLDER_GONE" => Ok(UnleashReason::HolderGone {
+                    inner: UnleashReasonStruct::from_raw(env, obj)?,
+                }),
+                "PLAYER_UNLEASH" => Ok(UnleashReason::PlayerUnleash {
+                    inner: UnleashReasonStruct::from_raw(env, obj)?,
+                }),
+                "DISTANCE" => Ok(UnleashReason::Distance {
+                    inner: UnleashReasonStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(UnleashReason::Unknown {
+                    inner: UnleashReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> UnleashReason<'mc> {
-    pub const HOLDER_GONE: UnleashReasonEnum = UnleashReasonEnum::HolderGone;
-    pub const PLAYER_UNLEASH: UnleashReasonEnum = UnleashReasonEnum::PlayerUnleash;
-    pub const DISTANCE: UnleashReasonEnum = UnleashReasonEnum::Distance;
-    pub const UNKNOWN: UnleashReasonEnum = UnleashReasonEnum::Unknown;
-    pub fn from_string(str: String) -> std::option::Option<UnleashReasonEnum> {
-        match str.as_str() {
-            "HOLDER_GONE" => Some(UnleashReasonEnum::HolderGone),
-            "PLAYER_UNLEASH" => Some(UnleashReasonEnum::PlayerUnleash),
-            "DISTANCE" => Some(UnleashReasonEnum::Distance),
-            "UNKNOWN" => Some(UnleashReasonEnum::Unknown),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for UnleashReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for UnleashReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate UnleashReasonStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/UnleashReason")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a UnleashReasonStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<UnleashReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/UnleashReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/UnleashReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        UnleashReason::from_raw(
-            &jni,
-            raw_obj,
-            UnleashReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> UnleashReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Thrown when a LivingEntity is tamed
@@ -12757,12 +13692,10 @@ impl<'mc> JNIRaw<'mc> for EntityTameEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityTameEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12908,12 +13841,7 @@ impl<'mc> EntityTameEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -13029,14 +13957,9 @@ impl<'mc> EntityTameEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -13073,12 +13996,10 @@ impl<'mc> JNIRaw<'mc> for EntityBreakDoorEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityBreakDoorEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13231,12 +14152,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        Ok(Some(crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )?))
+        Ok(Some(crate::Material::from_raw(&self.jni_ref(), raw_obj)?))
     }
 
     pub fn entity_type(
@@ -13257,12 +14173,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -13378,14 +14289,9 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -13414,12 +14320,10 @@ impl<'mc> JNIRaw<'mc> for EntityBreedEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityBreedEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13643,12 +14547,7 @@ impl<'mc> EntityBreedEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -13764,14 +14663,9 @@ impl<'mc> EntityBreedEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -13809,12 +14703,10 @@ impl<'mc> JNIRaw<'mc> for EntityPlaceEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityPlaceEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13972,12 +14864,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::inventory::EquipmentSlot::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::inventory::EquipmentSlot::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn block_face(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -13996,12 +14883,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
@@ -14033,12 +14915,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -14154,14 +15031,9 @@ impl<'mc> EntityPlaceEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -14197,12 +15069,10 @@ impl<'mc> JNIRaw<'mc> for EntityCombustByBlockEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityCombustByBlockEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14372,12 +15242,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -14493,14 +15358,9 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -14530,12 +15390,10 @@ impl<'mc> JNIRaw<'mc> for ItemDespawnEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ItemDespawnEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14674,12 +15532,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -14795,14 +15648,9 @@ impl<'mc> ItemDespawnEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -14833,69 +15681,153 @@ pub struct EntityRegainHealthEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum EntityRegainHealthEventRegainReasonEnum {
-    Regen,
-    Satiated,
-    Eating,
-    EnderCrystal,
-    Magic,
-    MagicRegen,
-    WitherSpawn,
-    Wither,
-    Custom,
-}
-impl std::fmt::Display for EntityRegainHealthEventRegainReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            EntityRegainHealthEventRegainReasonEnum::Regen => f.write_str("REGEN"),
-            EntityRegainHealthEventRegainReasonEnum::Satiated => f.write_str("SATIATED"),
-            EntityRegainHealthEventRegainReasonEnum::Eating => f.write_str("EATING"),
-            EntityRegainHealthEventRegainReasonEnum::EnderCrystal => f.write_str("ENDER_CRYSTAL"),
-            EntityRegainHealthEventRegainReasonEnum::Magic => f.write_str("MAGIC"),
-            EntityRegainHealthEventRegainReasonEnum::MagicRegen => f.write_str("MAGIC_REGEN"),
-            EntityRegainHealthEventRegainReasonEnum::WitherSpawn => f.write_str("WITHER_SPAWN"),
-            EntityRegainHealthEventRegainReasonEnum::Wither => f.write_str("WITHER"),
-            EntityRegainHealthEventRegainReasonEnum::Custom => f.write_str("CUSTOM"),
-        }
-    }
+pub enum EntityRegainHealthEventRegainReason<'mc> {
+    Regen {
+        inner: EntityRegainHealthEventRegainReasonStruct<'mc>,
+    },
+    Satiated {
+        inner: EntityRegainHealthEventRegainReasonStruct<'mc>,
+    },
+    Eating {
+        inner: EntityRegainHealthEventRegainReasonStruct<'mc>,
+    },
+    EnderCrystal {
+        inner: EntityRegainHealthEventRegainReasonStruct<'mc>,
+    },
+    Magic {
+        inner: EntityRegainHealthEventRegainReasonStruct<'mc>,
+    },
+    MagicRegen {
+        inner: EntityRegainHealthEventRegainReasonStruct<'mc>,
+    },
+    WitherSpawn {
+        inner: EntityRegainHealthEventRegainReasonStruct<'mc>,
+    },
+    Wither {
+        inner: EntityRegainHealthEventRegainReasonStruct<'mc>,
+    },
+    Custom {
+        inner: EntityRegainHealthEventRegainReasonStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for EntityRegainHealthEventRegainReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            EntityRegainHealthEventRegainReason::Regen { .. } => f.write_str("REGEN"),
+            EntityRegainHealthEventRegainReason::Satiated { .. } => f.write_str("SATIATED"),
+            EntityRegainHealthEventRegainReason::Eating { .. } => f.write_str("EATING"),
+            EntityRegainHealthEventRegainReason::EnderCrystal { .. } => {
+                f.write_str("ENDER_CRYSTAL")
+            }
+            EntityRegainHealthEventRegainReason::Magic { .. } => f.write_str("MAGIC"),
+            EntityRegainHealthEventRegainReason::MagicRegen { .. } => f.write_str("MAGIC_REGEN"),
+            EntityRegainHealthEventRegainReason::WitherSpawn { .. } => f.write_str("WITHER_SPAWN"),
+            EntityRegainHealthEventRegainReason::Wither { .. } => f.write_str("WITHER"),
+            EntityRegainHealthEventRegainReason::Custom { .. } => f.write_str("CUSTOM"),
+        }
     }
 }
+
+impl<'mc> EntityRegainHealthEventRegainReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<EntityRegainHealthEventRegainReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/EntityRegainHealthEvent$RegainReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityRegainHealthEvent$RegainReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "REGEN" => Ok(EntityRegainHealthEventRegainReason::Regen {
+                inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "SATIATED" => Ok(EntityRegainHealthEventRegainReason::Satiated {
+                inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "EATING" => Ok(EntityRegainHealthEventRegainReason::Eating {
+                inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "ENDER_CRYSTAL" => Ok(EntityRegainHealthEventRegainReason::EnderCrystal {
+                inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "MAGIC" => Ok(EntityRegainHealthEventRegainReason::Magic {
+                inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "MAGIC_REGEN" => Ok(EntityRegainHealthEventRegainReason::MagicRegen {
+                inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "WITHER_SPAWN" => Ok(EntityRegainHealthEventRegainReason::WitherSpawn {
+                inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "WITHER" => Ok(EntityRegainHealthEventRegainReason::Wither {
+                inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+            }),
+            "CUSTOM" => Ok(EntityRegainHealthEventRegainReason::Custom {
+                inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct EntityRegainHealthEventRegainReason<'mc>(
+pub struct EntityRegainHealthEventRegainReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub EntityRegainHealthEventRegainReasonEnum,
 );
-impl<'mc> std::ops::Deref for EntityRegainHealthEventRegainReason<'mc> {
-    type Target = EntityRegainHealthEventRegainReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for EntityRegainHealthEventRegainReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Regen { inner } => inner.0.clone(),
+            Self::Satiated { inner } => inner.0.clone(),
+            Self::Eating { inner } => inner.0.clone(),
+            Self::EnderCrystal { inner } => inner.0.clone(),
+            Self::Magic { inner } => inner.0.clone(),
+            Self::MagicRegen { inner } => inner.0.clone(),
+            Self::WitherSpawn { inner } => inner.0.clone(),
+            Self::Wither { inner } => inner.0.clone(),
+            Self::Custom { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Regen { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Satiated { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Eating { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::EnderCrystal { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Magic { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::MagicRegen { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WitherSpawn { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Wither { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Custom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for EntityRegainHealthEventRegainReason<'mc> {
-    type Enum = EntityRegainHealthEventRegainReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for EntityRegainHealthEventRegainReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -14914,85 +15846,85 @@ impl<'mc> JNIInstantiatableEnum<'mc> for EntityRegainHealthEventRegainReason<'mc
                 )
                 .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "REGEN" => Ok(EntityRegainHealthEventRegainReason::Regen {
+                    inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "SATIATED" => Ok(EntityRegainHealthEventRegainReason::Satiated {
+                    inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "EATING" => Ok(EntityRegainHealthEventRegainReason::Eating {
+                    inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "ENDER_CRYSTAL" => Ok(EntityRegainHealthEventRegainReason::EnderCrystal {
+                    inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "MAGIC" => Ok(EntityRegainHealthEventRegainReason::Magic {
+                    inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "MAGIC_REGEN" => Ok(EntityRegainHealthEventRegainReason::MagicRegen {
+                    inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "WITHER_SPAWN" => Ok(EntityRegainHealthEventRegainReason::WitherSpawn {
+                    inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "WITHER" => Ok(EntityRegainHealthEventRegainReason::Wither {
+                    inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+                }),
+                "CUSTOM" => Ok(EntityRegainHealthEventRegainReason::Custom {
+                    inner: EntityRegainHealthEventRegainReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> EntityRegainHealthEventRegainReason<'mc> {
-    pub const REGEN: EntityRegainHealthEventRegainReasonEnum =
-        EntityRegainHealthEventRegainReasonEnum::Regen;
-    pub const SATIATED: EntityRegainHealthEventRegainReasonEnum =
-        EntityRegainHealthEventRegainReasonEnum::Satiated;
-    pub const EATING: EntityRegainHealthEventRegainReasonEnum =
-        EntityRegainHealthEventRegainReasonEnum::Eating;
-    pub const ENDER_CRYSTAL: EntityRegainHealthEventRegainReasonEnum =
-        EntityRegainHealthEventRegainReasonEnum::EnderCrystal;
-    pub const MAGIC: EntityRegainHealthEventRegainReasonEnum =
-        EntityRegainHealthEventRegainReasonEnum::Magic;
-    pub const MAGIC_REGEN: EntityRegainHealthEventRegainReasonEnum =
-        EntityRegainHealthEventRegainReasonEnum::MagicRegen;
-    pub const WITHER_SPAWN: EntityRegainHealthEventRegainReasonEnum =
-        EntityRegainHealthEventRegainReasonEnum::WitherSpawn;
-    pub const WITHER: EntityRegainHealthEventRegainReasonEnum =
-        EntityRegainHealthEventRegainReasonEnum::Wither;
-    pub const CUSTOM: EntityRegainHealthEventRegainReasonEnum =
-        EntityRegainHealthEventRegainReasonEnum::Custom;
-    pub fn from_string(
-        str: String,
-    ) -> std::option::Option<EntityRegainHealthEventRegainReasonEnum> {
-        match str.as_str() {
-            "REGEN" => Some(EntityRegainHealthEventRegainReasonEnum::Regen),
-            "SATIATED" => Some(EntityRegainHealthEventRegainReasonEnum::Satiated),
-            "EATING" => Some(EntityRegainHealthEventRegainReasonEnum::Eating),
-            "ENDER_CRYSTAL" => Some(EntityRegainHealthEventRegainReasonEnum::EnderCrystal),
-            "MAGIC" => Some(EntityRegainHealthEventRegainReasonEnum::Magic),
-            "MAGIC_REGEN" => Some(EntityRegainHealthEventRegainReasonEnum::MagicRegen),
-            "WITHER_SPAWN" => Some(EntityRegainHealthEventRegainReasonEnum::WitherSpawn),
-            "WITHER" => Some(EntityRegainHealthEventRegainReasonEnum::Wither),
-            "CUSTOM" => Some(EntityRegainHealthEventRegainReasonEnum::Custom),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for EntityRegainHealthEventRegainReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EntityRegainHealthEventRegainReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate EntityRegainHealthEventRegainReasonStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityRegainHealthEvent$RegainReason",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a EntityRegainHealthEventRegainReasonStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<EntityRegainHealthEventRegainReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/EntityRegainHealthEvent$RegainReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityRegainHealthEvent$RegainReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        EntityRegainHealthEventRegainReason::from_raw(
-            &jni,
-            raw_obj,
-            EntityRegainHealthEventRegainReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> EntityRegainHealthEventRegainReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -15000,12 +15932,10 @@ impl<'mc> JNIRaw<'mc> for EntityRegainHealthEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityRegainHealthEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15154,8 +16084,6 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
         crate::event::entity::EntityRegainHealthEventRegainReason::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::event::entity::EntityRegainHealthEventRegainReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
 
@@ -15188,12 +16116,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -15309,14 +16232,9 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -15354,12 +16272,10 @@ impl<'mc> JNIRaw<'mc> for BatToggleSleepEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BatToggleSleepEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15493,12 +16409,7 @@ impl<'mc> BatToggleSleepEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -15614,14 +16525,9 @@ impl<'mc> BatToggleSleepEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -15657,12 +16563,10 @@ impl<'mc> JNIRaw<'mc> for ProjectileLaunchEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ProjectileLaunchEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15796,12 +16700,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -15917,14 +16816,9 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -15950,79 +16844,172 @@ impl<'mc> Into<crate::event::entity::EntitySpawnEvent<'mc>> for ProjectileLaunch
         )
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum ExhaustionReasonEnum {
-    BlockMined,
-    HungerEffect,
-    Damaged,
-    Attack,
-    JumpSprint,
-    Jump,
-    Swim,
-    WalkUnderwater,
-    WalkOnWater,
-    Sprint,
-    Crouch,
-    Walk,
-    Regen,
-    Unknown,
-}
-impl std::fmt::Display for ExhaustionReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ExhaustionReasonEnum::BlockMined => f.write_str("BLOCK_MINED"),
-            ExhaustionReasonEnum::HungerEffect => f.write_str("HUNGER_EFFECT"),
-            ExhaustionReasonEnum::Damaged => f.write_str("DAMAGED"),
-            ExhaustionReasonEnum::Attack => f.write_str("ATTACK"),
-            ExhaustionReasonEnum::JumpSprint => f.write_str("JUMP_SPRINT"),
-            ExhaustionReasonEnum::Jump => f.write_str("JUMP"),
-            ExhaustionReasonEnum::Swim => f.write_str("SWIM"),
-            ExhaustionReasonEnum::WalkUnderwater => f.write_str("WALK_UNDERWATER"),
-            ExhaustionReasonEnum::WalkOnWater => f.write_str("WALK_ON_WATER"),
-            ExhaustionReasonEnum::Sprint => f.write_str("SPRINT"),
-            ExhaustionReasonEnum::Crouch => f.write_str("CROUCH"),
-            ExhaustionReasonEnum::Walk => f.write_str("WALK"),
-            ExhaustionReasonEnum::Regen => f.write_str("REGEN"),
-            ExhaustionReasonEnum::Unknown => f.write_str("UNKNOWN"),
-        }
-    }
+pub enum ExhaustionReason<'mc> {
+    BlockMined { inner: ExhaustionReasonStruct<'mc> },
+    HungerEffect { inner: ExhaustionReasonStruct<'mc> },
+    Damaged { inner: ExhaustionReasonStruct<'mc> },
+    Attack { inner: ExhaustionReasonStruct<'mc> },
+    JumpSprint { inner: ExhaustionReasonStruct<'mc> },
+    Jump { inner: ExhaustionReasonStruct<'mc> },
+    Swim { inner: ExhaustionReasonStruct<'mc> },
+    WalkUnderwater { inner: ExhaustionReasonStruct<'mc> },
+    WalkOnWater { inner: ExhaustionReasonStruct<'mc> },
+    Sprint { inner: ExhaustionReasonStruct<'mc> },
+    Crouch { inner: ExhaustionReasonStruct<'mc> },
+    Walk { inner: ExhaustionReasonStruct<'mc> },
+    Regen { inner: ExhaustionReasonStruct<'mc> },
+    Unknown { inner: ExhaustionReasonStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for ExhaustionReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            ExhaustionReason::BlockMined { .. } => f.write_str("BLOCK_MINED"),
+            ExhaustionReason::HungerEffect { .. } => f.write_str("HUNGER_EFFECT"),
+            ExhaustionReason::Damaged { .. } => f.write_str("DAMAGED"),
+            ExhaustionReason::Attack { .. } => f.write_str("ATTACK"),
+            ExhaustionReason::JumpSprint { .. } => f.write_str("JUMP_SPRINT"),
+            ExhaustionReason::Jump { .. } => f.write_str("JUMP"),
+            ExhaustionReason::Swim { .. } => f.write_str("SWIM"),
+            ExhaustionReason::WalkUnderwater { .. } => f.write_str("WALK_UNDERWATER"),
+            ExhaustionReason::WalkOnWater { .. } => f.write_str("WALK_ON_WATER"),
+            ExhaustionReason::Sprint { .. } => f.write_str("SPRINT"),
+            ExhaustionReason::Crouch { .. } => f.write_str("CROUCH"),
+            ExhaustionReason::Walk { .. } => f.write_str("WALK"),
+            ExhaustionReason::Regen { .. } => f.write_str("REGEN"),
+            ExhaustionReason::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
     }
 }
+
+impl<'mc> ExhaustionReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<ExhaustionReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/ExhaustionReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/ExhaustionReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "BLOCK_MINED" => Ok(ExhaustionReason::BlockMined {
+                inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "HUNGER_EFFECT" => Ok(ExhaustionReason::HungerEffect {
+                inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "DAMAGED" => Ok(ExhaustionReason::Damaged {
+                inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "ATTACK" => Ok(ExhaustionReason::Attack {
+                inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "JUMP_SPRINT" => Ok(ExhaustionReason::JumpSprint {
+                inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "JUMP" => Ok(ExhaustionReason::Jump {
+                inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "SWIM" => Ok(ExhaustionReason::Swim {
+                inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "WALK_UNDERWATER" => Ok(ExhaustionReason::WalkUnderwater {
+                inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "WALK_ON_WATER" => Ok(ExhaustionReason::WalkOnWater {
+                inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "SPRINT" => Ok(ExhaustionReason::Sprint {
+                inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "CROUCH" => Ok(ExhaustionReason::Crouch {
+                inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "WALK" => Ok(ExhaustionReason::Walk {
+                inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "REGEN" => Ok(ExhaustionReason::Regen {
+                inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(ExhaustionReason::Unknown {
+                inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct ExhaustionReason<'mc>(
+pub struct ExhaustionReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub ExhaustionReasonEnum,
 );
-impl<'mc> std::ops::Deref for ExhaustionReason<'mc> {
-    type Target = ExhaustionReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for ExhaustionReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::BlockMined { inner } => inner.0.clone(),
+            Self::HungerEffect { inner } => inner.0.clone(),
+            Self::Damaged { inner } => inner.0.clone(),
+            Self::Attack { inner } => inner.0.clone(),
+            Self::JumpSprint { inner } => inner.0.clone(),
+            Self::Jump { inner } => inner.0.clone(),
+            Self::Swim { inner } => inner.0.clone(),
+            Self::WalkUnderwater { inner } => inner.0.clone(),
+            Self::WalkOnWater { inner } => inner.0.clone(),
+            Self::Sprint { inner } => inner.0.clone(),
+            Self::Crouch { inner } => inner.0.clone(),
+            Self::Walk { inner } => inner.0.clone(),
+            Self::Regen { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::BlockMined { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HungerEffect { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Damaged { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Attack { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::JumpSprint { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Jump { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Swim { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WalkUnderwater { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WalkOnWater { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Sprint { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Crouch { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Walk { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Regen { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for ExhaustionReason<'mc> {
-    type Enum = ExhaustionReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for ExhaustionReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -16037,84 +17024,97 @@ impl<'mc> JNIInstantiatableEnum<'mc> for ExhaustionReason<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "BLOCK_MINED" => Ok(ExhaustionReason::BlockMined {
+                    inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "HUNGER_EFFECT" => Ok(ExhaustionReason::HungerEffect {
+                    inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "DAMAGED" => Ok(ExhaustionReason::Damaged {
+                    inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "ATTACK" => Ok(ExhaustionReason::Attack {
+                    inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "JUMP_SPRINT" => Ok(ExhaustionReason::JumpSprint {
+                    inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "JUMP" => Ok(ExhaustionReason::Jump {
+                    inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "SWIM" => Ok(ExhaustionReason::Swim {
+                    inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "WALK_UNDERWATER" => Ok(ExhaustionReason::WalkUnderwater {
+                    inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "WALK_ON_WATER" => Ok(ExhaustionReason::WalkOnWater {
+                    inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "SPRINT" => Ok(ExhaustionReason::Sprint {
+                    inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "CROUCH" => Ok(ExhaustionReason::Crouch {
+                    inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "WALK" => Ok(ExhaustionReason::Walk {
+                    inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "REGEN" => Ok(ExhaustionReason::Regen {
+                    inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(ExhaustionReason::Unknown {
+                    inner: ExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> ExhaustionReason<'mc> {
-    pub const BLOCK_MINED: ExhaustionReasonEnum = ExhaustionReasonEnum::BlockMined;
-    pub const HUNGER_EFFECT: ExhaustionReasonEnum = ExhaustionReasonEnum::HungerEffect;
-    pub const DAMAGED: ExhaustionReasonEnum = ExhaustionReasonEnum::Damaged;
-    pub const ATTACK: ExhaustionReasonEnum = ExhaustionReasonEnum::Attack;
-    pub const JUMP_SPRINT: ExhaustionReasonEnum = ExhaustionReasonEnum::JumpSprint;
-    pub const JUMP: ExhaustionReasonEnum = ExhaustionReasonEnum::Jump;
-    pub const SWIM: ExhaustionReasonEnum = ExhaustionReasonEnum::Swim;
-    pub const WALK_UNDERWATER: ExhaustionReasonEnum = ExhaustionReasonEnum::WalkUnderwater;
-    pub const WALK_ON_WATER: ExhaustionReasonEnum = ExhaustionReasonEnum::WalkOnWater;
-    pub const SPRINT: ExhaustionReasonEnum = ExhaustionReasonEnum::Sprint;
-    pub const CROUCH: ExhaustionReasonEnum = ExhaustionReasonEnum::Crouch;
-    pub const WALK: ExhaustionReasonEnum = ExhaustionReasonEnum::Walk;
-    pub const REGEN: ExhaustionReasonEnum = ExhaustionReasonEnum::Regen;
-    pub const UNKNOWN: ExhaustionReasonEnum = ExhaustionReasonEnum::Unknown;
-    pub fn from_string(str: String) -> std::option::Option<ExhaustionReasonEnum> {
-        match str.as_str() {
-            "BLOCK_MINED" => Some(ExhaustionReasonEnum::BlockMined),
-            "HUNGER_EFFECT" => Some(ExhaustionReasonEnum::HungerEffect),
-            "DAMAGED" => Some(ExhaustionReasonEnum::Damaged),
-            "ATTACK" => Some(ExhaustionReasonEnum::Attack),
-            "JUMP_SPRINT" => Some(ExhaustionReasonEnum::JumpSprint),
-            "JUMP" => Some(ExhaustionReasonEnum::Jump),
-            "SWIM" => Some(ExhaustionReasonEnum::Swim),
-            "WALK_UNDERWATER" => Some(ExhaustionReasonEnum::WalkUnderwater),
-            "WALK_ON_WATER" => Some(ExhaustionReasonEnum::WalkOnWater),
-            "SPRINT" => Some(ExhaustionReasonEnum::Sprint),
-            "CROUCH" => Some(ExhaustionReasonEnum::Crouch),
-            "WALK" => Some(ExhaustionReasonEnum::Walk),
-            "REGEN" => Some(ExhaustionReasonEnum::Regen),
-            "UNKNOWN" => Some(ExhaustionReasonEnum::Unknown),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for ExhaustionReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ExhaustionReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate ExhaustionReasonStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/ExhaustionReason")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ExhaustionReasonStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<ExhaustionReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/ExhaustionReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/ExhaustionReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        ExhaustionReason::from_raw(
-            &jni,
-            raw_obj,
-            ExhaustionReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> ExhaustionReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Thrown whenever a <a href="../../entity/Player.html" title="interface in org.bukkit.entity"><code>Player</code></a> dies
@@ -16128,12 +17128,10 @@ impl<'mc> JNIRaw<'mc> for PlayerDeathEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PlayerDeathEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16406,12 +17404,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -16527,14 +17520,9 @@ impl<'mc> PlayerDeathEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -16564,12 +17552,10 @@ impl<'mc> JNIRaw<'mc> for AreaEffectCloudApplyEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for AreaEffectCloudApplyEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16696,12 +17682,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -16817,14 +17798,9 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -16861,12 +17837,10 @@ impl<'mc> JNIRaw<'mc> for EntityChangeBlockEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityChangeBlockEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -17013,12 +17987,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        Ok(Some(crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )?))
+        Ok(Some(crate::Material::from_raw(&self.jni_ref(), raw_obj)?))
     }
 
     pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
@@ -17050,12 +18019,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -17171,14 +18135,9 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -17215,12 +18174,10 @@ impl<'mc> JNIRaw<'mc> for EntityCombustByEntityEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityCombustByEntityEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -17390,12 +18347,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -17511,14 +18463,9 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -17536,71 +18483,142 @@ impl<'mc> Into<crate::event::entity::EntityCombustEvent<'mc>> for EntityCombustB
         crate::event::entity::EntityCombustEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting EntityCombustByEntityEvent into crate::event::entity::EntityCombustEvent")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum TransformReasonEnum {
-    Cured,
-    Frozen,
-    Infection,
-    Drowned,
-    Sheared,
-    Lightning,
-    Split,
-    PiglinZombified,
-    Metamorphosis,
-    Unknown,
-}
-impl std::fmt::Display for TransformReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TransformReasonEnum::Cured => f.write_str("CURED"),
-            TransformReasonEnum::Frozen => f.write_str("FROZEN"),
-            TransformReasonEnum::Infection => f.write_str("INFECTION"),
-            TransformReasonEnum::Drowned => f.write_str("DROWNED"),
-            TransformReasonEnum::Sheared => f.write_str("SHEARED"),
-            TransformReasonEnum::Lightning => f.write_str("LIGHTNING"),
-            TransformReasonEnum::Split => f.write_str("SPLIT"),
-            TransformReasonEnum::PiglinZombified => f.write_str("PIGLIN_ZOMBIFIED"),
-            TransformReasonEnum::Metamorphosis => f.write_str("METAMORPHOSIS"),
-            TransformReasonEnum::Unknown => f.write_str("UNKNOWN"),
-        }
-    }
+pub enum TransformReason<'mc> {
+    Cured { inner: TransformReasonStruct<'mc> },
+    Frozen { inner: TransformReasonStruct<'mc> },
+    Infection { inner: TransformReasonStruct<'mc> },
+    Drowned { inner: TransformReasonStruct<'mc> },
+    Sheared { inner: TransformReasonStruct<'mc> },
+    Lightning { inner: TransformReasonStruct<'mc> },
+    Split { inner: TransformReasonStruct<'mc> },
+    PiglinZombified { inner: TransformReasonStruct<'mc> },
+    Metamorphosis { inner: TransformReasonStruct<'mc> },
+    Unknown { inner: TransformReasonStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for TransformReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            TransformReason::Cured { .. } => f.write_str("CURED"),
+            TransformReason::Frozen { .. } => f.write_str("FROZEN"),
+            TransformReason::Infection { .. } => f.write_str("INFECTION"),
+            TransformReason::Drowned { .. } => f.write_str("DROWNED"),
+            TransformReason::Sheared { .. } => f.write_str("SHEARED"),
+            TransformReason::Lightning { .. } => f.write_str("LIGHTNING"),
+            TransformReason::Split { .. } => f.write_str("SPLIT"),
+            TransformReason::PiglinZombified { .. } => f.write_str("PIGLIN_ZOMBIFIED"),
+            TransformReason::Metamorphosis { .. } => f.write_str("METAMORPHOSIS"),
+            TransformReason::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
     }
 }
+
+impl<'mc> TransformReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<TransformReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/TransformReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/TransformReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "CURED" => Ok(TransformReason::Cured {
+                inner: TransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "FROZEN" => Ok(TransformReason::Frozen {
+                inner: TransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "INFECTION" => Ok(TransformReason::Infection {
+                inner: TransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "DROWNED" => Ok(TransformReason::Drowned {
+                inner: TransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "SHEARED" => Ok(TransformReason::Sheared {
+                inner: TransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "LIGHTNING" => Ok(TransformReason::Lightning {
+                inner: TransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "SPLIT" => Ok(TransformReason::Split {
+                inner: TransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "PIGLIN_ZOMBIFIED" => Ok(TransformReason::PiglinZombified {
+                inner: TransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "METAMORPHOSIS" => Ok(TransformReason::Metamorphosis {
+                inner: TransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(TransformReason::Unknown {
+                inner: TransformReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct TransformReason<'mc>(
+pub struct TransformReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub TransformReasonEnum,
 );
-impl<'mc> std::ops::Deref for TransformReason<'mc> {
-    type Target = TransformReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for TransformReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Cured { inner } => inner.0.clone(),
+            Self::Frozen { inner } => inner.0.clone(),
+            Self::Infection { inner } => inner.0.clone(),
+            Self::Drowned { inner } => inner.0.clone(),
+            Self::Sheared { inner } => inner.0.clone(),
+            Self::Lightning { inner } => inner.0.clone(),
+            Self::Split { inner } => inner.0.clone(),
+            Self::PiglinZombified { inner } => inner.0.clone(),
+            Self::Metamorphosis { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Cured { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Frozen { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Infection { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Drowned { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Sheared { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Lightning { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Split { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::PiglinZombified { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Metamorphosis { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for TransformReason<'mc> {
-    type Enum = TransformReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for TransformReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -17615,76 +18633,85 @@ impl<'mc> JNIInstantiatableEnum<'mc> for TransformReason<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "CURED" => Ok(TransformReason::Cured {
+                    inner: TransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "FROZEN" => Ok(TransformReason::Frozen {
+                    inner: TransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "INFECTION" => Ok(TransformReason::Infection {
+                    inner: TransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "DROWNED" => Ok(TransformReason::Drowned {
+                    inner: TransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "SHEARED" => Ok(TransformReason::Sheared {
+                    inner: TransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "LIGHTNING" => Ok(TransformReason::Lightning {
+                    inner: TransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "SPLIT" => Ok(TransformReason::Split {
+                    inner: TransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "PIGLIN_ZOMBIFIED" => Ok(TransformReason::PiglinZombified {
+                    inner: TransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "METAMORPHOSIS" => Ok(TransformReason::Metamorphosis {
+                    inner: TransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(TransformReason::Unknown {
+                    inner: TransformReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> TransformReason<'mc> {
-    pub const CURED: TransformReasonEnum = TransformReasonEnum::Cured;
-    pub const FROZEN: TransformReasonEnum = TransformReasonEnum::Frozen;
-    pub const INFECTION: TransformReasonEnum = TransformReasonEnum::Infection;
-    pub const DROWNED: TransformReasonEnum = TransformReasonEnum::Drowned;
-    pub const SHEARED: TransformReasonEnum = TransformReasonEnum::Sheared;
-    pub const LIGHTNING: TransformReasonEnum = TransformReasonEnum::Lightning;
-    pub const SPLIT: TransformReasonEnum = TransformReasonEnum::Split;
-    pub const PIGLIN_ZOMBIFIED: TransformReasonEnum = TransformReasonEnum::PiglinZombified;
-    pub const METAMORPHOSIS: TransformReasonEnum = TransformReasonEnum::Metamorphosis;
-    pub const UNKNOWN: TransformReasonEnum = TransformReasonEnum::Unknown;
-    pub fn from_string(str: String) -> std::option::Option<TransformReasonEnum> {
-        match str.as_str() {
-            "CURED" => Some(TransformReasonEnum::Cured),
-            "FROZEN" => Some(TransformReasonEnum::Frozen),
-            "INFECTION" => Some(TransformReasonEnum::Infection),
-            "DROWNED" => Some(TransformReasonEnum::Drowned),
-            "SHEARED" => Some(TransformReasonEnum::Sheared),
-            "LIGHTNING" => Some(TransformReasonEnum::Lightning),
-            "SPLIT" => Some(TransformReasonEnum::Split),
-            "PIGLIN_ZOMBIFIED" => Some(TransformReasonEnum::PiglinZombified),
-            "METAMORPHOSIS" => Some(TransformReasonEnum::Metamorphosis),
-            "UNKNOWN" => Some(TransformReasonEnum::Unknown),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for TransformReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for TransformReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate TransformReasonStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/TransformReason")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a TransformReasonStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<TransformReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/TransformReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/TransformReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        TransformReason::from_raw(
-            &jni,
-            raw_obj,
-            TransformReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> TransformReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Called when a human entity experiences exhaustion. An exhaustion level greater than 4.0 causes a decrease in saturation by 1.
@@ -17693,81 +18720,206 @@ pub struct EntityExhaustionEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum EntityExhaustionEventExhaustionReasonEnum {
-    BlockMined,
-    HungerEffect,
-    Damaged,
-    Attack,
-    JumpSprint,
-    Jump,
-    Swim,
-    WalkUnderwater,
-    WalkOnWater,
-    Sprint,
-    Crouch,
-    Walk,
-    Regen,
-    Unknown,
-}
-impl std::fmt::Display for EntityExhaustionEventExhaustionReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            EntityExhaustionEventExhaustionReasonEnum::BlockMined => f.write_str("BLOCK_MINED"),
-            EntityExhaustionEventExhaustionReasonEnum::HungerEffect => f.write_str("HUNGER_EFFECT"),
-            EntityExhaustionEventExhaustionReasonEnum::Damaged => f.write_str("DAMAGED"),
-            EntityExhaustionEventExhaustionReasonEnum::Attack => f.write_str("ATTACK"),
-            EntityExhaustionEventExhaustionReasonEnum::JumpSprint => f.write_str("JUMP_SPRINT"),
-            EntityExhaustionEventExhaustionReasonEnum::Jump => f.write_str("JUMP"),
-            EntityExhaustionEventExhaustionReasonEnum::Swim => f.write_str("SWIM"),
-            EntityExhaustionEventExhaustionReasonEnum::WalkUnderwater => {
-                f.write_str("WALK_UNDERWATER")
-            }
-            EntityExhaustionEventExhaustionReasonEnum::WalkOnWater => f.write_str("WALK_ON_WATER"),
-            EntityExhaustionEventExhaustionReasonEnum::Sprint => f.write_str("SPRINT"),
-            EntityExhaustionEventExhaustionReasonEnum::Crouch => f.write_str("CROUCH"),
-            EntityExhaustionEventExhaustionReasonEnum::Walk => f.write_str("WALK"),
-            EntityExhaustionEventExhaustionReasonEnum::Regen => f.write_str("REGEN"),
-            EntityExhaustionEventExhaustionReasonEnum::Unknown => f.write_str("UNKNOWN"),
-        }
-    }
+pub enum EntityExhaustionEventExhaustionReason<'mc> {
+    BlockMined {
+        inner: EntityExhaustionEventExhaustionReasonStruct<'mc>,
+    },
+    HungerEffect {
+        inner: EntityExhaustionEventExhaustionReasonStruct<'mc>,
+    },
+    Damaged {
+        inner: EntityExhaustionEventExhaustionReasonStruct<'mc>,
+    },
+    Attack {
+        inner: EntityExhaustionEventExhaustionReasonStruct<'mc>,
+    },
+    JumpSprint {
+        inner: EntityExhaustionEventExhaustionReasonStruct<'mc>,
+    },
+    Jump {
+        inner: EntityExhaustionEventExhaustionReasonStruct<'mc>,
+    },
+    Swim {
+        inner: EntityExhaustionEventExhaustionReasonStruct<'mc>,
+    },
+    WalkUnderwater {
+        inner: EntityExhaustionEventExhaustionReasonStruct<'mc>,
+    },
+    WalkOnWater {
+        inner: EntityExhaustionEventExhaustionReasonStruct<'mc>,
+    },
+    Sprint {
+        inner: EntityExhaustionEventExhaustionReasonStruct<'mc>,
+    },
+    Crouch {
+        inner: EntityExhaustionEventExhaustionReasonStruct<'mc>,
+    },
+    Walk {
+        inner: EntityExhaustionEventExhaustionReasonStruct<'mc>,
+    },
+    Regen {
+        inner: EntityExhaustionEventExhaustionReasonStruct<'mc>,
+    },
+    Unknown {
+        inner: EntityExhaustionEventExhaustionReasonStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for EntityExhaustionEventExhaustionReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            EntityExhaustionEventExhaustionReason::BlockMined { .. } => f.write_str("BLOCK_MINED"),
+            EntityExhaustionEventExhaustionReason::HungerEffect { .. } => {
+                f.write_str("HUNGER_EFFECT")
+            }
+            EntityExhaustionEventExhaustionReason::Damaged { .. } => f.write_str("DAMAGED"),
+            EntityExhaustionEventExhaustionReason::Attack { .. } => f.write_str("ATTACK"),
+            EntityExhaustionEventExhaustionReason::JumpSprint { .. } => f.write_str("JUMP_SPRINT"),
+            EntityExhaustionEventExhaustionReason::Jump { .. } => f.write_str("JUMP"),
+            EntityExhaustionEventExhaustionReason::Swim { .. } => f.write_str("SWIM"),
+            EntityExhaustionEventExhaustionReason::WalkUnderwater { .. } => {
+                f.write_str("WALK_UNDERWATER")
+            }
+            EntityExhaustionEventExhaustionReason::WalkOnWater { .. } => {
+                f.write_str("WALK_ON_WATER")
+            }
+            EntityExhaustionEventExhaustionReason::Sprint { .. } => f.write_str("SPRINT"),
+            EntityExhaustionEventExhaustionReason::Crouch { .. } => f.write_str("CROUCH"),
+            EntityExhaustionEventExhaustionReason::Walk { .. } => f.write_str("WALK"),
+            EntityExhaustionEventExhaustionReason::Regen { .. } => f.write_str("REGEN"),
+            EntityExhaustionEventExhaustionReason::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
     }
 }
+
+impl<'mc> EntityExhaustionEventExhaustionReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<EntityExhaustionEventExhaustionReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/EntityExhaustionEvent$ExhaustionReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityExhaustionEvent$ExhaustionReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "BLOCK_MINED" => Ok(EntityExhaustionEventExhaustionReason::BlockMined {
+                inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "HUNGER_EFFECT" => Ok(EntityExhaustionEventExhaustionReason::HungerEffect {
+                inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "DAMAGED" => Ok(EntityExhaustionEventExhaustionReason::Damaged {
+                inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "ATTACK" => Ok(EntityExhaustionEventExhaustionReason::Attack {
+                inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "JUMP_SPRINT" => Ok(EntityExhaustionEventExhaustionReason::JumpSprint {
+                inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "JUMP" => Ok(EntityExhaustionEventExhaustionReason::Jump {
+                inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "SWIM" => Ok(EntityExhaustionEventExhaustionReason::Swim {
+                inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "WALK_UNDERWATER" => Ok(EntityExhaustionEventExhaustionReason::WalkUnderwater {
+                inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "WALK_ON_WATER" => Ok(EntityExhaustionEventExhaustionReason::WalkOnWater {
+                inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "SPRINT" => Ok(EntityExhaustionEventExhaustionReason::Sprint {
+                inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "CROUCH" => Ok(EntityExhaustionEventExhaustionReason::Crouch {
+                inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "WALK" => Ok(EntityExhaustionEventExhaustionReason::Walk {
+                inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "REGEN" => Ok(EntityExhaustionEventExhaustionReason::Regen {
+                inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(EntityExhaustionEventExhaustionReason::Unknown {
+                inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct EntityExhaustionEventExhaustionReason<'mc>(
+pub struct EntityExhaustionEventExhaustionReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub EntityExhaustionEventExhaustionReasonEnum,
 );
-impl<'mc> std::ops::Deref for EntityExhaustionEventExhaustionReason<'mc> {
-    type Target = EntityExhaustionEventExhaustionReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for EntityExhaustionEventExhaustionReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::BlockMined { inner } => inner.0.clone(),
+            Self::HungerEffect { inner } => inner.0.clone(),
+            Self::Damaged { inner } => inner.0.clone(),
+            Self::Attack { inner } => inner.0.clone(),
+            Self::JumpSprint { inner } => inner.0.clone(),
+            Self::Jump { inner } => inner.0.clone(),
+            Self::Swim { inner } => inner.0.clone(),
+            Self::WalkUnderwater { inner } => inner.0.clone(),
+            Self::WalkOnWater { inner } => inner.0.clone(),
+            Self::Sprint { inner } => inner.0.clone(),
+            Self::Crouch { inner } => inner.0.clone(),
+            Self::Walk { inner } => inner.0.clone(),
+            Self::Regen { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::BlockMined { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HungerEffect { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Damaged { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Attack { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::JumpSprint { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Jump { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Swim { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WalkUnderwater { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WalkOnWater { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Sprint { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Crouch { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Walk { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Regen { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for EntityExhaustionEventExhaustionReason<'mc> {
-    type Enum = EntityExhaustionEventExhaustionReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for EntityExhaustionEventExhaustionReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -17786,100 +18938,99 @@ impl<'mc> JNIInstantiatableEnum<'mc> for EntityExhaustionEventExhaustionReason<'
                 )
                 .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "BLOCK_MINED" => Ok(EntityExhaustionEventExhaustionReason::BlockMined {
+                    inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "HUNGER_EFFECT" => Ok(EntityExhaustionEventExhaustionReason::HungerEffect {
+                    inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "DAMAGED" => Ok(EntityExhaustionEventExhaustionReason::Damaged {
+                    inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "ATTACK" => Ok(EntityExhaustionEventExhaustionReason::Attack {
+                    inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "JUMP_SPRINT" => Ok(EntityExhaustionEventExhaustionReason::JumpSprint {
+                    inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "JUMP" => Ok(EntityExhaustionEventExhaustionReason::Jump {
+                    inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "SWIM" => Ok(EntityExhaustionEventExhaustionReason::Swim {
+                    inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "WALK_UNDERWATER" => Ok(EntityExhaustionEventExhaustionReason::WalkUnderwater {
+                    inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "WALK_ON_WATER" => Ok(EntityExhaustionEventExhaustionReason::WalkOnWater {
+                    inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "SPRINT" => Ok(EntityExhaustionEventExhaustionReason::Sprint {
+                    inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "CROUCH" => Ok(EntityExhaustionEventExhaustionReason::Crouch {
+                    inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "WALK" => Ok(EntityExhaustionEventExhaustionReason::Walk {
+                    inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "REGEN" => Ok(EntityExhaustionEventExhaustionReason::Regen {
+                    inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(EntityExhaustionEventExhaustionReason::Unknown {
+                    inner: EntityExhaustionEventExhaustionReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> EntityExhaustionEventExhaustionReason<'mc> {
-    pub const BLOCK_MINED: EntityExhaustionEventExhaustionReasonEnum =
-        EntityExhaustionEventExhaustionReasonEnum::BlockMined;
-    pub const HUNGER_EFFECT: EntityExhaustionEventExhaustionReasonEnum =
-        EntityExhaustionEventExhaustionReasonEnum::HungerEffect;
-    pub const DAMAGED: EntityExhaustionEventExhaustionReasonEnum =
-        EntityExhaustionEventExhaustionReasonEnum::Damaged;
-    pub const ATTACK: EntityExhaustionEventExhaustionReasonEnum =
-        EntityExhaustionEventExhaustionReasonEnum::Attack;
-    pub const JUMP_SPRINT: EntityExhaustionEventExhaustionReasonEnum =
-        EntityExhaustionEventExhaustionReasonEnum::JumpSprint;
-    pub const JUMP: EntityExhaustionEventExhaustionReasonEnum =
-        EntityExhaustionEventExhaustionReasonEnum::Jump;
-    pub const SWIM: EntityExhaustionEventExhaustionReasonEnum =
-        EntityExhaustionEventExhaustionReasonEnum::Swim;
-    pub const WALK_UNDERWATER: EntityExhaustionEventExhaustionReasonEnum =
-        EntityExhaustionEventExhaustionReasonEnum::WalkUnderwater;
-    pub const WALK_ON_WATER: EntityExhaustionEventExhaustionReasonEnum =
-        EntityExhaustionEventExhaustionReasonEnum::WalkOnWater;
-    pub const SPRINT: EntityExhaustionEventExhaustionReasonEnum =
-        EntityExhaustionEventExhaustionReasonEnum::Sprint;
-    pub const CROUCH: EntityExhaustionEventExhaustionReasonEnum =
-        EntityExhaustionEventExhaustionReasonEnum::Crouch;
-    pub const WALK: EntityExhaustionEventExhaustionReasonEnum =
-        EntityExhaustionEventExhaustionReasonEnum::Walk;
-    pub const REGEN: EntityExhaustionEventExhaustionReasonEnum =
-        EntityExhaustionEventExhaustionReasonEnum::Regen;
-    pub const UNKNOWN: EntityExhaustionEventExhaustionReasonEnum =
-        EntityExhaustionEventExhaustionReasonEnum::Unknown;
-    pub fn from_string(
-        str: String,
-    ) -> std::option::Option<EntityExhaustionEventExhaustionReasonEnum> {
-        match str.as_str() {
-            "BLOCK_MINED" => Some(EntityExhaustionEventExhaustionReasonEnum::BlockMined),
-            "HUNGER_EFFECT" => Some(EntityExhaustionEventExhaustionReasonEnum::HungerEffect),
-            "DAMAGED" => Some(EntityExhaustionEventExhaustionReasonEnum::Damaged),
-            "ATTACK" => Some(EntityExhaustionEventExhaustionReasonEnum::Attack),
-            "JUMP_SPRINT" => Some(EntityExhaustionEventExhaustionReasonEnum::JumpSprint),
-            "JUMP" => Some(EntityExhaustionEventExhaustionReasonEnum::Jump),
-            "SWIM" => Some(EntityExhaustionEventExhaustionReasonEnum::Swim),
-            "WALK_UNDERWATER" => Some(EntityExhaustionEventExhaustionReasonEnum::WalkUnderwater),
-            "WALK_ON_WATER" => Some(EntityExhaustionEventExhaustionReasonEnum::WalkOnWater),
-            "SPRINT" => Some(EntityExhaustionEventExhaustionReasonEnum::Sprint),
-            "CROUCH" => Some(EntityExhaustionEventExhaustionReasonEnum::Crouch),
-            "WALK" => Some(EntityExhaustionEventExhaustionReasonEnum::Walk),
-            "REGEN" => Some(EntityExhaustionEventExhaustionReasonEnum::Regen),
-            "UNKNOWN" => Some(EntityExhaustionEventExhaustionReasonEnum::Unknown),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for EntityExhaustionEventExhaustionReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EntityExhaustionEventExhaustionReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                    "Tried to instantiate EntityExhaustionEventExhaustionReasonStruct from null object.")
+                .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityExhaustionEvent$ExhaustionReason",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a EntityExhaustionEventExhaustionReasonStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<EntityExhaustionEventExhaustionReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/EntityExhaustionEvent$ExhaustionReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityExhaustionEvent$ExhaustionReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        EntityExhaustionEventExhaustionReason::from_raw(
-            &jni,
-            raw_obj,
-            EntityExhaustionEventExhaustionReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> EntityExhaustionEventExhaustionReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -17887,12 +19038,10 @@ impl<'mc> JNIRaw<'mc> for EntityExhaustionEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityExhaustionEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -18057,8 +19206,6 @@ impl<'mc> EntityExhaustionEvent<'mc> {
         crate::event::entity::EntityExhaustionEventExhaustionReason::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::event::entity::EntityExhaustionEventExhaustionReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
 
@@ -18080,12 +19227,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -18201,14 +19343,9 @@ impl<'mc> EntityExhaustionEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -18244,12 +19381,10 @@ impl<'mc> JNIRaw<'mc> for PlayerLeashEntityEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PlayerLeashEntityEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -18414,12 +19549,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::inventory::EquipmentSlot::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::inventory::EquipmentSlot::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -18535,14 +19665,9 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -18567,88 +19692,248 @@ impl<'mc> Into<crate::event::Event<'mc>> for PlayerLeashEntityEvent<'mc> {
             .expect("Error converting PlayerLeashEntityEvent into crate::event::Event")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum TargetReasonEnum {
-    TargetDied,
-    ClosestPlayer,
-    TargetAttackedEntity,
+pub enum TargetReason<'mc> {
+    TargetDied {
+        inner: TargetReasonStruct<'mc>,
+    },
+    ClosestPlayer {
+        inner: TargetReasonStruct<'mc>,
+    },
+    TargetAttackedEntity {
+        inner: TargetReasonStruct<'mc>,
+    },
     #[deprecated]
-    PigZombieTarget,
-    ForgotTarget,
-    TargetAttackedOwner,
-    OwnerAttackedTarget,
-    RandomTarget,
-    DefendVillage,
-    TargetAttackedNearbyEntity,
-    ReinforcementTarget,
-    Collision,
-    Custom,
-    ClosestEntity,
-    FollowLeader,
-    Tempt,
-    Unknown,
-}
-impl std::fmt::Display for TargetReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TargetReasonEnum::TargetDied => f.write_str("TARGET_DIED"),
-            TargetReasonEnum::ClosestPlayer => f.write_str("CLOSEST_PLAYER"),
-            TargetReasonEnum::TargetAttackedEntity => f.write_str("TARGET_ATTACKED_ENTITY"),
-            TargetReasonEnum::PigZombieTarget => f.write_str("PIG_ZOMBIE_TARGET"),
-            TargetReasonEnum::ForgotTarget => f.write_str("FORGOT_TARGET"),
-            TargetReasonEnum::TargetAttackedOwner => f.write_str("TARGET_ATTACKED_OWNER"),
-            TargetReasonEnum::OwnerAttackedTarget => f.write_str("OWNER_ATTACKED_TARGET"),
-            TargetReasonEnum::RandomTarget => f.write_str("RANDOM_TARGET"),
-            TargetReasonEnum::DefendVillage => f.write_str("DEFEND_VILLAGE"),
-            TargetReasonEnum::TargetAttackedNearbyEntity => {
-                f.write_str("TARGET_ATTACKED_NEARBY_ENTITY")
-            }
-            TargetReasonEnum::ReinforcementTarget => f.write_str("REINFORCEMENT_TARGET"),
-            TargetReasonEnum::Collision => f.write_str("COLLISION"),
-            TargetReasonEnum::Custom => f.write_str("CUSTOM"),
-            TargetReasonEnum::ClosestEntity => f.write_str("CLOSEST_ENTITY"),
-            TargetReasonEnum::FollowLeader => f.write_str("FOLLOW_LEADER"),
-            TargetReasonEnum::Tempt => f.write_str("TEMPT"),
-            TargetReasonEnum::Unknown => f.write_str("UNKNOWN"),
-        }
-    }
+    PigZombieTarget {
+        inner: TargetReasonStruct<'mc>,
+    },
+    ForgotTarget {
+        inner: TargetReasonStruct<'mc>,
+    },
+    TargetAttackedOwner {
+        inner: TargetReasonStruct<'mc>,
+    },
+    OwnerAttackedTarget {
+        inner: TargetReasonStruct<'mc>,
+    },
+    RandomTarget {
+        inner: TargetReasonStruct<'mc>,
+    },
+    DefendVillage {
+        inner: TargetReasonStruct<'mc>,
+    },
+    TargetAttackedNearbyEntity {
+        inner: TargetReasonStruct<'mc>,
+    },
+    ReinforcementTarget {
+        inner: TargetReasonStruct<'mc>,
+    },
+    Collision {
+        inner: TargetReasonStruct<'mc>,
+    },
+    Custom {
+        inner: TargetReasonStruct<'mc>,
+    },
+    ClosestEntity {
+        inner: TargetReasonStruct<'mc>,
+    },
+    FollowLeader {
+        inner: TargetReasonStruct<'mc>,
+    },
+    Tempt {
+        inner: TargetReasonStruct<'mc>,
+    },
+    Unknown {
+        inner: TargetReasonStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for TargetReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            TargetReason::TargetDied { .. } => f.write_str("TARGET_DIED"),
+            TargetReason::ClosestPlayer { .. } => f.write_str("CLOSEST_PLAYER"),
+            TargetReason::TargetAttackedEntity { .. } => f.write_str("TARGET_ATTACKED_ENTITY"),
+            TargetReason::PigZombieTarget { .. } => f.write_str("PIG_ZOMBIE_TARGET"),
+            TargetReason::ForgotTarget { .. } => f.write_str("FORGOT_TARGET"),
+            TargetReason::TargetAttackedOwner { .. } => f.write_str("TARGET_ATTACKED_OWNER"),
+            TargetReason::OwnerAttackedTarget { .. } => f.write_str("OWNER_ATTACKED_TARGET"),
+            TargetReason::RandomTarget { .. } => f.write_str("RANDOM_TARGET"),
+            TargetReason::DefendVillage { .. } => f.write_str("DEFEND_VILLAGE"),
+            TargetReason::TargetAttackedNearbyEntity { .. } => {
+                f.write_str("TARGET_ATTACKED_NEARBY_ENTITY")
+            }
+            TargetReason::ReinforcementTarget { .. } => f.write_str("REINFORCEMENT_TARGET"),
+            TargetReason::Collision { .. } => f.write_str("COLLISION"),
+            TargetReason::Custom { .. } => f.write_str("CUSTOM"),
+            TargetReason::ClosestEntity { .. } => f.write_str("CLOSEST_ENTITY"),
+            TargetReason::FollowLeader { .. } => f.write_str("FOLLOW_LEADER"),
+            TargetReason::Tempt { .. } => f.write_str("TEMPT"),
+            TargetReason::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
     }
 }
+
+impl<'mc> TargetReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<TargetReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/TargetReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/TargetReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "TARGET_DIED" => Ok(TargetReason::TargetDied {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "CLOSEST_PLAYER" => Ok(TargetReason::ClosestPlayer {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "TARGET_ATTACKED_ENTITY" => Ok(TargetReason::TargetAttackedEntity {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "PIG_ZOMBIE_TARGET" => Ok(TargetReason::PigZombieTarget {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "FORGOT_TARGET" => Ok(TargetReason::ForgotTarget {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "TARGET_ATTACKED_OWNER" => Ok(TargetReason::TargetAttackedOwner {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "OWNER_ATTACKED_TARGET" => Ok(TargetReason::OwnerAttackedTarget {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "RANDOM_TARGET" => Ok(TargetReason::RandomTarget {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "DEFEND_VILLAGE" => Ok(TargetReason::DefendVillage {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "TARGET_ATTACKED_NEARBY_ENTITY" => Ok(TargetReason::TargetAttackedNearbyEntity {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "REINFORCEMENT_TARGET" => Ok(TargetReason::ReinforcementTarget {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "COLLISION" => Ok(TargetReason::Collision {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "CUSTOM" => Ok(TargetReason::Custom {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "CLOSEST_ENTITY" => Ok(TargetReason::ClosestEntity {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "FOLLOW_LEADER" => Ok(TargetReason::FollowLeader {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "TEMPT" => Ok(TargetReason::Tempt {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(TargetReason::Unknown {
+                inner: TargetReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct TargetReason<'mc>(
+pub struct TargetReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub TargetReasonEnum,
 );
-impl<'mc> std::ops::Deref for TargetReason<'mc> {
-    type Target = TargetReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for TargetReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::TargetDied { inner } => inner.0.clone(),
+            Self::ClosestPlayer { inner } => inner.0.clone(),
+            Self::TargetAttackedEntity { inner } => inner.0.clone(),
+            Self::PigZombieTarget { inner } => inner.0.clone(),
+            Self::ForgotTarget { inner } => inner.0.clone(),
+            Self::TargetAttackedOwner { inner } => inner.0.clone(),
+            Self::OwnerAttackedTarget { inner } => inner.0.clone(),
+            Self::RandomTarget { inner } => inner.0.clone(),
+            Self::DefendVillage { inner } => inner.0.clone(),
+            Self::TargetAttackedNearbyEntity { inner } => inner.0.clone(),
+            Self::ReinforcementTarget { inner } => inner.0.clone(),
+            Self::Collision { inner } => inner.0.clone(),
+            Self::Custom { inner } => inner.0.clone(),
+            Self::ClosestEntity { inner } => inner.0.clone(),
+            Self::FollowLeader { inner } => inner.0.clone(),
+            Self::Tempt { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::TargetDied { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ClosestPlayer { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::TargetAttackedEntity { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::PigZombieTarget { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ForgotTarget { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::TargetAttackedOwner { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::OwnerAttackedTarget { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::RandomTarget { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DefendVillage { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::TargetAttackedNearbyEntity { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ReinforcementTarget { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Collision { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Custom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ClosestEntity { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::FollowLeader { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Tempt { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for TargetReason<'mc> {
-    type Enum = TargetReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for TargetReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate TargetReason from null object.").into());
@@ -18661,91 +19946,105 @@ impl<'mc> JNIInstantiatableEnum<'mc> for TargetReason<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "TARGET_DIED" => Ok(TargetReason::TargetDied {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "CLOSEST_PLAYER" => Ok(TargetReason::ClosestPlayer {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "TARGET_ATTACKED_ENTITY" => Ok(TargetReason::TargetAttackedEntity {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "PIG_ZOMBIE_TARGET" => Ok(TargetReason::PigZombieTarget {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "FORGOT_TARGET" => Ok(TargetReason::ForgotTarget {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "TARGET_ATTACKED_OWNER" => Ok(TargetReason::TargetAttackedOwner {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "OWNER_ATTACKED_TARGET" => Ok(TargetReason::OwnerAttackedTarget {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "RANDOM_TARGET" => Ok(TargetReason::RandomTarget {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "DEFEND_VILLAGE" => Ok(TargetReason::DefendVillage {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "TARGET_ATTACKED_NEARBY_ENTITY" => Ok(TargetReason::TargetAttackedNearbyEntity {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "REINFORCEMENT_TARGET" => Ok(TargetReason::ReinforcementTarget {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "COLLISION" => Ok(TargetReason::Collision {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "CUSTOM" => Ok(TargetReason::Custom {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "CLOSEST_ENTITY" => Ok(TargetReason::ClosestEntity {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "FOLLOW_LEADER" => Ok(TargetReason::FollowLeader {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "TEMPT" => Ok(TargetReason::Tempt {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(TargetReason::Unknown {
+                    inner: TargetReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> TargetReason<'mc> {
-    pub const TARGET_DIED: TargetReasonEnum = TargetReasonEnum::TargetDied;
-    pub const CLOSEST_PLAYER: TargetReasonEnum = TargetReasonEnum::ClosestPlayer;
-    pub const TARGET_ATTACKED_ENTITY: TargetReasonEnum = TargetReasonEnum::TargetAttackedEntity;
-    pub const PIG_ZOMBIE_TARGET: TargetReasonEnum = TargetReasonEnum::PigZombieTarget;
-    pub const FORGOT_TARGET: TargetReasonEnum = TargetReasonEnum::ForgotTarget;
-    pub const TARGET_ATTACKED_OWNER: TargetReasonEnum = TargetReasonEnum::TargetAttackedOwner;
-    pub const OWNER_ATTACKED_TARGET: TargetReasonEnum = TargetReasonEnum::OwnerAttackedTarget;
-    pub const RANDOM_TARGET: TargetReasonEnum = TargetReasonEnum::RandomTarget;
-    pub const DEFEND_VILLAGE: TargetReasonEnum = TargetReasonEnum::DefendVillage;
-    pub const TARGET_ATTACKED_NEARBY_ENTITY: TargetReasonEnum =
-        TargetReasonEnum::TargetAttackedNearbyEntity;
-    pub const REINFORCEMENT_TARGET: TargetReasonEnum = TargetReasonEnum::ReinforcementTarget;
-    pub const COLLISION: TargetReasonEnum = TargetReasonEnum::Collision;
-    pub const CUSTOM: TargetReasonEnum = TargetReasonEnum::Custom;
-    pub const CLOSEST_ENTITY: TargetReasonEnum = TargetReasonEnum::ClosestEntity;
-    pub const FOLLOW_LEADER: TargetReasonEnum = TargetReasonEnum::FollowLeader;
-    pub const TEMPT: TargetReasonEnum = TargetReasonEnum::Tempt;
-    pub const UNKNOWN: TargetReasonEnum = TargetReasonEnum::Unknown;
-    pub fn from_string(str: String) -> std::option::Option<TargetReasonEnum> {
-        match str.as_str() {
-            "TARGET_DIED" => Some(TargetReasonEnum::TargetDied),
-            "CLOSEST_PLAYER" => Some(TargetReasonEnum::ClosestPlayer),
-            "TARGET_ATTACKED_ENTITY" => Some(TargetReasonEnum::TargetAttackedEntity),
-            "PIG_ZOMBIE_TARGET" => Some(TargetReasonEnum::PigZombieTarget),
-            "FORGOT_TARGET" => Some(TargetReasonEnum::ForgotTarget),
-            "TARGET_ATTACKED_OWNER" => Some(TargetReasonEnum::TargetAttackedOwner),
-            "OWNER_ATTACKED_TARGET" => Some(TargetReasonEnum::OwnerAttackedTarget),
-            "RANDOM_TARGET" => Some(TargetReasonEnum::RandomTarget),
-            "DEFEND_VILLAGE" => Some(TargetReasonEnum::DefendVillage),
-            "TARGET_ATTACKED_NEARBY_ENTITY" => Some(TargetReasonEnum::TargetAttackedNearbyEntity),
-            "REINFORCEMENT_TARGET" => Some(TargetReasonEnum::ReinforcementTarget),
-            "COLLISION" => Some(TargetReasonEnum::Collision),
-            "CUSTOM" => Some(TargetReasonEnum::Custom),
-            "CLOSEST_ENTITY" => Some(TargetReasonEnum::ClosestEntity),
-            "FOLLOW_LEADER" => Some(TargetReasonEnum::FollowLeader),
-            "TEMPT" => Some(TargetReasonEnum::Tempt),
-            "UNKNOWN" => Some(TargetReasonEnum::Unknown),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for TargetReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for TargetReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate TargetReasonStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/TargetReason")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a TargetReasonStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<TargetReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/TargetReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/TargetReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        TargetReason::from_raw(
-            &jni,
-            raw_obj,
-            TargetReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> TargetReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Stores data for pigs being zapped
@@ -18759,12 +20058,10 @@ impl<'mc> JNIRaw<'mc> for PigZapEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PigZapEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -18966,8 +20263,6 @@ impl<'mc> PigZapEvent<'mc> {
         crate::event::entity::EntityTransformEventTransformReason::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::event::entity::EntityTransformEventTransformReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
 
@@ -18989,12 +20284,7 @@ impl<'mc> PigZapEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -19110,14 +20400,9 @@ impl<'mc> PigZapEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -19153,12 +20438,10 @@ impl<'mc> JNIRaw<'mc> for FireworkExplodeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for FireworkExplodeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19279,12 +20562,7 @@ impl<'mc> FireworkExplodeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -19400,14 +20678,9 @@ impl<'mc> FireworkExplodeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -19443,12 +20716,10 @@ impl<'mc> JNIRaw<'mc> for ArrowBodyCountChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ArrowBodyCountChangeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19623,12 +20894,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -19744,14 +21010,9 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -19789,12 +21050,10 @@ impl<'mc> JNIRaw<'mc> for EntityPortalExitEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityPortalExitEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20037,12 +21296,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -20158,14 +21412,9 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -20191,117 +21440,380 @@ pub struct EntityDamageEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum EntityDamageEventDamageCauseEnum {
-    Kill,
-    WorldBorder,
-    Contact,
-    EntityAttack,
-    EntitySweepAttack,
-    Projectile,
-    Suffocation,
-    Fall,
-    Fire,
-    FireTick,
-    Melting,
-    Lava,
-    Drowning,
-    BlockExplosion,
-    EntityExplosion,
-    Void,
-    Lightning,
-    Suicide,
-    Starvation,
-    Poison,
-    Magic,
-    Wither,
-    FallingBlock,
-    Thorns,
-    DragonBreath,
-    Custom,
-    FlyIntoWall,
-    HotFloor,
-    Cramming,
-    Dryout,
-    Freeze,
-    SonicBoom,
-}
-impl std::fmt::Display for EntityDamageEventDamageCauseEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            EntityDamageEventDamageCauseEnum::Kill => f.write_str("KILL"),
-            EntityDamageEventDamageCauseEnum::WorldBorder => f.write_str("WORLD_BORDER"),
-            EntityDamageEventDamageCauseEnum::Contact => f.write_str("CONTACT"),
-            EntityDamageEventDamageCauseEnum::EntityAttack => f.write_str("ENTITY_ATTACK"),
-            EntityDamageEventDamageCauseEnum::EntitySweepAttack => {
-                f.write_str("ENTITY_SWEEP_ATTACK")
-            }
-            EntityDamageEventDamageCauseEnum::Projectile => f.write_str("PROJECTILE"),
-            EntityDamageEventDamageCauseEnum::Suffocation => f.write_str("SUFFOCATION"),
-            EntityDamageEventDamageCauseEnum::Fall => f.write_str("FALL"),
-            EntityDamageEventDamageCauseEnum::Fire => f.write_str("FIRE"),
-            EntityDamageEventDamageCauseEnum::FireTick => f.write_str("FIRE_TICK"),
-            EntityDamageEventDamageCauseEnum::Melting => f.write_str("MELTING"),
-            EntityDamageEventDamageCauseEnum::Lava => f.write_str("LAVA"),
-            EntityDamageEventDamageCauseEnum::Drowning => f.write_str("DROWNING"),
-            EntityDamageEventDamageCauseEnum::BlockExplosion => f.write_str("BLOCK_EXPLOSION"),
-            EntityDamageEventDamageCauseEnum::EntityExplosion => f.write_str("ENTITY_EXPLOSION"),
-            EntityDamageEventDamageCauseEnum::Void => f.write_str("VOID"),
-            EntityDamageEventDamageCauseEnum::Lightning => f.write_str("LIGHTNING"),
-            EntityDamageEventDamageCauseEnum::Suicide => f.write_str("SUICIDE"),
-            EntityDamageEventDamageCauseEnum::Starvation => f.write_str("STARVATION"),
-            EntityDamageEventDamageCauseEnum::Poison => f.write_str("POISON"),
-            EntityDamageEventDamageCauseEnum::Magic => f.write_str("MAGIC"),
-            EntityDamageEventDamageCauseEnum::Wither => f.write_str("WITHER"),
-            EntityDamageEventDamageCauseEnum::FallingBlock => f.write_str("FALLING_BLOCK"),
-            EntityDamageEventDamageCauseEnum::Thorns => f.write_str("THORNS"),
-            EntityDamageEventDamageCauseEnum::DragonBreath => f.write_str("DRAGON_BREATH"),
-            EntityDamageEventDamageCauseEnum::Custom => f.write_str("CUSTOM"),
-            EntityDamageEventDamageCauseEnum::FlyIntoWall => f.write_str("FLY_INTO_WALL"),
-            EntityDamageEventDamageCauseEnum::HotFloor => f.write_str("HOT_FLOOR"),
-            EntityDamageEventDamageCauseEnum::Cramming => f.write_str("CRAMMING"),
-            EntityDamageEventDamageCauseEnum::Dryout => f.write_str("DRYOUT"),
-            EntityDamageEventDamageCauseEnum::Freeze => f.write_str("FREEZE"),
-            EntityDamageEventDamageCauseEnum::SonicBoom => f.write_str("SONIC_BOOM"),
-        }
-    }
+pub enum EntityDamageEventDamageCause<'mc> {
+    Kill {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    WorldBorder {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Contact {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    EntityAttack {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    EntitySweepAttack {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Projectile {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Suffocation {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Fall {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Fire {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    FireTick {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Melting {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Lava {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Drowning {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    BlockExplosion {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    EntityExplosion {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Void {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Lightning {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Suicide {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Starvation {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Poison {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Magic {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Wither {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    FallingBlock {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Thorns {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    DragonBreath {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Custom {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    FlyIntoWall {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    HotFloor {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Cramming {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Dryout {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    Freeze {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
+    SonicBoom {
+        inner: EntityDamageEventDamageCauseStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for EntityDamageEventDamageCause<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            EntityDamageEventDamageCause::Kill { .. } => f.write_str("KILL"),
+            EntityDamageEventDamageCause::WorldBorder { .. } => f.write_str("WORLD_BORDER"),
+            EntityDamageEventDamageCause::Contact { .. } => f.write_str("CONTACT"),
+            EntityDamageEventDamageCause::EntityAttack { .. } => f.write_str("ENTITY_ATTACK"),
+            EntityDamageEventDamageCause::EntitySweepAttack { .. } => {
+                f.write_str("ENTITY_SWEEP_ATTACK")
+            }
+            EntityDamageEventDamageCause::Projectile { .. } => f.write_str("PROJECTILE"),
+            EntityDamageEventDamageCause::Suffocation { .. } => f.write_str("SUFFOCATION"),
+            EntityDamageEventDamageCause::Fall { .. } => f.write_str("FALL"),
+            EntityDamageEventDamageCause::Fire { .. } => f.write_str("FIRE"),
+            EntityDamageEventDamageCause::FireTick { .. } => f.write_str("FIRE_TICK"),
+            EntityDamageEventDamageCause::Melting { .. } => f.write_str("MELTING"),
+            EntityDamageEventDamageCause::Lava { .. } => f.write_str("LAVA"),
+            EntityDamageEventDamageCause::Drowning { .. } => f.write_str("DROWNING"),
+            EntityDamageEventDamageCause::BlockExplosion { .. } => f.write_str("BLOCK_EXPLOSION"),
+            EntityDamageEventDamageCause::EntityExplosion { .. } => f.write_str("ENTITY_EXPLOSION"),
+            EntityDamageEventDamageCause::Void { .. } => f.write_str("VOID"),
+            EntityDamageEventDamageCause::Lightning { .. } => f.write_str("LIGHTNING"),
+            EntityDamageEventDamageCause::Suicide { .. } => f.write_str("SUICIDE"),
+            EntityDamageEventDamageCause::Starvation { .. } => f.write_str("STARVATION"),
+            EntityDamageEventDamageCause::Poison { .. } => f.write_str("POISON"),
+            EntityDamageEventDamageCause::Magic { .. } => f.write_str("MAGIC"),
+            EntityDamageEventDamageCause::Wither { .. } => f.write_str("WITHER"),
+            EntityDamageEventDamageCause::FallingBlock { .. } => f.write_str("FALLING_BLOCK"),
+            EntityDamageEventDamageCause::Thorns { .. } => f.write_str("THORNS"),
+            EntityDamageEventDamageCause::DragonBreath { .. } => f.write_str("DRAGON_BREATH"),
+            EntityDamageEventDamageCause::Custom { .. } => f.write_str("CUSTOM"),
+            EntityDamageEventDamageCause::FlyIntoWall { .. } => f.write_str("FLY_INTO_WALL"),
+            EntityDamageEventDamageCause::HotFloor { .. } => f.write_str("HOT_FLOOR"),
+            EntityDamageEventDamageCause::Cramming { .. } => f.write_str("CRAMMING"),
+            EntityDamageEventDamageCause::Dryout { .. } => f.write_str("DRYOUT"),
+            EntityDamageEventDamageCause::Freeze { .. } => f.write_str("FREEZE"),
+            EntityDamageEventDamageCause::SonicBoom { .. } => f.write_str("SONIC_BOOM"),
+        }
     }
 }
+
+impl<'mc> EntityDamageEventDamageCause<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<EntityDamageEventDamageCause<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/EntityDamageEvent$DamageCause");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityDamageEvent$DamageCause;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "KILL" => Ok(EntityDamageEventDamageCause::Kill {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "WORLD_BORDER" => Ok(EntityDamageEventDamageCause::WorldBorder {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "CONTACT" => Ok(EntityDamageEventDamageCause::Contact {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "ENTITY_ATTACK" => Ok(EntityDamageEventDamageCause::EntityAttack {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "ENTITY_SWEEP_ATTACK" => Ok(EntityDamageEventDamageCause::EntitySweepAttack {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "PROJECTILE" => Ok(EntityDamageEventDamageCause::Projectile {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "SUFFOCATION" => Ok(EntityDamageEventDamageCause::Suffocation {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "FALL" => Ok(EntityDamageEventDamageCause::Fall {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "FIRE" => Ok(EntityDamageEventDamageCause::Fire {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "FIRE_TICK" => Ok(EntityDamageEventDamageCause::FireTick {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "MELTING" => Ok(EntityDamageEventDamageCause::Melting {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "LAVA" => Ok(EntityDamageEventDamageCause::Lava {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "DROWNING" => Ok(EntityDamageEventDamageCause::Drowning {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "BLOCK_EXPLOSION" => Ok(EntityDamageEventDamageCause::BlockExplosion {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "ENTITY_EXPLOSION" => Ok(EntityDamageEventDamageCause::EntityExplosion {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "VOID" => Ok(EntityDamageEventDamageCause::Void {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "LIGHTNING" => Ok(EntityDamageEventDamageCause::Lightning {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "SUICIDE" => Ok(EntityDamageEventDamageCause::Suicide {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "STARVATION" => Ok(EntityDamageEventDamageCause::Starvation {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "POISON" => Ok(EntityDamageEventDamageCause::Poison {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "MAGIC" => Ok(EntityDamageEventDamageCause::Magic {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "WITHER" => Ok(EntityDamageEventDamageCause::Wither {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "FALLING_BLOCK" => Ok(EntityDamageEventDamageCause::FallingBlock {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "THORNS" => Ok(EntityDamageEventDamageCause::Thorns {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "DRAGON_BREATH" => Ok(EntityDamageEventDamageCause::DragonBreath {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "CUSTOM" => Ok(EntityDamageEventDamageCause::Custom {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "FLY_INTO_WALL" => Ok(EntityDamageEventDamageCause::FlyIntoWall {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "HOT_FLOOR" => Ok(EntityDamageEventDamageCause::HotFloor {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "CRAMMING" => Ok(EntityDamageEventDamageCause::Cramming {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "DRYOUT" => Ok(EntityDamageEventDamageCause::Dryout {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "FREEZE" => Ok(EntityDamageEventDamageCause::Freeze {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "SONIC_BOOM" => Ok(EntityDamageEventDamageCause::SonicBoom {
+                inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct EntityDamageEventDamageCause<'mc>(
+pub struct EntityDamageEventDamageCauseStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub EntityDamageEventDamageCauseEnum,
 );
-impl<'mc> std::ops::Deref for EntityDamageEventDamageCause<'mc> {
-    type Target = EntityDamageEventDamageCauseEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for EntityDamageEventDamageCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Kill { inner } => inner.0.clone(),
+            Self::WorldBorder { inner } => inner.0.clone(),
+            Self::Contact { inner } => inner.0.clone(),
+            Self::EntityAttack { inner } => inner.0.clone(),
+            Self::EntitySweepAttack { inner } => inner.0.clone(),
+            Self::Projectile { inner } => inner.0.clone(),
+            Self::Suffocation { inner } => inner.0.clone(),
+            Self::Fall { inner } => inner.0.clone(),
+            Self::Fire { inner } => inner.0.clone(),
+            Self::FireTick { inner } => inner.0.clone(),
+            Self::Melting { inner } => inner.0.clone(),
+            Self::Lava { inner } => inner.0.clone(),
+            Self::Drowning { inner } => inner.0.clone(),
+            Self::BlockExplosion { inner } => inner.0.clone(),
+            Self::EntityExplosion { inner } => inner.0.clone(),
+            Self::Void { inner } => inner.0.clone(),
+            Self::Lightning { inner } => inner.0.clone(),
+            Self::Suicide { inner } => inner.0.clone(),
+            Self::Starvation { inner } => inner.0.clone(),
+            Self::Poison { inner } => inner.0.clone(),
+            Self::Magic { inner } => inner.0.clone(),
+            Self::Wither { inner } => inner.0.clone(),
+            Self::FallingBlock { inner } => inner.0.clone(),
+            Self::Thorns { inner } => inner.0.clone(),
+            Self::DragonBreath { inner } => inner.0.clone(),
+            Self::Custom { inner } => inner.0.clone(),
+            Self::FlyIntoWall { inner } => inner.0.clone(),
+            Self::HotFloor { inner } => inner.0.clone(),
+            Self::Cramming { inner } => inner.0.clone(),
+            Self::Dryout { inner } => inner.0.clone(),
+            Self::Freeze { inner } => inner.0.clone(),
+            Self::SonicBoom { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Kill { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WorldBorder { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Contact { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::EntityAttack { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EntitySweepAttack { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Projectile { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Suffocation { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Fall { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Fire { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FireTick { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Melting { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Lava { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Drowning { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::BlockExplosion { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EntityExplosion { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Void { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Lightning { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Suicide { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Starvation { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Poison { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Magic { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Wither { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FallingBlock { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Thorns { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::DragonBreath { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Custom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FlyIntoWall { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HotFloor { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Cramming { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Dryout { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Freeze { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SonicBoom { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for EntityDamageEventDamageCause<'mc> {
-    type Enum = EntityDamageEventDamageCauseEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for EntityDamageEventDamageCause<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -20320,198 +21832,281 @@ impl<'mc> JNIInstantiatableEnum<'mc> for EntityDamageEventDamageCause<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "KILL" => Ok(EntityDamageEventDamageCause::Kill {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "WORLD_BORDER" => Ok(EntityDamageEventDamageCause::WorldBorder {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "CONTACT" => Ok(EntityDamageEventDamageCause::Contact {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "ENTITY_ATTACK" => Ok(EntityDamageEventDamageCause::EntityAttack {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "ENTITY_SWEEP_ATTACK" => Ok(EntityDamageEventDamageCause::EntitySweepAttack {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "PROJECTILE" => Ok(EntityDamageEventDamageCause::Projectile {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "SUFFOCATION" => Ok(EntityDamageEventDamageCause::Suffocation {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "FALL" => Ok(EntityDamageEventDamageCause::Fall {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "FIRE" => Ok(EntityDamageEventDamageCause::Fire {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "FIRE_TICK" => Ok(EntityDamageEventDamageCause::FireTick {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "MELTING" => Ok(EntityDamageEventDamageCause::Melting {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "LAVA" => Ok(EntityDamageEventDamageCause::Lava {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "DROWNING" => Ok(EntityDamageEventDamageCause::Drowning {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "BLOCK_EXPLOSION" => Ok(EntityDamageEventDamageCause::BlockExplosion {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "ENTITY_EXPLOSION" => Ok(EntityDamageEventDamageCause::EntityExplosion {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "VOID" => Ok(EntityDamageEventDamageCause::Void {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "LIGHTNING" => Ok(EntityDamageEventDamageCause::Lightning {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "SUICIDE" => Ok(EntityDamageEventDamageCause::Suicide {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "STARVATION" => Ok(EntityDamageEventDamageCause::Starvation {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "POISON" => Ok(EntityDamageEventDamageCause::Poison {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "MAGIC" => Ok(EntityDamageEventDamageCause::Magic {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "WITHER" => Ok(EntityDamageEventDamageCause::Wither {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "FALLING_BLOCK" => Ok(EntityDamageEventDamageCause::FallingBlock {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "THORNS" => Ok(EntityDamageEventDamageCause::Thorns {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "DRAGON_BREATH" => Ok(EntityDamageEventDamageCause::DragonBreath {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "CUSTOM" => Ok(EntityDamageEventDamageCause::Custom {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "FLY_INTO_WALL" => Ok(EntityDamageEventDamageCause::FlyIntoWall {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "HOT_FLOOR" => Ok(EntityDamageEventDamageCause::HotFloor {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "CRAMMING" => Ok(EntityDamageEventDamageCause::Cramming {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "DRYOUT" => Ok(EntityDamageEventDamageCause::Dryout {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "FREEZE" => Ok(EntityDamageEventDamageCause::Freeze {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "SONIC_BOOM" => Ok(EntityDamageEventDamageCause::SonicBoom {
+                    inner: EntityDamageEventDamageCauseStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> EntityDamageEventDamageCause<'mc> {
-    pub const KILL: EntityDamageEventDamageCauseEnum = EntityDamageEventDamageCauseEnum::Kill;
-    pub const WORLD_BORDER: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::WorldBorder;
-    pub const CONTACT: EntityDamageEventDamageCauseEnum = EntityDamageEventDamageCauseEnum::Contact;
-    pub const ENTITY_ATTACK: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::EntityAttack;
-    pub const ENTITY_SWEEP_ATTACK: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::EntitySweepAttack;
-    pub const PROJECTILE: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::Projectile;
-    pub const SUFFOCATION: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::Suffocation;
-    pub const FALL: EntityDamageEventDamageCauseEnum = EntityDamageEventDamageCauseEnum::Fall;
-    pub const FIRE: EntityDamageEventDamageCauseEnum = EntityDamageEventDamageCauseEnum::Fire;
-    pub const FIRE_TICK: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::FireTick;
-    pub const MELTING: EntityDamageEventDamageCauseEnum = EntityDamageEventDamageCauseEnum::Melting;
-    pub const LAVA: EntityDamageEventDamageCauseEnum = EntityDamageEventDamageCauseEnum::Lava;
-    pub const DROWNING: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::Drowning;
-    pub const BLOCK_EXPLOSION: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::BlockExplosion;
-    pub const ENTITY_EXPLOSION: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::EntityExplosion;
-    pub const VOID: EntityDamageEventDamageCauseEnum = EntityDamageEventDamageCauseEnum::Void;
-    pub const LIGHTNING: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::Lightning;
-    pub const SUICIDE: EntityDamageEventDamageCauseEnum = EntityDamageEventDamageCauseEnum::Suicide;
-    pub const STARVATION: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::Starvation;
-    pub const POISON: EntityDamageEventDamageCauseEnum = EntityDamageEventDamageCauseEnum::Poison;
-    pub const MAGIC: EntityDamageEventDamageCauseEnum = EntityDamageEventDamageCauseEnum::Magic;
-    pub const WITHER: EntityDamageEventDamageCauseEnum = EntityDamageEventDamageCauseEnum::Wither;
-    pub const FALLING_BLOCK: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::FallingBlock;
-    pub const THORNS: EntityDamageEventDamageCauseEnum = EntityDamageEventDamageCauseEnum::Thorns;
-    pub const DRAGON_BREATH: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::DragonBreath;
-    pub const CUSTOM: EntityDamageEventDamageCauseEnum = EntityDamageEventDamageCauseEnum::Custom;
-    pub const FLY_INTO_WALL: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::FlyIntoWall;
-    pub const HOT_FLOOR: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::HotFloor;
-    pub const CRAMMING: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::Cramming;
-    pub const DRYOUT: EntityDamageEventDamageCauseEnum = EntityDamageEventDamageCauseEnum::Dryout;
-    pub const FREEZE: EntityDamageEventDamageCauseEnum = EntityDamageEventDamageCauseEnum::Freeze;
-    pub const SONIC_BOOM: EntityDamageEventDamageCauseEnum =
-        EntityDamageEventDamageCauseEnum::SonicBoom;
-    pub fn from_string(str: String) -> std::option::Option<EntityDamageEventDamageCauseEnum> {
-        match str.as_str() {
-            "KILL" => Some(EntityDamageEventDamageCauseEnum::Kill),
-            "WORLD_BORDER" => Some(EntityDamageEventDamageCauseEnum::WorldBorder),
-            "CONTACT" => Some(EntityDamageEventDamageCauseEnum::Contact),
-            "ENTITY_ATTACK" => Some(EntityDamageEventDamageCauseEnum::EntityAttack),
-            "ENTITY_SWEEP_ATTACK" => Some(EntityDamageEventDamageCauseEnum::EntitySweepAttack),
-            "PROJECTILE" => Some(EntityDamageEventDamageCauseEnum::Projectile),
-            "SUFFOCATION" => Some(EntityDamageEventDamageCauseEnum::Suffocation),
-            "FALL" => Some(EntityDamageEventDamageCauseEnum::Fall),
-            "FIRE" => Some(EntityDamageEventDamageCauseEnum::Fire),
-            "FIRE_TICK" => Some(EntityDamageEventDamageCauseEnum::FireTick),
-            "MELTING" => Some(EntityDamageEventDamageCauseEnum::Melting),
-            "LAVA" => Some(EntityDamageEventDamageCauseEnum::Lava),
-            "DROWNING" => Some(EntityDamageEventDamageCauseEnum::Drowning),
-            "BLOCK_EXPLOSION" => Some(EntityDamageEventDamageCauseEnum::BlockExplosion),
-            "ENTITY_EXPLOSION" => Some(EntityDamageEventDamageCauseEnum::EntityExplosion),
-            "VOID" => Some(EntityDamageEventDamageCauseEnum::Void),
-            "LIGHTNING" => Some(EntityDamageEventDamageCauseEnum::Lightning),
-            "SUICIDE" => Some(EntityDamageEventDamageCauseEnum::Suicide),
-            "STARVATION" => Some(EntityDamageEventDamageCauseEnum::Starvation),
-            "POISON" => Some(EntityDamageEventDamageCauseEnum::Poison),
-            "MAGIC" => Some(EntityDamageEventDamageCauseEnum::Magic),
-            "WITHER" => Some(EntityDamageEventDamageCauseEnum::Wither),
-            "FALLING_BLOCK" => Some(EntityDamageEventDamageCauseEnum::FallingBlock),
-            "THORNS" => Some(EntityDamageEventDamageCauseEnum::Thorns),
-            "DRAGON_BREATH" => Some(EntityDamageEventDamageCauseEnum::DragonBreath),
-            "CUSTOM" => Some(EntityDamageEventDamageCauseEnum::Custom),
-            "FLY_INTO_WALL" => Some(EntityDamageEventDamageCauseEnum::FlyIntoWall),
-            "HOT_FLOOR" => Some(EntityDamageEventDamageCauseEnum::HotFloor),
-            "CRAMMING" => Some(EntityDamageEventDamageCauseEnum::Cramming),
-            "DRYOUT" => Some(EntityDamageEventDamageCauseEnum::Dryout),
-            "FREEZE" => Some(EntityDamageEventDamageCauseEnum::Freeze),
-            "SONIC_BOOM" => Some(EntityDamageEventDamageCauseEnum::SonicBoom),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<EntityDamageEventDamageCause<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/EntityDamageEvent$DamageCause");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityDamageEvent$DamageCause;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        EntityDamageEventDamageCause::from_raw(
-            &jni,
-            raw_obj,
-            EntityDamageEventDamageCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-#[derive(PartialEq, Eq)]
-pub enum EntityDamageEventDamageModifierEnum {
-    Base,
-    HardHat,
-    Blocking,
-    Armor,
-    Resistance,
-    Magic,
-    Absorption,
-}
-impl std::fmt::Display for EntityDamageEventDamageModifierEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            EntityDamageEventDamageModifierEnum::Base => f.write_str("BASE"),
-            EntityDamageEventDamageModifierEnum::HardHat => f.write_str("HARD_HAT"),
-            EntityDamageEventDamageModifierEnum::Blocking => f.write_str("BLOCKING"),
-            EntityDamageEventDamageModifierEnum::Armor => f.write_str("ARMOR"),
-            EntityDamageEventDamageModifierEnum::Resistance => f.write_str("RESISTANCE"),
-            EntityDamageEventDamageModifierEnum::Magic => f.write_str("MAGIC"),
-            EntityDamageEventDamageModifierEnum::Absorption => f.write_str("ABSORPTION"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for EntityDamageEventDamageModifier<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct EntityDamageEventDamageModifier<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub EntityDamageEventDamageModifierEnum,
-);
-impl<'mc> std::ops::Deref for EntityDamageEventDamageModifier<'mc> {
-    type Target = EntityDamageEventDamageModifierEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for EntityDamageEventDamageModifier<'mc> {
+impl<'mc> JNIRaw<'mc> for EntityDamageEventDamageCauseStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for EntityDamageEventDamageModifier<'mc> {
-    type Enum = EntityDamageEventDamageModifierEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for EntityDamageEventDamageCauseStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate EntityDamageEventDamageCauseStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityDamageEvent$DamageCause",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a EntityDamageEventDamageCauseStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> EntityDamageEventDamageCauseStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+pub enum EntityDamageEventDamageModifier<'mc> {
+    Base {
+        inner: EntityDamageEventDamageModifierStruct<'mc>,
+    },
+    HardHat {
+        inner: EntityDamageEventDamageModifierStruct<'mc>,
+    },
+    Blocking {
+        inner: EntityDamageEventDamageModifierStruct<'mc>,
+    },
+    Armor {
+        inner: EntityDamageEventDamageModifierStruct<'mc>,
+    },
+    Resistance {
+        inner: EntityDamageEventDamageModifierStruct<'mc>,
+    },
+    Magic {
+        inner: EntityDamageEventDamageModifierStruct<'mc>,
+    },
+    Absorption {
+        inner: EntityDamageEventDamageModifierStruct<'mc>,
+    },
+}
+impl<'mc> std::fmt::Display for EntityDamageEventDamageModifier<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            EntityDamageEventDamageModifier::Base { .. } => f.write_str("BASE"),
+            EntityDamageEventDamageModifier::HardHat { .. } => f.write_str("HARD_HAT"),
+            EntityDamageEventDamageModifier::Blocking { .. } => f.write_str("BLOCKING"),
+            EntityDamageEventDamageModifier::Armor { .. } => f.write_str("ARMOR"),
+            EntityDamageEventDamageModifier::Resistance { .. } => f.write_str("RESISTANCE"),
+            EntityDamageEventDamageModifier::Magic { .. } => f.write_str("MAGIC"),
+            EntityDamageEventDamageModifier::Absorption { .. } => f.write_str("ABSORPTION"),
+        }
+    }
+}
+
+impl<'mc> EntityDamageEventDamageModifier<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<EntityDamageEventDamageModifier<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/EntityDamageEvent$DamageModifier");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityDamageEvent$DamageModifier;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "BASE" => Ok(EntityDamageEventDamageModifier::Base {
+                inner: EntityDamageEventDamageModifierStruct::from_raw(env, obj)?,
+            }),
+            "HARD_HAT" => Ok(EntityDamageEventDamageModifier::HardHat {
+                inner: EntityDamageEventDamageModifierStruct::from_raw(env, obj)?,
+            }),
+            "BLOCKING" => Ok(EntityDamageEventDamageModifier::Blocking {
+                inner: EntityDamageEventDamageModifierStruct::from_raw(env, obj)?,
+            }),
+            "ARMOR" => Ok(EntityDamageEventDamageModifier::Armor {
+                inner: EntityDamageEventDamageModifierStruct::from_raw(env, obj)?,
+            }),
+            "RESISTANCE" => Ok(EntityDamageEventDamageModifier::Resistance {
+                inner: EntityDamageEventDamageModifierStruct::from_raw(env, obj)?,
+            }),
+            "MAGIC" => Ok(EntityDamageEventDamageModifier::Magic {
+                inner: EntityDamageEventDamageModifierStruct::from_raw(env, obj)?,
+            }),
+            "ABSORPTION" => Ok(EntityDamageEventDamageModifier::Absorption {
+                inner: EntityDamageEventDamageModifierStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct EntityDamageEventDamageModifierStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for EntityDamageEventDamageModifier<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Base { inner } => inner.0.clone(),
+            Self::HardHat { inner } => inner.0.clone(),
+            Self::Blocking { inner } => inner.0.clone(),
+            Self::Armor { inner } => inner.0.clone(),
+            Self::Resistance { inner } => inner.0.clone(),
+            Self::Magic { inner } => inner.0.clone(),
+            Self::Absorption { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Base { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::HardHat { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Blocking { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Armor { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Resistance { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Magic { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Absorption { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EntityDamageEventDamageModifier<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -20530,76 +22125,79 @@ impl<'mc> JNIInstantiatableEnum<'mc> for EntityDamageEventDamageModifier<'mc> {
                 )
                 .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "BASE" => Ok(EntityDamageEventDamageModifier::Base {
+                    inner: EntityDamageEventDamageModifierStruct::from_raw(env, obj)?,
+                }),
+                "HARD_HAT" => Ok(EntityDamageEventDamageModifier::HardHat {
+                    inner: EntityDamageEventDamageModifierStruct::from_raw(env, obj)?,
+                }),
+                "BLOCKING" => Ok(EntityDamageEventDamageModifier::Blocking {
+                    inner: EntityDamageEventDamageModifierStruct::from_raw(env, obj)?,
+                }),
+                "ARMOR" => Ok(EntityDamageEventDamageModifier::Armor {
+                    inner: EntityDamageEventDamageModifierStruct::from_raw(env, obj)?,
+                }),
+                "RESISTANCE" => Ok(EntityDamageEventDamageModifier::Resistance {
+                    inner: EntityDamageEventDamageModifierStruct::from_raw(env, obj)?,
+                }),
+                "MAGIC" => Ok(EntityDamageEventDamageModifier::Magic {
+                    inner: EntityDamageEventDamageModifierStruct::from_raw(env, obj)?,
+                }),
+                "ABSORPTION" => Ok(EntityDamageEventDamageModifier::Absorption {
+                    inner: EntityDamageEventDamageModifierStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> EntityDamageEventDamageModifier<'mc> {
-    pub const BASE: EntityDamageEventDamageModifierEnum = EntityDamageEventDamageModifierEnum::Base;
-    pub const HARD_HAT: EntityDamageEventDamageModifierEnum =
-        EntityDamageEventDamageModifierEnum::HardHat;
-    pub const BLOCKING: EntityDamageEventDamageModifierEnum =
-        EntityDamageEventDamageModifierEnum::Blocking;
-    pub const ARMOR: EntityDamageEventDamageModifierEnum =
-        EntityDamageEventDamageModifierEnum::Armor;
-    pub const RESISTANCE: EntityDamageEventDamageModifierEnum =
-        EntityDamageEventDamageModifierEnum::Resistance;
-    pub const MAGIC: EntityDamageEventDamageModifierEnum =
-        EntityDamageEventDamageModifierEnum::Magic;
-    pub const ABSORPTION: EntityDamageEventDamageModifierEnum =
-        EntityDamageEventDamageModifierEnum::Absorption;
-    pub fn from_string(str: String) -> std::option::Option<EntityDamageEventDamageModifierEnum> {
-        match str.as_str() {
-            "BASE" => Some(EntityDamageEventDamageModifierEnum::Base),
-            "HARD_HAT" => Some(EntityDamageEventDamageModifierEnum::HardHat),
-            "BLOCKING" => Some(EntityDamageEventDamageModifierEnum::Blocking),
-            "ARMOR" => Some(EntityDamageEventDamageModifierEnum::Armor),
-            "RESISTANCE" => Some(EntityDamageEventDamageModifierEnum::Resistance),
-            "MAGIC" => Some(EntityDamageEventDamageModifierEnum::Magic),
-            "ABSORPTION" => Some(EntityDamageEventDamageModifierEnum::Absorption),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for EntityDamageEventDamageModifierStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EntityDamageEventDamageModifierStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate EntityDamageEventDamageModifierStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityDamageEvent$DamageModifier",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a EntityDamageEventDamageModifierStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<EntityDamageEventDamageModifier<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/EntityDamageEvent$DamageModifier");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityDamageEvent$DamageModifier;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        EntityDamageEventDamageModifier::from_raw(
-            &jni,
-            raw_obj,
-            EntityDamageEventDamageModifier::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> EntityDamageEventDamageModifierStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -20607,12 +22205,10 @@ impl<'mc> JNIRaw<'mc> for EntityDamageEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityDamageEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20715,12 +22311,7 @@ impl<'mc> EntityDamageEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::entity::EntityDamageEventDamageCause::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::entity::EntityDamageEventDamageCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::entity::EntityDamageEventDamageCause::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_damage_with_entity_damage_eventdamage_modifier(
@@ -20866,12 +22457,7 @@ impl<'mc> EntityDamageEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -20987,14 +22573,9 @@ impl<'mc> EntityDamageEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -21030,12 +22611,10 @@ impl<'mc> JNIRaw<'mc> for EntityDeathEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityDeathEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21155,12 +22734,7 @@ impl<'mc> EntityDeathEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -21276,14 +22850,9 @@ impl<'mc> EntityDeathEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -21317,12 +22886,10 @@ impl<'mc> JNIRaw<'mc> for EntityToggleGlideEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityToggleGlideEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21457,12 +23024,7 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -21578,14 +23140,9 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -21617,95 +23174,259 @@ pub struct EntityTargetEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum EntityTargetEventTargetReasonEnum {
-    TargetDied,
-    ClosestPlayer,
-    TargetAttackedEntity,
-    PigZombieTarget,
-    ForgotTarget,
-    TargetAttackedOwner,
-    OwnerAttackedTarget,
-    RandomTarget,
-    DefendVillage,
-    TargetAttackedNearbyEntity,
-    ReinforcementTarget,
-    Collision,
-    Custom,
-    ClosestEntity,
-    FollowLeader,
-    Tempt,
-    Unknown,
-}
-impl std::fmt::Display for EntityTargetEventTargetReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            EntityTargetEventTargetReasonEnum::TargetDied => f.write_str("TARGET_DIED"),
-            EntityTargetEventTargetReasonEnum::ClosestPlayer => f.write_str("CLOSEST_PLAYER"),
-            EntityTargetEventTargetReasonEnum::TargetAttackedEntity => {
-                f.write_str("TARGET_ATTACKED_ENTITY")
-            }
-            EntityTargetEventTargetReasonEnum::PigZombieTarget => f.write_str("PIG_ZOMBIE_TARGET"),
-            EntityTargetEventTargetReasonEnum::ForgotTarget => f.write_str("FORGOT_TARGET"),
-            EntityTargetEventTargetReasonEnum::TargetAttackedOwner => {
-                f.write_str("TARGET_ATTACKED_OWNER")
-            }
-            EntityTargetEventTargetReasonEnum::OwnerAttackedTarget => {
-                f.write_str("OWNER_ATTACKED_TARGET")
-            }
-            EntityTargetEventTargetReasonEnum::RandomTarget => f.write_str("RANDOM_TARGET"),
-            EntityTargetEventTargetReasonEnum::DefendVillage => f.write_str("DEFEND_VILLAGE"),
-            EntityTargetEventTargetReasonEnum::TargetAttackedNearbyEntity => {
-                f.write_str("TARGET_ATTACKED_NEARBY_ENTITY")
-            }
-            EntityTargetEventTargetReasonEnum::ReinforcementTarget => {
-                f.write_str("REINFORCEMENT_TARGET")
-            }
-            EntityTargetEventTargetReasonEnum::Collision => f.write_str("COLLISION"),
-            EntityTargetEventTargetReasonEnum::Custom => f.write_str("CUSTOM"),
-            EntityTargetEventTargetReasonEnum::ClosestEntity => f.write_str("CLOSEST_ENTITY"),
-            EntityTargetEventTargetReasonEnum::FollowLeader => f.write_str("FOLLOW_LEADER"),
-            EntityTargetEventTargetReasonEnum::Tempt => f.write_str("TEMPT"),
-            EntityTargetEventTargetReasonEnum::Unknown => f.write_str("UNKNOWN"),
-        }
-    }
+pub enum EntityTargetEventTargetReason<'mc> {
+    TargetDied {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    ClosestPlayer {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    TargetAttackedEntity {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    PigZombieTarget {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    ForgotTarget {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    TargetAttackedOwner {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    OwnerAttackedTarget {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    RandomTarget {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    DefendVillage {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    TargetAttackedNearbyEntity {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    ReinforcementTarget {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    Collision {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    Custom {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    ClosestEntity {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    FollowLeader {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    Tempt {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
+    Unknown {
+        inner: EntityTargetEventTargetReasonStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for EntityTargetEventTargetReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            EntityTargetEventTargetReason::TargetDied { .. } => f.write_str("TARGET_DIED"),
+            EntityTargetEventTargetReason::ClosestPlayer { .. } => f.write_str("CLOSEST_PLAYER"),
+            EntityTargetEventTargetReason::TargetAttackedEntity { .. } => {
+                f.write_str("TARGET_ATTACKED_ENTITY")
+            }
+            EntityTargetEventTargetReason::PigZombieTarget { .. } => {
+                f.write_str("PIG_ZOMBIE_TARGET")
+            }
+            EntityTargetEventTargetReason::ForgotTarget { .. } => f.write_str("FORGOT_TARGET"),
+            EntityTargetEventTargetReason::TargetAttackedOwner { .. } => {
+                f.write_str("TARGET_ATTACKED_OWNER")
+            }
+            EntityTargetEventTargetReason::OwnerAttackedTarget { .. } => {
+                f.write_str("OWNER_ATTACKED_TARGET")
+            }
+            EntityTargetEventTargetReason::RandomTarget { .. } => f.write_str("RANDOM_TARGET"),
+            EntityTargetEventTargetReason::DefendVillage { .. } => f.write_str("DEFEND_VILLAGE"),
+            EntityTargetEventTargetReason::TargetAttackedNearbyEntity { .. } => {
+                f.write_str("TARGET_ATTACKED_NEARBY_ENTITY")
+            }
+            EntityTargetEventTargetReason::ReinforcementTarget { .. } => {
+                f.write_str("REINFORCEMENT_TARGET")
+            }
+            EntityTargetEventTargetReason::Collision { .. } => f.write_str("COLLISION"),
+            EntityTargetEventTargetReason::Custom { .. } => f.write_str("CUSTOM"),
+            EntityTargetEventTargetReason::ClosestEntity { .. } => f.write_str("CLOSEST_ENTITY"),
+            EntityTargetEventTargetReason::FollowLeader { .. } => f.write_str("FOLLOW_LEADER"),
+            EntityTargetEventTargetReason::Tempt { .. } => f.write_str("TEMPT"),
+            EntityTargetEventTargetReason::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
     }
 }
+
+impl<'mc> EntityTargetEventTargetReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<EntityTargetEventTargetReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/EntityTargetEvent$TargetReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityTargetEvent$TargetReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "TARGET_DIED" => Ok(EntityTargetEventTargetReason::TargetDied {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "CLOSEST_PLAYER" => Ok(EntityTargetEventTargetReason::ClosestPlayer {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "TARGET_ATTACKED_ENTITY" => Ok(EntityTargetEventTargetReason::TargetAttackedEntity {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "PIG_ZOMBIE_TARGET" => Ok(EntityTargetEventTargetReason::PigZombieTarget {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "FORGOT_TARGET" => Ok(EntityTargetEventTargetReason::ForgotTarget {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "TARGET_ATTACKED_OWNER" => Ok(EntityTargetEventTargetReason::TargetAttackedOwner {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "OWNER_ATTACKED_TARGET" => Ok(EntityTargetEventTargetReason::OwnerAttackedTarget {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "RANDOM_TARGET" => Ok(EntityTargetEventTargetReason::RandomTarget {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "DEFEND_VILLAGE" => Ok(EntityTargetEventTargetReason::DefendVillage {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "TARGET_ATTACKED_NEARBY_ENTITY" => {
+                Ok(EntityTargetEventTargetReason::TargetAttackedNearbyEntity {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                })
+            }
+            "REINFORCEMENT_TARGET" => Ok(EntityTargetEventTargetReason::ReinforcementTarget {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "COLLISION" => Ok(EntityTargetEventTargetReason::Collision {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "CUSTOM" => Ok(EntityTargetEventTargetReason::Custom {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "CLOSEST_ENTITY" => Ok(EntityTargetEventTargetReason::ClosestEntity {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "FOLLOW_LEADER" => Ok(EntityTargetEventTargetReason::FollowLeader {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "TEMPT" => Ok(EntityTargetEventTargetReason::Tempt {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(EntityTargetEventTargetReason::Unknown {
+                inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct EntityTargetEventTargetReason<'mc>(
+pub struct EntityTargetEventTargetReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub EntityTargetEventTargetReasonEnum,
 );
-impl<'mc> std::ops::Deref for EntityTargetEventTargetReason<'mc> {
-    type Target = EntityTargetEventTargetReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for EntityTargetEventTargetReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::TargetDied { inner } => inner.0.clone(),
+            Self::ClosestPlayer { inner } => inner.0.clone(),
+            Self::TargetAttackedEntity { inner } => inner.0.clone(),
+            Self::PigZombieTarget { inner } => inner.0.clone(),
+            Self::ForgotTarget { inner } => inner.0.clone(),
+            Self::TargetAttackedOwner { inner } => inner.0.clone(),
+            Self::OwnerAttackedTarget { inner } => inner.0.clone(),
+            Self::RandomTarget { inner } => inner.0.clone(),
+            Self::DefendVillage { inner } => inner.0.clone(),
+            Self::TargetAttackedNearbyEntity { inner } => inner.0.clone(),
+            Self::ReinforcementTarget { inner } => inner.0.clone(),
+            Self::Collision { inner } => inner.0.clone(),
+            Self::Custom { inner } => inner.0.clone(),
+            Self::ClosestEntity { inner } => inner.0.clone(),
+            Self::FollowLeader { inner } => inner.0.clone(),
+            Self::Tempt { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::TargetDied { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ClosestPlayer { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::TargetAttackedEntity { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::PigZombieTarget { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ForgotTarget { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::TargetAttackedOwner { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::OwnerAttackedTarget { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::RandomTarget { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DefendVillage { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::TargetAttackedNearbyEntity { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ReinforcementTarget { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Collision { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Custom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ClosestEntity { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::FollowLeader { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Tempt { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for EntityTargetEventTargetReason<'mc> {
-    type Enum = EntityTargetEventTargetReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for EntityTargetEventTargetReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -21724,109 +23445,113 @@ impl<'mc> JNIInstantiatableEnum<'mc> for EntityTargetEventTargetReason<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "TARGET_DIED" => Ok(EntityTargetEventTargetReason::TargetDied {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "CLOSEST_PLAYER" => Ok(EntityTargetEventTargetReason::ClosestPlayer {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "TARGET_ATTACKED_ENTITY" => {
+                    Ok(EntityTargetEventTargetReason::TargetAttackedEntity {
+                        inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                    })
+                }
+                "PIG_ZOMBIE_TARGET" => Ok(EntityTargetEventTargetReason::PigZombieTarget {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "FORGOT_TARGET" => Ok(EntityTargetEventTargetReason::ForgotTarget {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "TARGET_ATTACKED_OWNER" => Ok(EntityTargetEventTargetReason::TargetAttackedOwner {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "OWNER_ATTACKED_TARGET" => Ok(EntityTargetEventTargetReason::OwnerAttackedTarget {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "RANDOM_TARGET" => Ok(EntityTargetEventTargetReason::RandomTarget {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "DEFEND_VILLAGE" => Ok(EntityTargetEventTargetReason::DefendVillage {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "TARGET_ATTACKED_NEARBY_ENTITY" => {
+                    Ok(EntityTargetEventTargetReason::TargetAttackedNearbyEntity {
+                        inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                    })
+                }
+                "REINFORCEMENT_TARGET" => Ok(EntityTargetEventTargetReason::ReinforcementTarget {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "COLLISION" => Ok(EntityTargetEventTargetReason::Collision {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "CUSTOM" => Ok(EntityTargetEventTargetReason::Custom {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "CLOSEST_ENTITY" => Ok(EntityTargetEventTargetReason::ClosestEntity {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "FOLLOW_LEADER" => Ok(EntityTargetEventTargetReason::FollowLeader {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "TEMPT" => Ok(EntityTargetEventTargetReason::Tempt {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(EntityTargetEventTargetReason::Unknown {
+                    inner: EntityTargetEventTargetReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> EntityTargetEventTargetReason<'mc> {
-    pub const TARGET_DIED: EntityTargetEventTargetReasonEnum =
-        EntityTargetEventTargetReasonEnum::TargetDied;
-    pub const CLOSEST_PLAYER: EntityTargetEventTargetReasonEnum =
-        EntityTargetEventTargetReasonEnum::ClosestPlayer;
-    pub const TARGET_ATTACKED_ENTITY: EntityTargetEventTargetReasonEnum =
-        EntityTargetEventTargetReasonEnum::TargetAttackedEntity;
-    pub const PIG_ZOMBIE_TARGET: EntityTargetEventTargetReasonEnum =
-        EntityTargetEventTargetReasonEnum::PigZombieTarget;
-    pub const FORGOT_TARGET: EntityTargetEventTargetReasonEnum =
-        EntityTargetEventTargetReasonEnum::ForgotTarget;
-    pub const TARGET_ATTACKED_OWNER: EntityTargetEventTargetReasonEnum =
-        EntityTargetEventTargetReasonEnum::TargetAttackedOwner;
-    pub const OWNER_ATTACKED_TARGET: EntityTargetEventTargetReasonEnum =
-        EntityTargetEventTargetReasonEnum::OwnerAttackedTarget;
-    pub const RANDOM_TARGET: EntityTargetEventTargetReasonEnum =
-        EntityTargetEventTargetReasonEnum::RandomTarget;
-    pub const DEFEND_VILLAGE: EntityTargetEventTargetReasonEnum =
-        EntityTargetEventTargetReasonEnum::DefendVillage;
-    pub const TARGET_ATTACKED_NEARBY_ENTITY: EntityTargetEventTargetReasonEnum =
-        EntityTargetEventTargetReasonEnum::TargetAttackedNearbyEntity;
-    pub const REINFORCEMENT_TARGET: EntityTargetEventTargetReasonEnum =
-        EntityTargetEventTargetReasonEnum::ReinforcementTarget;
-    pub const COLLISION: EntityTargetEventTargetReasonEnum =
-        EntityTargetEventTargetReasonEnum::Collision;
-    pub const CUSTOM: EntityTargetEventTargetReasonEnum = EntityTargetEventTargetReasonEnum::Custom;
-    pub const CLOSEST_ENTITY: EntityTargetEventTargetReasonEnum =
-        EntityTargetEventTargetReasonEnum::ClosestEntity;
-    pub const FOLLOW_LEADER: EntityTargetEventTargetReasonEnum =
-        EntityTargetEventTargetReasonEnum::FollowLeader;
-    pub const TEMPT: EntityTargetEventTargetReasonEnum = EntityTargetEventTargetReasonEnum::Tempt;
-    pub const UNKNOWN: EntityTargetEventTargetReasonEnum =
-        EntityTargetEventTargetReasonEnum::Unknown;
-    pub fn from_string(str: String) -> std::option::Option<EntityTargetEventTargetReasonEnum> {
-        match str.as_str() {
-            "TARGET_DIED" => Some(EntityTargetEventTargetReasonEnum::TargetDied),
-            "CLOSEST_PLAYER" => Some(EntityTargetEventTargetReasonEnum::ClosestPlayer),
-            "TARGET_ATTACKED_ENTITY" => {
-                Some(EntityTargetEventTargetReasonEnum::TargetAttackedEntity)
-            }
-            "PIG_ZOMBIE_TARGET" => Some(EntityTargetEventTargetReasonEnum::PigZombieTarget),
-            "FORGOT_TARGET" => Some(EntityTargetEventTargetReasonEnum::ForgotTarget),
-            "TARGET_ATTACKED_OWNER" => Some(EntityTargetEventTargetReasonEnum::TargetAttackedOwner),
-            "OWNER_ATTACKED_TARGET" => Some(EntityTargetEventTargetReasonEnum::OwnerAttackedTarget),
-            "RANDOM_TARGET" => Some(EntityTargetEventTargetReasonEnum::RandomTarget),
-            "DEFEND_VILLAGE" => Some(EntityTargetEventTargetReasonEnum::DefendVillage),
-            "TARGET_ATTACKED_NEARBY_ENTITY" => {
-                Some(EntityTargetEventTargetReasonEnum::TargetAttackedNearbyEntity)
-            }
-            "REINFORCEMENT_TARGET" => Some(EntityTargetEventTargetReasonEnum::ReinforcementTarget),
-            "COLLISION" => Some(EntityTargetEventTargetReasonEnum::Collision),
-            "CUSTOM" => Some(EntityTargetEventTargetReasonEnum::Custom),
-            "CLOSEST_ENTITY" => Some(EntityTargetEventTargetReasonEnum::ClosestEntity),
-            "FOLLOW_LEADER" => Some(EntityTargetEventTargetReasonEnum::FollowLeader),
-            "TEMPT" => Some(EntityTargetEventTargetReasonEnum::Tempt),
-            "UNKNOWN" => Some(EntityTargetEventTargetReasonEnum::Unknown),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for EntityTargetEventTargetReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EntityTargetEventTargetReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate EntityTargetEventTargetReasonStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityTargetEvent$TargetReason",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a EntityTargetEventTargetReasonStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<EntityTargetEventTargetReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/EntityTargetEvent$TargetReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityTargetEvent$TargetReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        EntityTargetEventTargetReason::from_raw(
-            &jni,
-            raw_obj,
-            EntityTargetEventTargetReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> EntityTargetEventTargetReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -21834,12 +23559,10 @@ impl<'mc> JNIRaw<'mc> for EntityTargetEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityTargetEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21932,8 +23655,6 @@ impl<'mc> EntityTargetEvent<'mc> {
             crate::event::entity::EntityTargetEventTargetReason::from_raw(
                 &self.jni_ref(),
                 raw_obj,
-                crate::event::entity::EntityTargetEventTargetReason::from_string(variant_str)
-                    .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
             )?,
         ))
     }
@@ -22037,12 +23758,7 @@ impl<'mc> EntityTargetEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -22158,14 +23874,9 @@ impl<'mc> EntityTargetEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -22197,57 +23908,93 @@ pub struct CreeperPowerEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum CreeperPowerEventPowerCauseEnum {
-    Lightning,
-    SetOn,
-    SetOff,
-}
-impl std::fmt::Display for CreeperPowerEventPowerCauseEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            CreeperPowerEventPowerCauseEnum::Lightning => f.write_str("LIGHTNING"),
-            CreeperPowerEventPowerCauseEnum::SetOn => f.write_str("SET_ON"),
-            CreeperPowerEventPowerCauseEnum::SetOff => f.write_str("SET_OFF"),
-        }
-    }
+pub enum CreeperPowerEventPowerCause<'mc> {
+    Lightning {
+        inner: CreeperPowerEventPowerCauseStruct<'mc>,
+    },
+    SetOn {
+        inner: CreeperPowerEventPowerCauseStruct<'mc>,
+    },
+    SetOff {
+        inner: CreeperPowerEventPowerCauseStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for CreeperPowerEventPowerCause<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            CreeperPowerEventPowerCause::Lightning { .. } => f.write_str("LIGHTNING"),
+            CreeperPowerEventPowerCause::SetOn { .. } => f.write_str("SET_ON"),
+            CreeperPowerEventPowerCause::SetOff { .. } => f.write_str("SET_OFF"),
+        }
     }
 }
+
+impl<'mc> CreeperPowerEventPowerCause<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<CreeperPowerEventPowerCause<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/CreeperPowerEvent$PowerCause");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/CreeperPowerEvent$PowerCause;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "LIGHTNING" => Ok(CreeperPowerEventPowerCause::Lightning {
+                inner: CreeperPowerEventPowerCauseStruct::from_raw(env, obj)?,
+            }),
+            "SET_ON" => Ok(CreeperPowerEventPowerCause::SetOn {
+                inner: CreeperPowerEventPowerCauseStruct::from_raw(env, obj)?,
+            }),
+            "SET_OFF" => Ok(CreeperPowerEventPowerCause::SetOff {
+                inner: CreeperPowerEventPowerCauseStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct CreeperPowerEventPowerCause<'mc>(
+pub struct CreeperPowerEventPowerCauseStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub CreeperPowerEventPowerCauseEnum,
 );
-impl<'mc> std::ops::Deref for CreeperPowerEventPowerCause<'mc> {
-    type Target = CreeperPowerEventPowerCauseEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for CreeperPowerEventPowerCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Lightning { inner } => inner.0.clone(),
+            Self::SetOn { inner } => inner.0.clone(),
+            Self::SetOff { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Lightning { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SetOn { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SetOff { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for CreeperPowerEventPowerCause<'mc> {
-    type Enum = CreeperPowerEventPowerCauseEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for CreeperPowerEventPowerCause<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -22264,63 +24011,65 @@ impl<'mc> JNIInstantiatableEnum<'mc> for CreeperPowerEventPowerCause<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "LIGHTNING" => Ok(CreeperPowerEventPowerCause::Lightning {
+                    inner: CreeperPowerEventPowerCauseStruct::from_raw(env, obj)?,
+                }),
+                "SET_ON" => Ok(CreeperPowerEventPowerCause::SetOn {
+                    inner: CreeperPowerEventPowerCauseStruct::from_raw(env, obj)?,
+                }),
+                "SET_OFF" => Ok(CreeperPowerEventPowerCause::SetOff {
+                    inner: CreeperPowerEventPowerCauseStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> CreeperPowerEventPowerCause<'mc> {
-    pub const LIGHTNING: CreeperPowerEventPowerCauseEnum =
-        CreeperPowerEventPowerCauseEnum::Lightning;
-    pub const SET_ON: CreeperPowerEventPowerCauseEnum = CreeperPowerEventPowerCauseEnum::SetOn;
-    pub const SET_OFF: CreeperPowerEventPowerCauseEnum = CreeperPowerEventPowerCauseEnum::SetOff;
-    pub fn from_string(str: String) -> std::option::Option<CreeperPowerEventPowerCauseEnum> {
-        match str.as_str() {
-            "LIGHTNING" => Some(CreeperPowerEventPowerCauseEnum::Lightning),
-            "SET_ON" => Some(CreeperPowerEventPowerCauseEnum::SetOn),
-            "SET_OFF" => Some(CreeperPowerEventPowerCauseEnum::SetOff),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for CreeperPowerEventPowerCauseStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for CreeperPowerEventPowerCauseStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate CreeperPowerEventPowerCauseStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/CreeperPowerEvent$PowerCause")?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a CreeperPowerEventPowerCauseStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<CreeperPowerEventPowerCause<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/CreeperPowerEvent$PowerCause");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/CreeperPowerEvent$PowerCause;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        CreeperPowerEventPowerCause::from_raw(
-            &jni,
-            raw_obj,
-            CreeperPowerEventPowerCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> CreeperPowerEventPowerCauseStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -22328,12 +24077,10 @@ impl<'mc> JNIRaw<'mc> for CreeperPowerEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CreeperPowerEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22432,12 +24179,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::entity::CreeperPowerEventPowerCause::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::entity::CreeperPowerEventPowerCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::entity::CreeperPowerEventPowerCause::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn entity(&self) -> Result<crate::entity::Creeper<'mc>, Box<dyn std::error::Error>> {
@@ -22510,12 +24252,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -22631,14 +24368,9 @@ impl<'mc> CreeperPowerEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -22675,12 +24407,10 @@ impl<'mc> JNIRaw<'mc> for SpawnerSpawnEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SpawnerSpawnEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22829,12 +24559,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -22950,14 +24675,9 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -22988,12 +24708,10 @@ impl<'mc> JNIRaw<'mc> for EnderDragonChangePhaseEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EnderDragonChangePhaseEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23153,8 +24871,6 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
         Ok(Some(crate::entity::EnderDragonPhase::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::entity::EnderDragonPhase::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
 
@@ -23176,12 +24892,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EnderDragonPhase::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EnderDragonPhase::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EnderDragonPhase::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn entity_type(
@@ -23202,12 +24913,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -23323,14 +25029,9 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -23370,12 +25071,10 @@ impl<'mc> JNIRaw<'mc> for ProjectileHitEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ProjectileHitEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23547,8 +25246,6 @@ impl<'mc> ProjectileHitEvent<'mc> {
         Ok(Some(crate::block::BlockFace::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
 
@@ -23587,12 +25284,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -23708,14 +25400,9 @@ impl<'mc> ProjectileHitEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -23751,12 +25438,10 @@ impl<'mc> JNIRaw<'mc> for EntityPortalEnterEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityPortalEnterEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23872,12 +25557,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -23993,14 +25673,9 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -24031,12 +25706,10 @@ impl<'mc> JNIRaw<'mc> for EntityAirChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityAirChangeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24183,12 +25856,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -24304,14 +25972,9 @@ impl<'mc> EntityAirChangeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -24342,59 +26005,104 @@ pub struct EntityUnleashEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum EntityUnleashEventUnleashReasonEnum {
-    HolderGone,
-    PlayerUnleash,
-    Distance,
-    Unknown,
-}
-impl std::fmt::Display for EntityUnleashEventUnleashReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            EntityUnleashEventUnleashReasonEnum::HolderGone => f.write_str("HOLDER_GONE"),
-            EntityUnleashEventUnleashReasonEnum::PlayerUnleash => f.write_str("PLAYER_UNLEASH"),
-            EntityUnleashEventUnleashReasonEnum::Distance => f.write_str("DISTANCE"),
-            EntityUnleashEventUnleashReasonEnum::Unknown => f.write_str("UNKNOWN"),
-        }
-    }
+pub enum EntityUnleashEventUnleashReason<'mc> {
+    HolderGone {
+        inner: EntityUnleashEventUnleashReasonStruct<'mc>,
+    },
+    PlayerUnleash {
+        inner: EntityUnleashEventUnleashReasonStruct<'mc>,
+    },
+    Distance {
+        inner: EntityUnleashEventUnleashReasonStruct<'mc>,
+    },
+    Unknown {
+        inner: EntityUnleashEventUnleashReasonStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for EntityUnleashEventUnleashReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            EntityUnleashEventUnleashReason::HolderGone { .. } => f.write_str("HOLDER_GONE"),
+            EntityUnleashEventUnleashReason::PlayerUnleash { .. } => f.write_str("PLAYER_UNLEASH"),
+            EntityUnleashEventUnleashReason::Distance { .. } => f.write_str("DISTANCE"),
+            EntityUnleashEventUnleashReason::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
     }
 }
+
+impl<'mc> EntityUnleashEventUnleashReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<EntityUnleashEventUnleashReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/EntityUnleashEvent$UnleashReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityUnleashEvent$UnleashReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "HOLDER_GONE" => Ok(EntityUnleashEventUnleashReason::HolderGone {
+                inner: EntityUnleashEventUnleashReasonStruct::from_raw(env, obj)?,
+            }),
+            "PLAYER_UNLEASH" => Ok(EntityUnleashEventUnleashReason::PlayerUnleash {
+                inner: EntityUnleashEventUnleashReasonStruct::from_raw(env, obj)?,
+            }),
+            "DISTANCE" => Ok(EntityUnleashEventUnleashReason::Distance {
+                inner: EntityUnleashEventUnleashReasonStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(EntityUnleashEventUnleashReason::Unknown {
+                inner: EntityUnleashEventUnleashReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct EntityUnleashEventUnleashReason<'mc>(
+pub struct EntityUnleashEventUnleashReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub EntityUnleashEventUnleashReasonEnum,
 );
-impl<'mc> std::ops::Deref for EntityUnleashEventUnleashReason<'mc> {
-    type Target = EntityUnleashEventUnleashReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for EntityUnleashEventUnleashReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::HolderGone { inner } => inner.0.clone(),
+            Self::PlayerUnleash { inner } => inner.0.clone(),
+            Self::Distance { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::HolderGone { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::PlayerUnleash { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Distance { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for EntityUnleashEventUnleashReason<'mc> {
-    type Enum = EntityUnleashEventUnleashReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for EntityUnleashEventUnleashReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -24413,68 +26121,70 @@ impl<'mc> JNIInstantiatableEnum<'mc> for EntityUnleashEventUnleashReason<'mc> {
                 )
                 .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "HOLDER_GONE" => Ok(EntityUnleashEventUnleashReason::HolderGone {
+                    inner: EntityUnleashEventUnleashReasonStruct::from_raw(env, obj)?,
+                }),
+                "PLAYER_UNLEASH" => Ok(EntityUnleashEventUnleashReason::PlayerUnleash {
+                    inner: EntityUnleashEventUnleashReasonStruct::from_raw(env, obj)?,
+                }),
+                "DISTANCE" => Ok(EntityUnleashEventUnleashReason::Distance {
+                    inner: EntityUnleashEventUnleashReasonStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(EntityUnleashEventUnleashReason::Unknown {
+                    inner: EntityUnleashEventUnleashReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> EntityUnleashEventUnleashReason<'mc> {
-    pub const HOLDER_GONE: EntityUnleashEventUnleashReasonEnum =
-        EntityUnleashEventUnleashReasonEnum::HolderGone;
-    pub const PLAYER_UNLEASH: EntityUnleashEventUnleashReasonEnum =
-        EntityUnleashEventUnleashReasonEnum::PlayerUnleash;
-    pub const DISTANCE: EntityUnleashEventUnleashReasonEnum =
-        EntityUnleashEventUnleashReasonEnum::Distance;
-    pub const UNKNOWN: EntityUnleashEventUnleashReasonEnum =
-        EntityUnleashEventUnleashReasonEnum::Unknown;
-    pub fn from_string(str: String) -> std::option::Option<EntityUnleashEventUnleashReasonEnum> {
-        match str.as_str() {
-            "HOLDER_GONE" => Some(EntityUnleashEventUnleashReasonEnum::HolderGone),
-            "PLAYER_UNLEASH" => Some(EntityUnleashEventUnleashReasonEnum::PlayerUnleash),
-            "DISTANCE" => Some(EntityUnleashEventUnleashReasonEnum::Distance),
-            "UNKNOWN" => Some(EntityUnleashEventUnleashReasonEnum::Unknown),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for EntityUnleashEventUnleashReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EntityUnleashEventUnleashReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate EntityUnleashEventUnleashReasonStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityUnleashEvent$UnleashReason",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a EntityUnleashEventUnleashReasonStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<EntityUnleashEventUnleashReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/EntityUnleashEvent$UnleashReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityUnleashEvent$UnleashReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        EntityUnleashEventUnleashReason::from_raw(
-            &jni,
-            raw_obj,
-            EntityUnleashEventUnleashReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> EntityUnleashEventUnleashReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -24482,12 +26192,10 @@ impl<'mc> JNIRaw<'mc> for EntityUnleashEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityUnleashEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24567,8 +26275,6 @@ impl<'mc> EntityUnleashEvent<'mc> {
             crate::event::entity::EntityUnleashEventUnleashReason::from_raw(
                 &self.jni_ref(),
                 raw_obj,
-                crate::event::entity::EntityUnleashEventUnleashReason::from_string(variant_str)
-                    .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
             )?,
         ))
     }
@@ -24625,12 +26331,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -24746,14 +26447,9 @@ impl<'mc> EntityUnleashEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -24783,12 +26479,10 @@ impl<'mc> JNIRaw<'mc> for ExpBottleEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ExpBottleEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24984,8 +26678,6 @@ impl<'mc> ExpBottleEvent<'mc> {
         Ok(Some(crate::block::BlockFace::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
 
@@ -25024,12 +26716,7 @@ impl<'mc> ExpBottleEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -25145,14 +26832,9 @@ impl<'mc> ExpBottleEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -25183,12 +26865,10 @@ impl<'mc> JNIRaw<'mc> for EntityCombustEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityCombustEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -25336,12 +27016,7 @@ impl<'mc> EntityCombustEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -25457,14 +27132,9 @@ impl<'mc> EntityCombustEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -25500,12 +27170,10 @@ impl<'mc> JNIRaw<'mc> for EntitySpellCastEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntitySpellCastEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -25596,12 +27264,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::SpellcasterSpell::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::SpellcasterSpell::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::SpellcasterSpell::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn entity(&self) -> Result<crate::entity::Spellcaster<'mc>, Box<dyn std::error::Error>> {
@@ -25661,12 +27324,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -25782,14 +27440,9 @@ impl<'mc> EntitySpellCastEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -25820,73 +27473,166 @@ pub struct EntityTransformEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum EntityTransformEventTransformReasonEnum {
-    Cured,
-    Frozen,
-    Infection,
-    Drowned,
-    Sheared,
-    Lightning,
-    Split,
-    PiglinZombified,
-    Metamorphosis,
-    Unknown,
-}
-impl std::fmt::Display for EntityTransformEventTransformReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            EntityTransformEventTransformReasonEnum::Cured => f.write_str("CURED"),
-            EntityTransformEventTransformReasonEnum::Frozen => f.write_str("FROZEN"),
-            EntityTransformEventTransformReasonEnum::Infection => f.write_str("INFECTION"),
-            EntityTransformEventTransformReasonEnum::Drowned => f.write_str("DROWNED"),
-            EntityTransformEventTransformReasonEnum::Sheared => f.write_str("SHEARED"),
-            EntityTransformEventTransformReasonEnum::Lightning => f.write_str("LIGHTNING"),
-            EntityTransformEventTransformReasonEnum::Split => f.write_str("SPLIT"),
-            EntityTransformEventTransformReasonEnum::PiglinZombified => {
-                f.write_str("PIGLIN_ZOMBIFIED")
-            }
-            EntityTransformEventTransformReasonEnum::Metamorphosis => f.write_str("METAMORPHOSIS"),
-            EntityTransformEventTransformReasonEnum::Unknown => f.write_str("UNKNOWN"),
-        }
-    }
+pub enum EntityTransformEventTransformReason<'mc> {
+    Cured {
+        inner: EntityTransformEventTransformReasonStruct<'mc>,
+    },
+    Frozen {
+        inner: EntityTransformEventTransformReasonStruct<'mc>,
+    },
+    Infection {
+        inner: EntityTransformEventTransformReasonStruct<'mc>,
+    },
+    Drowned {
+        inner: EntityTransformEventTransformReasonStruct<'mc>,
+    },
+    Sheared {
+        inner: EntityTransformEventTransformReasonStruct<'mc>,
+    },
+    Lightning {
+        inner: EntityTransformEventTransformReasonStruct<'mc>,
+    },
+    Split {
+        inner: EntityTransformEventTransformReasonStruct<'mc>,
+    },
+    PiglinZombified {
+        inner: EntityTransformEventTransformReasonStruct<'mc>,
+    },
+    Metamorphosis {
+        inner: EntityTransformEventTransformReasonStruct<'mc>,
+    },
+    Unknown {
+        inner: EntityTransformEventTransformReasonStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for EntityTransformEventTransformReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            EntityTransformEventTransformReason::Cured { .. } => f.write_str("CURED"),
+            EntityTransformEventTransformReason::Frozen { .. } => f.write_str("FROZEN"),
+            EntityTransformEventTransformReason::Infection { .. } => f.write_str("INFECTION"),
+            EntityTransformEventTransformReason::Drowned { .. } => f.write_str("DROWNED"),
+            EntityTransformEventTransformReason::Sheared { .. } => f.write_str("SHEARED"),
+            EntityTransformEventTransformReason::Lightning { .. } => f.write_str("LIGHTNING"),
+            EntityTransformEventTransformReason::Split { .. } => f.write_str("SPLIT"),
+            EntityTransformEventTransformReason::PiglinZombified { .. } => {
+                f.write_str("PIGLIN_ZOMBIFIED")
+            }
+            EntityTransformEventTransformReason::Metamorphosis { .. } => {
+                f.write_str("METAMORPHOSIS")
+            }
+            EntityTransformEventTransformReason::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
     }
 }
+
+impl<'mc> EntityTransformEventTransformReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<EntityTransformEventTransformReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/EntityTransformEvent$TransformReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityTransformEvent$TransformReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "CURED" => Ok(EntityTransformEventTransformReason::Cured {
+                inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "FROZEN" => Ok(EntityTransformEventTransformReason::Frozen {
+                inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "INFECTION" => Ok(EntityTransformEventTransformReason::Infection {
+                inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "DROWNED" => Ok(EntityTransformEventTransformReason::Drowned {
+                inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "SHEARED" => Ok(EntityTransformEventTransformReason::Sheared {
+                inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "LIGHTNING" => Ok(EntityTransformEventTransformReason::Lightning {
+                inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "SPLIT" => Ok(EntityTransformEventTransformReason::Split {
+                inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "PIGLIN_ZOMBIFIED" => Ok(EntityTransformEventTransformReason::PiglinZombified {
+                inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "METAMORPHOSIS" => Ok(EntityTransformEventTransformReason::Metamorphosis {
+                inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(EntityTransformEventTransformReason::Unknown {
+                inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct EntityTransformEventTransformReason<'mc>(
+pub struct EntityTransformEventTransformReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub EntityTransformEventTransformReasonEnum,
 );
-impl<'mc> std::ops::Deref for EntityTransformEventTransformReason<'mc> {
-    type Target = EntityTransformEventTransformReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for EntityTransformEventTransformReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Cured { inner } => inner.0.clone(),
+            Self::Frozen { inner } => inner.0.clone(),
+            Self::Infection { inner } => inner.0.clone(),
+            Self::Drowned { inner } => inner.0.clone(),
+            Self::Sheared { inner } => inner.0.clone(),
+            Self::Lightning { inner } => inner.0.clone(),
+            Self::Split { inner } => inner.0.clone(),
+            Self::PiglinZombified { inner } => inner.0.clone(),
+            Self::Metamorphosis { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Cured { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Frozen { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Infection { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Drowned { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Sheared { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Lightning { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Split { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::PiglinZombified { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Metamorphosis { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for EntityTransformEventTransformReason<'mc> {
-    type Enum = EntityTransformEventTransformReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for EntityTransformEventTransformReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -25905,88 +27651,88 @@ impl<'mc> JNIInstantiatableEnum<'mc> for EntityTransformEventTransformReason<'mc
                 )
                 .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "CURED" => Ok(EntityTransformEventTransformReason::Cured {
+                    inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "FROZEN" => Ok(EntityTransformEventTransformReason::Frozen {
+                    inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "INFECTION" => Ok(EntityTransformEventTransformReason::Infection {
+                    inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "DROWNED" => Ok(EntityTransformEventTransformReason::Drowned {
+                    inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "SHEARED" => Ok(EntityTransformEventTransformReason::Sheared {
+                    inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "LIGHTNING" => Ok(EntityTransformEventTransformReason::Lightning {
+                    inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "SPLIT" => Ok(EntityTransformEventTransformReason::Split {
+                    inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "PIGLIN_ZOMBIFIED" => Ok(EntityTransformEventTransformReason::PiglinZombified {
+                    inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "METAMORPHOSIS" => Ok(EntityTransformEventTransformReason::Metamorphosis {
+                    inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(EntityTransformEventTransformReason::Unknown {
+                    inner: EntityTransformEventTransformReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> EntityTransformEventTransformReason<'mc> {
-    pub const CURED: EntityTransformEventTransformReasonEnum =
-        EntityTransformEventTransformReasonEnum::Cured;
-    pub const FROZEN: EntityTransformEventTransformReasonEnum =
-        EntityTransformEventTransformReasonEnum::Frozen;
-    pub const INFECTION: EntityTransformEventTransformReasonEnum =
-        EntityTransformEventTransformReasonEnum::Infection;
-    pub const DROWNED: EntityTransformEventTransformReasonEnum =
-        EntityTransformEventTransformReasonEnum::Drowned;
-    pub const SHEARED: EntityTransformEventTransformReasonEnum =
-        EntityTransformEventTransformReasonEnum::Sheared;
-    pub const LIGHTNING: EntityTransformEventTransformReasonEnum =
-        EntityTransformEventTransformReasonEnum::Lightning;
-    pub const SPLIT: EntityTransformEventTransformReasonEnum =
-        EntityTransformEventTransformReasonEnum::Split;
-    pub const PIGLIN_ZOMBIFIED: EntityTransformEventTransformReasonEnum =
-        EntityTransformEventTransformReasonEnum::PiglinZombified;
-    pub const METAMORPHOSIS: EntityTransformEventTransformReasonEnum =
-        EntityTransformEventTransformReasonEnum::Metamorphosis;
-    pub const UNKNOWN: EntityTransformEventTransformReasonEnum =
-        EntityTransformEventTransformReasonEnum::Unknown;
-    pub fn from_string(
-        str: String,
-    ) -> std::option::Option<EntityTransformEventTransformReasonEnum> {
-        match str.as_str() {
-            "CURED" => Some(EntityTransformEventTransformReasonEnum::Cured),
-            "FROZEN" => Some(EntityTransformEventTransformReasonEnum::Frozen),
-            "INFECTION" => Some(EntityTransformEventTransformReasonEnum::Infection),
-            "DROWNED" => Some(EntityTransformEventTransformReasonEnum::Drowned),
-            "SHEARED" => Some(EntityTransformEventTransformReasonEnum::Sheared),
-            "LIGHTNING" => Some(EntityTransformEventTransformReasonEnum::Lightning),
-            "SPLIT" => Some(EntityTransformEventTransformReasonEnum::Split),
-            "PIGLIN_ZOMBIFIED" => Some(EntityTransformEventTransformReasonEnum::PiglinZombified),
-            "METAMORPHOSIS" => Some(EntityTransformEventTransformReasonEnum::Metamorphosis),
-            "UNKNOWN" => Some(EntityTransformEventTransformReasonEnum::Unknown),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for EntityTransformEventTransformReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EntityTransformEventTransformReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate EntityTransformEventTransformReasonStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityTransformEvent$TransformReason",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a EntityTransformEventTransformReasonStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<EntityTransformEventTransformReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/EntityTransformEvent$TransformReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/EntityTransformEvent$TransformReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        EntityTransformEventTransformReason::from_raw(
-            &jni,
-            raw_obj,
-            EntityTransformEventTransformReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> EntityTransformEventTransformReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -25994,12 +27740,10 @@ impl<'mc> JNIRaw<'mc> for EntityTransformEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityTransformEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -26135,8 +27879,6 @@ impl<'mc> EntityTransformEvent<'mc> {
         crate::event::entity::EntityTransformEventTransformReason::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::event::entity::EntityTransformEventTransformReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
 
@@ -26169,12 +27911,7 @@ impl<'mc> EntityTransformEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -26290,14 +28027,9 @@ impl<'mc> EntityTransformEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -26322,115 +28054,314 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityTransformEvent<
             .expect("Error converting EntityTransformEvent into crate::event::entity::EntityEvent")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum DamageCauseEnum {
-    Kill,
-    WorldBorder,
-    Contact,
-    EntityAttack,
-    EntitySweepAttack,
-    Projectile,
-    Suffocation,
-    Fall,
-    Fire,
-    FireTick,
-    Melting,
-    Lava,
-    Drowning,
-    BlockExplosion,
-    EntityExplosion,
-    Void,
-    Lightning,
-    Suicide,
-    Starvation,
-    Poison,
-    Magic,
-    Wither,
-    FallingBlock,
-    Thorns,
-    DragonBreath,
-    Custom,
-    FlyIntoWall,
-    HotFloor,
-    Cramming,
-    Dryout,
-    Freeze,
-    SonicBoom,
-}
-impl std::fmt::Display for DamageCauseEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            DamageCauseEnum::Kill => f.write_str("KILL"),
-            DamageCauseEnum::WorldBorder => f.write_str("WORLD_BORDER"),
-            DamageCauseEnum::Contact => f.write_str("CONTACT"),
-            DamageCauseEnum::EntityAttack => f.write_str("ENTITY_ATTACK"),
-            DamageCauseEnum::EntitySweepAttack => f.write_str("ENTITY_SWEEP_ATTACK"),
-            DamageCauseEnum::Projectile => f.write_str("PROJECTILE"),
-            DamageCauseEnum::Suffocation => f.write_str("SUFFOCATION"),
-            DamageCauseEnum::Fall => f.write_str("FALL"),
-            DamageCauseEnum::Fire => f.write_str("FIRE"),
-            DamageCauseEnum::FireTick => f.write_str("FIRE_TICK"),
-            DamageCauseEnum::Melting => f.write_str("MELTING"),
-            DamageCauseEnum::Lava => f.write_str("LAVA"),
-            DamageCauseEnum::Drowning => f.write_str("DROWNING"),
-            DamageCauseEnum::BlockExplosion => f.write_str("BLOCK_EXPLOSION"),
-            DamageCauseEnum::EntityExplosion => f.write_str("ENTITY_EXPLOSION"),
-            DamageCauseEnum::Void => f.write_str("VOID"),
-            DamageCauseEnum::Lightning => f.write_str("LIGHTNING"),
-            DamageCauseEnum::Suicide => f.write_str("SUICIDE"),
-            DamageCauseEnum::Starvation => f.write_str("STARVATION"),
-            DamageCauseEnum::Poison => f.write_str("POISON"),
-            DamageCauseEnum::Magic => f.write_str("MAGIC"),
-            DamageCauseEnum::Wither => f.write_str("WITHER"),
-            DamageCauseEnum::FallingBlock => f.write_str("FALLING_BLOCK"),
-            DamageCauseEnum::Thorns => f.write_str("THORNS"),
-            DamageCauseEnum::DragonBreath => f.write_str("DRAGON_BREATH"),
-            DamageCauseEnum::Custom => f.write_str("CUSTOM"),
-            DamageCauseEnum::FlyIntoWall => f.write_str("FLY_INTO_WALL"),
-            DamageCauseEnum::HotFloor => f.write_str("HOT_FLOOR"),
-            DamageCauseEnum::Cramming => f.write_str("CRAMMING"),
-            DamageCauseEnum::Dryout => f.write_str("DRYOUT"),
-            DamageCauseEnum::Freeze => f.write_str("FREEZE"),
-            DamageCauseEnum::SonicBoom => f.write_str("SONIC_BOOM"),
-        }
-    }
+pub enum DamageCause<'mc> {
+    Kill { inner: DamageCauseStruct<'mc> },
+    WorldBorder { inner: DamageCauseStruct<'mc> },
+    Contact { inner: DamageCauseStruct<'mc> },
+    EntityAttack { inner: DamageCauseStruct<'mc> },
+    EntitySweepAttack { inner: DamageCauseStruct<'mc> },
+    Projectile { inner: DamageCauseStruct<'mc> },
+    Suffocation { inner: DamageCauseStruct<'mc> },
+    Fall { inner: DamageCauseStruct<'mc> },
+    Fire { inner: DamageCauseStruct<'mc> },
+    FireTick { inner: DamageCauseStruct<'mc> },
+    Melting { inner: DamageCauseStruct<'mc> },
+    Lava { inner: DamageCauseStruct<'mc> },
+    Drowning { inner: DamageCauseStruct<'mc> },
+    BlockExplosion { inner: DamageCauseStruct<'mc> },
+    EntityExplosion { inner: DamageCauseStruct<'mc> },
+    Void { inner: DamageCauseStruct<'mc> },
+    Lightning { inner: DamageCauseStruct<'mc> },
+    Suicide { inner: DamageCauseStruct<'mc> },
+    Starvation { inner: DamageCauseStruct<'mc> },
+    Poison { inner: DamageCauseStruct<'mc> },
+    Magic { inner: DamageCauseStruct<'mc> },
+    Wither { inner: DamageCauseStruct<'mc> },
+    FallingBlock { inner: DamageCauseStruct<'mc> },
+    Thorns { inner: DamageCauseStruct<'mc> },
+    DragonBreath { inner: DamageCauseStruct<'mc> },
+    Custom { inner: DamageCauseStruct<'mc> },
+    FlyIntoWall { inner: DamageCauseStruct<'mc> },
+    HotFloor { inner: DamageCauseStruct<'mc> },
+    Cramming { inner: DamageCauseStruct<'mc> },
+    Dryout { inner: DamageCauseStruct<'mc> },
+    Freeze { inner: DamageCauseStruct<'mc> },
+    SonicBoom { inner: DamageCauseStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for DamageCause<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            DamageCause::Kill { .. } => f.write_str("KILL"),
+            DamageCause::WorldBorder { .. } => f.write_str("WORLD_BORDER"),
+            DamageCause::Contact { .. } => f.write_str("CONTACT"),
+            DamageCause::EntityAttack { .. } => f.write_str("ENTITY_ATTACK"),
+            DamageCause::EntitySweepAttack { .. } => f.write_str("ENTITY_SWEEP_ATTACK"),
+            DamageCause::Projectile { .. } => f.write_str("PROJECTILE"),
+            DamageCause::Suffocation { .. } => f.write_str("SUFFOCATION"),
+            DamageCause::Fall { .. } => f.write_str("FALL"),
+            DamageCause::Fire { .. } => f.write_str("FIRE"),
+            DamageCause::FireTick { .. } => f.write_str("FIRE_TICK"),
+            DamageCause::Melting { .. } => f.write_str("MELTING"),
+            DamageCause::Lava { .. } => f.write_str("LAVA"),
+            DamageCause::Drowning { .. } => f.write_str("DROWNING"),
+            DamageCause::BlockExplosion { .. } => f.write_str("BLOCK_EXPLOSION"),
+            DamageCause::EntityExplosion { .. } => f.write_str("ENTITY_EXPLOSION"),
+            DamageCause::Void { .. } => f.write_str("VOID"),
+            DamageCause::Lightning { .. } => f.write_str("LIGHTNING"),
+            DamageCause::Suicide { .. } => f.write_str("SUICIDE"),
+            DamageCause::Starvation { .. } => f.write_str("STARVATION"),
+            DamageCause::Poison { .. } => f.write_str("POISON"),
+            DamageCause::Magic { .. } => f.write_str("MAGIC"),
+            DamageCause::Wither { .. } => f.write_str("WITHER"),
+            DamageCause::FallingBlock { .. } => f.write_str("FALLING_BLOCK"),
+            DamageCause::Thorns { .. } => f.write_str("THORNS"),
+            DamageCause::DragonBreath { .. } => f.write_str("DRAGON_BREATH"),
+            DamageCause::Custom { .. } => f.write_str("CUSTOM"),
+            DamageCause::FlyIntoWall { .. } => f.write_str("FLY_INTO_WALL"),
+            DamageCause::HotFloor { .. } => f.write_str("HOT_FLOOR"),
+            DamageCause::Cramming { .. } => f.write_str("CRAMMING"),
+            DamageCause::Dryout { .. } => f.write_str("DRYOUT"),
+            DamageCause::Freeze { .. } => f.write_str("FREEZE"),
+            DamageCause::SonicBoom { .. } => f.write_str("SONIC_BOOM"),
+        }
     }
 }
+
+impl<'mc> DamageCause<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<DamageCause<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/entity/DamageCause");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/entity/DamageCause;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "KILL" => Ok(DamageCause::Kill {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "WORLD_BORDER" => Ok(DamageCause::WorldBorder {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "CONTACT" => Ok(DamageCause::Contact {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "ENTITY_ATTACK" => Ok(DamageCause::EntityAttack {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "ENTITY_SWEEP_ATTACK" => Ok(DamageCause::EntitySweepAttack {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "PROJECTILE" => Ok(DamageCause::Projectile {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "SUFFOCATION" => Ok(DamageCause::Suffocation {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "FALL" => Ok(DamageCause::Fall {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "FIRE" => Ok(DamageCause::Fire {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "FIRE_TICK" => Ok(DamageCause::FireTick {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "MELTING" => Ok(DamageCause::Melting {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "LAVA" => Ok(DamageCause::Lava {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "DROWNING" => Ok(DamageCause::Drowning {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "BLOCK_EXPLOSION" => Ok(DamageCause::BlockExplosion {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "ENTITY_EXPLOSION" => Ok(DamageCause::EntityExplosion {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "VOID" => Ok(DamageCause::Void {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "LIGHTNING" => Ok(DamageCause::Lightning {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "SUICIDE" => Ok(DamageCause::Suicide {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "STARVATION" => Ok(DamageCause::Starvation {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "POISON" => Ok(DamageCause::Poison {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "MAGIC" => Ok(DamageCause::Magic {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "WITHER" => Ok(DamageCause::Wither {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "FALLING_BLOCK" => Ok(DamageCause::FallingBlock {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "THORNS" => Ok(DamageCause::Thorns {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "DRAGON_BREATH" => Ok(DamageCause::DragonBreath {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "CUSTOM" => Ok(DamageCause::Custom {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "FLY_INTO_WALL" => Ok(DamageCause::FlyIntoWall {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "HOT_FLOOR" => Ok(DamageCause::HotFloor {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "CRAMMING" => Ok(DamageCause::Cramming {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "DRYOUT" => Ok(DamageCause::Dryout {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "FREEZE" => Ok(DamageCause::Freeze {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+            "SONIC_BOOM" => Ok(DamageCause::SonicBoom {
+                inner: DamageCauseStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct DamageCause<'mc>(
+pub struct DamageCauseStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub DamageCauseEnum,
 );
-impl<'mc> std::ops::Deref for DamageCause<'mc> {
-    type Target = DamageCauseEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for DamageCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Kill { inner } => inner.0.clone(),
+            Self::WorldBorder { inner } => inner.0.clone(),
+            Self::Contact { inner } => inner.0.clone(),
+            Self::EntityAttack { inner } => inner.0.clone(),
+            Self::EntitySweepAttack { inner } => inner.0.clone(),
+            Self::Projectile { inner } => inner.0.clone(),
+            Self::Suffocation { inner } => inner.0.clone(),
+            Self::Fall { inner } => inner.0.clone(),
+            Self::Fire { inner } => inner.0.clone(),
+            Self::FireTick { inner } => inner.0.clone(),
+            Self::Melting { inner } => inner.0.clone(),
+            Self::Lava { inner } => inner.0.clone(),
+            Self::Drowning { inner } => inner.0.clone(),
+            Self::BlockExplosion { inner } => inner.0.clone(),
+            Self::EntityExplosion { inner } => inner.0.clone(),
+            Self::Void { inner } => inner.0.clone(),
+            Self::Lightning { inner } => inner.0.clone(),
+            Self::Suicide { inner } => inner.0.clone(),
+            Self::Starvation { inner } => inner.0.clone(),
+            Self::Poison { inner } => inner.0.clone(),
+            Self::Magic { inner } => inner.0.clone(),
+            Self::Wither { inner } => inner.0.clone(),
+            Self::FallingBlock { inner } => inner.0.clone(),
+            Self::Thorns { inner } => inner.0.clone(),
+            Self::DragonBreath { inner } => inner.0.clone(),
+            Self::Custom { inner } => inner.0.clone(),
+            Self::FlyIntoWall { inner } => inner.0.clone(),
+            Self::HotFloor { inner } => inner.0.clone(),
+            Self::Cramming { inner } => inner.0.clone(),
+            Self::Dryout { inner } => inner.0.clone(),
+            Self::Freeze { inner } => inner.0.clone(),
+            Self::SonicBoom { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Kill { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WorldBorder { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Contact { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::EntityAttack { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EntitySweepAttack { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Projectile { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Suffocation { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Fall { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Fire { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FireTick { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Melting { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Lava { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Drowning { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::BlockExplosion { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EntityExplosion { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Void { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Lightning { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Suicide { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Starvation { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Poison { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Magic { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Wither { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FallingBlock { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Thorns { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::DragonBreath { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Custom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FlyIntoWall { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HotFloor { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Cramming { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Dryout { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Freeze { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SonicBoom { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for DamageCause<'mc> {
-    type Enum = DamageCauseEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for DamageCause<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate DamageCause from null object.").into());
@@ -26443,120 +28374,150 @@ impl<'mc> JNIInstantiatableEnum<'mc> for DamageCause<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "KILL" => Ok(DamageCause::Kill {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "WORLD_BORDER" => Ok(DamageCause::WorldBorder {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "CONTACT" => Ok(DamageCause::Contact {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "ENTITY_ATTACK" => Ok(DamageCause::EntityAttack {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "ENTITY_SWEEP_ATTACK" => Ok(DamageCause::EntitySweepAttack {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "PROJECTILE" => Ok(DamageCause::Projectile {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "SUFFOCATION" => Ok(DamageCause::Suffocation {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "FALL" => Ok(DamageCause::Fall {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "FIRE" => Ok(DamageCause::Fire {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "FIRE_TICK" => Ok(DamageCause::FireTick {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "MELTING" => Ok(DamageCause::Melting {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "LAVA" => Ok(DamageCause::Lava {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "DROWNING" => Ok(DamageCause::Drowning {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "BLOCK_EXPLOSION" => Ok(DamageCause::BlockExplosion {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "ENTITY_EXPLOSION" => Ok(DamageCause::EntityExplosion {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "VOID" => Ok(DamageCause::Void {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "LIGHTNING" => Ok(DamageCause::Lightning {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "SUICIDE" => Ok(DamageCause::Suicide {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "STARVATION" => Ok(DamageCause::Starvation {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "POISON" => Ok(DamageCause::Poison {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "MAGIC" => Ok(DamageCause::Magic {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "WITHER" => Ok(DamageCause::Wither {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "FALLING_BLOCK" => Ok(DamageCause::FallingBlock {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "THORNS" => Ok(DamageCause::Thorns {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "DRAGON_BREATH" => Ok(DamageCause::DragonBreath {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "CUSTOM" => Ok(DamageCause::Custom {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "FLY_INTO_WALL" => Ok(DamageCause::FlyIntoWall {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "HOT_FLOOR" => Ok(DamageCause::HotFloor {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "CRAMMING" => Ok(DamageCause::Cramming {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "DRYOUT" => Ok(DamageCause::Dryout {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "FREEZE" => Ok(DamageCause::Freeze {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                "SONIC_BOOM" => Ok(DamageCause::SonicBoom {
+                    inner: DamageCauseStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> DamageCause<'mc> {
-    pub const KILL: DamageCauseEnum = DamageCauseEnum::Kill;
-    pub const WORLD_BORDER: DamageCauseEnum = DamageCauseEnum::WorldBorder;
-    pub const CONTACT: DamageCauseEnum = DamageCauseEnum::Contact;
-    pub const ENTITY_ATTACK: DamageCauseEnum = DamageCauseEnum::EntityAttack;
-    pub const ENTITY_SWEEP_ATTACK: DamageCauseEnum = DamageCauseEnum::EntitySweepAttack;
-    pub const PROJECTILE: DamageCauseEnum = DamageCauseEnum::Projectile;
-    pub const SUFFOCATION: DamageCauseEnum = DamageCauseEnum::Suffocation;
-    pub const FALL: DamageCauseEnum = DamageCauseEnum::Fall;
-    pub const FIRE: DamageCauseEnum = DamageCauseEnum::Fire;
-    pub const FIRE_TICK: DamageCauseEnum = DamageCauseEnum::FireTick;
-    pub const MELTING: DamageCauseEnum = DamageCauseEnum::Melting;
-    pub const LAVA: DamageCauseEnum = DamageCauseEnum::Lava;
-    pub const DROWNING: DamageCauseEnum = DamageCauseEnum::Drowning;
-    pub const BLOCK_EXPLOSION: DamageCauseEnum = DamageCauseEnum::BlockExplosion;
-    pub const ENTITY_EXPLOSION: DamageCauseEnum = DamageCauseEnum::EntityExplosion;
-    pub const VOID: DamageCauseEnum = DamageCauseEnum::Void;
-    pub const LIGHTNING: DamageCauseEnum = DamageCauseEnum::Lightning;
-    pub const SUICIDE: DamageCauseEnum = DamageCauseEnum::Suicide;
-    pub const STARVATION: DamageCauseEnum = DamageCauseEnum::Starvation;
-    pub const POISON: DamageCauseEnum = DamageCauseEnum::Poison;
-    pub const MAGIC: DamageCauseEnum = DamageCauseEnum::Magic;
-    pub const WITHER: DamageCauseEnum = DamageCauseEnum::Wither;
-    pub const FALLING_BLOCK: DamageCauseEnum = DamageCauseEnum::FallingBlock;
-    pub const THORNS: DamageCauseEnum = DamageCauseEnum::Thorns;
-    pub const DRAGON_BREATH: DamageCauseEnum = DamageCauseEnum::DragonBreath;
-    pub const CUSTOM: DamageCauseEnum = DamageCauseEnum::Custom;
-    pub const FLY_INTO_WALL: DamageCauseEnum = DamageCauseEnum::FlyIntoWall;
-    pub const HOT_FLOOR: DamageCauseEnum = DamageCauseEnum::HotFloor;
-    pub const CRAMMING: DamageCauseEnum = DamageCauseEnum::Cramming;
-    pub const DRYOUT: DamageCauseEnum = DamageCauseEnum::Dryout;
-    pub const FREEZE: DamageCauseEnum = DamageCauseEnum::Freeze;
-    pub const SONIC_BOOM: DamageCauseEnum = DamageCauseEnum::SonicBoom;
-    pub fn from_string(str: String) -> std::option::Option<DamageCauseEnum> {
-        match str.as_str() {
-            "KILL" => Some(DamageCauseEnum::Kill),
-            "WORLD_BORDER" => Some(DamageCauseEnum::WorldBorder),
-            "CONTACT" => Some(DamageCauseEnum::Contact),
-            "ENTITY_ATTACK" => Some(DamageCauseEnum::EntityAttack),
-            "ENTITY_SWEEP_ATTACK" => Some(DamageCauseEnum::EntitySweepAttack),
-            "PROJECTILE" => Some(DamageCauseEnum::Projectile),
-            "SUFFOCATION" => Some(DamageCauseEnum::Suffocation),
-            "FALL" => Some(DamageCauseEnum::Fall),
-            "FIRE" => Some(DamageCauseEnum::Fire),
-            "FIRE_TICK" => Some(DamageCauseEnum::FireTick),
-            "MELTING" => Some(DamageCauseEnum::Melting),
-            "LAVA" => Some(DamageCauseEnum::Lava),
-            "DROWNING" => Some(DamageCauseEnum::Drowning),
-            "BLOCK_EXPLOSION" => Some(DamageCauseEnum::BlockExplosion),
-            "ENTITY_EXPLOSION" => Some(DamageCauseEnum::EntityExplosion),
-            "VOID" => Some(DamageCauseEnum::Void),
-            "LIGHTNING" => Some(DamageCauseEnum::Lightning),
-            "SUICIDE" => Some(DamageCauseEnum::Suicide),
-            "STARVATION" => Some(DamageCauseEnum::Starvation),
-            "POISON" => Some(DamageCauseEnum::Poison),
-            "MAGIC" => Some(DamageCauseEnum::Magic),
-            "WITHER" => Some(DamageCauseEnum::Wither),
-            "FALLING_BLOCK" => Some(DamageCauseEnum::FallingBlock),
-            "THORNS" => Some(DamageCauseEnum::Thorns),
-            "DRAGON_BREATH" => Some(DamageCauseEnum::DragonBreath),
-            "CUSTOM" => Some(DamageCauseEnum::Custom),
-            "FLY_INTO_WALL" => Some(DamageCauseEnum::FlyIntoWall),
-            "HOT_FLOOR" => Some(DamageCauseEnum::HotFloor),
-            "CRAMMING" => Some(DamageCauseEnum::Cramming),
-            "DRYOUT" => Some(DamageCauseEnum::Dryout),
-            "FREEZE" => Some(DamageCauseEnum::Freeze),
-            "SONIC_BOOM" => Some(DamageCauseEnum::SonicBoom),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for DamageCauseStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for DamageCauseStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate DamageCauseStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/DamageCause")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a DamageCauseStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<DamageCause<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/entity/DamageCause");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/entity/DamageCause;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        DamageCause::from_raw(
-            &jni,
-            raw_obj,
-            DamageCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> DamageCauseStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Called when a splash potion hits an area
@@ -26570,12 +28531,10 @@ impl<'mc> JNIRaw<'mc> for PotionSplashEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PotionSplashEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -26803,8 +28762,6 @@ impl<'mc> PotionSplashEvent<'mc> {
         Ok(Some(crate::block::BlockFace::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
 
@@ -26843,12 +28800,7 @@ impl<'mc> PotionSplashEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -26964,14 +28916,9 @@ impl<'mc> PotionSplashEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -27008,12 +28955,10 @@ impl<'mc> JNIRaw<'mc> for EntityInteractEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityInteractEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -27151,12 +29096,7 @@ impl<'mc> EntityInteractEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -27272,14 +29212,9 @@ impl<'mc> EntityInteractEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -27316,12 +29251,10 @@ impl<'mc> JNIRaw<'mc> for EntitySpawnEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntitySpawnEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -27451,12 +29384,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -27572,14 +29500,9 @@ impl<'mc> EntitySpawnEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -27616,12 +29539,10 @@ impl<'mc> JNIRaw<'mc> for VillagerReplenishTradeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for VillagerReplenishTradeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -27815,12 +29736,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -27936,14 +29852,9 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 

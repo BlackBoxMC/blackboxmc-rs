@@ -3,57 +3,87 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-#[derive(PartialEq, Eq)]
-pub enum ChatMessageTypeEnum {
-    Chat,
-    System,
-    ActionBar,
-}
-impl std::fmt::Display for ChatMessageTypeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ChatMessageTypeEnum::Chat => f.write_str("CHAT"),
-            ChatMessageTypeEnum::System => f.write_str("SYSTEM"),
-            ChatMessageTypeEnum::ActionBar => f.write_str("ACTION_BAR"),
-        }
-    }
+pub enum ChatMessageType<'mc> {
+    Chat { inner: ChatMessageTypeStruct<'mc> },
+    System { inner: ChatMessageTypeStruct<'mc> },
+    ActionBar { inner: ChatMessageTypeStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for ChatMessageType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            ChatMessageType::Chat { .. } => f.write_str("CHAT"),
+            ChatMessageType::System { .. } => f.write_str("SYSTEM"),
+            ChatMessageType::ActionBar { .. } => f.write_str("ACTION_BAR"),
+        }
     }
 }
+
+impl<'mc> ChatMessageType<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<ChatMessageType<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("net/md_5/bungee/api/ChatMessageType");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lnet/md_5/bungee/api/ChatMessageType;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "CHAT" => Ok(ChatMessageType::Chat {
+                inner: ChatMessageTypeStruct::from_raw(env, obj)?,
+            }),
+            "SYSTEM" => Ok(ChatMessageType::System {
+                inner: ChatMessageTypeStruct::from_raw(env, obj)?,
+            }),
+            "ACTION_BAR" => Ok(ChatMessageType::ActionBar {
+                inner: ChatMessageTypeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct ChatMessageType<'mc>(
+pub struct ChatMessageTypeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub ChatMessageTypeEnum,
 );
-impl<'mc> std::ops::Deref for ChatMessageType<'mc> {
-    type Target = ChatMessageTypeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for ChatMessageType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Chat { inner } => inner.0.clone(),
+            Self::System { inner } => inner.0.clone(),
+            Self::ActionBar { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Chat { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::System { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ActionBar { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for ChatMessageType<'mc> {
-    type Enum = ChatMessageTypeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for ChatMessageType<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -68,62 +98,64 @@ impl<'mc> JNIInstantiatableEnum<'mc> for ChatMessageType<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "CHAT" => Ok(ChatMessageType::Chat {
+                    inner: ChatMessageTypeStruct::from_raw(env, obj)?,
+                }),
+                "SYSTEM" => Ok(ChatMessageType::System {
+                    inner: ChatMessageTypeStruct::from_raw(env, obj)?,
+                }),
+                "ACTION_BAR" => Ok(ChatMessageType::ActionBar {
+                    inner: ChatMessageTypeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> ChatMessageType<'mc> {
-    pub const CHAT: ChatMessageTypeEnum = ChatMessageTypeEnum::Chat;
-    pub const SYSTEM: ChatMessageTypeEnum = ChatMessageTypeEnum::System;
-    pub const ACTION_BAR: ChatMessageTypeEnum = ChatMessageTypeEnum::ActionBar;
-    pub fn from_string(str: String) -> std::option::Option<ChatMessageTypeEnum> {
-        match str.as_str() {
-            "CHAT" => Some(ChatMessageTypeEnum::Chat),
-            "SYSTEM" => Some(ChatMessageTypeEnum::System),
-            "ACTION_BAR" => Some(ChatMessageTypeEnum::ActionBar),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for ChatMessageTypeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ChatMessageTypeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate ChatMessageTypeStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/ChatMessageType")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ChatMessageTypeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<ChatMessageType<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("net/md_5/bungee/api/ChatMessageType");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lnet/md_5/bungee/api/ChatMessageType;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        ChatMessageType::from_raw(
-            &jni,
-            raw_obj,
-            ChatMessageType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> ChatMessageTypeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -137,12 +169,10 @@ impl<'mc> JNIRaw<'mc> for ChatColor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ChatColor<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -400,14 +430,9 @@ impl<'mc> ChatColor<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 

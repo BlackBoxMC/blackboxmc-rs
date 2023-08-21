@@ -16,12 +16,10 @@ impl<'mc> JNIRaw<'mc> for AdvancementProgress<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for AdvancementProgress<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -173,67 +171,98 @@ impl<'mc> AdvancementProgress<'mc> {
         Ok(new_vec)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum AdvancementDisplayTypeEnum {
-    Task,
-    Challenge,
-    Goal,
-}
-impl std::fmt::Display for AdvancementDisplayTypeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            AdvancementDisplayTypeEnum::Task => f.write_str("TASK"),
-            AdvancementDisplayTypeEnum::Challenge => f.write_str("CHALLENGE"),
-            AdvancementDisplayTypeEnum::Goal => f.write_str("GOAL"),
-        }
-    }
+pub enum AdvancementDisplayType<'mc> {
+    Task {
+        inner: AdvancementDisplayTypeStruct<'mc>,
+    },
+    Challenge {
+        inner: AdvancementDisplayTypeStruct<'mc>,
+    },
+    Goal {
+        inner: AdvancementDisplayTypeStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for AdvancementDisplayType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            AdvancementDisplayType::Task { .. } => f.write_str("TASK"),
+            AdvancementDisplayType::Challenge { .. } => f.write_str("CHALLENGE"),
+            AdvancementDisplayType::Goal { .. } => f.write_str("GOAL"),
+        }
     }
 }
+
+impl<'mc> AdvancementDisplayType<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<AdvancementDisplayType<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/advancement/AdvancementDisplayType");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/advancement/AdvancementDisplayType;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "TASK" => Ok(AdvancementDisplayType::Task {
+                inner: AdvancementDisplayTypeStruct::from_raw(env, obj)?,
+            }),
+            "CHALLENGE" => Ok(AdvancementDisplayType::Challenge {
+                inner: AdvancementDisplayTypeStruct::from_raw(env, obj)?,
+            }),
+            "GOAL" => Ok(AdvancementDisplayType::Goal {
+                inner: AdvancementDisplayTypeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct AdvancementDisplayType<'mc>(
+pub struct AdvancementDisplayTypeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub AdvancementDisplayTypeEnum,
 );
-impl<'mc> std::ops::Deref for AdvancementDisplayType<'mc> {
-    type Target = AdvancementDisplayTypeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for AdvancementDisplayType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Task { inner } => inner.0.clone(),
+            Self::Challenge { inner } => inner.0.clone(),
+            Self::Goal { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Task { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Challenge { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Goal { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for AdvancementDisplayType<'mc> {
-    type Enum = AdvancementDisplayTypeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for AdvancementDisplayType<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -250,62 +279,65 @@ impl<'mc> JNIInstantiatableEnum<'mc> for AdvancementDisplayType<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "TASK" => Ok(AdvancementDisplayType::Task {
+                    inner: AdvancementDisplayTypeStruct::from_raw(env, obj)?,
+                }),
+                "CHALLENGE" => Ok(AdvancementDisplayType::Challenge {
+                    inner: AdvancementDisplayTypeStruct::from_raw(env, obj)?,
+                }),
+                "GOAL" => Ok(AdvancementDisplayType::Goal {
+                    inner: AdvancementDisplayTypeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> AdvancementDisplayType<'mc> {
-    pub const TASK: AdvancementDisplayTypeEnum = AdvancementDisplayTypeEnum::Task;
-    pub const CHALLENGE: AdvancementDisplayTypeEnum = AdvancementDisplayTypeEnum::Challenge;
-    pub const GOAL: AdvancementDisplayTypeEnum = AdvancementDisplayTypeEnum::Goal;
-    pub fn from_string(str: String) -> std::option::Option<AdvancementDisplayTypeEnum> {
-        match str.as_str() {
-            "TASK" => Some(AdvancementDisplayTypeEnum::Task),
-            "CHALLENGE" => Some(AdvancementDisplayTypeEnum::Challenge),
-            "GOAL" => Some(AdvancementDisplayTypeEnum::Goal),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for AdvancementDisplayTypeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for AdvancementDisplayTypeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate AdvancementDisplayTypeStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/advancement/AdvancementDisplayType")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a AdvancementDisplayTypeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<AdvancementDisplayType<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/advancement/AdvancementDisplayType");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/advancement/AdvancementDisplayType;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        AdvancementDisplayType::from_raw(
-            &jni,
-            raw_obj,
-            AdvancementDisplayType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> AdvancementDisplayTypeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Holds information about how the advancement is displayed by the game.
@@ -321,12 +353,10 @@ impl<'mc> JNIRaw<'mc> for AdvancementDisplay<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for AdvancementDisplay<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -378,12 +408,7 @@ impl<'mc> AdvancementDisplay<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::advancement::AdvancementDisplayType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::advancement::AdvancementDisplayType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::advancement::AdvancementDisplayType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn x(&self) -> Result<f32, Box<dyn std::error::Error>> {
@@ -462,14 +487,9 @@ impl<'mc> AdvancementDisplay<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents an advancement that may be awarded to a player. This class is not reference safe as the underlying advancement may be reloaded.
@@ -485,12 +505,10 @@ impl<'mc> JNIRaw<'mc> for Advancement<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Advancement<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -563,14 +581,9 @@ impl<'mc> Advancement<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::Keyed<'mc>> for Advancement<'mc> {

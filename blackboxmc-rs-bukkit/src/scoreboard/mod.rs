@@ -14,12 +14,10 @@ impl<'mc> JNIRaw<'mc> for Criterias<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Criterias<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -133,14 +131,9 @@ impl<'mc> Criterias<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -154,59 +147,96 @@ impl<'mc> std::string::ToString for Criterias<'mc> {
 }
 
 /// How an option may be applied to members of this team.
-#[derive(PartialEq, Eq)]
-pub enum TeamOptionStatusEnum {
-    Always,
-    Never,
-    ForOtherTeams,
-    ForOwnTeam,
-}
-impl std::fmt::Display for TeamOptionStatusEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TeamOptionStatusEnum::Always => f.write_str("ALWAYS"),
-            TeamOptionStatusEnum::Never => f.write_str("NEVER"),
-            TeamOptionStatusEnum::ForOtherTeams => f.write_str("FOR_OTHER_TEAMS"),
-            TeamOptionStatusEnum::ForOwnTeam => f.write_str("FOR_OWN_TEAM"),
-        }
-    }
+pub enum TeamOptionStatus<'mc> {
+    Always { inner: TeamOptionStatusStruct<'mc> },
+    Never { inner: TeamOptionStatusStruct<'mc> },
+    ForOtherTeams { inner: TeamOptionStatusStruct<'mc> },
+    ForOwnTeam { inner: TeamOptionStatusStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for TeamOptionStatus<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            TeamOptionStatus::Always { .. } => f.write_str("ALWAYS"),
+            TeamOptionStatus::Never { .. } => f.write_str("NEVER"),
+            TeamOptionStatus::ForOtherTeams { .. } => f.write_str("FOR_OTHER_TEAMS"),
+            TeamOptionStatus::ForOwnTeam { .. } => f.write_str("FOR_OWN_TEAM"),
+        }
     }
 }
+
+impl<'mc> TeamOptionStatus<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<TeamOptionStatus<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/scoreboard/Team$OptionStatus");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Team$OptionStatus;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "ALWAYS" => Ok(TeamOptionStatus::Always {
+                inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+            }),
+            "NEVER" => Ok(TeamOptionStatus::Never {
+                inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+            }),
+            "FOR_OTHER_TEAMS" => Ok(TeamOptionStatus::ForOtherTeams {
+                inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+            }),
+            "FOR_OWN_TEAM" => Ok(TeamOptionStatus::ForOwnTeam {
+                inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct TeamOptionStatus<'mc>(
+pub struct TeamOptionStatusStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub TeamOptionStatusEnum,
 );
-impl<'mc> std::ops::Deref for TeamOptionStatus<'mc> {
-    type Target = TeamOptionStatusEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for TeamOptionStatus<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Always { inner } => inner.0.clone(),
+            Self::Never { inner } => inner.0.clone(),
+            Self::ForOtherTeams { inner } => inner.0.clone(),
+            Self::ForOwnTeam { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Always { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Never { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ForOtherTeams { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ForOwnTeam { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for TeamOptionStatus<'mc> {
-    type Enum = TeamOptionStatusEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for TeamOptionStatus<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -221,64 +251,67 @@ impl<'mc> JNIInstantiatableEnum<'mc> for TeamOptionStatus<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "ALWAYS" => Ok(TeamOptionStatus::Always {
+                    inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+                }),
+                "NEVER" => Ok(TeamOptionStatus::Never {
+                    inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+                }),
+                "FOR_OTHER_TEAMS" => Ok(TeamOptionStatus::ForOtherTeams {
+                    inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+                }),
+                "FOR_OWN_TEAM" => Ok(TeamOptionStatus::ForOwnTeam {
+                    inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> TeamOptionStatus<'mc> {
-    pub const ALWAYS: TeamOptionStatusEnum = TeamOptionStatusEnum::Always;
-    pub const NEVER: TeamOptionStatusEnum = TeamOptionStatusEnum::Never;
-    pub const FOR_OTHER_TEAMS: TeamOptionStatusEnum = TeamOptionStatusEnum::ForOtherTeams;
-    pub const FOR_OWN_TEAM: TeamOptionStatusEnum = TeamOptionStatusEnum::ForOwnTeam;
-    pub fn from_string(str: String) -> std::option::Option<TeamOptionStatusEnum> {
-        match str.as_str() {
-            "ALWAYS" => Some(TeamOptionStatusEnum::Always),
-            "NEVER" => Some(TeamOptionStatusEnum::Never),
-            "FOR_OTHER_TEAMS" => Some(TeamOptionStatusEnum::ForOtherTeams),
-            "FOR_OWN_TEAM" => Some(TeamOptionStatusEnum::ForOwnTeam),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for TeamOptionStatusStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for TeamOptionStatusStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate TeamOptionStatusStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/Team$OptionStatus")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a TeamOptionStatusStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<TeamOptionStatus<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/scoreboard/Team$OptionStatus");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Team$OptionStatus;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        TeamOptionStatus::from_raw(
-            &jni,
-            raw_obj,
-            TeamOptionStatus::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> TeamOptionStatusStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a scoreboard criteria, either custom or built-in to the Minecraft server, used to keep track of and manually or automatically change scores on a scoreboard.
@@ -295,12 +328,10 @@ impl<'mc> JNIRaw<'mc> for Criteria<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Criteria<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -387,12 +418,7 @@ impl<'mc> Criteria<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::scoreboard::RenderType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::scoreboard::RenderType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::scoreboard::RenderType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn statistic_with_statistic(
@@ -423,69 +449,101 @@ impl<'mc> Criteria<'mc> {
         crate::scoreboard::Criteria::from_raw(&jni, obj)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum NameTagVisibilityEnum {
-    Always,
-    Never,
-    HideForOtherTeams,
-    HideForOwnTeam,
-}
-impl std::fmt::Display for NameTagVisibilityEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            NameTagVisibilityEnum::Always => f.write_str("ALWAYS"),
-            NameTagVisibilityEnum::Never => f.write_str("NEVER"),
-            NameTagVisibilityEnum::HideForOtherTeams => f.write_str("HIDE_FOR_OTHER_TEAMS"),
-            NameTagVisibilityEnum::HideForOwnTeam => f.write_str("HIDE_FOR_OWN_TEAM"),
-        }
-    }
+pub enum NameTagVisibility<'mc> {
+    Always { inner: NameTagVisibilityStruct<'mc> },
+    Never { inner: NameTagVisibilityStruct<'mc> },
+    HideForOtherTeams { inner: NameTagVisibilityStruct<'mc> },
+    HideForOwnTeam { inner: NameTagVisibilityStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for NameTagVisibility<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            NameTagVisibility::Always { .. } => f.write_str("ALWAYS"),
+            NameTagVisibility::Never { .. } => f.write_str("NEVER"),
+            NameTagVisibility::HideForOtherTeams { .. } => f.write_str("HIDE_FOR_OTHER_TEAMS"),
+            NameTagVisibility::HideForOwnTeam { .. } => f.write_str("HIDE_FOR_OWN_TEAM"),
+        }
     }
 }
+
+impl<'mc> NameTagVisibility<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<NameTagVisibility<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/scoreboard/NameTagVisibility");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/NameTagVisibility;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "ALWAYS" => Ok(NameTagVisibility::Always {
+                inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+            }),
+            "NEVER" => Ok(NameTagVisibility::Never {
+                inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+            }),
+            "HIDE_FOR_OTHER_TEAMS" => Ok(NameTagVisibility::HideForOtherTeams {
+                inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+            }),
+            "HIDE_FOR_OWN_TEAM" => Ok(NameTagVisibility::HideForOwnTeam {
+                inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct NameTagVisibility<'mc>(
+pub struct NameTagVisibilityStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub NameTagVisibilityEnum,
 );
-impl<'mc> std::ops::Deref for NameTagVisibility<'mc> {
-    type Target = NameTagVisibilityEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for NameTagVisibility<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Always { inner } => inner.0.clone(),
+            Self::Never { inner } => inner.0.clone(),
+            Self::HideForOtherTeams { inner } => inner.0.clone(),
+            Self::HideForOwnTeam { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Always { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Never { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::HideForOtherTeams { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HideForOwnTeam { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for NameTagVisibility<'mc> {
-    type Enum = NameTagVisibilityEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for NameTagVisibility<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -500,116 +558,141 @@ impl<'mc> JNIInstantiatableEnum<'mc> for NameTagVisibility<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "ALWAYS" => Ok(NameTagVisibility::Always {
+                    inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+                }),
+                "NEVER" => Ok(NameTagVisibility::Never {
+                    inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+                }),
+                "HIDE_FOR_OTHER_TEAMS" => Ok(NameTagVisibility::HideForOtherTeams {
+                    inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+                }),
+                "HIDE_FOR_OWN_TEAM" => Ok(NameTagVisibility::HideForOwnTeam {
+                    inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> NameTagVisibility<'mc> {
-    pub const ALWAYS: NameTagVisibilityEnum = NameTagVisibilityEnum::Always;
-    pub const NEVER: NameTagVisibilityEnum = NameTagVisibilityEnum::Never;
-    pub const HIDE_FOR_OTHER_TEAMS: NameTagVisibilityEnum =
-        NameTagVisibilityEnum::HideForOtherTeams;
-    pub const HIDE_FOR_OWN_TEAM: NameTagVisibilityEnum = NameTagVisibilityEnum::HideForOwnTeam;
-    pub fn from_string(str: String) -> std::option::Option<NameTagVisibilityEnum> {
-        match str.as_str() {
-            "ALWAYS" => Some(NameTagVisibilityEnum::Always),
-            "NEVER" => Some(NameTagVisibilityEnum::Never),
-            "HIDE_FOR_OTHER_TEAMS" => Some(NameTagVisibilityEnum::HideForOtherTeams),
-            "HIDE_FOR_OWN_TEAM" => Some(NameTagVisibilityEnum::HideForOwnTeam),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<NameTagVisibility<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/scoreboard/NameTagVisibility");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/NameTagVisibility;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        NameTagVisibility::from_raw(
-            &jni,
-            raw_obj,
-            NameTagVisibility::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-#[derive(PartialEq, Eq)]
-pub enum RenderTypeEnum {
-    Integer,
-    Hearts,
-}
-impl std::fmt::Display for RenderTypeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            RenderTypeEnum::Integer => f.write_str("INTEGER"),
-            RenderTypeEnum::Hearts => f.write_str("HEARTS"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for RenderType<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct RenderType<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub RenderTypeEnum,
-);
-impl<'mc> std::ops::Deref for RenderType<'mc> {
-    type Target = RenderTypeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for RenderType<'mc> {
+impl<'mc> JNIRaw<'mc> for NameTagVisibilityStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for RenderType<'mc> {
-    type Enum = RenderTypeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for NameTagVisibilityStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate NameTagVisibilityStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/NameTagVisibility")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a NameTagVisibilityStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> NameTagVisibilityStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+pub enum RenderType<'mc> {
+    Integer { inner: RenderTypeStruct<'mc> },
+    Hearts { inner: RenderTypeStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for RenderType<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            RenderType::Integer { .. } => f.write_str("INTEGER"),
+            RenderType::Hearts { .. } => f.write_str("HEARTS"),
+        }
+    }
+}
+
+impl<'mc> RenderType<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<RenderType<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/scoreboard/RenderType");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/RenderType;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "INTEGER" => Ok(RenderType::Integer {
+                inner: RenderTypeStruct::from_raw(env, obj)?,
+            }),
+            "HEARTS" => Ok(RenderType::Hearts {
+                inner: RenderTypeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct RenderTypeStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for RenderType<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Integer { inner } => inner.0.clone(),
+            Self::Hearts { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Integer { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Hearts { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for RenderType<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate RenderType from null object.").into());
@@ -622,60 +705,60 @@ impl<'mc> JNIInstantiatableEnum<'mc> for RenderType<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "INTEGER" => Ok(RenderType::Integer {
+                    inner: RenderTypeStruct::from_raw(env, obj)?,
+                }),
+                "HEARTS" => Ok(RenderType::Hearts {
+                    inner: RenderTypeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> RenderType<'mc> {
-    pub const INTEGER: RenderTypeEnum = RenderTypeEnum::Integer;
-    pub const HEARTS: RenderTypeEnum = RenderTypeEnum::Hearts;
-    pub fn from_string(str: String) -> std::option::Option<RenderTypeEnum> {
-        match str.as_str() {
-            "INTEGER" => Some(RenderTypeEnum::Integer),
-            "HEARTS" => Some(RenderTypeEnum::Hearts),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for RenderTypeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for RenderTypeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate RenderTypeStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/RenderType")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a RenderTypeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<RenderType<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/scoreboard/RenderType");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/RenderType;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        RenderType::from_raw(
-            &jni,
-            raw_obj,
-            RenderType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> RenderTypeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// An objective on a scoreboard that can show scores specific to entries. This objective is only relevant to the display of the associated <a href="#getScoreboard()"><code>scoreboard</code></a>.
@@ -691,12 +774,10 @@ impl<'mc> JNIRaw<'mc> for Objective<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Objective<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -890,8 +971,6 @@ impl<'mc> Objective<'mc> {
         Ok(Some(crate::scoreboard::DisplaySlot::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::scoreboard::DisplaySlot::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
 
@@ -931,22 +1010,12 @@ impl<'mc> Objective<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::scoreboard::RenderType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::scoreboard::RenderType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::scoreboard::RenderType::from_raw(&self.jni_ref(), raw_obj)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// A score entry for an <a href="#getEntry()"><code>entry</code></a> on an <a href="#getObjective()"><code>objective</code></a>. Changing this will not affect any other objective or scoreboard.
@@ -962,12 +1031,10 @@ impl<'mc> JNIRaw<'mc> for Score<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Score<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1079,14 +1146,9 @@ impl<'mc> Score<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// A scoreboard
@@ -1102,12 +1164,10 @@ impl<'mc> JNIRaw<'mc> for Scoreboard<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Scoreboard<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1410,99 +1470,238 @@ impl<'mc> Scoreboard<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum DisplaySlotEnum {
-    BelowName,
-    PlayerList,
-    Sidebar,
-    SidebarBlack,
-    SidebarDarkBlue,
-    SidebarDarkGreen,
-    SidebarDarkAqua,
-    SidebarDarkRed,
-    SidebarDarkPurple,
-    SidebarGold,
-    SidebarGray,
-    SidebarDarkGray,
-    SidebarBlue,
-    SidebarGreen,
-    SidebarAqua,
-    SidebarRed,
-    SidebarLightPurple,
-    SidebarYellow,
-    SidebarWhite,
-}
-impl std::fmt::Display for DisplaySlotEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            DisplaySlotEnum::BelowName => f.write_str("BELOW_NAME"),
-            DisplaySlotEnum::PlayerList => f.write_str("PLAYER_LIST"),
-            DisplaySlotEnum::Sidebar => f.write_str("SIDEBAR"),
-            DisplaySlotEnum::SidebarBlack => f.write_str("SIDEBAR_BLACK"),
-            DisplaySlotEnum::SidebarDarkBlue => f.write_str("SIDEBAR_DARK_BLUE"),
-            DisplaySlotEnum::SidebarDarkGreen => f.write_str("SIDEBAR_DARK_GREEN"),
-            DisplaySlotEnum::SidebarDarkAqua => f.write_str("SIDEBAR_DARK_AQUA"),
-            DisplaySlotEnum::SidebarDarkRed => f.write_str("SIDEBAR_DARK_RED"),
-            DisplaySlotEnum::SidebarDarkPurple => f.write_str("SIDEBAR_DARK_PURPLE"),
-            DisplaySlotEnum::SidebarGold => f.write_str("SIDEBAR_GOLD"),
-            DisplaySlotEnum::SidebarGray => f.write_str("SIDEBAR_GRAY"),
-            DisplaySlotEnum::SidebarDarkGray => f.write_str("SIDEBAR_DARK_GRAY"),
-            DisplaySlotEnum::SidebarBlue => f.write_str("SIDEBAR_BLUE"),
-            DisplaySlotEnum::SidebarGreen => f.write_str("SIDEBAR_GREEN"),
-            DisplaySlotEnum::SidebarAqua => f.write_str("SIDEBAR_AQUA"),
-            DisplaySlotEnum::SidebarRed => f.write_str("SIDEBAR_RED"),
-            DisplaySlotEnum::SidebarLightPurple => f.write_str("SIDEBAR_LIGHT_PURPLE"),
-            DisplaySlotEnum::SidebarYellow => f.write_str("SIDEBAR_YELLOW"),
-            DisplaySlotEnum::SidebarWhite => f.write_str("SIDEBAR_WHITE"),
-        }
-    }
+pub enum DisplaySlot<'mc> {
+    BelowName { inner: DisplaySlotStruct<'mc> },
+    PlayerList { inner: DisplaySlotStruct<'mc> },
+    Sidebar { inner: DisplaySlotStruct<'mc> },
+    SidebarBlack { inner: DisplaySlotStruct<'mc> },
+    SidebarDarkBlue { inner: DisplaySlotStruct<'mc> },
+    SidebarDarkGreen { inner: DisplaySlotStruct<'mc> },
+    SidebarDarkAqua { inner: DisplaySlotStruct<'mc> },
+    SidebarDarkRed { inner: DisplaySlotStruct<'mc> },
+    SidebarDarkPurple { inner: DisplaySlotStruct<'mc> },
+    SidebarGold { inner: DisplaySlotStruct<'mc> },
+    SidebarGray { inner: DisplaySlotStruct<'mc> },
+    SidebarDarkGray { inner: DisplaySlotStruct<'mc> },
+    SidebarBlue { inner: DisplaySlotStruct<'mc> },
+    SidebarGreen { inner: DisplaySlotStruct<'mc> },
+    SidebarAqua { inner: DisplaySlotStruct<'mc> },
+    SidebarRed { inner: DisplaySlotStruct<'mc> },
+    SidebarLightPurple { inner: DisplaySlotStruct<'mc> },
+    SidebarYellow { inner: DisplaySlotStruct<'mc> },
+    SidebarWhite { inner: DisplaySlotStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for DisplaySlot<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            DisplaySlot::BelowName { .. } => f.write_str("BELOW_NAME"),
+            DisplaySlot::PlayerList { .. } => f.write_str("PLAYER_LIST"),
+            DisplaySlot::Sidebar { .. } => f.write_str("SIDEBAR"),
+            DisplaySlot::SidebarBlack { .. } => f.write_str("SIDEBAR_BLACK"),
+            DisplaySlot::SidebarDarkBlue { .. } => f.write_str("SIDEBAR_DARK_BLUE"),
+            DisplaySlot::SidebarDarkGreen { .. } => f.write_str("SIDEBAR_DARK_GREEN"),
+            DisplaySlot::SidebarDarkAqua { .. } => f.write_str("SIDEBAR_DARK_AQUA"),
+            DisplaySlot::SidebarDarkRed { .. } => f.write_str("SIDEBAR_DARK_RED"),
+            DisplaySlot::SidebarDarkPurple { .. } => f.write_str("SIDEBAR_DARK_PURPLE"),
+            DisplaySlot::SidebarGold { .. } => f.write_str("SIDEBAR_GOLD"),
+            DisplaySlot::SidebarGray { .. } => f.write_str("SIDEBAR_GRAY"),
+            DisplaySlot::SidebarDarkGray { .. } => f.write_str("SIDEBAR_DARK_GRAY"),
+            DisplaySlot::SidebarBlue { .. } => f.write_str("SIDEBAR_BLUE"),
+            DisplaySlot::SidebarGreen { .. } => f.write_str("SIDEBAR_GREEN"),
+            DisplaySlot::SidebarAqua { .. } => f.write_str("SIDEBAR_AQUA"),
+            DisplaySlot::SidebarRed { .. } => f.write_str("SIDEBAR_RED"),
+            DisplaySlot::SidebarLightPurple { .. } => f.write_str("SIDEBAR_LIGHT_PURPLE"),
+            DisplaySlot::SidebarYellow { .. } => f.write_str("SIDEBAR_YELLOW"),
+            DisplaySlot::SidebarWhite { .. } => f.write_str("SIDEBAR_WHITE"),
+        }
     }
 }
+
+impl<'mc> DisplaySlot<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<DisplaySlot<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/scoreboard/DisplaySlot");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/DisplaySlot;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "BELOW_NAME" => Ok(DisplaySlot::BelowName {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "PLAYER_LIST" => Ok(DisplaySlot::PlayerList {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR" => Ok(DisplaySlot::Sidebar {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_BLACK" => Ok(DisplaySlot::SidebarBlack {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_DARK_BLUE" => Ok(DisplaySlot::SidebarDarkBlue {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_DARK_GREEN" => Ok(DisplaySlot::SidebarDarkGreen {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_DARK_AQUA" => Ok(DisplaySlot::SidebarDarkAqua {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_DARK_RED" => Ok(DisplaySlot::SidebarDarkRed {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_DARK_PURPLE" => Ok(DisplaySlot::SidebarDarkPurple {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_GOLD" => Ok(DisplaySlot::SidebarGold {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_GRAY" => Ok(DisplaySlot::SidebarGray {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_DARK_GRAY" => Ok(DisplaySlot::SidebarDarkGray {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_BLUE" => Ok(DisplaySlot::SidebarBlue {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_GREEN" => Ok(DisplaySlot::SidebarGreen {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_AQUA" => Ok(DisplaySlot::SidebarAqua {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_RED" => Ok(DisplaySlot::SidebarRed {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_LIGHT_PURPLE" => Ok(DisplaySlot::SidebarLightPurple {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_YELLOW" => Ok(DisplaySlot::SidebarYellow {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_WHITE" => Ok(DisplaySlot::SidebarWhite {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct DisplaySlot<'mc>(
+pub struct DisplaySlotStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub DisplaySlotEnum,
 );
-impl<'mc> std::ops::Deref for DisplaySlot<'mc> {
-    type Target = DisplaySlotEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for DisplaySlot<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::BelowName { inner } => inner.0.clone(),
+            Self::PlayerList { inner } => inner.0.clone(),
+            Self::Sidebar { inner } => inner.0.clone(),
+            Self::SidebarBlack { inner } => inner.0.clone(),
+            Self::SidebarDarkBlue { inner } => inner.0.clone(),
+            Self::SidebarDarkGreen { inner } => inner.0.clone(),
+            Self::SidebarDarkAqua { inner } => inner.0.clone(),
+            Self::SidebarDarkRed { inner } => inner.0.clone(),
+            Self::SidebarDarkPurple { inner } => inner.0.clone(),
+            Self::SidebarGold { inner } => inner.0.clone(),
+            Self::SidebarGray { inner } => inner.0.clone(),
+            Self::SidebarDarkGray { inner } => inner.0.clone(),
+            Self::SidebarBlue { inner } => inner.0.clone(),
+            Self::SidebarGreen { inner } => inner.0.clone(),
+            Self::SidebarAqua { inner } => inner.0.clone(),
+            Self::SidebarRed { inner } => inner.0.clone(),
+            Self::SidebarLightPurple { inner } => inner.0.clone(),
+            Self::SidebarYellow { inner } => inner.0.clone(),
+            Self::SidebarWhite { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::BelowName { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::PlayerList { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Sidebar { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SidebarBlack { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarDarkBlue { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarDarkGreen { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarDarkAqua { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarDarkRed { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarDarkPurple { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarGold { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarGray { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarDarkGray { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarBlue { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarGreen { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarAqua { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarRed { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarLightPurple { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarYellow { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarWhite { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for DisplaySlot<'mc> {
-    type Enum = DisplaySlotEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for DisplaySlot<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate DisplaySlot from null object.").into());
@@ -1515,94 +1714,111 @@ impl<'mc> JNIInstantiatableEnum<'mc> for DisplaySlot<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "BELOW_NAME" => Ok(DisplaySlot::BelowName {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "PLAYER_LIST" => Ok(DisplaySlot::PlayerList {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR" => Ok(DisplaySlot::Sidebar {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_BLACK" => Ok(DisplaySlot::SidebarBlack {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_DARK_BLUE" => Ok(DisplaySlot::SidebarDarkBlue {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_DARK_GREEN" => Ok(DisplaySlot::SidebarDarkGreen {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_DARK_AQUA" => Ok(DisplaySlot::SidebarDarkAqua {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_DARK_RED" => Ok(DisplaySlot::SidebarDarkRed {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_DARK_PURPLE" => Ok(DisplaySlot::SidebarDarkPurple {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_GOLD" => Ok(DisplaySlot::SidebarGold {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_GRAY" => Ok(DisplaySlot::SidebarGray {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_DARK_GRAY" => Ok(DisplaySlot::SidebarDarkGray {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_BLUE" => Ok(DisplaySlot::SidebarBlue {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_GREEN" => Ok(DisplaySlot::SidebarGreen {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_AQUA" => Ok(DisplaySlot::SidebarAqua {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_RED" => Ok(DisplaySlot::SidebarRed {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_LIGHT_PURPLE" => Ok(DisplaySlot::SidebarLightPurple {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_YELLOW" => Ok(DisplaySlot::SidebarYellow {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_WHITE" => Ok(DisplaySlot::SidebarWhite {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> DisplaySlot<'mc> {
-    pub const BELOW_NAME: DisplaySlotEnum = DisplaySlotEnum::BelowName;
-    pub const PLAYER_LIST: DisplaySlotEnum = DisplaySlotEnum::PlayerList;
-    pub const SIDEBAR: DisplaySlotEnum = DisplaySlotEnum::Sidebar;
-    pub const SIDEBAR_BLACK: DisplaySlotEnum = DisplaySlotEnum::SidebarBlack;
-    pub const SIDEBAR_DARK_BLUE: DisplaySlotEnum = DisplaySlotEnum::SidebarDarkBlue;
-    pub const SIDEBAR_DARK_GREEN: DisplaySlotEnum = DisplaySlotEnum::SidebarDarkGreen;
-    pub const SIDEBAR_DARK_AQUA: DisplaySlotEnum = DisplaySlotEnum::SidebarDarkAqua;
-    pub const SIDEBAR_DARK_RED: DisplaySlotEnum = DisplaySlotEnum::SidebarDarkRed;
-    pub const SIDEBAR_DARK_PURPLE: DisplaySlotEnum = DisplaySlotEnum::SidebarDarkPurple;
-    pub const SIDEBAR_GOLD: DisplaySlotEnum = DisplaySlotEnum::SidebarGold;
-    pub const SIDEBAR_GRAY: DisplaySlotEnum = DisplaySlotEnum::SidebarGray;
-    pub const SIDEBAR_DARK_GRAY: DisplaySlotEnum = DisplaySlotEnum::SidebarDarkGray;
-    pub const SIDEBAR_BLUE: DisplaySlotEnum = DisplaySlotEnum::SidebarBlue;
-    pub const SIDEBAR_GREEN: DisplaySlotEnum = DisplaySlotEnum::SidebarGreen;
-    pub const SIDEBAR_AQUA: DisplaySlotEnum = DisplaySlotEnum::SidebarAqua;
-    pub const SIDEBAR_RED: DisplaySlotEnum = DisplaySlotEnum::SidebarRed;
-    pub const SIDEBAR_LIGHT_PURPLE: DisplaySlotEnum = DisplaySlotEnum::SidebarLightPurple;
-    pub const SIDEBAR_YELLOW: DisplaySlotEnum = DisplaySlotEnum::SidebarYellow;
-    pub const SIDEBAR_WHITE: DisplaySlotEnum = DisplaySlotEnum::SidebarWhite;
-    pub fn from_string(str: String) -> std::option::Option<DisplaySlotEnum> {
-        match str.as_str() {
-            "BELOW_NAME" => Some(DisplaySlotEnum::BelowName),
-            "PLAYER_LIST" => Some(DisplaySlotEnum::PlayerList),
-            "SIDEBAR" => Some(DisplaySlotEnum::Sidebar),
-            "SIDEBAR_BLACK" => Some(DisplaySlotEnum::SidebarBlack),
-            "SIDEBAR_DARK_BLUE" => Some(DisplaySlotEnum::SidebarDarkBlue),
-            "SIDEBAR_DARK_GREEN" => Some(DisplaySlotEnum::SidebarDarkGreen),
-            "SIDEBAR_DARK_AQUA" => Some(DisplaySlotEnum::SidebarDarkAqua),
-            "SIDEBAR_DARK_RED" => Some(DisplaySlotEnum::SidebarDarkRed),
-            "SIDEBAR_DARK_PURPLE" => Some(DisplaySlotEnum::SidebarDarkPurple),
-            "SIDEBAR_GOLD" => Some(DisplaySlotEnum::SidebarGold),
-            "SIDEBAR_GRAY" => Some(DisplaySlotEnum::SidebarGray),
-            "SIDEBAR_DARK_GRAY" => Some(DisplaySlotEnum::SidebarDarkGray),
-            "SIDEBAR_BLUE" => Some(DisplaySlotEnum::SidebarBlue),
-            "SIDEBAR_GREEN" => Some(DisplaySlotEnum::SidebarGreen),
-            "SIDEBAR_AQUA" => Some(DisplaySlotEnum::SidebarAqua),
-            "SIDEBAR_RED" => Some(DisplaySlotEnum::SidebarRed),
-            "SIDEBAR_LIGHT_PURPLE" => Some(DisplaySlotEnum::SidebarLightPurple),
-            "SIDEBAR_YELLOW" => Some(DisplaySlotEnum::SidebarYellow),
-            "SIDEBAR_WHITE" => Some(DisplaySlotEnum::SidebarWhite),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for DisplaySlotStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for DisplaySlotStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate DisplaySlotStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/DisplaySlot")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a DisplaySlotStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<DisplaySlot<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/scoreboard/DisplaySlot");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/DisplaySlot;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        DisplaySlot::from_raw(
-            &jni,
-            raw_obj,
-            DisplaySlot::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> DisplaySlotStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// A team on a scoreboard that has a common display theme and other properties. This team is only relevant to the display of the associated <a href="#getScoreboard()"><code>scoreboard</code></a>.
@@ -1618,12 +1834,10 @@ impl<'mc> JNIRaw<'mc> for Team<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Team<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1921,12 +2135,7 @@ impl<'mc> Team<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::scoreboard::NameTagVisibility::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::scoreboard::NameTagVisibility::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::scoreboard::NameTagVisibility::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_name_tag_visibility(
@@ -2074,12 +2283,7 @@ impl<'mc> Team<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::scoreboard::TeamOptionStatus::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::scoreboard::TeamOptionStatus::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::scoreboard::TeamOptionStatus::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_option(
@@ -2109,14 +2313,9 @@ impl<'mc> Team<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Manager of Scoreboards
@@ -2132,12 +2331,10 @@ impl<'mc> JNIRaw<'mc> for ScoreboardManager<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ScoreboardManager<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2194,67 +2391,96 @@ impl<'mc> ScoreboardManager<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum SpigotOptionEnum {
-    NameTagVisibility,
-    DeathMessageVisibility,
-    CollisionRule,
-}
-impl std::fmt::Display for SpigotOptionEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            SpigotOptionEnum::NameTagVisibility => f.write_str("NAME_TAG_VISIBILITY"),
-            SpigotOptionEnum::DeathMessageVisibility => f.write_str("DEATH_MESSAGE_VISIBILITY"),
-            SpigotOptionEnum::CollisionRule => f.write_str("COLLISION_RULE"),
-        }
-    }
+pub enum SpigotOption<'mc> {
+    NameTagVisibility { inner: SpigotOptionStruct<'mc> },
+    DeathMessageVisibility { inner: SpigotOptionStruct<'mc> },
+    CollisionRule { inner: SpigotOptionStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for SpigotOption<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            SpigotOption::NameTagVisibility { .. } => f.write_str("NAME_TAG_VISIBILITY"),
+            SpigotOption::DeathMessageVisibility { .. } => f.write_str("DEATH_MESSAGE_VISIBILITY"),
+            SpigotOption::CollisionRule { .. } => f.write_str("COLLISION_RULE"),
+        }
     }
 }
+
+impl<'mc> SpigotOption<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<SpigotOption<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/scoreboard/SpigotOption");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/SpigotOption;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "NAME_TAG_VISIBILITY" => Ok(SpigotOption::NameTagVisibility {
+                inner: SpigotOptionStruct::from_raw(env, obj)?,
+            }),
+            "DEATH_MESSAGE_VISIBILITY" => Ok(SpigotOption::DeathMessageVisibility {
+                inner: SpigotOptionStruct::from_raw(env, obj)?,
+            }),
+            "COLLISION_RULE" => Ok(SpigotOption::CollisionRule {
+                inner: SpigotOptionStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct SpigotOption<'mc>(
+pub struct SpigotOptionStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub SpigotOptionEnum,
 );
-impl<'mc> std::ops::Deref for SpigotOption<'mc> {
-    type Target = SpigotOptionEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for SpigotOption<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::NameTagVisibility { inner } => inner.0.clone(),
+            Self::DeathMessageVisibility { inner } => inner.0.clone(),
+            Self::CollisionRule { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::NameTagVisibility { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DeathMessageVisibility { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CollisionRule { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for SpigotOption<'mc> {
-    type Enum = SpigotOptionEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for SpigotOption<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SpigotOption from null object.").into());
@@ -2267,117 +2493,155 @@ impl<'mc> JNIInstantiatableEnum<'mc> for SpigotOption<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "NAME_TAG_VISIBILITY" => Ok(SpigotOption::NameTagVisibility {
+                    inner: SpigotOptionStruct::from_raw(env, obj)?,
+                }),
+                "DEATH_MESSAGE_VISIBILITY" => Ok(SpigotOption::DeathMessageVisibility {
+                    inner: SpigotOptionStruct::from_raw(env, obj)?,
+                }),
+                "COLLISION_RULE" => Ok(SpigotOption::CollisionRule {
+                    inner: SpigotOptionStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> SpigotOption<'mc> {
-    pub const NAME_TAG_VISIBILITY: SpigotOptionEnum = SpigotOptionEnum::NameTagVisibility;
-    pub const DEATH_MESSAGE_VISIBILITY: SpigotOptionEnum = SpigotOptionEnum::DeathMessageVisibility;
-    pub const COLLISION_RULE: SpigotOptionEnum = SpigotOptionEnum::CollisionRule;
-    pub fn from_string(str: String) -> std::option::Option<SpigotOptionEnum> {
-        match str.as_str() {
-            "NAME_TAG_VISIBILITY" => Some(SpigotOptionEnum::NameTagVisibility),
-            "DEATH_MESSAGE_VISIBILITY" => Some(SpigotOptionEnum::DeathMessageVisibility),
-            "COLLISION_RULE" => Some(SpigotOptionEnum::CollisionRule),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<SpigotOption<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/scoreboard/SpigotOption");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/SpigotOption;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        SpigotOption::from_raw(
-            &jni,
-            raw_obj,
-            SpigotOption::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-#[derive(PartialEq, Eq)]
-pub enum OptionStatusEnum {
-    Always,
-    Never,
-    ForOtherTeams,
-    ForOwnTeam,
-}
-impl std::fmt::Display for OptionStatusEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            OptionStatusEnum::Always => f.write_str("ALWAYS"),
-            OptionStatusEnum::Never => f.write_str("NEVER"),
-            OptionStatusEnum::ForOtherTeams => f.write_str("FOR_OTHER_TEAMS"),
-            OptionStatusEnum::ForOwnTeam => f.write_str("FOR_OWN_TEAM"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for OptionStatus<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct OptionStatus<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub OptionStatusEnum,
-);
-impl<'mc> std::ops::Deref for OptionStatus<'mc> {
-    type Target = OptionStatusEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for OptionStatus<'mc> {
+impl<'mc> JNIRaw<'mc> for SpigotOptionStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for OptionStatus<'mc> {
-    type Enum = OptionStatusEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for SpigotOptionStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate SpigotOptionStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/SpigotOption")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a SpigotOptionStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> SpigotOptionStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+pub enum OptionStatus<'mc> {
+    Always { inner: OptionStatusStruct<'mc> },
+    Never { inner: OptionStatusStruct<'mc> },
+    ForOtherTeams { inner: OptionStatusStruct<'mc> },
+    ForOwnTeam { inner: OptionStatusStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for OptionStatus<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            OptionStatus::Always { .. } => f.write_str("ALWAYS"),
+            OptionStatus::Never { .. } => f.write_str("NEVER"),
+            OptionStatus::ForOtherTeams { .. } => f.write_str("FOR_OTHER_TEAMS"),
+            OptionStatus::ForOwnTeam { .. } => f.write_str("FOR_OWN_TEAM"),
+        }
+    }
+}
+
+impl<'mc> OptionStatus<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<OptionStatus<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/scoreboard/OptionStatus");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/OptionStatus;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "ALWAYS" => Ok(OptionStatus::Always {
+                inner: OptionStatusStruct::from_raw(env, obj)?,
+            }),
+            "NEVER" => Ok(OptionStatus::Never {
+                inner: OptionStatusStruct::from_raw(env, obj)?,
+            }),
+            "FOR_OTHER_TEAMS" => Ok(OptionStatus::ForOtherTeams {
+                inner: OptionStatusStruct::from_raw(env, obj)?,
+            }),
+            "FOR_OWN_TEAM" => Ok(OptionStatus::ForOwnTeam {
+                inner: OptionStatusStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct OptionStatusStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for OptionStatus<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Always { inner } => inner.0.clone(),
+            Self::Never { inner } => inner.0.clone(),
+            Self::ForOtherTeams { inner } => inner.0.clone(),
+            Self::ForOwnTeam { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Always { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Never { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ForOtherTeams { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ForOwnTeam { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for OptionStatus<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate OptionStatus from null object.").into());
@@ -2390,118 +2654,154 @@ impl<'mc> JNIInstantiatableEnum<'mc> for OptionStatus<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "ALWAYS" => Ok(OptionStatus::Always {
+                    inner: OptionStatusStruct::from_raw(env, obj)?,
+                }),
+                "NEVER" => Ok(OptionStatus::Never {
+                    inner: OptionStatusStruct::from_raw(env, obj)?,
+                }),
+                "FOR_OTHER_TEAMS" => Ok(OptionStatus::ForOtherTeams {
+                    inner: OptionStatusStruct::from_raw(env, obj)?,
+                }),
+                "FOR_OWN_TEAM" => Ok(OptionStatus::ForOwnTeam {
+                    inner: OptionStatusStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> OptionStatus<'mc> {
-    pub const ALWAYS: OptionStatusEnum = OptionStatusEnum::Always;
-    pub const NEVER: OptionStatusEnum = OptionStatusEnum::Never;
-    pub const FOR_OTHER_TEAMS: OptionStatusEnum = OptionStatusEnum::ForOtherTeams;
-    pub const FOR_OWN_TEAM: OptionStatusEnum = OptionStatusEnum::ForOwnTeam;
-    pub fn from_string(str: String) -> std::option::Option<OptionStatusEnum> {
-        match str.as_str() {
-            "ALWAYS" => Some(OptionStatusEnum::Always),
-            "NEVER" => Some(OptionStatusEnum::Never),
-            "FOR_OTHER_TEAMS" => Some(OptionStatusEnum::ForOtherTeams),
-            "FOR_OWN_TEAM" => Some(OptionStatusEnum::ForOwnTeam),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<OptionStatus<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/scoreboard/OptionStatus");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/OptionStatus;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        OptionStatus::from_raw(
-            &jni,
-            raw_obj,
-            OptionStatus::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-/// Represents an option which may be applied to this team.
-#[derive(PartialEq, Eq)]
-pub enum TeamOptionEnum {
-    NameTagVisibility,
-    DeathMessageVisibility,
-    CollisionRule,
-}
-impl std::fmt::Display for TeamOptionEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TeamOptionEnum::NameTagVisibility => f.write_str("NAME_TAG_VISIBILITY"),
-            TeamOptionEnum::DeathMessageVisibility => f.write_str("DEATH_MESSAGE_VISIBILITY"),
-            TeamOptionEnum::CollisionRule => f.write_str("COLLISION_RULE"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for TeamOption<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct TeamOption<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub TeamOptionEnum,
-);
-impl<'mc> std::ops::Deref for TeamOption<'mc> {
-    type Target = TeamOptionEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for TeamOption<'mc> {
+impl<'mc> JNIRaw<'mc> for OptionStatusStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for TeamOption<'mc> {
-    type Enum = TeamOptionEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for OptionStatusStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate OptionStatusStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/OptionStatus")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a OptionStatusStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> OptionStatusStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+/// Represents an option which may be applied to this team.
+pub enum TeamOption<'mc> {
+    NameTagVisibility { inner: TeamOptionStruct<'mc> },
+    DeathMessageVisibility { inner: TeamOptionStruct<'mc> },
+    CollisionRule { inner: TeamOptionStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for TeamOption<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TeamOption::NameTagVisibility { .. } => f.write_str("NAME_TAG_VISIBILITY"),
+            TeamOption::DeathMessageVisibility { .. } => f.write_str("DEATH_MESSAGE_VISIBILITY"),
+            TeamOption::CollisionRule { .. } => f.write_str("COLLISION_RULE"),
+        }
+    }
+}
+
+impl<'mc> TeamOption<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<TeamOption<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/scoreboard/Team$Option");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Team$Option;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "NAME_TAG_VISIBILITY" => Ok(TeamOption::NameTagVisibility {
+                inner: TeamOptionStruct::from_raw(env, obj)?,
+            }),
+            "DEATH_MESSAGE_VISIBILITY" => Ok(TeamOption::DeathMessageVisibility {
+                inner: TeamOptionStruct::from_raw(env, obj)?,
+            }),
+            "COLLISION_RULE" => Ok(TeamOption::CollisionRule {
+                inner: TeamOptionStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct TeamOptionStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for TeamOption<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::NameTagVisibility { inner } => inner.0.clone(),
+            Self::DeathMessageVisibility { inner } => inner.0.clone(),
+            Self::CollisionRule { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::NameTagVisibility { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DeathMessageVisibility { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CollisionRule { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for TeamOption<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate TeamOption from null object.").into());
@@ -2514,61 +2814,62 @@ impl<'mc> JNIInstantiatableEnum<'mc> for TeamOption<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "NAME_TAG_VISIBILITY" => Ok(TeamOption::NameTagVisibility {
+                    inner: TeamOptionStruct::from_raw(env, obj)?,
+                }),
+                "DEATH_MESSAGE_VISIBILITY" => Ok(TeamOption::DeathMessageVisibility {
+                    inner: TeamOptionStruct::from_raw(env, obj)?,
+                }),
+                "COLLISION_RULE" => Ok(TeamOption::CollisionRule {
+                    inner: TeamOptionStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> TeamOption<'mc> {
-    pub const NAME_TAG_VISIBILITY: TeamOptionEnum = TeamOptionEnum::NameTagVisibility;
-    pub const DEATH_MESSAGE_VISIBILITY: TeamOptionEnum = TeamOptionEnum::DeathMessageVisibility;
-    pub const COLLISION_RULE: TeamOptionEnum = TeamOptionEnum::CollisionRule;
-    pub fn from_string(str: String) -> std::option::Option<TeamOptionEnum> {
-        match str.as_str() {
-            "NAME_TAG_VISIBILITY" => Some(TeamOptionEnum::NameTagVisibility),
-            "DEATH_MESSAGE_VISIBILITY" => Some(TeamOptionEnum::DeathMessageVisibility),
-            "COLLISION_RULE" => Some(TeamOptionEnum::CollisionRule),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for TeamOptionStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for TeamOptionStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate TeamOptionStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/Team$Option")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a TeamOptionStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<TeamOption<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/scoreboard/Team$Option");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Team$Option;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        TeamOption::from_raw(
-            &jni,
-            raw_obj,
-            TeamOption::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> TeamOptionStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }

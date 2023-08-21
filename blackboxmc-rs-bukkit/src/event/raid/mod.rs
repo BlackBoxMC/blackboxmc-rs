@@ -14,12 +14,10 @@ impl<'mc> JNIRaw<'mc> for RaidEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RaidEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -191,14 +189,9 @@ impl<'mc> RaidEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -228,12 +221,10 @@ impl<'mc> JNIRaw<'mc> for RaidSpawnWaveEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RaidSpawnWaveEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -452,14 +443,9 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -489,12 +475,10 @@ impl<'mc> JNIRaw<'mc> for RaidTriggerEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RaidTriggerEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -749,14 +733,9 @@ impl<'mc> RaidTriggerEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -792,12 +771,10 @@ impl<'mc> JNIRaw<'mc> for RaidFinishEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RaidFinishEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -999,14 +976,9 @@ impl<'mc> RaidFinishEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1031,61 +1003,113 @@ pub struct RaidStopEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum RaidStopEventReasonEnum {
-    Peace,
-    Timeout,
-    Finished,
-    Unspawnable,
-    NotInVillage,
-}
-impl std::fmt::Display for RaidStopEventReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            RaidStopEventReasonEnum::Peace => f.write_str("PEACE"),
-            RaidStopEventReasonEnum::Timeout => f.write_str("TIMEOUT"),
-            RaidStopEventReasonEnum::Finished => f.write_str("FINISHED"),
-            RaidStopEventReasonEnum::Unspawnable => f.write_str("UNSPAWNABLE"),
-            RaidStopEventReasonEnum::NotInVillage => f.write_str("NOT_IN_VILLAGE"),
-        }
-    }
+pub enum RaidStopEventReason<'mc> {
+    Peace {
+        inner: RaidStopEventReasonStruct<'mc>,
+    },
+    Timeout {
+        inner: RaidStopEventReasonStruct<'mc>,
+    },
+    Finished {
+        inner: RaidStopEventReasonStruct<'mc>,
+    },
+    Unspawnable {
+        inner: RaidStopEventReasonStruct<'mc>,
+    },
+    NotInVillage {
+        inner: RaidStopEventReasonStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for RaidStopEventReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            RaidStopEventReason::Peace { .. } => f.write_str("PEACE"),
+            RaidStopEventReason::Timeout { .. } => f.write_str("TIMEOUT"),
+            RaidStopEventReason::Finished { .. } => f.write_str("FINISHED"),
+            RaidStopEventReason::Unspawnable { .. } => f.write_str("UNSPAWNABLE"),
+            RaidStopEventReason::NotInVillage { .. } => f.write_str("NOT_IN_VILLAGE"),
+        }
     }
 }
+
+impl<'mc> RaidStopEventReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<RaidStopEventReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/raid/RaidStopEvent$Reason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/raid/RaidStopEvent$Reason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "PEACE" => Ok(RaidStopEventReason::Peace {
+                inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+            }),
+            "TIMEOUT" => Ok(RaidStopEventReason::Timeout {
+                inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+            }),
+            "FINISHED" => Ok(RaidStopEventReason::Finished {
+                inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+            }),
+            "UNSPAWNABLE" => Ok(RaidStopEventReason::Unspawnable {
+                inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+            }),
+            "NOT_IN_VILLAGE" => Ok(RaidStopEventReason::NotInVillage {
+                inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct RaidStopEventReason<'mc>(
+pub struct RaidStopEventReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub RaidStopEventReasonEnum,
 );
-impl<'mc> std::ops::Deref for RaidStopEventReason<'mc> {
-    type Target = RaidStopEventReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for RaidStopEventReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Peace { inner } => inner.0.clone(),
+            Self::Timeout { inner } => inner.0.clone(),
+            Self::Finished { inner } => inner.0.clone(),
+            Self::Unspawnable { inner } => inner.0.clone(),
+            Self::NotInVillage { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Peace { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Timeout { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Finished { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unspawnable { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NotInVillage { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for RaidStopEventReason<'mc> {
-    type Enum = RaidStopEventReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for RaidStopEventReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -1101,66 +1125,71 @@ impl<'mc> JNIInstantiatableEnum<'mc> for RaidStopEventReason<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "PEACE" => Ok(RaidStopEventReason::Peace {
+                    inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+                }),
+                "TIMEOUT" => Ok(RaidStopEventReason::Timeout {
+                    inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+                }),
+                "FINISHED" => Ok(RaidStopEventReason::Finished {
+                    inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+                }),
+                "UNSPAWNABLE" => Ok(RaidStopEventReason::Unspawnable {
+                    inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+                }),
+                "NOT_IN_VILLAGE" => Ok(RaidStopEventReason::NotInVillage {
+                    inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> RaidStopEventReason<'mc> {
-    pub const PEACE: RaidStopEventReasonEnum = RaidStopEventReasonEnum::Peace;
-    pub const TIMEOUT: RaidStopEventReasonEnum = RaidStopEventReasonEnum::Timeout;
-    pub const FINISHED: RaidStopEventReasonEnum = RaidStopEventReasonEnum::Finished;
-    pub const UNSPAWNABLE: RaidStopEventReasonEnum = RaidStopEventReasonEnum::Unspawnable;
-    pub const NOT_IN_VILLAGE: RaidStopEventReasonEnum = RaidStopEventReasonEnum::NotInVillage;
-    pub fn from_string(str: String) -> std::option::Option<RaidStopEventReasonEnum> {
-        match str.as_str() {
-            "PEACE" => Some(RaidStopEventReasonEnum::Peace),
-            "TIMEOUT" => Some(RaidStopEventReasonEnum::Timeout),
-            "FINISHED" => Some(RaidStopEventReasonEnum::Finished),
-            "UNSPAWNABLE" => Some(RaidStopEventReasonEnum::Unspawnable),
-            "NOT_IN_VILLAGE" => Some(RaidStopEventReasonEnum::NotInVillage),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for RaidStopEventReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for RaidStopEventReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate RaidStopEventReasonStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/raid/RaidStopEvent$Reason")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a RaidStopEventReasonStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<RaidStopEventReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/raid/RaidStopEvent$Reason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/raid/RaidStopEvent$Reason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        RaidStopEventReason::from_raw(
-            &jni,
-            raw_obj,
-            RaidStopEventReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> RaidStopEventReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1168,12 +1197,10 @@ impl<'mc> JNIRaw<'mc> for RaidStopEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RaidStopEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1254,8 +1281,6 @@ impl<'mc> RaidStopEvent<'mc> {
         Ok(Some(crate::event::raid::RaidStopEventReason::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::event::raid::RaidStopEventReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
 
@@ -1420,14 +1445,9 @@ impl<'mc> RaidStopEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1446,61 +1466,103 @@ impl<'mc> Into<crate::event::raid::RaidEvent<'mc>> for RaidStopEvent<'mc> {
             .expect("Error converting RaidStopEvent into crate::event::raid::RaidEvent")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum ReasonEnum {
-    Peace,
-    Timeout,
-    Finished,
-    Unspawnable,
-    NotInVillage,
-}
-impl std::fmt::Display for ReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ReasonEnum::Peace => f.write_str("PEACE"),
-            ReasonEnum::Timeout => f.write_str("TIMEOUT"),
-            ReasonEnum::Finished => f.write_str("FINISHED"),
-            ReasonEnum::Unspawnable => f.write_str("UNSPAWNABLE"),
-            ReasonEnum::NotInVillage => f.write_str("NOT_IN_VILLAGE"),
-        }
-    }
+pub enum Reason<'mc> {
+    Peace { inner: ReasonStruct<'mc> },
+    Timeout { inner: ReasonStruct<'mc> },
+    Finished { inner: ReasonStruct<'mc> },
+    Unspawnable { inner: ReasonStruct<'mc> },
+    NotInVillage { inner: ReasonStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Reason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Reason::Peace { .. } => f.write_str("PEACE"),
+            Reason::Timeout { .. } => f.write_str("TIMEOUT"),
+            Reason::Finished { .. } => f.write_str("FINISHED"),
+            Reason::Unspawnable { .. } => f.write_str("UNSPAWNABLE"),
+            Reason::NotInVillage { .. } => f.write_str("NOT_IN_VILLAGE"),
+        }
     }
 }
+
+impl<'mc> Reason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Reason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/raid/Reason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/raid/Reason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "PEACE" => Ok(Reason::Peace {
+                inner: ReasonStruct::from_raw(env, obj)?,
+            }),
+            "TIMEOUT" => Ok(Reason::Timeout {
+                inner: ReasonStruct::from_raw(env, obj)?,
+            }),
+            "FINISHED" => Ok(Reason::Finished {
+                inner: ReasonStruct::from_raw(env, obj)?,
+            }),
+            "UNSPAWNABLE" => Ok(Reason::Unspawnable {
+                inner: ReasonStruct::from_raw(env, obj)?,
+            }),
+            "NOT_IN_VILLAGE" => Ok(Reason::NotInVillage {
+                inner: ReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Reason<'mc>(
+pub struct ReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub ReasonEnum,
 );
-impl<'mc> std::ops::Deref for Reason<'mc> {
-    type Target = ReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Reason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Peace { inner } => inner.0.clone(),
+            Self::Timeout { inner } => inner.0.clone(),
+            Self::Finished { inner } => inner.0.clone(),
+            Self::Unspawnable { inner } => inner.0.clone(),
+            Self::NotInVillage { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Peace { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Timeout { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Finished { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unspawnable { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NotInVillage { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Reason<'mc> {
-    type Enum = ReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Reason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Reason from null object.").into());
@@ -1513,65 +1575,66 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Reason<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "PEACE" => Ok(Reason::Peace {
+                    inner: ReasonStruct::from_raw(env, obj)?,
+                }),
+                "TIMEOUT" => Ok(Reason::Timeout {
+                    inner: ReasonStruct::from_raw(env, obj)?,
+                }),
+                "FINISHED" => Ok(Reason::Finished {
+                    inner: ReasonStruct::from_raw(env, obj)?,
+                }),
+                "UNSPAWNABLE" => Ok(Reason::Unspawnable {
+                    inner: ReasonStruct::from_raw(env, obj)?,
+                }),
+                "NOT_IN_VILLAGE" => Ok(Reason::NotInVillage {
+                    inner: ReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Reason<'mc> {
-    pub const PEACE: ReasonEnum = ReasonEnum::Peace;
-    pub const TIMEOUT: ReasonEnum = ReasonEnum::Timeout;
-    pub const FINISHED: ReasonEnum = ReasonEnum::Finished;
-    pub const UNSPAWNABLE: ReasonEnum = ReasonEnum::Unspawnable;
-    pub const NOT_IN_VILLAGE: ReasonEnum = ReasonEnum::NotInVillage;
-    pub fn from_string(str: String) -> std::option::Option<ReasonEnum> {
-        match str.as_str() {
-            "PEACE" => Some(ReasonEnum::Peace),
-            "TIMEOUT" => Some(ReasonEnum::Timeout),
-            "FINISHED" => Some(ReasonEnum::Finished),
-            "UNSPAWNABLE" => Some(ReasonEnum::Unspawnable),
-            "NOT_IN_VILLAGE" => Some(ReasonEnum::NotInVillage),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for ReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate ReasonStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/raid/Reason")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ReasonStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Reason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/raid/Reason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/raid/Reason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Reason::from_raw(
-            &jni,
-            raw_obj,
-            Reason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> ReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }

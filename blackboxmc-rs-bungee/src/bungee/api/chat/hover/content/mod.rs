@@ -9,23 +9,17 @@ pub struct Item<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate
 
     impl<'mc> JNIRaw<'mc> for Item<'mc> {
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-            self.0.clone()
-        }
-
-        fn jni_object(&self) -> jni::objects::JObject<'mc> {
-            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-        }
-    }
-    
-
-    impl<'mc> JNIInstantiatable<'mc> for Item<'mc> {
         
-
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
+}
+impl<'mc> JNIInstantiatable<'mc> for Item<'mc> {
         fn from_raw(
             env: &blackboxmc_general::SharedJNIEnv<'mc>,
             obj: jni::objects::JObject<'mc>,
-    
-
         ) -> Result<Self, Box<dyn std::error::Error>> {
             if obj.is_null() {
                 return Err(eyre::eyre!(
@@ -40,9 +34,7 @@ pub struct Item<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate
                 )
                 .into())
             } else {
-    
-Ok(Self(env.clone(), obj))
-
+    Ok(Self(env.clone(), obj))
             }
         }
     }
@@ -139,7 +131,6 @@ let res =
 self.jni_ref().translate_error(res)?;
 let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };let variant = self.0.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]); let variant = self.jni_ref().translate_error(variant)?;let variant_str = self.0    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?    .to_string_lossy()    .to_string();
 crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
-, crate::bungee::api::chat::HoverEventAction::from_string(variant_str).ok_or(eyre::eyre!("String gaven for variant was invalid"))?
 )}
 
 	pub fn set_tag(&self,arg0: impl Into<crate::bungee::api::chat::ItemTag<'mc>>) 
@@ -239,9 +230,9 @@ Ok(
 ()
 )}
 
-    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
     
 }
@@ -272,23 +263,17 @@ pub struct Entity<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(cra
 
     impl<'mc> JNIRaw<'mc> for Entity<'mc> {
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-            self.0.clone()
-        }
-
-        fn jni_object(&self) -> jni::objects::JObject<'mc> {
-            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-        }
-    }
-    
-
-    impl<'mc> JNIInstantiatable<'mc> for Entity<'mc> {
         
-
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
+}
+impl<'mc> JNIInstantiatable<'mc> for Entity<'mc> {
         fn from_raw(
             env: &blackboxmc_general::SharedJNIEnv<'mc>,
             obj: jni::objects::JObject<'mc>,
-    
-
         ) -> Result<Self, Box<dyn std::error::Error>> {
             if obj.is_null() {
                 return Err(eyre::eyre!(
@@ -303,9 +288,7 @@ pub struct Entity<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(cra
                 )
                 .into())
             } else {
-    
-Ok(Self(env.clone(), obj))
-
+    Ok(Self(env.clone(), obj))
             }
         }
     }
@@ -413,7 +396,6 @@ let res =
 self.jni_ref().translate_error(res)?;
 let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };let variant = self.0.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]); let variant = self.jni_ref().translate_error(variant)?;let variant_str = self.0    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?    .to_string_lossy()    .to_string();
 crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
-, crate::bungee::api::chat::HoverEventAction::from_string(variant_str).ok_or(eyre::eyre!("String gaven for variant was invalid"))?
 )}
 
 	pub fn set_type(&self,arg0: impl Into<String>) 
@@ -502,9 +484,9 @@ Ok(
 ()
 )}
 
-    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
     
 }
@@ -535,23 +517,17 @@ pub struct ItemSerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
 
     impl<'mc> JNIRaw<'mc> for ItemSerializer<'mc> {
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-            self.0.clone()
-        }
-
-        fn jni_object(&self) -> jni::objects::JObject<'mc> {
-            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-        }
-    }
-    
-
-    impl<'mc> JNIInstantiatable<'mc> for ItemSerializer<'mc> {
         
-
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
+}
+impl<'mc> JNIInstantiatable<'mc> for ItemSerializer<'mc> {
         fn from_raw(
             env: &blackboxmc_general::SharedJNIEnv<'mc>,
             obj: jni::objects::JObject<'mc>,
-    
-
         ) -> Result<Self, Box<dyn std::error::Error>> {
             if obj.is_null() {
                 return Err(eyre::eyre!(
@@ -566,9 +542,7 @@ pub struct ItemSerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
                 )
                 .into())
             } else {
-    
-Ok(Self(env.clone(), obj))
-
+    Ok(Self(env.clone(), obj))
             }
         }
     }
@@ -718,9 +692,9 @@ Ok(
 ()
 )}
 
-    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
     
 }
@@ -750,23 +724,17 @@ pub struct TextSerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
 
     impl<'mc> JNIRaw<'mc> for TextSerializer<'mc> {
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-            self.0.clone()
-        }
-
-        fn jni_object(&self) -> jni::objects::JObject<'mc> {
-            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-        }
-    }
-    
-
-    impl<'mc> JNIInstantiatable<'mc> for TextSerializer<'mc> {
         
-
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
+}
+impl<'mc> JNIInstantiatable<'mc> for TextSerializer<'mc> {
         fn from_raw(
             env: &blackboxmc_general::SharedJNIEnv<'mc>,
             obj: jni::objects::JObject<'mc>,
-    
-
         ) -> Result<Self, Box<dyn std::error::Error>> {
             if obj.is_null() {
                 return Err(eyre::eyre!(
@@ -781,9 +749,7 @@ pub struct TextSerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
                 )
                 .into())
             } else {
-    
-Ok(Self(env.clone(), obj))
-
+    Ok(Self(env.clone(), obj))
             }
         }
     }
@@ -933,9 +899,9 @@ Ok(
 ()
 )}
 
-    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
     
 }
@@ -965,23 +931,17 @@ pub struct Content<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(cr
 
     impl<'mc> JNIRaw<'mc> for Content<'mc> {
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-            self.0.clone()
-        }
-
-        fn jni_object(&self) -> jni::objects::JObject<'mc> {
-            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-        }
-    }
-    
-
-    impl<'mc> JNIInstantiatable<'mc> for Content<'mc> {
         
-
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
+}
+impl<'mc> JNIInstantiatable<'mc> for Content<'mc> {
         fn from_raw(
             env: &blackboxmc_general::SharedJNIEnv<'mc>,
             obj: jni::objects::JObject<'mc>,
-    
-
         ) -> Result<Self, Box<dyn std::error::Error>> {
             if obj.is_null() {
                 return Err(eyre::eyre!(
@@ -996,9 +956,7 @@ pub struct Content<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(cr
                 )
                 .into())
             } else {
-    
-Ok(Self(env.clone(), obj))
-
+    Ok(Self(env.clone(), obj))
             }
         }
     }
@@ -1071,7 +1029,6 @@ let res =
 self.jni_ref().translate_error(res)?;
 let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };let variant = self.0.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]); let variant = self.jni_ref().translate_error(variant)?;let variant_str = self.0    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?    .to_string_lossy()    .to_string();
 crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
-, crate::bungee::api::chat::HoverEventAction::from_string(variant_str).ok_or(eyre::eyre!("String gaven for variant was invalid"))?
 )}
 
 	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
@@ -1127,9 +1084,9 @@ Ok(
 ()
 )}
 
-    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
     
 }
@@ -1152,23 +1109,17 @@ pub struct Text<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate
 
     impl<'mc> JNIRaw<'mc> for Text<'mc> {
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-            self.0.clone()
-        }
-
-        fn jni_object(&self) -> jni::objects::JObject<'mc> {
-            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-        }
-    }
-    
-
-    impl<'mc> JNIInstantiatable<'mc> for Text<'mc> {
         
-
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
+}
+impl<'mc> JNIInstantiatable<'mc> for Text<'mc> {
         fn from_raw(
             env: &blackboxmc_general::SharedJNIEnv<'mc>,
             obj: jni::objects::JObject<'mc>,
-    
-
         ) -> Result<Self, Box<dyn std::error::Error>> {
             if obj.is_null() {
                 return Err(eyre::eyre!(
@@ -1183,9 +1134,7 @@ pub struct Text<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate
                 )
                 .into())
             } else {
-    
-Ok(Self(env.clone(), obj))
-
+    Ok(Self(env.clone(), obj))
             }
         }
     }
@@ -1263,7 +1212,6 @@ let res =
 self.jni_ref().translate_error(res)?;
 let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };let variant = self.0.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]); let variant = self.jni_ref().translate_error(variant)?;let variant_str = self.0    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?    .to_string_lossy()    .to_string();
 crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
-, crate::bungee::api::chat::HoverEventAction::from_string(variant_str).ok_or(eyre::eyre!("String gaven for variant was invalid"))?
 )}
 
 	pub fn assert_action(&self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
@@ -1330,9 +1278,9 @@ Ok(
 ()
 )}
 
-    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
     
 }
@@ -1363,23 +1311,17 @@ pub struct EntitySerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc
 
     impl<'mc> JNIRaw<'mc> for EntitySerializer<'mc> {
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-            self.0.clone()
-        }
-
-        fn jni_object(&self) -> jni::objects::JObject<'mc> {
-            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-        }
-    }
-    
-
-    impl<'mc> JNIInstantiatable<'mc> for EntitySerializer<'mc> {
         
-
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
+}
+impl<'mc> JNIInstantiatable<'mc> for EntitySerializer<'mc> {
         fn from_raw(
             env: &blackboxmc_general::SharedJNIEnv<'mc>,
             obj: jni::objects::JObject<'mc>,
-    
-
         ) -> Result<Self, Box<dyn std::error::Error>> {
             if obj.is_null() {
                 return Err(eyre::eyre!(
@@ -1394,9 +1336,7 @@ pub struct EntitySerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc
                 )
                 .into())
             } else {
-    
-Ok(Self(env.clone(), obj))
-
+    Ok(Self(env.clone(), obj))
             }
         }
     }
@@ -1546,9 +1486,9 @@ Ok(
 ()
 )}
 
-    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
     
 }

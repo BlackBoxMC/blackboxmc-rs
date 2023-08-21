@@ -14,12 +14,10 @@ impl<'mc> JNIRaw<'mc> for WorldUnloadEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for WorldUnloadEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -233,14 +231,9 @@ impl<'mc> WorldUnloadEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -276,12 +269,10 @@ impl<'mc> JNIRaw<'mc> for SpawnChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SpawnChangeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -493,14 +484,9 @@ impl<'mc> SpawnChangeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -530,12 +516,10 @@ impl<'mc> JNIRaw<'mc> for ChunkLoadEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ChunkLoadEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -751,14 +735,9 @@ impl<'mc> ChunkLoadEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -783,57 +762,95 @@ pub struct PortalCreateEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum PortalCreateEventCreateReasonEnum {
-    Fire,
-    NetherPair,
-    EndPlatform,
-}
-impl std::fmt::Display for PortalCreateEventCreateReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PortalCreateEventCreateReasonEnum::Fire => f.write_str("FIRE"),
-            PortalCreateEventCreateReasonEnum::NetherPair => f.write_str("NETHER_PAIR"),
-            PortalCreateEventCreateReasonEnum::EndPlatform => f.write_str("END_PLATFORM"),
-        }
-    }
+pub enum PortalCreateEventCreateReason<'mc> {
+    Fire {
+        inner: PortalCreateEventCreateReasonStruct<'mc>,
+    },
+    NetherPair {
+        inner: PortalCreateEventCreateReasonStruct<'mc>,
+    },
+    EndPlatform {
+        inner: PortalCreateEventCreateReasonStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for PortalCreateEventCreateReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            PortalCreateEventCreateReason::Fire { .. } => f.write_str("FIRE"),
+            PortalCreateEventCreateReason::NetherPair { .. } => f.write_str("NETHER_PAIR"),
+            PortalCreateEventCreateReason::EndPlatform { .. } => f.write_str("END_PLATFORM"),
+        }
     }
 }
+
+impl<'mc> PortalCreateEventCreateReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PortalCreateEventCreateReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/world/PortalCreateEvent$CreateReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/world/PortalCreateEvent$CreateReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "FIRE" => Ok(PortalCreateEventCreateReason::Fire {
+                inner: PortalCreateEventCreateReasonStruct::from_raw(env, obj)?,
+            }),
+            "NETHER_PAIR" => Ok(PortalCreateEventCreateReason::NetherPair {
+                inner: PortalCreateEventCreateReasonStruct::from_raw(env, obj)?,
+            }),
+            "END_PLATFORM" => Ok(PortalCreateEventCreateReason::EndPlatform {
+                inner: PortalCreateEventCreateReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct PortalCreateEventCreateReason<'mc>(
+pub struct PortalCreateEventCreateReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub PortalCreateEventCreateReasonEnum,
 );
-impl<'mc> std::ops::Deref for PortalCreateEventCreateReason<'mc> {
-    type Target = PortalCreateEventCreateReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for PortalCreateEventCreateReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Fire { inner } => inner.0.clone(),
+            Self::NetherPair { inner } => inner.0.clone(),
+            Self::EndPlatform { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Fire { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NetherPair { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EndPlatform { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for PortalCreateEventCreateReason<'mc> {
-    type Enum = PortalCreateEventCreateReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for PortalCreateEventCreateReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -852,64 +869,67 @@ impl<'mc> JNIInstantiatableEnum<'mc> for PortalCreateEventCreateReason<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "FIRE" => Ok(PortalCreateEventCreateReason::Fire {
+                    inner: PortalCreateEventCreateReasonStruct::from_raw(env, obj)?,
+                }),
+                "NETHER_PAIR" => Ok(PortalCreateEventCreateReason::NetherPair {
+                    inner: PortalCreateEventCreateReasonStruct::from_raw(env, obj)?,
+                }),
+                "END_PLATFORM" => Ok(PortalCreateEventCreateReason::EndPlatform {
+                    inner: PortalCreateEventCreateReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> PortalCreateEventCreateReason<'mc> {
-    pub const FIRE: PortalCreateEventCreateReasonEnum = PortalCreateEventCreateReasonEnum::Fire;
-    pub const NETHER_PAIR: PortalCreateEventCreateReasonEnum =
-        PortalCreateEventCreateReasonEnum::NetherPair;
-    pub const END_PLATFORM: PortalCreateEventCreateReasonEnum =
-        PortalCreateEventCreateReasonEnum::EndPlatform;
-    pub fn from_string(str: String) -> std::option::Option<PortalCreateEventCreateReasonEnum> {
-        match str.as_str() {
-            "FIRE" => Some(PortalCreateEventCreateReasonEnum::Fire),
-            "NETHER_PAIR" => Some(PortalCreateEventCreateReasonEnum::NetherPair),
-            "END_PLATFORM" => Some(PortalCreateEventCreateReasonEnum::EndPlatform),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for PortalCreateEventCreateReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PortalCreateEventCreateReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PortalCreateEventCreateReasonStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/world/PortalCreateEvent$CreateReason",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a PortalCreateEventCreateReasonStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<PortalCreateEventCreateReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/world/PortalCreateEvent$CreateReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/world/PortalCreateEvent$CreateReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        PortalCreateEventCreateReason::from_raw(
-            &jni,
-            raw_obj,
-            PortalCreateEventCreateReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> PortalCreateEventCreateReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -917,12 +937,10 @@ impl<'mc> JNIRaw<'mc> for PortalCreateEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PortalCreateEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -981,12 +999,7 @@ impl<'mc> PortalCreateEvent<'mc> {
             .to_string_lossy()
             .to_string();
         Ok(Some(
-            crate::event::world::PortalCreateEventCreateReason::from_raw(
-                &self.jni_ref(),
-                raw_obj,
-                crate::event::world::PortalCreateEventCreateReason::from_string(variant_str)
-                    .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-            )?,
+            crate::event::world::PortalCreateEventCreateReason::from_raw(&self.jni_ref(), raw_obj)?,
         ))
     }
 
@@ -1178,14 +1191,9 @@ impl<'mc> PortalCreateEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1210,57 +1218,89 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for PortalCreateEvent<'mc> 
             .expect("Error converting PortalCreateEvent into crate::event::world::WorldEvent")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum CreateReasonEnum {
-    Fire,
-    NetherPair,
-    EndPlatform,
-}
-impl std::fmt::Display for CreateReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            CreateReasonEnum::Fire => f.write_str("FIRE"),
-            CreateReasonEnum::NetherPair => f.write_str("NETHER_PAIR"),
-            CreateReasonEnum::EndPlatform => f.write_str("END_PLATFORM"),
-        }
-    }
+pub enum CreateReason<'mc> {
+    Fire { inner: CreateReasonStruct<'mc> },
+    NetherPair { inner: CreateReasonStruct<'mc> },
+    EndPlatform { inner: CreateReasonStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for CreateReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            CreateReason::Fire { .. } => f.write_str("FIRE"),
+            CreateReason::NetherPair { .. } => f.write_str("NETHER_PAIR"),
+            CreateReason::EndPlatform { .. } => f.write_str("END_PLATFORM"),
+        }
     }
 }
+
+impl<'mc> CreateReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<CreateReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/world/CreateReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/world/CreateReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "FIRE" => Ok(CreateReason::Fire {
+                inner: CreateReasonStruct::from_raw(env, obj)?,
+            }),
+            "NETHER_PAIR" => Ok(CreateReason::NetherPair {
+                inner: CreateReasonStruct::from_raw(env, obj)?,
+            }),
+            "END_PLATFORM" => Ok(CreateReason::EndPlatform {
+                inner: CreateReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct CreateReason<'mc>(
+pub struct CreateReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub CreateReasonEnum,
 );
-impl<'mc> std::ops::Deref for CreateReason<'mc> {
-    type Target = CreateReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for CreateReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Fire { inner } => inner.0.clone(),
+            Self::NetherPair { inner } => inner.0.clone(),
+            Self::EndPlatform { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Fire { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NetherPair { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EndPlatform { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for CreateReason<'mc> {
-    type Enum = CreateReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for CreateReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate CreateReason from null object.").into());
@@ -1273,62 +1313,63 @@ impl<'mc> JNIInstantiatableEnum<'mc> for CreateReason<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "FIRE" => Ok(CreateReason::Fire {
+                    inner: CreateReasonStruct::from_raw(env, obj)?,
+                }),
+                "NETHER_PAIR" => Ok(CreateReason::NetherPair {
+                    inner: CreateReasonStruct::from_raw(env, obj)?,
+                }),
+                "END_PLATFORM" => Ok(CreateReason::EndPlatform {
+                    inner: CreateReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> CreateReason<'mc> {
-    pub const FIRE: CreateReasonEnum = CreateReasonEnum::Fire;
-    pub const NETHER_PAIR: CreateReasonEnum = CreateReasonEnum::NetherPair;
-    pub const END_PLATFORM: CreateReasonEnum = CreateReasonEnum::EndPlatform;
-    pub fn from_string(str: String) -> std::option::Option<CreateReasonEnum> {
-        match str.as_str() {
-            "FIRE" => Some(CreateReasonEnum::Fire),
-            "NETHER_PAIR" => Some(CreateReasonEnum::NetherPair),
-            "END_PLATFORM" => Some(CreateReasonEnum::EndPlatform),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for CreateReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for CreateReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate CreateReasonStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/world/CreateReason")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a CreateReasonStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<CreateReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/world/CreateReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/world/CreateReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        CreateReason::from_raw(
-            &jni,
-            raw_obj,
-            CreateReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> CreateReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Called when a World is initializing.
@@ -1344,12 +1385,10 @@ impl<'mc> JNIRaw<'mc> for WorldInitEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for WorldInitEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1540,14 +1579,9 @@ impl<'mc> WorldInitEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1566,57 +1600,87 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for WorldInitEvent<'mc> {
             .expect("Error converting WorldInitEvent into crate::event::world::WorldEvent")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum SkipReasonEnum {
-    Command,
-    Custom,
-    NightSkip,
-}
-impl std::fmt::Display for SkipReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            SkipReasonEnum::Command => f.write_str("COMMAND"),
-            SkipReasonEnum::Custom => f.write_str("CUSTOM"),
-            SkipReasonEnum::NightSkip => f.write_str("NIGHT_SKIP"),
-        }
-    }
+pub enum SkipReason<'mc> {
+    Command { inner: SkipReasonStruct<'mc> },
+    Custom { inner: SkipReasonStruct<'mc> },
+    NightSkip { inner: SkipReasonStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for SkipReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            SkipReason::Command { .. } => f.write_str("COMMAND"),
+            SkipReason::Custom { .. } => f.write_str("CUSTOM"),
+            SkipReason::NightSkip { .. } => f.write_str("NIGHT_SKIP"),
+        }
     }
 }
+
+impl<'mc> SkipReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<SkipReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/world/SkipReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/world/SkipReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "COMMAND" => Ok(SkipReason::Command {
+                inner: SkipReasonStruct::from_raw(env, obj)?,
+            }),
+            "CUSTOM" => Ok(SkipReason::Custom {
+                inner: SkipReasonStruct::from_raw(env, obj)?,
+            }),
+            "NIGHT_SKIP" => Ok(SkipReason::NightSkip {
+                inner: SkipReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct SkipReason<'mc>(
+pub struct SkipReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub SkipReasonEnum,
 );
-impl<'mc> std::ops::Deref for SkipReason<'mc> {
-    type Target = SkipReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for SkipReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Command { inner } => inner.0.clone(),
+            Self::Custom { inner } => inner.0.clone(),
+            Self::NightSkip { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Command { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Custom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NightSkip { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for SkipReason<'mc> {
-    type Enum = SkipReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for SkipReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SkipReason from null object.").into());
@@ -1629,62 +1693,63 @@ impl<'mc> JNIInstantiatableEnum<'mc> for SkipReason<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "COMMAND" => Ok(SkipReason::Command {
+                    inner: SkipReasonStruct::from_raw(env, obj)?,
+                }),
+                "CUSTOM" => Ok(SkipReason::Custom {
+                    inner: SkipReasonStruct::from_raw(env, obj)?,
+                }),
+                "NIGHT_SKIP" => Ok(SkipReason::NightSkip {
+                    inner: SkipReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> SkipReason<'mc> {
-    pub const COMMAND: SkipReasonEnum = SkipReasonEnum::Command;
-    pub const CUSTOM: SkipReasonEnum = SkipReasonEnum::Custom;
-    pub const NIGHT_SKIP: SkipReasonEnum = SkipReasonEnum::NightSkip;
-    pub fn from_string(str: String) -> std::option::Option<SkipReasonEnum> {
-        match str.as_str() {
-            "COMMAND" => Some(SkipReasonEnum::Command),
-            "CUSTOM" => Some(SkipReasonEnum::Custom),
-            "NIGHT_SKIP" => Some(SkipReasonEnum::NightSkip),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for SkipReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for SkipReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate SkipReasonStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/world/SkipReason")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a SkipReasonStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<SkipReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/world/SkipReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/world/SkipReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        SkipReason::from_raw(
-            &jni,
-            raw_obj,
-            SkipReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> SkipReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Called when a <a title="interface in org.bukkit.loot" href="../../loot/LootTable.html"><code>LootTable</code></a> is generated in the world for an <a title="interface in org.bukkit.inventory" href="../../inventory/InventoryHolder.html"><code>InventoryHolder</code></a>. This event is NOT currently called when an entity's loot table has been generated (use <a href="../entity/EntityDeathEvent.html#getDrops()"><code>EntityDeathEvent.getDrops()</code></a>, but WILL be called by plugins invoking <a href="../../loot/LootTable.html#fillInventory(org.bukkit.inventory.Inventory,java.util.Random,org.bukkit.loot.LootContext)"><code>LootTable.fillInventory(org.bukkit.inventory.Inventory, java.util.Random, LootContext)</code></a>.
@@ -1698,12 +1763,10 @@ impl<'mc> JNIRaw<'mc> for LootGenerateEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for LootGenerateEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1986,14 +2049,9 @@ impl<'mc> LootGenerateEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2029,12 +2087,10 @@ impl<'mc> JNIRaw<'mc> for WorldLoadEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for WorldLoadEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2225,14 +2281,9 @@ impl<'mc> WorldLoadEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2262,12 +2313,10 @@ impl<'mc> JNIRaw<'mc> for AsyncStructureSpawnEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for AsyncStructureSpawnEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2546,14 +2595,9 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2591,12 +2635,10 @@ impl<'mc> JNIRaw<'mc> for ChunkPopulateEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ChunkPopulateEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2798,14 +2840,9 @@ impl<'mc> ChunkPopulateEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2835,12 +2872,10 @@ impl<'mc> JNIRaw<'mc> for ChunkUnloadEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ChunkUnloadEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3070,14 +3105,9 @@ impl<'mc> ChunkUnloadEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3107,12 +3137,10 @@ impl<'mc> JNIRaw<'mc> for EntitiesUnloadEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntitiesUnloadEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3312,14 +3340,9 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3349,12 +3372,10 @@ impl<'mc> JNIRaw<'mc> for EntitiesLoadEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntitiesLoadEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3553,14 +3574,9 @@ impl<'mc> EntitiesLoadEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3590,12 +3606,10 @@ impl<'mc> JNIRaw<'mc> for GenericGameEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for GenericGameEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3884,14 +3898,9 @@ impl<'mc> GenericGameEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3927,12 +3936,10 @@ impl<'mc> JNIRaw<'mc> for WorldEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for WorldEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4115,14 +4122,9 @@ impl<'mc> WorldEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -4152,12 +4154,10 @@ impl<'mc> JNIRaw<'mc> for ChunkEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ChunkEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4326,14 +4326,9 @@ impl<'mc> ChunkEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -4363,12 +4358,10 @@ impl<'mc> JNIRaw<'mc> for StructureGrowEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for StructureGrowEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4497,12 +4490,7 @@ impl<'mc> StructureGrowEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::TreeType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::TreeType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::TreeType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_from_bonemeal(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4638,14 +4626,9 @@ impl<'mc> StructureGrowEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -4677,57 +4660,93 @@ pub struct TimeSkipEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum TimeSkipEventSkipReasonEnum {
-    Command,
-    Custom,
-    NightSkip,
-}
-impl std::fmt::Display for TimeSkipEventSkipReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TimeSkipEventSkipReasonEnum::Command => f.write_str("COMMAND"),
-            TimeSkipEventSkipReasonEnum::Custom => f.write_str("CUSTOM"),
-            TimeSkipEventSkipReasonEnum::NightSkip => f.write_str("NIGHT_SKIP"),
-        }
-    }
+pub enum TimeSkipEventSkipReason<'mc> {
+    Command {
+        inner: TimeSkipEventSkipReasonStruct<'mc>,
+    },
+    Custom {
+        inner: TimeSkipEventSkipReasonStruct<'mc>,
+    },
+    NightSkip {
+        inner: TimeSkipEventSkipReasonStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for TimeSkipEventSkipReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            TimeSkipEventSkipReason::Command { .. } => f.write_str("COMMAND"),
+            TimeSkipEventSkipReason::Custom { .. } => f.write_str("CUSTOM"),
+            TimeSkipEventSkipReason::NightSkip { .. } => f.write_str("NIGHT_SKIP"),
+        }
     }
 }
+
+impl<'mc> TimeSkipEventSkipReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<TimeSkipEventSkipReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/world/TimeSkipEvent$SkipReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/world/TimeSkipEvent$SkipReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "COMMAND" => Ok(TimeSkipEventSkipReason::Command {
+                inner: TimeSkipEventSkipReasonStruct::from_raw(env, obj)?,
+            }),
+            "CUSTOM" => Ok(TimeSkipEventSkipReason::Custom {
+                inner: TimeSkipEventSkipReasonStruct::from_raw(env, obj)?,
+            }),
+            "NIGHT_SKIP" => Ok(TimeSkipEventSkipReason::NightSkip {
+                inner: TimeSkipEventSkipReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct TimeSkipEventSkipReason<'mc>(
+pub struct TimeSkipEventSkipReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub TimeSkipEventSkipReasonEnum,
 );
-impl<'mc> std::ops::Deref for TimeSkipEventSkipReason<'mc> {
-    type Target = TimeSkipEventSkipReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for TimeSkipEventSkipReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Command { inner } => inner.0.clone(),
+            Self::Custom { inner } => inner.0.clone(),
+            Self::NightSkip { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Command { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Custom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NightSkip { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for TimeSkipEventSkipReason<'mc> {
-    type Enum = TimeSkipEventSkipReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for TimeSkipEventSkipReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -4744,62 +4763,65 @@ impl<'mc> JNIInstantiatableEnum<'mc> for TimeSkipEventSkipReason<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "COMMAND" => Ok(TimeSkipEventSkipReason::Command {
+                    inner: TimeSkipEventSkipReasonStruct::from_raw(env, obj)?,
+                }),
+                "CUSTOM" => Ok(TimeSkipEventSkipReason::Custom {
+                    inner: TimeSkipEventSkipReasonStruct::from_raw(env, obj)?,
+                }),
+                "NIGHT_SKIP" => Ok(TimeSkipEventSkipReason::NightSkip {
+                    inner: TimeSkipEventSkipReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> TimeSkipEventSkipReason<'mc> {
-    pub const COMMAND: TimeSkipEventSkipReasonEnum = TimeSkipEventSkipReasonEnum::Command;
-    pub const CUSTOM: TimeSkipEventSkipReasonEnum = TimeSkipEventSkipReasonEnum::Custom;
-    pub const NIGHT_SKIP: TimeSkipEventSkipReasonEnum = TimeSkipEventSkipReasonEnum::NightSkip;
-    pub fn from_string(str: String) -> std::option::Option<TimeSkipEventSkipReasonEnum> {
-        match str.as_str() {
-            "COMMAND" => Some(TimeSkipEventSkipReasonEnum::Command),
-            "CUSTOM" => Some(TimeSkipEventSkipReasonEnum::Custom),
-            "NIGHT_SKIP" => Some(TimeSkipEventSkipReasonEnum::NightSkip),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for TimeSkipEventSkipReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for TimeSkipEventSkipReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate TimeSkipEventSkipReasonStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/world/TimeSkipEvent$SkipReason")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a TimeSkipEventSkipReasonStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<TimeSkipEventSkipReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/world/TimeSkipEvent$SkipReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/world/TimeSkipEvent$SkipReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        TimeSkipEventSkipReason::from_raw(
-            &jni,
-            raw_obj,
-            TimeSkipEventSkipReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> TimeSkipEventSkipReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -4807,12 +4829,10 @@ impl<'mc> JNIRaw<'mc> for TimeSkipEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for TimeSkipEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4929,12 +4949,7 @@ impl<'mc> TimeSkipEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::world::TimeSkipEventSkipReason::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::world::TimeSkipEventSkipReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::world::TimeSkipEventSkipReason::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn skip_amount(&self) -> Result<i64, Box<dyn std::error::Error>> {
@@ -5083,14 +5098,9 @@ impl<'mc> TimeSkipEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -5126,12 +5136,10 @@ impl<'mc> JNIRaw<'mc> for WorldSaveEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for WorldSaveEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5322,14 +5330,9 @@ impl<'mc> WorldSaveEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 

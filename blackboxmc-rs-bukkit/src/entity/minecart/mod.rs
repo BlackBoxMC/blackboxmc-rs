@@ -16,12 +16,10 @@ impl<'mc> JNIRaw<'mc> for ExplosiveMinecart<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ExplosiveMinecart<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -423,12 +421,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -456,12 +449,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -548,12 +536,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
@@ -1047,12 +1030,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
@@ -1074,12 +1052,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn swim_high_speed_splash_sound(
@@ -1103,12 +1076,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1356,12 +1324,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::Pose::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::Pose::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::Pose::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn spawn_category(
@@ -1385,12 +1348,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::SpawnCategory::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::SpawnCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn spigot(
@@ -1756,14 +1714,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::entity::Minecart<'mc>> for ExplosiveMinecart<'mc> {
@@ -1785,12 +1738,10 @@ impl<'mc> JNIRaw<'mc> for HopperMinecart<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for HopperMinecart<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2153,12 +2104,7 @@ impl<'mc> HopperMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2186,12 +2132,7 @@ impl<'mc> HopperMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -2278,12 +2219,7 @@ impl<'mc> HopperMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
@@ -2777,12 +2713,7 @@ impl<'mc> HopperMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
@@ -2804,12 +2735,7 @@ impl<'mc> HopperMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn swim_high_speed_splash_sound(
@@ -2833,12 +2759,7 @@ impl<'mc> HopperMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3086,12 +3007,7 @@ impl<'mc> HopperMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::Pose::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::Pose::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::Pose::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn spawn_category(
@@ -3115,12 +3031,7 @@ impl<'mc> HopperMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::SpawnCategory::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::SpawnCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn spigot(
@@ -3556,14 +3467,9 @@ impl<'mc> HopperMinecart<'mc> {
         )?))
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::entity::Minecart<'mc>> for HopperMinecart<'mc> {
@@ -3597,12 +3503,10 @@ impl<'mc> JNIRaw<'mc> for StorageMinecart<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for StorageMinecart<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3944,12 +3848,7 @@ impl<'mc> StorageMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3977,12 +3876,7 @@ impl<'mc> StorageMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -4069,12 +3963,7 @@ impl<'mc> StorageMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
@@ -4568,12 +4457,7 @@ impl<'mc> StorageMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
@@ -4595,12 +4479,7 @@ impl<'mc> StorageMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn swim_high_speed_splash_sound(
@@ -4624,12 +4503,7 @@ impl<'mc> StorageMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4877,12 +4751,7 @@ impl<'mc> StorageMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::Pose::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::Pose::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::Pose::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn spawn_category(
@@ -4906,12 +4775,7 @@ impl<'mc> StorageMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::SpawnCategory::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::SpawnCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn spigot(
@@ -5347,14 +5211,9 @@ impl<'mc> StorageMinecart<'mc> {
         )?))
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::entity::Minecart<'mc>> for StorageMinecart<'mc> {
@@ -5388,12 +5247,10 @@ impl<'mc> JNIRaw<'mc> for SpawnerMinecart<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SpawnerMinecart<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5735,12 +5592,7 @@ impl<'mc> SpawnerMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5768,12 +5620,7 @@ impl<'mc> SpawnerMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -5860,12 +5707,7 @@ impl<'mc> SpawnerMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
@@ -6359,12 +6201,7 @@ impl<'mc> SpawnerMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
@@ -6386,12 +6223,7 @@ impl<'mc> SpawnerMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn swim_high_speed_splash_sound(
@@ -6415,12 +6247,7 @@ impl<'mc> SpawnerMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6668,12 +6495,7 @@ impl<'mc> SpawnerMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::Pose::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::Pose::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::Pose::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn spawn_category(
@@ -6697,12 +6519,7 @@ impl<'mc> SpawnerMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::SpawnCategory::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::SpawnCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn spigot(
@@ -7068,14 +6885,9 @@ impl<'mc> SpawnerMinecart<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::entity::Minecart<'mc>> for SpawnerMinecart<'mc> {
@@ -7097,12 +6909,10 @@ impl<'mc> JNIRaw<'mc> for PoweredMinecart<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for PoweredMinecart<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7467,12 +7277,7 @@ impl<'mc> PoweredMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7500,12 +7305,7 @@ impl<'mc> PoweredMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -7592,12 +7392,7 @@ impl<'mc> PoweredMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
@@ -8091,12 +7886,7 @@ impl<'mc> PoweredMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
@@ -8118,12 +7908,7 @@ impl<'mc> PoweredMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn swim_high_speed_splash_sound(
@@ -8147,12 +7932,7 @@ impl<'mc> PoweredMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8400,12 +8180,7 @@ impl<'mc> PoweredMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::Pose::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::Pose::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::Pose::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn spawn_category(
@@ -8429,12 +8204,7 @@ impl<'mc> PoweredMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::SpawnCategory::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::SpawnCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn spigot(
@@ -8800,14 +8570,9 @@ impl<'mc> PoweredMinecart<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::entity::Minecart<'mc>> for PoweredMinecart<'mc> {
@@ -8829,12 +8594,10 @@ impl<'mc> JNIRaw<'mc> for RideableMinecart<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for RideableMinecart<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9176,12 +8939,7 @@ impl<'mc> RideableMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9209,12 +8967,7 @@ impl<'mc> RideableMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -9301,12 +9054,7 @@ impl<'mc> RideableMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
@@ -9800,12 +9548,7 @@ impl<'mc> RideableMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
@@ -9827,12 +9570,7 @@ impl<'mc> RideableMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn swim_high_speed_splash_sound(
@@ -9856,12 +9594,7 @@ impl<'mc> RideableMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10109,12 +9842,7 @@ impl<'mc> RideableMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::Pose::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::Pose::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::Pose::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn spawn_category(
@@ -10138,12 +9866,7 @@ impl<'mc> RideableMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::SpawnCategory::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::SpawnCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn spigot(
@@ -10509,14 +10232,9 @@ impl<'mc> RideableMinecart<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::entity::Minecart<'mc>> for RideableMinecart<'mc> {
@@ -10538,12 +10256,10 @@ impl<'mc> JNIRaw<'mc> for CommandMinecart<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CommandMinecart<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10928,12 +10644,7 @@ impl<'mc> CommandMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10961,12 +10672,7 @@ impl<'mc> CommandMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -11053,12 +10759,7 @@ impl<'mc> CommandMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::PistonMoveReaction::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::PistonMoveReaction::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
@@ -11552,12 +11253,7 @@ impl<'mc> CommandMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
@@ -11579,12 +11275,7 @@ impl<'mc> CommandMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn swim_high_speed_splash_sound(
@@ -11608,12 +11299,7 @@ impl<'mc> CommandMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Sound::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Sound::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11861,12 +11547,7 @@ impl<'mc> CommandMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::Pose::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::Pose::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::Pose::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn spawn_category(
@@ -11890,12 +11571,7 @@ impl<'mc> CommandMinecart<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::entity::SpawnCategory::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::SpawnCategory::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn spigot(
@@ -12261,14 +11937,9 @@ impl<'mc> CommandMinecart<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 impl<'mc> Into<crate::entity::Minecart<'mc>> for CommandMinecart<'mc> {

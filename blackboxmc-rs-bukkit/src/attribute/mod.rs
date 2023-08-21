@@ -16,12 +16,10 @@ impl<'mc> JNIRaw<'mc> for Attributable<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Attributable<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -66,89 +64,190 @@ impl<'mc> Attributable<'mc> {
         })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum AttributeEnum {
-    GenericMaxHealth,
-    GenericFollowRange,
-    GenericKnockbackResistance,
-    GenericMovementSpeed,
-    GenericFlyingSpeed,
-    GenericAttackDamage,
-    GenericAttackKnockback,
-    GenericAttackSpeed,
-    GenericArmor,
-    GenericArmorToughness,
-    GenericLuck,
-    HorseJumpStrength,
-    ZombieSpawnReinforcements,
-}
-impl std::fmt::Display for AttributeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            AttributeEnum::GenericMaxHealth => f.write_str("GENERIC_MAX_HEALTH"),
-            AttributeEnum::GenericFollowRange => f.write_str("GENERIC_FOLLOW_RANGE"),
-            AttributeEnum::GenericKnockbackResistance => {
-                f.write_str("GENERIC_KNOCKBACK_RESISTANCE")
-            }
-            AttributeEnum::GenericMovementSpeed => f.write_str("GENERIC_MOVEMENT_SPEED"),
-            AttributeEnum::GenericFlyingSpeed => f.write_str("GENERIC_FLYING_SPEED"),
-            AttributeEnum::GenericAttackDamage => f.write_str("GENERIC_ATTACK_DAMAGE"),
-            AttributeEnum::GenericAttackKnockback => f.write_str("GENERIC_ATTACK_KNOCKBACK"),
-            AttributeEnum::GenericAttackSpeed => f.write_str("GENERIC_ATTACK_SPEED"),
-            AttributeEnum::GenericArmor => f.write_str("GENERIC_ARMOR"),
-            AttributeEnum::GenericArmorToughness => f.write_str("GENERIC_ARMOR_TOUGHNESS"),
-            AttributeEnum::GenericLuck => f.write_str("GENERIC_LUCK"),
-            AttributeEnum::HorseJumpStrength => f.write_str("HORSE_JUMP_STRENGTH"),
-            AttributeEnum::ZombieSpawnReinforcements => f.write_str("ZOMBIE_SPAWN_REINFORCEMENTS"),
-        }
-    }
+pub enum Attribute<'mc> {
+    GenericMaxHealth { inner: AttributeStruct<'mc> },
+    GenericFollowRange { inner: AttributeStruct<'mc> },
+    GenericKnockbackResistance { inner: AttributeStruct<'mc> },
+    GenericMovementSpeed { inner: AttributeStruct<'mc> },
+    GenericFlyingSpeed { inner: AttributeStruct<'mc> },
+    GenericAttackDamage { inner: AttributeStruct<'mc> },
+    GenericAttackKnockback { inner: AttributeStruct<'mc> },
+    GenericAttackSpeed { inner: AttributeStruct<'mc> },
+    GenericArmor { inner: AttributeStruct<'mc> },
+    GenericArmorToughness { inner: AttributeStruct<'mc> },
+    GenericLuck { inner: AttributeStruct<'mc> },
+    HorseJumpStrength { inner: AttributeStruct<'mc> },
+    ZombieSpawnReinforcements { inner: AttributeStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Attribute<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Attribute::GenericMaxHealth { .. } => f.write_str("GENERIC_MAX_HEALTH"),
+            Attribute::GenericFollowRange { .. } => f.write_str("GENERIC_FOLLOW_RANGE"),
+            Attribute::GenericKnockbackResistance { .. } => {
+                f.write_str("GENERIC_KNOCKBACK_RESISTANCE")
+            }
+            Attribute::GenericMovementSpeed { .. } => f.write_str("GENERIC_MOVEMENT_SPEED"),
+            Attribute::GenericFlyingSpeed { .. } => f.write_str("GENERIC_FLYING_SPEED"),
+            Attribute::GenericAttackDamage { .. } => f.write_str("GENERIC_ATTACK_DAMAGE"),
+            Attribute::GenericAttackKnockback { .. } => f.write_str("GENERIC_ATTACK_KNOCKBACK"),
+            Attribute::GenericAttackSpeed { .. } => f.write_str("GENERIC_ATTACK_SPEED"),
+            Attribute::GenericArmor { .. } => f.write_str("GENERIC_ARMOR"),
+            Attribute::GenericArmorToughness { .. } => f.write_str("GENERIC_ARMOR_TOUGHNESS"),
+            Attribute::GenericLuck { .. } => f.write_str("GENERIC_LUCK"),
+            Attribute::HorseJumpStrength { .. } => f.write_str("HORSE_JUMP_STRENGTH"),
+            Attribute::ZombieSpawnReinforcements { .. } => {
+                f.write_str("ZOMBIE_SPAWN_REINFORCEMENTS")
+            }
+        }
     }
 }
+
+impl<'mc> Attribute<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Attribute<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/attribute/Attribute");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/attribute/Attribute;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "GENERIC_MAX_HEALTH" => Ok(Attribute::GenericMaxHealth {
+                inner: AttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_FOLLOW_RANGE" => Ok(Attribute::GenericFollowRange {
+                inner: AttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_KNOCKBACK_RESISTANCE" => Ok(Attribute::GenericKnockbackResistance {
+                inner: AttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_MOVEMENT_SPEED" => Ok(Attribute::GenericMovementSpeed {
+                inner: AttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_FLYING_SPEED" => Ok(Attribute::GenericFlyingSpeed {
+                inner: AttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_ATTACK_DAMAGE" => Ok(Attribute::GenericAttackDamage {
+                inner: AttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_ATTACK_KNOCKBACK" => Ok(Attribute::GenericAttackKnockback {
+                inner: AttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_ATTACK_SPEED" => Ok(Attribute::GenericAttackSpeed {
+                inner: AttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_ARMOR" => Ok(Attribute::GenericArmor {
+                inner: AttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_ARMOR_TOUGHNESS" => Ok(Attribute::GenericArmorToughness {
+                inner: AttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_LUCK" => Ok(Attribute::GenericLuck {
+                inner: AttributeStruct::from_raw(env, obj)?,
+            }),
+            "HORSE_JUMP_STRENGTH" => Ok(Attribute::HorseJumpStrength {
+                inner: AttributeStruct::from_raw(env, obj)?,
+            }),
+            "ZOMBIE_SPAWN_REINFORCEMENTS" => Ok(Attribute::ZombieSpawnReinforcements {
+                inner: AttributeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Attribute<'mc>(
+pub struct AttributeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub AttributeEnum,
 );
-impl<'mc> std::ops::Deref for Attribute<'mc> {
-    type Target = AttributeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Attribute<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::GenericMaxHealth { inner } => inner.0.clone(),
+            Self::GenericFollowRange { inner } => inner.0.clone(),
+            Self::GenericKnockbackResistance { inner } => inner.0.clone(),
+            Self::GenericMovementSpeed { inner } => inner.0.clone(),
+            Self::GenericFlyingSpeed { inner } => inner.0.clone(),
+            Self::GenericAttackDamage { inner } => inner.0.clone(),
+            Self::GenericAttackKnockback { inner } => inner.0.clone(),
+            Self::GenericAttackSpeed { inner } => inner.0.clone(),
+            Self::GenericArmor { inner } => inner.0.clone(),
+            Self::GenericArmorToughness { inner } => inner.0.clone(),
+            Self::GenericLuck { inner } => inner.0.clone(),
+            Self::HorseJumpStrength { inner } => inner.0.clone(),
+            Self::ZombieSpawnReinforcements { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::GenericMaxHealth { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericFollowRange { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericKnockbackResistance { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericMovementSpeed { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericFlyingSpeed { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericAttackDamage { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericAttackKnockback { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericAttackSpeed { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericArmor { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericArmorToughness { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericLuck { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HorseJumpStrength { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ZombieSpawnReinforcements { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Attribute<'mc> {
-    type Enum = AttributeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Attribute<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Attribute from null object.").into());
@@ -161,83 +260,93 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Attribute<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "GENERIC_MAX_HEALTH" => Ok(Attribute::GenericMaxHealth {
+                    inner: AttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_FOLLOW_RANGE" => Ok(Attribute::GenericFollowRange {
+                    inner: AttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_KNOCKBACK_RESISTANCE" => Ok(Attribute::GenericKnockbackResistance {
+                    inner: AttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_MOVEMENT_SPEED" => Ok(Attribute::GenericMovementSpeed {
+                    inner: AttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_FLYING_SPEED" => Ok(Attribute::GenericFlyingSpeed {
+                    inner: AttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_ATTACK_DAMAGE" => Ok(Attribute::GenericAttackDamage {
+                    inner: AttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_ATTACK_KNOCKBACK" => Ok(Attribute::GenericAttackKnockback {
+                    inner: AttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_ATTACK_SPEED" => Ok(Attribute::GenericAttackSpeed {
+                    inner: AttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_ARMOR" => Ok(Attribute::GenericArmor {
+                    inner: AttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_ARMOR_TOUGHNESS" => Ok(Attribute::GenericArmorToughness {
+                    inner: AttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_LUCK" => Ok(Attribute::GenericLuck {
+                    inner: AttributeStruct::from_raw(env, obj)?,
+                }),
+                "HORSE_JUMP_STRENGTH" => Ok(Attribute::HorseJumpStrength {
+                    inner: AttributeStruct::from_raw(env, obj)?,
+                }),
+                "ZOMBIE_SPAWN_REINFORCEMENTS" => Ok(Attribute::ZombieSpawnReinforcements {
+                    inner: AttributeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Attribute<'mc> {
-    pub const GENERIC_MAX_HEALTH: AttributeEnum = AttributeEnum::GenericMaxHealth;
-    pub const GENERIC_FOLLOW_RANGE: AttributeEnum = AttributeEnum::GenericFollowRange;
-    pub const GENERIC_KNOCKBACK_RESISTANCE: AttributeEnum =
-        AttributeEnum::GenericKnockbackResistance;
-    pub const GENERIC_MOVEMENT_SPEED: AttributeEnum = AttributeEnum::GenericMovementSpeed;
-    pub const GENERIC_FLYING_SPEED: AttributeEnum = AttributeEnum::GenericFlyingSpeed;
-    pub const GENERIC_ATTACK_DAMAGE: AttributeEnum = AttributeEnum::GenericAttackDamage;
-    pub const GENERIC_ATTACK_KNOCKBACK: AttributeEnum = AttributeEnum::GenericAttackKnockback;
-    pub const GENERIC_ATTACK_SPEED: AttributeEnum = AttributeEnum::GenericAttackSpeed;
-    pub const GENERIC_ARMOR: AttributeEnum = AttributeEnum::GenericArmor;
-    pub const GENERIC_ARMOR_TOUGHNESS: AttributeEnum = AttributeEnum::GenericArmorToughness;
-    pub const GENERIC_LUCK: AttributeEnum = AttributeEnum::GenericLuck;
-    pub const HORSE_JUMP_STRENGTH: AttributeEnum = AttributeEnum::HorseJumpStrength;
-    pub const ZOMBIE_SPAWN_REINFORCEMENTS: AttributeEnum = AttributeEnum::ZombieSpawnReinforcements;
-    pub fn from_string(str: String) -> std::option::Option<AttributeEnum> {
-        match str.as_str() {
-            "GENERIC_MAX_HEALTH" => Some(AttributeEnum::GenericMaxHealth),
-            "GENERIC_FOLLOW_RANGE" => Some(AttributeEnum::GenericFollowRange),
-            "GENERIC_KNOCKBACK_RESISTANCE" => Some(AttributeEnum::GenericKnockbackResistance),
-            "GENERIC_MOVEMENT_SPEED" => Some(AttributeEnum::GenericMovementSpeed),
-            "GENERIC_FLYING_SPEED" => Some(AttributeEnum::GenericFlyingSpeed),
-            "GENERIC_ATTACK_DAMAGE" => Some(AttributeEnum::GenericAttackDamage),
-            "GENERIC_ATTACK_KNOCKBACK" => Some(AttributeEnum::GenericAttackKnockback),
-            "GENERIC_ATTACK_SPEED" => Some(AttributeEnum::GenericAttackSpeed),
-            "GENERIC_ARMOR" => Some(AttributeEnum::GenericArmor),
-            "GENERIC_ARMOR_TOUGHNESS" => Some(AttributeEnum::GenericArmorToughness),
-            "GENERIC_LUCK" => Some(AttributeEnum::GenericLuck),
-            "HORSE_JUMP_STRENGTH" => Some(AttributeEnum::HorseJumpStrength),
-            "ZOMBIE_SPAWN_REINFORCEMENTS" => Some(AttributeEnum::ZombieSpawnReinforcements),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for AttributeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for AttributeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate AttributeStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/attribute/Attribute")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a AttributeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Attribute<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/attribute/Attribute");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/attribute/Attribute;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Attribute::from_raw(
-            &jni,
-            raw_obj,
-            Attribute::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> AttributeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Represents a mutable instance of an attribute and its associated modifiers and values.
@@ -253,12 +362,10 @@ impl<'mc> JNIRaw<'mc> for AttributeInstance<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for AttributeInstance<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -341,12 +448,7 @@ impl<'mc> AttributeInstance<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::attribute::Attribute::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::attribute::Attribute::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::attribute::Attribute::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn base_value(&self) -> Result<f64, Box<dyn std::error::Error>> {
@@ -407,67 +509,96 @@ impl<'mc> AttributeInstance<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum OperationEnum {
-    AddNumber,
-    AddScalar,
-    MultiplyScalar1,
-}
-impl std::fmt::Display for OperationEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            OperationEnum::AddNumber => f.write_str("ADD_NUMBER"),
-            OperationEnum::AddScalar => f.write_str("ADD_SCALAR"),
-            OperationEnum::MultiplyScalar1 => f.write_str("MULTIPLY_SCALAR_1"),
-        }
-    }
+pub enum Operation<'mc> {
+    AddNumber { inner: OperationStruct<'mc> },
+    AddScalar { inner: OperationStruct<'mc> },
+    MultiplyScalar1 { inner: OperationStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Operation<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Operation::AddNumber { .. } => f.write_str("ADD_NUMBER"),
+            Operation::AddScalar { .. } => f.write_str("ADD_SCALAR"),
+            Operation::MultiplyScalar1 { .. } => f.write_str("MULTIPLY_SCALAR_1"),
+        }
     }
 }
+
+impl<'mc> Operation<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Operation<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/attribute/Operation");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/attribute/Operation;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "ADD_NUMBER" => Ok(Operation::AddNumber {
+                inner: OperationStruct::from_raw(env, obj)?,
+            }),
+            "ADD_SCALAR" => Ok(Operation::AddScalar {
+                inner: OperationStruct::from_raw(env, obj)?,
+            }),
+            "MULTIPLY_SCALAR_1" => Ok(Operation::MultiplyScalar1 {
+                inner: OperationStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Operation<'mc>(
+pub struct OperationStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub OperationEnum,
 );
-impl<'mc> std::ops::Deref for Operation<'mc> {
-    type Target = OperationEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Operation<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::AddNumber { inner } => inner.0.clone(),
+            Self::AddScalar { inner } => inner.0.clone(),
+            Self::MultiplyScalar1 { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::AddNumber { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::AddScalar { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::MultiplyScalar1 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Operation<'mc> {
-    type Enum = OperationEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Operation<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Operation from null object.").into());
@@ -480,62 +611,63 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Operation<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "ADD_NUMBER" => Ok(Operation::AddNumber {
+                    inner: OperationStruct::from_raw(env, obj)?,
+                }),
+                "ADD_SCALAR" => Ok(Operation::AddScalar {
+                    inner: OperationStruct::from_raw(env, obj)?,
+                }),
+                "MULTIPLY_SCALAR_1" => Ok(Operation::MultiplyScalar1 {
+                    inner: OperationStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Operation<'mc> {
-    pub const ADD_NUMBER: OperationEnum = OperationEnum::AddNumber;
-    pub const ADD_SCALAR: OperationEnum = OperationEnum::AddScalar;
-    pub const MULTIPLY_SCALAR_1: OperationEnum = OperationEnum::MultiplyScalar1;
-    pub fn from_string(str: String) -> std::option::Option<OperationEnum> {
-        match str.as_str() {
-            "ADD_NUMBER" => Some(OperationEnum::AddNumber),
-            "ADD_SCALAR" => Some(OperationEnum::AddScalar),
-            "MULTIPLY_SCALAR_1" => Some(OperationEnum::MultiplyScalar1),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for OperationStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for OperationStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate OperationStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/attribute/Operation")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a OperationStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Operation<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/attribute/Operation");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/attribute/Operation;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Operation::from_raw(
-            &jni,
-            raw_obj,
-            Operation::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> OperationStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Concrete implementation of an attribute modifier.
@@ -544,57 +676,97 @@ pub struct AttributeModifier<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum AttributeModifierOperationEnum {
-    AddNumber,
-    AddScalar,
-    MultiplyScalar1,
-}
-impl std::fmt::Display for AttributeModifierOperationEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            AttributeModifierOperationEnum::AddNumber => f.write_str("ADD_NUMBER"),
-            AttributeModifierOperationEnum::AddScalar => f.write_str("ADD_SCALAR"),
-            AttributeModifierOperationEnum::MultiplyScalar1 => f.write_str("MULTIPLY_SCALAR_1"),
-        }
-    }
+pub enum AttributeModifierOperation<'mc> {
+    AddNumber {
+        inner: AttributeModifierOperationStruct<'mc>,
+    },
+    AddScalar {
+        inner: AttributeModifierOperationStruct<'mc>,
+    },
+    MultiplyScalar1 {
+        inner: AttributeModifierOperationStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for AttributeModifierOperation<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            AttributeModifierOperation::AddNumber { .. } => f.write_str("ADD_NUMBER"),
+            AttributeModifierOperation::AddScalar { .. } => f.write_str("ADD_SCALAR"),
+            AttributeModifierOperation::MultiplyScalar1 { .. } => f.write_str("MULTIPLY_SCALAR_1"),
+        }
     }
 }
+
+impl<'mc> AttributeModifierOperation<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<AttributeModifierOperation<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/attribute/AttributeModifier$Operation");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/attribute/AttributeModifier$Operation;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "ADD_NUMBER" => Ok(AttributeModifierOperation::AddNumber {
+                inner: AttributeModifierOperationStruct::from_raw(env, obj)?,
+            }),
+            "ADD_SCALAR" => Ok(AttributeModifierOperation::AddScalar {
+                inner: AttributeModifierOperationStruct::from_raw(env, obj)?,
+            }),
+            "MULTIPLY_SCALAR_1" => Ok(AttributeModifierOperation::MultiplyScalar1 {
+                inner: AttributeModifierOperationStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct AttributeModifierOperation<'mc>(
+pub struct AttributeModifierOperationStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub AttributeModifierOperationEnum,
 );
-impl<'mc> std::ops::Deref for AttributeModifierOperation<'mc> {
-    type Target = AttributeModifierOperationEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for AttributeModifierOperation<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::AddNumber { inner } => inner.0.clone(),
+            Self::AddScalar { inner } => inner.0.clone(),
+            Self::MultiplyScalar1 { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::AddNumber { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::AddScalar { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::MultiplyScalar1 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for AttributeModifierOperation<'mc> {
-    type Enum = AttributeModifierOperationEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for AttributeModifierOperation<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -611,65 +783,65 @@ impl<'mc> JNIInstantiatableEnum<'mc> for AttributeModifierOperation<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "ADD_NUMBER" => Ok(AttributeModifierOperation::AddNumber {
+                    inner: AttributeModifierOperationStruct::from_raw(env, obj)?,
+                }),
+                "ADD_SCALAR" => Ok(AttributeModifierOperation::AddScalar {
+                    inner: AttributeModifierOperationStruct::from_raw(env, obj)?,
+                }),
+                "MULTIPLY_SCALAR_1" => Ok(AttributeModifierOperation::MultiplyScalar1 {
+                    inner: AttributeModifierOperationStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> AttributeModifierOperation<'mc> {
-    pub const ADD_NUMBER: AttributeModifierOperationEnum =
-        AttributeModifierOperationEnum::AddNumber;
-    pub const ADD_SCALAR: AttributeModifierOperationEnum =
-        AttributeModifierOperationEnum::AddScalar;
-    pub const MULTIPLY_SCALAR_1: AttributeModifierOperationEnum =
-        AttributeModifierOperationEnum::MultiplyScalar1;
-    pub fn from_string(str: String) -> std::option::Option<AttributeModifierOperationEnum> {
-        match str.as_str() {
-            "ADD_NUMBER" => Some(AttributeModifierOperationEnum::AddNumber),
-            "ADD_SCALAR" => Some(AttributeModifierOperationEnum::AddScalar),
-            "MULTIPLY_SCALAR_1" => Some(AttributeModifierOperationEnum::MultiplyScalar1),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for AttributeModifierOperationStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for AttributeModifierOperationStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate AttributeModifierOperationStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/attribute/AttributeModifier$Operation")?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a AttributeModifierOperationStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<AttributeModifierOperation<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/attribute/AttributeModifier$Operation");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/attribute/AttributeModifier$Operation;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        AttributeModifierOperation::from_raw(
-            &jni,
-            raw_obj,
-            AttributeModifierOperation::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> AttributeModifierOperationStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -677,12 +849,10 @@ impl<'mc> JNIRaw<'mc> for AttributeModifier<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for AttributeModifier<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -828,8 +998,6 @@ impl<'mc> AttributeModifier<'mc> {
         Ok(Some(crate::inventory::EquipmentSlot::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::inventory::EquipmentSlot::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
 
@@ -907,12 +1075,7 @@ impl<'mc> AttributeModifier<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::attribute::AttributeModifierOperation::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::attribute::AttributeModifierOperation::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::attribute::AttributeModifierOperation::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn wait_with_long(
@@ -967,14 +1130,9 @@ impl<'mc> AttributeModifier<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -994,83 +1152,217 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting AttributeModifier into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum AttributeAttributeEnum {
-    GenericMaxHealth,
-    GenericFollowRange,
-    GenericKnockbackResistance,
-    GenericMovementSpeed,
-    GenericFlyingSpeed,
-    GenericAttackDamage,
-    GenericAttackKnockback,
-    GenericAttackSpeed,
-    GenericArmor,
-    GenericArmorToughness,
-    GenericLuck,
-    HorseJumpStrength,
-    ZombieSpawnReinforcements,
+pub enum AttributeAttribute<'mc> {
+    GenericMaxHealth {
+        inner: AttributeAttributeStruct<'mc>,
+    },
+    GenericFollowRange {
+        inner: AttributeAttributeStruct<'mc>,
+    },
+    GenericKnockbackResistance {
+        inner: AttributeAttributeStruct<'mc>,
+    },
+    GenericMovementSpeed {
+        inner: AttributeAttributeStruct<'mc>,
+    },
+    GenericFlyingSpeed {
+        inner: AttributeAttributeStruct<'mc>,
+    },
+    GenericAttackDamage {
+        inner: AttributeAttributeStruct<'mc>,
+    },
+    GenericAttackKnockback {
+        inner: AttributeAttributeStruct<'mc>,
+    },
+    GenericAttackSpeed {
+        inner: AttributeAttributeStruct<'mc>,
+    },
+    GenericArmor {
+        inner: AttributeAttributeStruct<'mc>,
+    },
+    GenericArmorToughness {
+        inner: AttributeAttributeStruct<'mc>,
+    },
+    GenericLuck {
+        inner: AttributeAttributeStruct<'mc>,
+    },
+    HorseJumpStrength {
+        inner: AttributeAttributeStruct<'mc>,
+    },
+    ZombieSpawnReinforcements {
+        inner: AttributeAttributeStruct<'mc>,
+    },
 }
-impl std::fmt::Display for AttributeAttributeEnum {
+impl<'mc> std::fmt::Display for AttributeAttribute<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            AttributeAttributeEnum::GenericMaxHealth => f.write_str("GENERIC_MAX_HEALTH"),
-            AttributeAttributeEnum::GenericFollowRange => f.write_str("GENERIC_FOLLOW_RANGE"),
-            AttributeAttributeEnum::GenericKnockbackResistance => {
+            AttributeAttribute::GenericMaxHealth { .. } => f.write_str("GENERIC_MAX_HEALTH"),
+            AttributeAttribute::GenericFollowRange { .. } => f.write_str("GENERIC_FOLLOW_RANGE"),
+            AttributeAttribute::GenericKnockbackResistance { .. } => {
                 f.write_str("GENERIC_KNOCKBACK_RESISTANCE")
             }
-            AttributeAttributeEnum::GenericMovementSpeed => f.write_str("GENERIC_MOVEMENT_SPEED"),
-            AttributeAttributeEnum::GenericFlyingSpeed => f.write_str("GENERIC_FLYING_SPEED"),
-            AttributeAttributeEnum::GenericAttackDamage => f.write_str("GENERIC_ATTACK_DAMAGE"),
-            AttributeAttributeEnum::GenericAttackKnockback => {
+            AttributeAttribute::GenericMovementSpeed { .. } => {
+                f.write_str("GENERIC_MOVEMENT_SPEED")
+            }
+            AttributeAttribute::GenericFlyingSpeed { .. } => f.write_str("GENERIC_FLYING_SPEED"),
+            AttributeAttribute::GenericAttackDamage { .. } => f.write_str("GENERIC_ATTACK_DAMAGE"),
+            AttributeAttribute::GenericAttackKnockback { .. } => {
                 f.write_str("GENERIC_ATTACK_KNOCKBACK")
             }
-            AttributeAttributeEnum::GenericAttackSpeed => f.write_str("GENERIC_ATTACK_SPEED"),
-            AttributeAttributeEnum::GenericArmor => f.write_str("GENERIC_ARMOR"),
-            AttributeAttributeEnum::GenericArmorToughness => f.write_str("GENERIC_ARMOR_TOUGHNESS"),
-            AttributeAttributeEnum::GenericLuck => f.write_str("GENERIC_LUCK"),
-            AttributeAttributeEnum::HorseJumpStrength => f.write_str("HORSE_JUMP_STRENGTH"),
-            AttributeAttributeEnum::ZombieSpawnReinforcements => {
+            AttributeAttribute::GenericAttackSpeed { .. } => f.write_str("GENERIC_ATTACK_SPEED"),
+            AttributeAttribute::GenericArmor { .. } => f.write_str("GENERIC_ARMOR"),
+            AttributeAttribute::GenericArmorToughness { .. } => {
+                f.write_str("GENERIC_ARMOR_TOUGHNESS")
+            }
+            AttributeAttribute::GenericLuck { .. } => f.write_str("GENERIC_LUCK"),
+            AttributeAttribute::HorseJumpStrength { .. } => f.write_str("HORSE_JUMP_STRENGTH"),
+            AttributeAttribute::ZombieSpawnReinforcements { .. } => {
                 f.write_str("ZOMBIE_SPAWN_REINFORCEMENTS")
             }
         }
     }
 }
-impl<'mc> std::fmt::Display for AttributeAttribute<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+
+impl<'mc> AttributeAttribute<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<AttributeAttribute<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/attribute/Attribute$Attribute");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/attribute/Attribute$Attribute;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "GENERIC_MAX_HEALTH" => Ok(AttributeAttribute::GenericMaxHealth {
+                inner: AttributeAttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_FOLLOW_RANGE" => Ok(AttributeAttribute::GenericFollowRange {
+                inner: AttributeAttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_KNOCKBACK_RESISTANCE" => Ok(AttributeAttribute::GenericKnockbackResistance {
+                inner: AttributeAttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_MOVEMENT_SPEED" => Ok(AttributeAttribute::GenericMovementSpeed {
+                inner: AttributeAttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_FLYING_SPEED" => Ok(AttributeAttribute::GenericFlyingSpeed {
+                inner: AttributeAttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_ATTACK_DAMAGE" => Ok(AttributeAttribute::GenericAttackDamage {
+                inner: AttributeAttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_ATTACK_KNOCKBACK" => Ok(AttributeAttribute::GenericAttackKnockback {
+                inner: AttributeAttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_ATTACK_SPEED" => Ok(AttributeAttribute::GenericAttackSpeed {
+                inner: AttributeAttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_ARMOR" => Ok(AttributeAttribute::GenericArmor {
+                inner: AttributeAttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_ARMOR_TOUGHNESS" => Ok(AttributeAttribute::GenericArmorToughness {
+                inner: AttributeAttributeStruct::from_raw(env, obj)?,
+            }),
+            "GENERIC_LUCK" => Ok(AttributeAttribute::GenericLuck {
+                inner: AttributeAttributeStruct::from_raw(env, obj)?,
+            }),
+            "HORSE_JUMP_STRENGTH" => Ok(AttributeAttribute::HorseJumpStrength {
+                inner: AttributeAttributeStruct::from_raw(env, obj)?,
+            }),
+            "ZOMBIE_SPAWN_REINFORCEMENTS" => Ok(AttributeAttribute::ZombieSpawnReinforcements {
+                inner: AttributeAttributeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
     }
 }
+
 #[repr(C)]
-pub struct AttributeAttribute<'mc>(
+pub struct AttributeAttributeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub AttributeAttributeEnum,
 );
-impl<'mc> std::ops::Deref for AttributeAttribute<'mc> {
-    type Target = AttributeAttributeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for AttributeAttribute<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::GenericMaxHealth { inner } => inner.0.clone(),
+            Self::GenericFollowRange { inner } => inner.0.clone(),
+            Self::GenericKnockbackResistance { inner } => inner.0.clone(),
+            Self::GenericMovementSpeed { inner } => inner.0.clone(),
+            Self::GenericFlyingSpeed { inner } => inner.0.clone(),
+            Self::GenericAttackDamage { inner } => inner.0.clone(),
+            Self::GenericAttackKnockback { inner } => inner.0.clone(),
+            Self::GenericAttackSpeed { inner } => inner.0.clone(),
+            Self::GenericArmor { inner } => inner.0.clone(),
+            Self::GenericArmorToughness { inner } => inner.0.clone(),
+            Self::GenericLuck { inner } => inner.0.clone(),
+            Self::HorseJumpStrength { inner } => inner.0.clone(),
+            Self::ZombieSpawnReinforcements { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::GenericMaxHealth { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericFollowRange { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericKnockbackResistance { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericMovementSpeed { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericFlyingSpeed { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericAttackDamage { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericAttackKnockback { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericAttackSpeed { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericArmor { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericArmorToughness { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::GenericLuck { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HorseJumpStrength { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ZombieSpawnReinforcements { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for AttributeAttribute<'mc> {
-    type Enum = AttributeAttributeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for AttributeAttribute<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -1085,95 +1377,97 @@ impl<'mc> JNIInstantiatableEnum<'mc> for AttributeAttribute<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "GENERIC_MAX_HEALTH" => Ok(AttributeAttribute::GenericMaxHealth {
+                    inner: AttributeAttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_FOLLOW_RANGE" => Ok(AttributeAttribute::GenericFollowRange {
+                    inner: AttributeAttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_KNOCKBACK_RESISTANCE" => {
+                    Ok(AttributeAttribute::GenericKnockbackResistance {
+                        inner: AttributeAttributeStruct::from_raw(env, obj)?,
+                    })
+                }
+                "GENERIC_MOVEMENT_SPEED" => Ok(AttributeAttribute::GenericMovementSpeed {
+                    inner: AttributeAttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_FLYING_SPEED" => Ok(AttributeAttribute::GenericFlyingSpeed {
+                    inner: AttributeAttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_ATTACK_DAMAGE" => Ok(AttributeAttribute::GenericAttackDamage {
+                    inner: AttributeAttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_ATTACK_KNOCKBACK" => Ok(AttributeAttribute::GenericAttackKnockback {
+                    inner: AttributeAttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_ATTACK_SPEED" => Ok(AttributeAttribute::GenericAttackSpeed {
+                    inner: AttributeAttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_ARMOR" => Ok(AttributeAttribute::GenericArmor {
+                    inner: AttributeAttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_ARMOR_TOUGHNESS" => Ok(AttributeAttribute::GenericArmorToughness {
+                    inner: AttributeAttributeStruct::from_raw(env, obj)?,
+                }),
+                "GENERIC_LUCK" => Ok(AttributeAttribute::GenericLuck {
+                    inner: AttributeAttributeStruct::from_raw(env, obj)?,
+                }),
+                "HORSE_JUMP_STRENGTH" => Ok(AttributeAttribute::HorseJumpStrength {
+                    inner: AttributeAttributeStruct::from_raw(env, obj)?,
+                }),
+                "ZOMBIE_SPAWN_REINFORCEMENTS" => {
+                    Ok(AttributeAttribute::ZombieSpawnReinforcements {
+                        inner: AttributeAttributeStruct::from_raw(env, obj)?,
+                    })
+                }
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> AttributeAttribute<'mc> {
-    pub const GENERIC_MAX_HEALTH: AttributeAttributeEnum = AttributeAttributeEnum::GenericMaxHealth;
-    pub const GENERIC_FOLLOW_RANGE: AttributeAttributeEnum =
-        AttributeAttributeEnum::GenericFollowRange;
-    pub const GENERIC_KNOCKBACK_RESISTANCE: AttributeAttributeEnum =
-        AttributeAttributeEnum::GenericKnockbackResistance;
-    pub const GENERIC_MOVEMENT_SPEED: AttributeAttributeEnum =
-        AttributeAttributeEnum::GenericMovementSpeed;
-    pub const GENERIC_FLYING_SPEED: AttributeAttributeEnum =
-        AttributeAttributeEnum::GenericFlyingSpeed;
-    pub const GENERIC_ATTACK_DAMAGE: AttributeAttributeEnum =
-        AttributeAttributeEnum::GenericAttackDamage;
-    pub const GENERIC_ATTACK_KNOCKBACK: AttributeAttributeEnum =
-        AttributeAttributeEnum::GenericAttackKnockback;
-    pub const GENERIC_ATTACK_SPEED: AttributeAttributeEnum =
-        AttributeAttributeEnum::GenericAttackSpeed;
-    pub const GENERIC_ARMOR: AttributeAttributeEnum = AttributeAttributeEnum::GenericArmor;
-    pub const GENERIC_ARMOR_TOUGHNESS: AttributeAttributeEnum =
-        AttributeAttributeEnum::GenericArmorToughness;
-    pub const GENERIC_LUCK: AttributeAttributeEnum = AttributeAttributeEnum::GenericLuck;
-    pub const HORSE_JUMP_STRENGTH: AttributeAttributeEnum =
-        AttributeAttributeEnum::HorseJumpStrength;
-    pub const ZOMBIE_SPAWN_REINFORCEMENTS: AttributeAttributeEnum =
-        AttributeAttributeEnum::ZombieSpawnReinforcements;
-    pub fn from_string(str: String) -> std::option::Option<AttributeAttributeEnum> {
-        match str.as_str() {
-            "GENERIC_MAX_HEALTH" => Some(AttributeAttributeEnum::GenericMaxHealth),
-            "GENERIC_FOLLOW_RANGE" => Some(AttributeAttributeEnum::GenericFollowRange),
-            "GENERIC_KNOCKBACK_RESISTANCE" => {
-                Some(AttributeAttributeEnum::GenericKnockbackResistance)
-            }
-            "GENERIC_MOVEMENT_SPEED" => Some(AttributeAttributeEnum::GenericMovementSpeed),
-            "GENERIC_FLYING_SPEED" => Some(AttributeAttributeEnum::GenericFlyingSpeed),
-            "GENERIC_ATTACK_DAMAGE" => Some(AttributeAttributeEnum::GenericAttackDamage),
-            "GENERIC_ATTACK_KNOCKBACK" => Some(AttributeAttributeEnum::GenericAttackKnockback),
-            "GENERIC_ATTACK_SPEED" => Some(AttributeAttributeEnum::GenericAttackSpeed),
-            "GENERIC_ARMOR" => Some(AttributeAttributeEnum::GenericArmor),
-            "GENERIC_ARMOR_TOUGHNESS" => Some(AttributeAttributeEnum::GenericArmorToughness),
-            "GENERIC_LUCK" => Some(AttributeAttributeEnum::GenericLuck),
-            "HORSE_JUMP_STRENGTH" => Some(AttributeAttributeEnum::HorseJumpStrength),
-            "ZOMBIE_SPAWN_REINFORCEMENTS" => {
-                Some(AttributeAttributeEnum::ZombieSpawnReinforcements)
-            }
-            _ => None,
+impl<'mc> JNIRaw<'mc> for AttributeAttributeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for AttributeAttributeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate AttributeAttributeStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/attribute/Attribute$Attribute")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a AttributeAttributeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<AttributeAttribute<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/attribute/Attribute$Attribute");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/attribute/Attribute$Attribute;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        AttributeAttribute::from_raw(
-            &jni,
-            raw_obj,
-            AttributeAttribute::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> AttributeAttributeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }

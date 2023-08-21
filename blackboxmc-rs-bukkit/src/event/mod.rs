@@ -14,12 +14,10 @@ impl<'mc> JNIRaw<'mc> for HandlerList<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for HandlerList<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -274,14 +272,9 @@ impl<'mc> HandlerList<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -307,12 +300,10 @@ impl<'mc> JNIRaw<'mc> for Listener<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Listener<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -335,14 +326,9 @@ impl<'mc> JNIInstantiatable<'mc> for Listener<'mc> {
 }
 
 impl<'mc> Listener<'mc> {
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// A type characterizing events that may be cancelled by a plugin or the server.
@@ -358,12 +344,10 @@ impl<'mc> JNIRaw<'mc> for Cancellable<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Cancellable<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -408,14 +392,9 @@ impl<'mc> Cancellable<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// An annotation to mark methods as being event handler methods
@@ -431,12 +410,10 @@ impl<'mc> JNIRaw<'mc> for EventHandler<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EventHandler<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -475,12 +452,7 @@ impl<'mc> EventHandler<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::EventPriority::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::EventPriority::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::EventPriority::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn ignore_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -540,14 +512,9 @@ impl<'mc> EventHandler<'mc> {
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -566,57 +533,85 @@ pub struct Event<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum EventResultEnum {
-    Deny,
-    Default,
-    Allow,
-}
-impl std::fmt::Display for EventResultEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            EventResultEnum::Deny => f.write_str("DENY"),
-            EventResultEnum::Default => f.write_str("DEFAULT"),
-            EventResultEnum::Allow => f.write_str("ALLOW"),
-        }
-    }
+pub enum EventResult<'mc> {
+    Deny { inner: EventResultStruct<'mc> },
+    Default { inner: EventResultStruct<'mc> },
+    Allow { inner: EventResultStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for EventResult<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            EventResult::Deny { .. } => f.write_str("DENY"),
+            EventResult::Default { .. } => f.write_str("DEFAULT"),
+            EventResult::Allow { .. } => f.write_str("ALLOW"),
+        }
     }
 }
+
+impl<'mc> EventResult<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<EventResult<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/Event$Result");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/Event$Result;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "DENY" => Ok(EventResult::Deny {
+                inner: EventResultStruct::from_raw(env, obj)?,
+            }),
+            "DEFAULT" => Ok(EventResult::Default {
+                inner: EventResultStruct::from_raw(env, obj)?,
+            }),
+            "ALLOW" => Ok(EventResult::Allow {
+                inner: EventResultStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct EventResult<'mc>(
+pub struct EventResultStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub EventResultEnum,
 );
-impl<'mc> std::ops::Deref for EventResult<'mc> {
-    type Target = EventResultEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for EventResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Deny { inner } => inner.0.clone(),
+            Self::Default { inner } => inner.0.clone(),
+            Self::Allow { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Deny { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Default { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Allow { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for EventResult<'mc> {
-    type Enum = EventResultEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for EventResult<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate EventResult from null object.").into());
@@ -629,62 +624,63 @@ impl<'mc> JNIInstantiatableEnum<'mc> for EventResult<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "DENY" => Ok(EventResult::Deny {
+                    inner: EventResultStruct::from_raw(env, obj)?,
+                }),
+                "DEFAULT" => Ok(EventResult::Default {
+                    inner: EventResultStruct::from_raw(env, obj)?,
+                }),
+                "ALLOW" => Ok(EventResult::Allow {
+                    inner: EventResultStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> EventResult<'mc> {
-    pub const DENY: EventResultEnum = EventResultEnum::Deny;
-    pub const DEFAULT: EventResultEnum = EventResultEnum::Default;
-    pub const ALLOW: EventResultEnum = EventResultEnum::Allow;
-    pub fn from_string(str: String) -> std::option::Option<EventResultEnum> {
-        match str.as_str() {
-            "DENY" => Some(EventResultEnum::Deny),
-            "DEFAULT" => Some(EventResultEnum::Default),
-            "ALLOW" => Some(EventResultEnum::Allow),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for EventResultStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EventResultStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate EventResultStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/Event$Result")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a EventResultStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<EventResult<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/Event$Result");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/Event$Result;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        EventResult::from_raw(
-            &jni,
-            raw_obj,
-            EventResult::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> EventResultStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -692,12 +688,10 @@ impl<'mc> JNIRaw<'mc> for Event<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Event<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -863,14 +857,9 @@ impl<'mc> Event<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -883,63 +872,106 @@ impl<'mc> std::string::ToString for Event<'mc> {
     }
 }
 
-#[derive(PartialEq, Eq)]
-pub enum EventPriorityEnum {
-    Lowest,
-    Low,
-    Normal,
-    High,
-    Highest,
-    Monitor,
-}
-impl std::fmt::Display for EventPriorityEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            EventPriorityEnum::Lowest => f.write_str("LOWEST"),
-            EventPriorityEnum::Low => f.write_str("LOW"),
-            EventPriorityEnum::Normal => f.write_str("NORMAL"),
-            EventPriorityEnum::High => f.write_str("HIGH"),
-            EventPriorityEnum::Highest => f.write_str("HIGHEST"),
-            EventPriorityEnum::Monitor => f.write_str("MONITOR"),
-        }
-    }
+pub enum EventPriority<'mc> {
+    Lowest { inner: EventPriorityStruct<'mc> },
+    Low { inner: EventPriorityStruct<'mc> },
+    Normal { inner: EventPriorityStruct<'mc> },
+    High { inner: EventPriorityStruct<'mc> },
+    Highest { inner: EventPriorityStruct<'mc> },
+    Monitor { inner: EventPriorityStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for EventPriority<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            EventPriority::Lowest { .. } => f.write_str("LOWEST"),
+            EventPriority::Low { .. } => f.write_str("LOW"),
+            EventPriority::Normal { .. } => f.write_str("NORMAL"),
+            EventPriority::High { .. } => f.write_str("HIGH"),
+            EventPriority::Highest { .. } => f.write_str("HIGHEST"),
+            EventPriority::Monitor { .. } => f.write_str("MONITOR"),
+        }
     }
 }
+
+impl<'mc> EventPriority<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<EventPriority<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/EventPriority");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/EventPriority;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "LOWEST" => Ok(EventPriority::Lowest {
+                inner: EventPriorityStruct::from_raw(env, obj)?,
+            }),
+            "LOW" => Ok(EventPriority::Low {
+                inner: EventPriorityStruct::from_raw(env, obj)?,
+            }),
+            "NORMAL" => Ok(EventPriority::Normal {
+                inner: EventPriorityStruct::from_raw(env, obj)?,
+            }),
+            "HIGH" => Ok(EventPriority::High {
+                inner: EventPriorityStruct::from_raw(env, obj)?,
+            }),
+            "HIGHEST" => Ok(EventPriority::Highest {
+                inner: EventPriorityStruct::from_raw(env, obj)?,
+            }),
+            "MONITOR" => Ok(EventPriority::Monitor {
+                inner: EventPriorityStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct EventPriority<'mc>(
+pub struct EventPriorityStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub EventPriorityEnum,
 );
-impl<'mc> std::ops::Deref for EventPriority<'mc> {
-    type Target = EventPriorityEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for EventPriority<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Lowest { inner } => inner.0.clone(),
+            Self::Low { inner } => inner.0.clone(),
+            Self::Normal { inner } => inner.0.clone(),
+            Self::High { inner } => inner.0.clone(),
+            Self::Highest { inner } => inner.0.clone(),
+            Self::Monitor { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Lowest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Low { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Normal { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::High { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Highest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Monitor { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for EventPriority<'mc> {
-    type Enum = EventPriorityEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for EventPriority<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate EventPriority from null object.").into());
@@ -952,121 +984,153 @@ impl<'mc> JNIInstantiatableEnum<'mc> for EventPriority<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "LOWEST" => Ok(EventPriority::Lowest {
+                    inner: EventPriorityStruct::from_raw(env, obj)?,
+                }),
+                "LOW" => Ok(EventPriority::Low {
+                    inner: EventPriorityStruct::from_raw(env, obj)?,
+                }),
+                "NORMAL" => Ok(EventPriority::Normal {
+                    inner: EventPriorityStruct::from_raw(env, obj)?,
+                }),
+                "HIGH" => Ok(EventPriority::High {
+                    inner: EventPriorityStruct::from_raw(env, obj)?,
+                }),
+                "HIGHEST" => Ok(EventPriority::Highest {
+                    inner: EventPriorityStruct::from_raw(env, obj)?,
+                }),
+                "MONITOR" => Ok(EventPriority::Monitor {
+                    inner: EventPriorityStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> EventPriority<'mc> {
-    pub const LOWEST: EventPriorityEnum = EventPriorityEnum::Lowest;
-    pub const LOW: EventPriorityEnum = EventPriorityEnum::Low;
-    pub const NORMAL: EventPriorityEnum = EventPriorityEnum::Normal;
-    pub const HIGH: EventPriorityEnum = EventPriorityEnum::High;
-    pub const HIGHEST: EventPriorityEnum = EventPriorityEnum::Highest;
-    pub const MONITOR: EventPriorityEnum = EventPriorityEnum::Monitor;
-    pub fn from_string(str: String) -> std::option::Option<EventPriorityEnum> {
-        match str.as_str() {
-            "LOWEST" => Some(EventPriorityEnum::Lowest),
-            "LOW" => Some(EventPriorityEnum::Low),
-            "NORMAL" => Some(EventPriorityEnum::Normal),
-            "HIGH" => Some(EventPriorityEnum::High),
-            "HIGHEST" => Some(EventPriorityEnum::Highest),
-            "MONITOR" => Some(EventPriorityEnum::Monitor),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<EventPriority<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/EventPriority");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/EventPriority;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        EventPriority::from_raw(
-            &jni,
-            raw_obj,
-            EventPriority::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-#[derive(PartialEq, Eq)]
-pub enum SpigotResultEnum {
-    Deny,
-    Default,
-    Allow,
-}
-impl std::fmt::Display for SpigotResultEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            SpigotResultEnum::Deny => f.write_str("DENY"),
-            SpigotResultEnum::Default => f.write_str("DEFAULT"),
-            SpigotResultEnum::Allow => f.write_str("ALLOW"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for SpigotResult<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct SpigotResult<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub SpigotResultEnum,
-);
-impl<'mc> std::ops::Deref for SpigotResult<'mc> {
-    type Target = SpigotResultEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for SpigotResult<'mc> {
+impl<'mc> JNIRaw<'mc> for EventPriorityStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for SpigotResult<'mc> {
-    type Enum = SpigotResultEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for EventPriorityStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate EventPriorityStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/EventPriority")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a EventPriorityStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> EventPriorityStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+pub enum SpigotResult<'mc> {
+    Deny { inner: SpigotResultStruct<'mc> },
+    Default { inner: SpigotResultStruct<'mc> },
+    Allow { inner: SpigotResultStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for SpigotResult<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            SpigotResult::Deny { .. } => f.write_str("DENY"),
+            SpigotResult::Default { .. } => f.write_str("DEFAULT"),
+            SpigotResult::Allow { .. } => f.write_str("ALLOW"),
+        }
+    }
+}
+
+impl<'mc> SpigotResult<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<SpigotResult<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/SpigotResult");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/SpigotResult;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "DENY" => Ok(SpigotResult::Deny {
+                inner: SpigotResultStruct::from_raw(env, obj)?,
+            }),
+            "DEFAULT" => Ok(SpigotResult::Default {
+                inner: SpigotResultStruct::from_raw(env, obj)?,
+            }),
+            "ALLOW" => Ok(SpigotResult::Allow {
+                inner: SpigotResultStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct SpigotResultStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for SpigotResult<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Deny { inner } => inner.0.clone(),
+            Self::Default { inner } => inner.0.clone(),
+            Self::Allow { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Deny { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Default { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Allow { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for SpigotResult<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SpigotResult from null object.").into());
@@ -1079,62 +1143,63 @@ impl<'mc> JNIInstantiatableEnum<'mc> for SpigotResult<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "DENY" => Ok(SpigotResult::Deny {
+                    inner: SpigotResultStruct::from_raw(env, obj)?,
+                }),
+                "DEFAULT" => Ok(SpigotResult::Default {
+                    inner: SpigotResultStruct::from_raw(env, obj)?,
+                }),
+                "ALLOW" => Ok(SpigotResult::Allow {
+                    inner: SpigotResultStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> SpigotResult<'mc> {
-    pub const DENY: SpigotResultEnum = SpigotResultEnum::Deny;
-    pub const DEFAULT: SpigotResultEnum = SpigotResultEnum::Default;
-    pub const ALLOW: SpigotResultEnum = SpigotResultEnum::Allow;
-    pub fn from_string(str: String) -> std::option::Option<SpigotResultEnum> {
-        match str.as_str() {
-            "DENY" => Some(SpigotResultEnum::Deny),
-            "DEFAULT" => Some(SpigotResultEnum::Default),
-            "ALLOW" => Some(SpigotResultEnum::Allow),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for SpigotResultStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for SpigotResultStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate SpigotResultStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/SpigotResult")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a SpigotResultStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<SpigotResult<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/SpigotResult");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/SpigotResult;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        SpigotResult::from_raw(
-            &jni,
-            raw_obj,
-            SpigotResult::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> SpigotResultStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 pub mod block;

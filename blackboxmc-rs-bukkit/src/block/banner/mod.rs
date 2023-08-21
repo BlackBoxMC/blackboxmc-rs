@@ -3,133 +3,411 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-#[derive(PartialEq, Eq)]
-pub enum PatternTypeEnum {
-    Base,
-    SquareBottomLeft,
-    SquareBottomRight,
-    SquareTopLeft,
-    SquareTopRight,
-    StripeBottom,
-    StripeTop,
-    StripeLeft,
-    StripeRight,
-    StripeCenter,
-    StripeMiddle,
-    StripeDownright,
-    StripeDownleft,
-    StripeSmall,
-    Cross,
-    StraightCross,
-    TriangleBottom,
-    TriangleTop,
-    TrianglesBottom,
-    TrianglesTop,
-    DiagonalLeft,
-    DiagonalRight,
-    DiagonalLeftMirror,
-    DiagonalRightMirror,
-    CircleMiddle,
-    RhombusMiddle,
-    HalfVertical,
-    HalfHorizontal,
-    HalfVerticalMirror,
-    HalfHorizontalMirror,
-    Border,
-    CurlyBorder,
-    Creeper,
-    Gradient,
-    GradientUp,
-    Bricks,
-    Skull,
-    Flower,
-    Mojang,
-    Globe,
-    Piglin,
-}
-impl std::fmt::Display for PatternTypeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PatternTypeEnum::Base => f.write_str("BASE"),
-            PatternTypeEnum::SquareBottomLeft => f.write_str("SQUARE_BOTTOM_LEFT"),
-            PatternTypeEnum::SquareBottomRight => f.write_str("SQUARE_BOTTOM_RIGHT"),
-            PatternTypeEnum::SquareTopLeft => f.write_str("SQUARE_TOP_LEFT"),
-            PatternTypeEnum::SquareTopRight => f.write_str("SQUARE_TOP_RIGHT"),
-            PatternTypeEnum::StripeBottom => f.write_str("STRIPE_BOTTOM"),
-            PatternTypeEnum::StripeTop => f.write_str("STRIPE_TOP"),
-            PatternTypeEnum::StripeLeft => f.write_str("STRIPE_LEFT"),
-            PatternTypeEnum::StripeRight => f.write_str("STRIPE_RIGHT"),
-            PatternTypeEnum::StripeCenter => f.write_str("STRIPE_CENTER"),
-            PatternTypeEnum::StripeMiddle => f.write_str("STRIPE_MIDDLE"),
-            PatternTypeEnum::StripeDownright => f.write_str("STRIPE_DOWNRIGHT"),
-            PatternTypeEnum::StripeDownleft => f.write_str("STRIPE_DOWNLEFT"),
-            PatternTypeEnum::StripeSmall => f.write_str("STRIPE_SMALL"),
-            PatternTypeEnum::Cross => f.write_str("CROSS"),
-            PatternTypeEnum::StraightCross => f.write_str("STRAIGHT_CROSS"),
-            PatternTypeEnum::TriangleBottom => f.write_str("TRIANGLE_BOTTOM"),
-            PatternTypeEnum::TriangleTop => f.write_str("TRIANGLE_TOP"),
-            PatternTypeEnum::TrianglesBottom => f.write_str("TRIANGLES_BOTTOM"),
-            PatternTypeEnum::TrianglesTop => f.write_str("TRIANGLES_TOP"),
-            PatternTypeEnum::DiagonalLeft => f.write_str("DIAGONAL_LEFT"),
-            PatternTypeEnum::DiagonalRight => f.write_str("DIAGONAL_RIGHT"),
-            PatternTypeEnum::DiagonalLeftMirror => f.write_str("DIAGONAL_LEFT_MIRROR"),
-            PatternTypeEnum::DiagonalRightMirror => f.write_str("DIAGONAL_RIGHT_MIRROR"),
-            PatternTypeEnum::CircleMiddle => f.write_str("CIRCLE_MIDDLE"),
-            PatternTypeEnum::RhombusMiddle => f.write_str("RHOMBUS_MIDDLE"),
-            PatternTypeEnum::HalfVertical => f.write_str("HALF_VERTICAL"),
-            PatternTypeEnum::HalfHorizontal => f.write_str("HALF_HORIZONTAL"),
-            PatternTypeEnum::HalfVerticalMirror => f.write_str("HALF_VERTICAL_MIRROR"),
-            PatternTypeEnum::HalfHorizontalMirror => f.write_str("HALF_HORIZONTAL_MIRROR"),
-            PatternTypeEnum::Border => f.write_str("BORDER"),
-            PatternTypeEnum::CurlyBorder => f.write_str("CURLY_BORDER"),
-            PatternTypeEnum::Creeper => f.write_str("CREEPER"),
-            PatternTypeEnum::Gradient => f.write_str("GRADIENT"),
-            PatternTypeEnum::GradientUp => f.write_str("GRADIENT_UP"),
-            PatternTypeEnum::Bricks => f.write_str("BRICKS"),
-            PatternTypeEnum::Skull => f.write_str("SKULL"),
-            PatternTypeEnum::Flower => f.write_str("FLOWER"),
-            PatternTypeEnum::Mojang => f.write_str("MOJANG"),
-            PatternTypeEnum::Globe => f.write_str("GLOBE"),
-            PatternTypeEnum::Piglin => f.write_str("PIGLIN"),
-        }
-    }
+pub enum PatternType<'mc> {
+    Base { inner: PatternTypeStruct<'mc> },
+    SquareBottomLeft { inner: PatternTypeStruct<'mc> },
+    SquareBottomRight { inner: PatternTypeStruct<'mc> },
+    SquareTopLeft { inner: PatternTypeStruct<'mc> },
+    SquareTopRight { inner: PatternTypeStruct<'mc> },
+    StripeBottom { inner: PatternTypeStruct<'mc> },
+    StripeTop { inner: PatternTypeStruct<'mc> },
+    StripeLeft { inner: PatternTypeStruct<'mc> },
+    StripeRight { inner: PatternTypeStruct<'mc> },
+    StripeCenter { inner: PatternTypeStruct<'mc> },
+    StripeMiddle { inner: PatternTypeStruct<'mc> },
+    StripeDownright { inner: PatternTypeStruct<'mc> },
+    StripeDownleft { inner: PatternTypeStruct<'mc> },
+    StripeSmall { inner: PatternTypeStruct<'mc> },
+    Cross { inner: PatternTypeStruct<'mc> },
+    StraightCross { inner: PatternTypeStruct<'mc> },
+    TriangleBottom { inner: PatternTypeStruct<'mc> },
+    TriangleTop { inner: PatternTypeStruct<'mc> },
+    TrianglesBottom { inner: PatternTypeStruct<'mc> },
+    TrianglesTop { inner: PatternTypeStruct<'mc> },
+    DiagonalLeft { inner: PatternTypeStruct<'mc> },
+    DiagonalRight { inner: PatternTypeStruct<'mc> },
+    DiagonalLeftMirror { inner: PatternTypeStruct<'mc> },
+    DiagonalRightMirror { inner: PatternTypeStruct<'mc> },
+    CircleMiddle { inner: PatternTypeStruct<'mc> },
+    RhombusMiddle { inner: PatternTypeStruct<'mc> },
+    HalfVertical { inner: PatternTypeStruct<'mc> },
+    HalfHorizontal { inner: PatternTypeStruct<'mc> },
+    HalfVerticalMirror { inner: PatternTypeStruct<'mc> },
+    HalfHorizontalMirror { inner: PatternTypeStruct<'mc> },
+    Border { inner: PatternTypeStruct<'mc> },
+    CurlyBorder { inner: PatternTypeStruct<'mc> },
+    Creeper { inner: PatternTypeStruct<'mc> },
+    Gradient { inner: PatternTypeStruct<'mc> },
+    GradientUp { inner: PatternTypeStruct<'mc> },
+    Bricks { inner: PatternTypeStruct<'mc> },
+    Skull { inner: PatternTypeStruct<'mc> },
+    Flower { inner: PatternTypeStruct<'mc> },
+    Mojang { inner: PatternTypeStruct<'mc> },
+    Globe { inner: PatternTypeStruct<'mc> },
+    Piglin { inner: PatternTypeStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for PatternType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            PatternType::Base { .. } => f.write_str("BASE"),
+            PatternType::SquareBottomLeft { .. } => f.write_str("SQUARE_BOTTOM_LEFT"),
+            PatternType::SquareBottomRight { .. } => f.write_str("SQUARE_BOTTOM_RIGHT"),
+            PatternType::SquareTopLeft { .. } => f.write_str("SQUARE_TOP_LEFT"),
+            PatternType::SquareTopRight { .. } => f.write_str("SQUARE_TOP_RIGHT"),
+            PatternType::StripeBottom { .. } => f.write_str("STRIPE_BOTTOM"),
+            PatternType::StripeTop { .. } => f.write_str("STRIPE_TOP"),
+            PatternType::StripeLeft { .. } => f.write_str("STRIPE_LEFT"),
+            PatternType::StripeRight { .. } => f.write_str("STRIPE_RIGHT"),
+            PatternType::StripeCenter { .. } => f.write_str("STRIPE_CENTER"),
+            PatternType::StripeMiddle { .. } => f.write_str("STRIPE_MIDDLE"),
+            PatternType::StripeDownright { .. } => f.write_str("STRIPE_DOWNRIGHT"),
+            PatternType::StripeDownleft { .. } => f.write_str("STRIPE_DOWNLEFT"),
+            PatternType::StripeSmall { .. } => f.write_str("STRIPE_SMALL"),
+            PatternType::Cross { .. } => f.write_str("CROSS"),
+            PatternType::StraightCross { .. } => f.write_str("STRAIGHT_CROSS"),
+            PatternType::TriangleBottom { .. } => f.write_str("TRIANGLE_BOTTOM"),
+            PatternType::TriangleTop { .. } => f.write_str("TRIANGLE_TOP"),
+            PatternType::TrianglesBottom { .. } => f.write_str("TRIANGLES_BOTTOM"),
+            PatternType::TrianglesTop { .. } => f.write_str("TRIANGLES_TOP"),
+            PatternType::DiagonalLeft { .. } => f.write_str("DIAGONAL_LEFT"),
+            PatternType::DiagonalRight { .. } => f.write_str("DIAGONAL_RIGHT"),
+            PatternType::DiagonalLeftMirror { .. } => f.write_str("DIAGONAL_LEFT_MIRROR"),
+            PatternType::DiagonalRightMirror { .. } => f.write_str("DIAGONAL_RIGHT_MIRROR"),
+            PatternType::CircleMiddle { .. } => f.write_str("CIRCLE_MIDDLE"),
+            PatternType::RhombusMiddle { .. } => f.write_str("RHOMBUS_MIDDLE"),
+            PatternType::HalfVertical { .. } => f.write_str("HALF_VERTICAL"),
+            PatternType::HalfHorizontal { .. } => f.write_str("HALF_HORIZONTAL"),
+            PatternType::HalfVerticalMirror { .. } => f.write_str("HALF_VERTICAL_MIRROR"),
+            PatternType::HalfHorizontalMirror { .. } => f.write_str("HALF_HORIZONTAL_MIRROR"),
+            PatternType::Border { .. } => f.write_str("BORDER"),
+            PatternType::CurlyBorder { .. } => f.write_str("CURLY_BORDER"),
+            PatternType::Creeper { .. } => f.write_str("CREEPER"),
+            PatternType::Gradient { .. } => f.write_str("GRADIENT"),
+            PatternType::GradientUp { .. } => f.write_str("GRADIENT_UP"),
+            PatternType::Bricks { .. } => f.write_str("BRICKS"),
+            PatternType::Skull { .. } => f.write_str("SKULL"),
+            PatternType::Flower { .. } => f.write_str("FLOWER"),
+            PatternType::Mojang { .. } => f.write_str("MOJANG"),
+            PatternType::Globe { .. } => f.write_str("GLOBE"),
+            PatternType::Piglin { .. } => f.write_str("PIGLIN"),
+        }
     }
 }
+
+impl<'mc> PatternType<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PatternType<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/banner/PatternType");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/banner/PatternType;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "BASE" => Ok(PatternType::Base {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "SQUARE_BOTTOM_LEFT" => Ok(PatternType::SquareBottomLeft {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "SQUARE_BOTTOM_RIGHT" => Ok(PatternType::SquareBottomRight {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "SQUARE_TOP_LEFT" => Ok(PatternType::SquareTopLeft {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "SQUARE_TOP_RIGHT" => Ok(PatternType::SquareTopRight {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "STRIPE_BOTTOM" => Ok(PatternType::StripeBottom {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "STRIPE_TOP" => Ok(PatternType::StripeTop {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "STRIPE_LEFT" => Ok(PatternType::StripeLeft {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "STRIPE_RIGHT" => Ok(PatternType::StripeRight {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "STRIPE_CENTER" => Ok(PatternType::StripeCenter {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "STRIPE_MIDDLE" => Ok(PatternType::StripeMiddle {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "STRIPE_DOWNRIGHT" => Ok(PatternType::StripeDownright {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "STRIPE_DOWNLEFT" => Ok(PatternType::StripeDownleft {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "STRIPE_SMALL" => Ok(PatternType::StripeSmall {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "CROSS" => Ok(PatternType::Cross {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "STRAIGHT_CROSS" => Ok(PatternType::StraightCross {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "TRIANGLE_BOTTOM" => Ok(PatternType::TriangleBottom {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "TRIANGLE_TOP" => Ok(PatternType::TriangleTop {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "TRIANGLES_BOTTOM" => Ok(PatternType::TrianglesBottom {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "TRIANGLES_TOP" => Ok(PatternType::TrianglesTop {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "DIAGONAL_LEFT" => Ok(PatternType::DiagonalLeft {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "DIAGONAL_RIGHT" => Ok(PatternType::DiagonalRight {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "DIAGONAL_LEFT_MIRROR" => Ok(PatternType::DiagonalLeftMirror {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "DIAGONAL_RIGHT_MIRROR" => Ok(PatternType::DiagonalRightMirror {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "CIRCLE_MIDDLE" => Ok(PatternType::CircleMiddle {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "RHOMBUS_MIDDLE" => Ok(PatternType::RhombusMiddle {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "HALF_VERTICAL" => Ok(PatternType::HalfVertical {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "HALF_HORIZONTAL" => Ok(PatternType::HalfHorizontal {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "HALF_VERTICAL_MIRROR" => Ok(PatternType::HalfVerticalMirror {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "HALF_HORIZONTAL_MIRROR" => Ok(PatternType::HalfHorizontalMirror {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "BORDER" => Ok(PatternType::Border {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "CURLY_BORDER" => Ok(PatternType::CurlyBorder {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "CREEPER" => Ok(PatternType::Creeper {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "GRADIENT" => Ok(PatternType::Gradient {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "GRADIENT_UP" => Ok(PatternType::GradientUp {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "BRICKS" => Ok(PatternType::Bricks {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "SKULL" => Ok(PatternType::Skull {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "FLOWER" => Ok(PatternType::Flower {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "MOJANG" => Ok(PatternType::Mojang {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "GLOBE" => Ok(PatternType::Globe {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+            "PIGLIN" => Ok(PatternType::Piglin {
+                inner: PatternTypeStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct PatternType<'mc>(
+pub struct PatternTypeStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub PatternTypeEnum,
 );
-impl<'mc> std::ops::Deref for PatternType<'mc> {
-    type Target = PatternTypeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for PatternType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Base { inner } => inner.0.clone(),
+            Self::SquareBottomLeft { inner } => inner.0.clone(),
+            Self::SquareBottomRight { inner } => inner.0.clone(),
+            Self::SquareTopLeft { inner } => inner.0.clone(),
+            Self::SquareTopRight { inner } => inner.0.clone(),
+            Self::StripeBottom { inner } => inner.0.clone(),
+            Self::StripeTop { inner } => inner.0.clone(),
+            Self::StripeLeft { inner } => inner.0.clone(),
+            Self::StripeRight { inner } => inner.0.clone(),
+            Self::StripeCenter { inner } => inner.0.clone(),
+            Self::StripeMiddle { inner } => inner.0.clone(),
+            Self::StripeDownright { inner } => inner.0.clone(),
+            Self::StripeDownleft { inner } => inner.0.clone(),
+            Self::StripeSmall { inner } => inner.0.clone(),
+            Self::Cross { inner } => inner.0.clone(),
+            Self::StraightCross { inner } => inner.0.clone(),
+            Self::TriangleBottom { inner } => inner.0.clone(),
+            Self::TriangleTop { inner } => inner.0.clone(),
+            Self::TrianglesBottom { inner } => inner.0.clone(),
+            Self::TrianglesTop { inner } => inner.0.clone(),
+            Self::DiagonalLeft { inner } => inner.0.clone(),
+            Self::DiagonalRight { inner } => inner.0.clone(),
+            Self::DiagonalLeftMirror { inner } => inner.0.clone(),
+            Self::DiagonalRightMirror { inner } => inner.0.clone(),
+            Self::CircleMiddle { inner } => inner.0.clone(),
+            Self::RhombusMiddle { inner } => inner.0.clone(),
+            Self::HalfVertical { inner } => inner.0.clone(),
+            Self::HalfHorizontal { inner } => inner.0.clone(),
+            Self::HalfVerticalMirror { inner } => inner.0.clone(),
+            Self::HalfHorizontalMirror { inner } => inner.0.clone(),
+            Self::Border { inner } => inner.0.clone(),
+            Self::CurlyBorder { inner } => inner.0.clone(),
+            Self::Creeper { inner } => inner.0.clone(),
+            Self::Gradient { inner } => inner.0.clone(),
+            Self::GradientUp { inner } => inner.0.clone(),
+            Self::Bricks { inner } => inner.0.clone(),
+            Self::Skull { inner } => inner.0.clone(),
+            Self::Flower { inner } => inner.0.clone(),
+            Self::Mojang { inner } => inner.0.clone(),
+            Self::Globe { inner } => inner.0.clone(),
+            Self::Piglin { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Base { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SquareBottomLeft { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SquareBottomRight { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SquareTopLeft { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SquareTopRight { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::StripeBottom { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::StripeTop { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::StripeLeft { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::StripeRight { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::StripeCenter { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::StripeMiddle { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::StripeDownright { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::StripeDownleft { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::StripeSmall { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Cross { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::StraightCross { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::TriangleBottom { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::TriangleTop { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::TrianglesBottom { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::TrianglesTop { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DiagonalLeft { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DiagonalRight { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DiagonalLeftMirror { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DiagonalRightMirror { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CircleMiddle { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::RhombusMiddle { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HalfVertical { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HalfHorizontal { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HalfVerticalMirror { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HalfHorizontalMirror { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Border { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::CurlyBorder { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Creeper { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Gradient { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::GradientUp { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Bricks { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Skull { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Flower { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Mojang { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Globe { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Piglin { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for PatternType<'mc> {
-    type Enum = PatternTypeEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for PatternType<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate PatternType from null object.").into());
@@ -142,138 +420,177 @@ impl<'mc> JNIInstantiatableEnum<'mc> for PatternType<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "BASE" => Ok(PatternType::Base {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "SQUARE_BOTTOM_LEFT" => Ok(PatternType::SquareBottomLeft {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "SQUARE_BOTTOM_RIGHT" => Ok(PatternType::SquareBottomRight {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "SQUARE_TOP_LEFT" => Ok(PatternType::SquareTopLeft {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "SQUARE_TOP_RIGHT" => Ok(PatternType::SquareTopRight {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "STRIPE_BOTTOM" => Ok(PatternType::StripeBottom {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "STRIPE_TOP" => Ok(PatternType::StripeTop {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "STRIPE_LEFT" => Ok(PatternType::StripeLeft {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "STRIPE_RIGHT" => Ok(PatternType::StripeRight {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "STRIPE_CENTER" => Ok(PatternType::StripeCenter {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "STRIPE_MIDDLE" => Ok(PatternType::StripeMiddle {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "STRIPE_DOWNRIGHT" => Ok(PatternType::StripeDownright {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "STRIPE_DOWNLEFT" => Ok(PatternType::StripeDownleft {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "STRIPE_SMALL" => Ok(PatternType::StripeSmall {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "CROSS" => Ok(PatternType::Cross {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "STRAIGHT_CROSS" => Ok(PatternType::StraightCross {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "TRIANGLE_BOTTOM" => Ok(PatternType::TriangleBottom {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "TRIANGLE_TOP" => Ok(PatternType::TriangleTop {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "TRIANGLES_BOTTOM" => Ok(PatternType::TrianglesBottom {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "TRIANGLES_TOP" => Ok(PatternType::TrianglesTop {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "DIAGONAL_LEFT" => Ok(PatternType::DiagonalLeft {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "DIAGONAL_RIGHT" => Ok(PatternType::DiagonalRight {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "DIAGONAL_LEFT_MIRROR" => Ok(PatternType::DiagonalLeftMirror {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "DIAGONAL_RIGHT_MIRROR" => Ok(PatternType::DiagonalRightMirror {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "CIRCLE_MIDDLE" => Ok(PatternType::CircleMiddle {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "RHOMBUS_MIDDLE" => Ok(PatternType::RhombusMiddle {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "HALF_VERTICAL" => Ok(PatternType::HalfVertical {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "HALF_HORIZONTAL" => Ok(PatternType::HalfHorizontal {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "HALF_VERTICAL_MIRROR" => Ok(PatternType::HalfVerticalMirror {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "HALF_HORIZONTAL_MIRROR" => Ok(PatternType::HalfHorizontalMirror {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "BORDER" => Ok(PatternType::Border {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "CURLY_BORDER" => Ok(PatternType::CurlyBorder {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "CREEPER" => Ok(PatternType::Creeper {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "GRADIENT" => Ok(PatternType::Gradient {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "GRADIENT_UP" => Ok(PatternType::GradientUp {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "BRICKS" => Ok(PatternType::Bricks {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "SKULL" => Ok(PatternType::Skull {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "FLOWER" => Ok(PatternType::Flower {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "MOJANG" => Ok(PatternType::Mojang {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "GLOBE" => Ok(PatternType::Globe {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                "PIGLIN" => Ok(PatternType::Piglin {
+                    inner: PatternTypeStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> PatternType<'mc> {
-    pub const BASE: PatternTypeEnum = PatternTypeEnum::Base;
-    pub const SQUARE_BOTTOM_LEFT: PatternTypeEnum = PatternTypeEnum::SquareBottomLeft;
-    pub const SQUARE_BOTTOM_RIGHT: PatternTypeEnum = PatternTypeEnum::SquareBottomRight;
-    pub const SQUARE_TOP_LEFT: PatternTypeEnum = PatternTypeEnum::SquareTopLeft;
-    pub const SQUARE_TOP_RIGHT: PatternTypeEnum = PatternTypeEnum::SquareTopRight;
-    pub const STRIPE_BOTTOM: PatternTypeEnum = PatternTypeEnum::StripeBottom;
-    pub const STRIPE_TOP: PatternTypeEnum = PatternTypeEnum::StripeTop;
-    pub const STRIPE_LEFT: PatternTypeEnum = PatternTypeEnum::StripeLeft;
-    pub const STRIPE_RIGHT: PatternTypeEnum = PatternTypeEnum::StripeRight;
-    pub const STRIPE_CENTER: PatternTypeEnum = PatternTypeEnum::StripeCenter;
-    pub const STRIPE_MIDDLE: PatternTypeEnum = PatternTypeEnum::StripeMiddle;
-    pub const STRIPE_DOWNRIGHT: PatternTypeEnum = PatternTypeEnum::StripeDownright;
-    pub const STRIPE_DOWNLEFT: PatternTypeEnum = PatternTypeEnum::StripeDownleft;
-    pub const STRIPE_SMALL: PatternTypeEnum = PatternTypeEnum::StripeSmall;
-    pub const CROSS: PatternTypeEnum = PatternTypeEnum::Cross;
-    pub const STRAIGHT_CROSS: PatternTypeEnum = PatternTypeEnum::StraightCross;
-    pub const TRIANGLE_BOTTOM: PatternTypeEnum = PatternTypeEnum::TriangleBottom;
-    pub const TRIANGLE_TOP: PatternTypeEnum = PatternTypeEnum::TriangleTop;
-    pub const TRIANGLES_BOTTOM: PatternTypeEnum = PatternTypeEnum::TrianglesBottom;
-    pub const TRIANGLES_TOP: PatternTypeEnum = PatternTypeEnum::TrianglesTop;
-    pub const DIAGONAL_LEFT: PatternTypeEnum = PatternTypeEnum::DiagonalLeft;
-    pub const DIAGONAL_RIGHT: PatternTypeEnum = PatternTypeEnum::DiagonalRight;
-    pub const DIAGONAL_LEFT_MIRROR: PatternTypeEnum = PatternTypeEnum::DiagonalLeftMirror;
-    pub const DIAGONAL_RIGHT_MIRROR: PatternTypeEnum = PatternTypeEnum::DiagonalRightMirror;
-    pub const CIRCLE_MIDDLE: PatternTypeEnum = PatternTypeEnum::CircleMiddle;
-    pub const RHOMBUS_MIDDLE: PatternTypeEnum = PatternTypeEnum::RhombusMiddle;
-    pub const HALF_VERTICAL: PatternTypeEnum = PatternTypeEnum::HalfVertical;
-    pub const HALF_HORIZONTAL: PatternTypeEnum = PatternTypeEnum::HalfHorizontal;
-    pub const HALF_VERTICAL_MIRROR: PatternTypeEnum = PatternTypeEnum::HalfVerticalMirror;
-    pub const HALF_HORIZONTAL_MIRROR: PatternTypeEnum = PatternTypeEnum::HalfHorizontalMirror;
-    pub const BORDER: PatternTypeEnum = PatternTypeEnum::Border;
-    pub const CURLY_BORDER: PatternTypeEnum = PatternTypeEnum::CurlyBorder;
-    pub const CREEPER: PatternTypeEnum = PatternTypeEnum::Creeper;
-    pub const GRADIENT: PatternTypeEnum = PatternTypeEnum::Gradient;
-    pub const GRADIENT_UP: PatternTypeEnum = PatternTypeEnum::GradientUp;
-    pub const BRICKS: PatternTypeEnum = PatternTypeEnum::Bricks;
-    pub const SKULL: PatternTypeEnum = PatternTypeEnum::Skull;
-    pub const FLOWER: PatternTypeEnum = PatternTypeEnum::Flower;
-    pub const MOJANG: PatternTypeEnum = PatternTypeEnum::Mojang;
-    pub const GLOBE: PatternTypeEnum = PatternTypeEnum::Globe;
-    pub const PIGLIN: PatternTypeEnum = PatternTypeEnum::Piglin;
-    pub fn from_string(str: String) -> std::option::Option<PatternTypeEnum> {
-        match str.as_str() {
-            "BASE" => Some(PatternTypeEnum::Base),
-            "SQUARE_BOTTOM_LEFT" => Some(PatternTypeEnum::SquareBottomLeft),
-            "SQUARE_BOTTOM_RIGHT" => Some(PatternTypeEnum::SquareBottomRight),
-            "SQUARE_TOP_LEFT" => Some(PatternTypeEnum::SquareTopLeft),
-            "SQUARE_TOP_RIGHT" => Some(PatternTypeEnum::SquareTopRight),
-            "STRIPE_BOTTOM" => Some(PatternTypeEnum::StripeBottom),
-            "STRIPE_TOP" => Some(PatternTypeEnum::StripeTop),
-            "STRIPE_LEFT" => Some(PatternTypeEnum::StripeLeft),
-            "STRIPE_RIGHT" => Some(PatternTypeEnum::StripeRight),
-            "STRIPE_CENTER" => Some(PatternTypeEnum::StripeCenter),
-            "STRIPE_MIDDLE" => Some(PatternTypeEnum::StripeMiddle),
-            "STRIPE_DOWNRIGHT" => Some(PatternTypeEnum::StripeDownright),
-            "STRIPE_DOWNLEFT" => Some(PatternTypeEnum::StripeDownleft),
-            "STRIPE_SMALL" => Some(PatternTypeEnum::StripeSmall),
-            "CROSS" => Some(PatternTypeEnum::Cross),
-            "STRAIGHT_CROSS" => Some(PatternTypeEnum::StraightCross),
-            "TRIANGLE_BOTTOM" => Some(PatternTypeEnum::TriangleBottom),
-            "TRIANGLE_TOP" => Some(PatternTypeEnum::TriangleTop),
-            "TRIANGLES_BOTTOM" => Some(PatternTypeEnum::TrianglesBottom),
-            "TRIANGLES_TOP" => Some(PatternTypeEnum::TrianglesTop),
-            "DIAGONAL_LEFT" => Some(PatternTypeEnum::DiagonalLeft),
-            "DIAGONAL_RIGHT" => Some(PatternTypeEnum::DiagonalRight),
-            "DIAGONAL_LEFT_MIRROR" => Some(PatternTypeEnum::DiagonalLeftMirror),
-            "DIAGONAL_RIGHT_MIRROR" => Some(PatternTypeEnum::DiagonalRightMirror),
-            "CIRCLE_MIDDLE" => Some(PatternTypeEnum::CircleMiddle),
-            "RHOMBUS_MIDDLE" => Some(PatternTypeEnum::RhombusMiddle),
-            "HALF_VERTICAL" => Some(PatternTypeEnum::HalfVertical),
-            "HALF_HORIZONTAL" => Some(PatternTypeEnum::HalfHorizontal),
-            "HALF_VERTICAL_MIRROR" => Some(PatternTypeEnum::HalfVerticalMirror),
-            "HALF_HORIZONTAL_MIRROR" => Some(PatternTypeEnum::HalfHorizontalMirror),
-            "BORDER" => Some(PatternTypeEnum::Border),
-            "CURLY_BORDER" => Some(PatternTypeEnum::CurlyBorder),
-            "CREEPER" => Some(PatternTypeEnum::Creeper),
-            "GRADIENT" => Some(PatternTypeEnum::Gradient),
-            "GRADIENT_UP" => Some(PatternTypeEnum::GradientUp),
-            "BRICKS" => Some(PatternTypeEnum::Bricks),
-            "SKULL" => Some(PatternTypeEnum::Skull),
-            "FLOWER" => Some(PatternTypeEnum::Flower),
-            "MOJANG" => Some(PatternTypeEnum::Mojang),
-            "GLOBE" => Some(PatternTypeEnum::Globe),
-            "PIGLIN" => Some(PatternTypeEnum::Piglin),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for PatternTypeStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PatternTypeStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PatternTypeStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/banner/PatternType")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PatternTypeStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<PatternType<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/block/banner/PatternType");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/banner/PatternType;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        PatternType::from_raw(
-            &jni,
-            raw_obj,
-            PatternType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> PatternTypeStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -287,12 +604,10 @@ impl<'mc> JNIRaw<'mc> for Pattern<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Pattern<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -399,12 +714,7 @@ impl<'mc> Pattern<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        Ok(Some(crate::DyeColor::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::DyeColor::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )?))
+        Ok(Some(crate::DyeColor::from_raw(&self.jni_ref(), raw_obj)?))
     }
 
     pub fn pattern(
@@ -425,12 +735,7 @@ impl<'mc> Pattern<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::banner::PatternType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::banner::PatternType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::banner::PatternType::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn wait_with_long(
@@ -499,14 +804,9 @@ impl<'mc> Pattern<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 

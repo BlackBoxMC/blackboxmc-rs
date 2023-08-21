@@ -511,15 +511,6 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                     return None
             code.append("while iter.has_next()"+end_line+" {"+
                 "            let obj = iter.next()"+end_line+";")
-            if return_group["generics"][0]["type_name_original"] in enums:
-                code.append("let variant = "+val_1+".call_method(&obj, \"toString\", \"()Ljava/lang/String;\", vec![]); let variant = "+prefix+".translate_error(variant)"+end_line+";"+
-                            "let variant_str = "+val_1+""+
-                            "    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })"+end_line+
-                            "    .to_string_lossy()"+
-                            "    .to_string();")
-                val_3 = gen+"::from_string(variant_str).ok_or(eyre::eyre!(\"String gaven for variant was invalid\"))"+end_line+","
-            else:
-                val_3 = ""
             match gen:
                 case "()" | "u16" | "i8" | "i16" | "bool" | "i32" | "i64" | "f32" | "f64":
                     return None
@@ -536,7 +527,7 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                         ".to_string_lossy()"+
                         ".to_string());")
                 case _:
-                    code.append("new_vec.push("+gen+"::from_raw(&"+val_1+",obj,"+val_3+")"+end_line+");")
+                    code.append("new_vec.push("+gen+"::from_raw(&"+val_1+",obj,)"+end_line+");")
             code.append("};Ok(")
             if nullable:
                 code.append("Some(")
@@ -576,8 +567,8 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
             code.append(return_group["type_name_resolved"]+"::from_raw(&"+
                                                 prefix+","+
                                                 val_2)
-            if return_group["type_name_original"] in enums:
-                code.append(", "+return_group["type_name_resolved"]+"::from_string(variant_str).ok_or(eyre::eyre!(\"String gaven for variant was invalid\"))"+end_line)
+            #if return_group["type_name_original"] in enums:
+            #    code.append(", "+return_group["type_name_resolved"]+"::from_string(variant_str).ok_or(eyre::eyre!(\"String gaven for variant was invalid\"))"+end_line)
             if nullable:
                 code.append(")"+end_line+")")
             code.append(")")
@@ -881,49 +872,52 @@ def gen_to_string_func(name, static):
 def gen_instance_of_func(mod_path):
     impl_signature = []
     impl_signature.append("""
-    pub fn instance_of<A>(&self, other: A) -> bool where A: blackboxmc_general::JNIProvidesClassName  {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref().is_instance_of(&self.jni_object(), cls).unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
     """)
     for impl in impl_signature:
         file_cache[mod_path].append(impl)
 
-def gen_jniraw_impl(name, is_enum, mod_path, full_name):
+def gen_jniraw_impl(name, is_enum, mod_path, full_name, variants):
     impl_signature = []
     impl_signature.append("""
     impl<'mc> JNIRaw<'mc> for """+name+"""<'mc> {
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-            self.0.clone()
-        }
+        """)
+    if is_enum:
+        impl_signature.append("match self {")
+        for (_,val_proper) in variants:
+            impl_signature.append("Self::"+val_proper+" { inner } => inner.0.clone(),")
+        impl_signature.append("}")
+    else:
+        impl_signature.append("self.0.clone()")
+    impl_signature.append("}")
+    impl_signature.append("fn jni_object(&self) -> jni::objects::JObject<'mc> {")
+    if is_enum:
+        impl_signature.append("match self {")
+        for (_,val_proper) in variants:
+            impl_signature.append("Self::"+val_proper+" { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },")
+        impl_signature.append("}")
+    else:
+        impl_signature.append("unsafe { jni::objects::JObject::from_raw(self.1.clone()) }")
+    impl_signature.append("}")
+    impl_signature.append("}")
 
-        fn jni_object(&self) -> jni::objects::JObject<'mc> {
-            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-        }
-    }
-    """)
+    impl_signature.append(gen_jni_instantiatable(name,full_name,is_enum,variants))
+
+    for impl in impl_signature:
+        file_cache[mod_path].append(impl)
 
     if is_enum:
-        impl_signature.append("""
-    impl<'mc> JNIInstantiatableEnum<'mc> for """+name+"""<'mc> {
-        type Enum = """+name+"""Enum;
-        """)
-    else:
-        impl_signature.append("""
-    impl<'mc> JNIInstantiatable<'mc> for """+name+"""<'mc> {
-        """)
+        gen_jniraw_impl(name+"Struct",False,mod_path,full_name,variants)
 
-    impl_signature.append("""
+def gen_jni_instantiatable(name,full_name,is_enum,variants):
+    st = """impl<'mc> JNIInstantiatable<'mc> for """+name+"""<'mc> {
         fn from_raw(
             env: &blackboxmc_general::SharedJNIEnv<'mc>,
             obj: jni::objects::JObject<'mc>,
-    """)
-    if is_enum:
-        impl_signature.append("""
-            e: Self::Enum,
-        """)
-
-    impl_signature.append("""
         ) -> Result<Self, Box<dyn std::error::Error>> {
             if obj.is_null() {
                 return Err(eyre::eyre!(
@@ -938,66 +932,35 @@ def gen_jniraw_impl(name, is_enum, mod_path, full_name):
                 )
                 .into())
             } else {
-    """)
+    """
     if is_enum:
-        impl_signature.append("Ok(Self(env.clone(), obj, e))")
+        st += """
+                let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+                let variant = env.translate_error(variant)?;
+                let variant_str = env
+                    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                    .to_string_lossy()
+                    .to_string();
+                match variant_str.as_str() {
+                    """
+        for (v,val_proper) in variants:
+            st += "\""+v+"\" => Ok("+name+"::"+val_proper+" { inner: "+name+"Struct::from_raw(env,obj)?}),"
+        st += "_ => Err(eyre::eyre!(\"String gaven for variant was invalid\").into())"
+        st += "}"
     else:
-        impl_signature.append("Ok(Self(env.clone(), obj))")
-    impl_signature.append("""
+        st += "Ok(Self(env.clone(), obj))"
+    st += """
             }
         }
     }
-    """)
-
-
-    for impl in impl_signature:
-        file_cache[mod_path].append(impl)
+    """
+    return st
 
 def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,variants,is_constructor,full_name):
     og_name = name
     impl_signature = []
     extern_signature = []
     methods = list(filter(lambda f: f["name"] != "valueOf",methods))
-
-    if is_enum and not is_trait and not is_constructor:
-        for (v,val_proper) in variants:
-            impl_signature.append("pub const "+v.upper()+": "+name+"Enum = "+name+"Enum::"+val_proper+";")
-
-        impl_signature.append("pub fn from_string(str: String) -> std::option::Option<"+name+"Enum> {\nmatch str.as_str() {")
-        for (v,val_proper) in variants:
-            impl_signature.append("\""+v+"\" => Some("+name+"Enum::"+val_proper+"),")
-        impl_signature.append("_ => None}}")
-
-        impl_signature.append("""
-            pub fn value_of(
-                jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-                arg0: impl Into<String>,
-            ) -> Result<"""+name+"""<'mc>, Box<dyn std::error::Error>> {
-                let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-                let cls = jni.find_class(\""""+full_name.replace(".","/")+"""\");
-                let cls = jni.translate_error_with_class(cls)?;
-                let res = jni.call_static_method(
-                    cls,
-                    "valueOf",
-                    "(Ljava/lang/String;)L"""+full_name.replace(".","/")+""";",
-                    vec![jni::objects::JValueGen::from(val_1)],
-                );
-                let res = jni.translate_error(res)?;
-                let obj = res.l()?;
-                let raw_obj = obj;
-                let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-                let variant = jni.translate_error(variant)?;
-                let variant_str = jni
-                    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                    .to_string_lossy()
-                    .to_string();
-                """+name+"""::from_raw(
-                    &jni,
-                    raw_obj,
-                    """+name+"""::from_string(variant_str).ok_or(eyre::eyre!(\"String gaven for variant was invalid\"))?,
-                )
-            }
-        """)
 
     has_to_string = False
     has_to_string_is_static = False
@@ -1416,7 +1379,7 @@ def parse_classes(library, val, classes):
             if "fields" in val:
                 val["values"] += list(filter(lambda f: not "$" in f, val["fields"]))
         file_cache[mod_path].append(
-            "#[derive(PartialEq, Eq)]\npub enum "+name+"Enum {")
+            "pub enum "+name+"<'mc> {")
 
         for v in val["values"]:
             val_proper = snake_case_to_camel_case(v)
@@ -1426,7 +1389,7 @@ def parse_classes(library, val, classes):
             if "annotations" in val:
                 if v in val["annotations"]:
                     file_cache[mod_path] += parse_annotations(val["annotations"][v],"")[0]
-            file_cache[mod_path].append("\t"+val_proper+",")
+            file_cache[mod_path].append("\t"+val_proper+" {inner: "+name+"Struct<'mc>},")
 
 
         file_cache[mod_path].append("}")
@@ -1441,39 +1404,60 @@ def parse_classes(library, val, classes):
 
         # DISPLAY IMPL
 
-        file_cache[mod_path].append("impl std::fmt::Display for "+name+"Enum {")
+        file_cache[mod_path].append("impl<'mc> std::fmt::Display for "+name+"<'mc> {")
         file_cache[mod_path].append("   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {")
         file_cache[mod_path].append("       match self {")
         for (v,val_proper) in variants:
-            file_cache[mod_path].append("           "+name+"Enum::"+val_proper+" => f.write_str(\""+v+"\"),")
+            file_cache[mod_path].append("           "+name+"::"+val_proper+" { .. } => f.write_str(\""+v+"\"),")
         file_cache[mod_path].append("       }")
         file_cache[mod_path].append("   }")
         file_cache[mod_path].append("}")
 
-        file_cache[mod_path].append("impl<'mc> std::fmt::Display for "+name+"<'mc> {")
-        file_cache[mod_path].append("   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {")
-        file_cache[mod_path].append("       self.2.fmt(f)")
-        file_cache[mod_path].append("   }")
-        file_cache[mod_path].append("}")
+        file_cache[mod_path].append("""
+        impl<'mc> """+name+"""<'mc> {
+            pub fn value_of(
+                env: &blackboxmc_general::SharedJNIEnv<'mc>,
+                arg0: impl Into<String>,
+            ) -> Result<"""+name+"""<'mc>, Box<dyn std::error::Error>> {
+                let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+                let cls = env.find_class(\""""+full_name.replace(".","/")+"""\");
+                let cls = env.translate_error_with_class(cls)?;
+                let res = env.call_static_method(
+                    cls,
+                    "valueOf",
+                    "(Ljava/lang/String;)L"""+full_name.replace(".","/")+""";",
+                    vec![jni::objects::JValueGen::from(val_1)],
+                );
+                let res = env.translate_error(res)?;
+                let obj = res.l()?;
+                let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+                let variant = env.translate_error(variant)?;
+                let variant_str = env
+                    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                    .to_string_lossy()
+                    .to_string();
+                match variant_str.as_str() {
+                    """)
+        for (v,val_proper) in variants:
+            file_cache[mod_path].append("\""+v+"\" => Ok("+name+"::"+val_proper+" { inner: "+name+"Struct::from_raw(env,obj)?}),")
+
+        file_cache[mod_path].append("""
+                    _ => Err(eyre::eyre!(\"String gaven for variant was invalid\").into())
+                }
+            }
+        }
+        """)
 
         file_cache[mod_path].append(
-            "#[repr(C)]\npub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>, pub "+name+"Enum);")
-
-        file_cache[mod_path].append("impl<'mc> std::ops::Deref for "+name+"<'mc> {")
-        file_cache[mod_path].append("   type Target = "+name+"Enum;")
-        file_cache[mod_path].append("   fn deref(&self) -> &Self::Target {")
-        file_cache[mod_path].append("       return &self.2;")
-        file_cache[mod_path].append("   }")
-        file_cache[mod_path].append("}")
-
+            "#[repr(C)]\npub struct "+name+"Struct<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);")
 
         if "classes" in val:
             for cl in val["classes"]:
                 parse_classes(library, cl, classes)
 
-        gen_jniraw_impl(name, True, mod_path, full_name)
+        gen_jniraw_impl(name, True, mod_path, full_name, variants)
 
-        file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
+        file_cache[mod_path].append("impl<'mc> "+name+"Struct<'mc> {")
 
         has_to_string = False
         has_to_string_is_static = False
@@ -1502,7 +1486,7 @@ def parse_classes(library, val, classes):
             "#[repr(C)]\npub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
         )
 
-        gen_jniraw_impl(name, False, mod_path, full_name)
+        gen_jniraw_impl(name, False, mod_path, full_name, None)
 
         file_cache[mod_path].append(
             "impl<'mc> "+name+"<'mc> {")
@@ -1540,7 +1524,7 @@ def parse_classes(library, val, classes):
             for cl in val["classes"]:
                 parse_classes(library,cl, classes)
 
-        gen_jniraw_impl(name, False, mod_path, full_name)
+        gen_jniraw_impl(name, False, mod_path, full_name, None)
 
         file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
 

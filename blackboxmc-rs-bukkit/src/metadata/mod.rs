@@ -16,12 +16,10 @@ impl<'mc> JNIRaw<'mc> for MetadataStore<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MetadataStore<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -176,14 +174,9 @@ impl<'mc> MetadataStore<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -199,12 +192,10 @@ impl<'mc> JNIRaw<'mc> for MetadataValue<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MetadataValue<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -349,14 +340,9 @@ impl<'mc> MetadataValue<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// This interface is implemented by all objects that can provide metadata about themselves.
@@ -372,12 +358,10 @@ impl<'mc> JNIRaw<'mc> for Metadatable<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for Metadatable<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -496,14 +480,9 @@ impl<'mc> Metadatable<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -517,12 +496,10 @@ impl<'mc> JNIRaw<'mc> for MetadataStoreBase<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MetadataStoreBase<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -778,14 +755,9 @@ impl<'mc> MetadataStoreBase<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -805,59 +777,99 @@ pub struct LazyMetadataValue<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum LazyMetadataValueCacheStrategyEnum {
-    CacheAfterFirstEval,
-    NeverCache,
-    CacheEternally,
-}
-impl std::fmt::Display for LazyMetadataValueCacheStrategyEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            LazyMetadataValueCacheStrategyEnum::CacheAfterFirstEval => {
-                f.write_str("CACHE_AFTER_FIRST_EVAL")
-            }
-            LazyMetadataValueCacheStrategyEnum::NeverCache => f.write_str("NEVER_CACHE"),
-            LazyMetadataValueCacheStrategyEnum::CacheEternally => f.write_str("CACHE_ETERNALLY"),
-        }
-    }
+pub enum LazyMetadataValueCacheStrategy<'mc> {
+    CacheAfterFirstEval {
+        inner: LazyMetadataValueCacheStrategyStruct<'mc>,
+    },
+    NeverCache {
+        inner: LazyMetadataValueCacheStrategyStruct<'mc>,
+    },
+    CacheEternally {
+        inner: LazyMetadataValueCacheStrategyStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for LazyMetadataValueCacheStrategy<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            LazyMetadataValueCacheStrategy::CacheAfterFirstEval { .. } => {
+                f.write_str("CACHE_AFTER_FIRST_EVAL")
+            }
+            LazyMetadataValueCacheStrategy::NeverCache { .. } => f.write_str("NEVER_CACHE"),
+            LazyMetadataValueCacheStrategy::CacheEternally { .. } => f.write_str("CACHE_ETERNALLY"),
+        }
     }
 }
+
+impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<LazyMetadataValueCacheStrategy<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/metadata/LazyMetadataValue$CacheStrategy");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/metadata/LazyMetadataValue$CacheStrategy;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "CACHE_AFTER_FIRST_EVAL" => Ok(LazyMetadataValueCacheStrategy::CacheAfterFirstEval {
+                inner: LazyMetadataValueCacheStrategyStruct::from_raw(env, obj)?,
+            }),
+            "NEVER_CACHE" => Ok(LazyMetadataValueCacheStrategy::NeverCache {
+                inner: LazyMetadataValueCacheStrategyStruct::from_raw(env, obj)?,
+            }),
+            "CACHE_ETERNALLY" => Ok(LazyMetadataValueCacheStrategy::CacheEternally {
+                inner: LazyMetadataValueCacheStrategyStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct LazyMetadataValueCacheStrategy<'mc>(
+pub struct LazyMetadataValueCacheStrategyStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub LazyMetadataValueCacheStrategyEnum,
 );
-impl<'mc> std::ops::Deref for LazyMetadataValueCacheStrategy<'mc> {
-    type Target = LazyMetadataValueCacheStrategyEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for LazyMetadataValueCacheStrategy<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::CacheAfterFirstEval { inner } => inner.0.clone(),
+            Self::NeverCache { inner } => inner.0.clone(),
+            Self::CacheEternally { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::CacheAfterFirstEval { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NeverCache { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CacheEternally { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for LazyMetadataValueCacheStrategy<'mc> {
-    type Enum = LazyMetadataValueCacheStrategyEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for LazyMetadataValueCacheStrategy<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -874,67 +886,67 @@ impl<'mc> JNIInstantiatableEnum<'mc> for LazyMetadataValueCacheStrategy<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "CACHE_AFTER_FIRST_EVAL" => {
+                    Ok(LazyMetadataValueCacheStrategy::CacheAfterFirstEval {
+                        inner: LazyMetadataValueCacheStrategyStruct::from_raw(env, obj)?,
+                    })
+                }
+                "NEVER_CACHE" => Ok(LazyMetadataValueCacheStrategy::NeverCache {
+                    inner: LazyMetadataValueCacheStrategyStruct::from_raw(env, obj)?,
+                }),
+                "CACHE_ETERNALLY" => Ok(LazyMetadataValueCacheStrategy::CacheEternally {
+                    inner: LazyMetadataValueCacheStrategyStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
-    pub const CACHE_AFTER_FIRST_EVAL: LazyMetadataValueCacheStrategyEnum =
-        LazyMetadataValueCacheStrategyEnum::CacheAfterFirstEval;
-    pub const NEVER_CACHE: LazyMetadataValueCacheStrategyEnum =
-        LazyMetadataValueCacheStrategyEnum::NeverCache;
-    pub const CACHE_ETERNALLY: LazyMetadataValueCacheStrategyEnum =
-        LazyMetadataValueCacheStrategyEnum::CacheEternally;
-    pub fn from_string(str: String) -> std::option::Option<LazyMetadataValueCacheStrategyEnum> {
-        match str.as_str() {
-            "CACHE_AFTER_FIRST_EVAL" => {
-                Some(LazyMetadataValueCacheStrategyEnum::CacheAfterFirstEval)
-            }
-            "NEVER_CACHE" => Some(LazyMetadataValueCacheStrategyEnum::NeverCache),
-            "CACHE_ETERNALLY" => Some(LazyMetadataValueCacheStrategyEnum::CacheEternally),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for LazyMetadataValueCacheStrategyStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for LazyMetadataValueCacheStrategyStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate LazyMetadataValueCacheStrategyStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/metadata/LazyMetadataValue$CacheStrategy")?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a LazyMetadataValueCacheStrategyStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<LazyMetadataValueCacheStrategy<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/metadata/LazyMetadataValue$CacheStrategy");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/metadata/LazyMetadataValue$CacheStrategy;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        LazyMetadataValueCacheStrategy::from_raw(
-            &jni,
-            raw_obj,
-            LazyMetadataValueCacheStrategy::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> LazyMetadataValueCacheStrategyStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -942,12 +954,10 @@ impl<'mc> JNIRaw<'mc> for LazyMetadataValue<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for LazyMetadataValue<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1174,14 +1184,9 @@ impl<'mc> LazyMetadataValue<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1212,12 +1217,10 @@ impl<'mc> JNIRaw<'mc> for FixedMetadataValue<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for FixedMetadataValue<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1468,14 +1471,9 @@ impl<'mc> FixedMetadataValue<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1506,12 +1504,10 @@ impl<'mc> JNIRaw<'mc> for MetadataValueAdapter<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MetadataValueAdapter<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1738,14 +1734,9 @@ impl<'mc> MetadataValueAdapter<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1764,57 +1755,91 @@ impl<'mc> Into<crate::metadata::MetadataValue<'mc>> for MetadataValueAdapter<'mc
             .expect("Error converting MetadataValueAdapter into crate::metadata::MetadataValue")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum CacheStrategyEnum {
-    CacheAfterFirstEval,
-    NeverCache,
-    CacheEternally,
-}
-impl std::fmt::Display for CacheStrategyEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            CacheStrategyEnum::CacheAfterFirstEval => f.write_str("CACHE_AFTER_FIRST_EVAL"),
-            CacheStrategyEnum::NeverCache => f.write_str("NEVER_CACHE"),
-            CacheStrategyEnum::CacheEternally => f.write_str("CACHE_ETERNALLY"),
-        }
-    }
+pub enum CacheStrategy<'mc> {
+    CacheAfterFirstEval { inner: CacheStrategyStruct<'mc> },
+    NeverCache { inner: CacheStrategyStruct<'mc> },
+    CacheEternally { inner: CacheStrategyStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for CacheStrategy<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            CacheStrategy::CacheAfterFirstEval { .. } => f.write_str("CACHE_AFTER_FIRST_EVAL"),
+            CacheStrategy::NeverCache { .. } => f.write_str("NEVER_CACHE"),
+            CacheStrategy::CacheEternally { .. } => f.write_str("CACHE_ETERNALLY"),
+        }
     }
 }
+
+impl<'mc> CacheStrategy<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<CacheStrategy<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/metadata/CacheStrategy");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/metadata/CacheStrategy;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "CACHE_AFTER_FIRST_EVAL" => Ok(CacheStrategy::CacheAfterFirstEval {
+                inner: CacheStrategyStruct::from_raw(env, obj)?,
+            }),
+            "NEVER_CACHE" => Ok(CacheStrategy::NeverCache {
+                inner: CacheStrategyStruct::from_raw(env, obj)?,
+            }),
+            "CACHE_ETERNALLY" => Ok(CacheStrategy::CacheEternally {
+                inner: CacheStrategyStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct CacheStrategy<'mc>(
+pub struct CacheStrategyStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub CacheStrategyEnum,
 );
-impl<'mc> std::ops::Deref for CacheStrategy<'mc> {
-    type Target = CacheStrategyEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for CacheStrategy<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::CacheAfterFirstEval { inner } => inner.0.clone(),
+            Self::NeverCache { inner } => inner.0.clone(),
+            Self::CacheEternally { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::CacheAfterFirstEval { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NeverCache { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CacheEternally { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for CacheStrategy<'mc> {
-    type Enum = CacheStrategyEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for CacheStrategy<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate CacheStrategy from null object.").into());
@@ -1827,61 +1852,62 @@ impl<'mc> JNIInstantiatableEnum<'mc> for CacheStrategy<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "CACHE_AFTER_FIRST_EVAL" => Ok(CacheStrategy::CacheAfterFirstEval {
+                    inner: CacheStrategyStruct::from_raw(env, obj)?,
+                }),
+                "NEVER_CACHE" => Ok(CacheStrategy::NeverCache {
+                    inner: CacheStrategyStruct::from_raw(env, obj)?,
+                }),
+                "CACHE_ETERNALLY" => Ok(CacheStrategy::CacheEternally {
+                    inner: CacheStrategyStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> CacheStrategy<'mc> {
-    pub const CACHE_AFTER_FIRST_EVAL: CacheStrategyEnum = CacheStrategyEnum::CacheAfterFirstEval;
-    pub const NEVER_CACHE: CacheStrategyEnum = CacheStrategyEnum::NeverCache;
-    pub const CACHE_ETERNALLY: CacheStrategyEnum = CacheStrategyEnum::CacheEternally;
-    pub fn from_string(str: String) -> std::option::Option<CacheStrategyEnum> {
-        match str.as_str() {
-            "CACHE_AFTER_FIRST_EVAL" => Some(CacheStrategyEnum::CacheAfterFirstEval),
-            "NEVER_CACHE" => Some(CacheStrategyEnum::NeverCache),
-            "CACHE_ETERNALLY" => Some(CacheStrategyEnum::CacheEternally),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for CacheStrategyStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for CacheStrategyStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate CacheStrategyStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/metadata/CacheStrategy")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a CacheStrategyStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<CacheStrategy<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/metadata/CacheStrategy");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/metadata/CacheStrategy;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        CacheStrategy::from_raw(
-            &jni,
-            raw_obj,
-            CacheStrategy::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> CacheStrategyStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }

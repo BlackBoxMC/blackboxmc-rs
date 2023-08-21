@@ -14,12 +14,10 @@ impl<'mc> JNIRaw<'mc> for MoistureChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for MoistureChangeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -252,14 +250,9 @@ impl<'mc> MoistureChangeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -295,12 +288,10 @@ impl<'mc> JNIRaw<'mc> for BlockReceiveGameEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockReceiveGameEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -552,14 +543,9 @@ impl<'mc> BlockReceiveGameEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -595,12 +581,10 @@ impl<'mc> JNIRaw<'mc> for BlockDropItemEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockDropItemEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -837,14 +821,9 @@ impl<'mc> BlockDropItemEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -876,65 +855,135 @@ pub struct TNTPrimeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum TNTPrimeEventPrimeCauseEnum {
-    Fire,
-    Redstone,
-    Player,
-    Explosion,
-    Projectile,
-    BlockBreak,
-    Dispenser,
-}
-impl std::fmt::Display for TNTPrimeEventPrimeCauseEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TNTPrimeEventPrimeCauseEnum::Fire => f.write_str("FIRE"),
-            TNTPrimeEventPrimeCauseEnum::Redstone => f.write_str("REDSTONE"),
-            TNTPrimeEventPrimeCauseEnum::Player => f.write_str("PLAYER"),
-            TNTPrimeEventPrimeCauseEnum::Explosion => f.write_str("EXPLOSION"),
-            TNTPrimeEventPrimeCauseEnum::Projectile => f.write_str("PROJECTILE"),
-            TNTPrimeEventPrimeCauseEnum::BlockBreak => f.write_str("BLOCK_BREAK"),
-            TNTPrimeEventPrimeCauseEnum::Dispenser => f.write_str("DISPENSER"),
-        }
-    }
+pub enum TNTPrimeEventPrimeCause<'mc> {
+    Fire {
+        inner: TNTPrimeEventPrimeCauseStruct<'mc>,
+    },
+    Redstone {
+        inner: TNTPrimeEventPrimeCauseStruct<'mc>,
+    },
+    Player {
+        inner: TNTPrimeEventPrimeCauseStruct<'mc>,
+    },
+    Explosion {
+        inner: TNTPrimeEventPrimeCauseStruct<'mc>,
+    },
+    Projectile {
+        inner: TNTPrimeEventPrimeCauseStruct<'mc>,
+    },
+    BlockBreak {
+        inner: TNTPrimeEventPrimeCauseStruct<'mc>,
+    },
+    Dispenser {
+        inner: TNTPrimeEventPrimeCauseStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for TNTPrimeEventPrimeCause<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            TNTPrimeEventPrimeCause::Fire { .. } => f.write_str("FIRE"),
+            TNTPrimeEventPrimeCause::Redstone { .. } => f.write_str("REDSTONE"),
+            TNTPrimeEventPrimeCause::Player { .. } => f.write_str("PLAYER"),
+            TNTPrimeEventPrimeCause::Explosion { .. } => f.write_str("EXPLOSION"),
+            TNTPrimeEventPrimeCause::Projectile { .. } => f.write_str("PROJECTILE"),
+            TNTPrimeEventPrimeCause::BlockBreak { .. } => f.write_str("BLOCK_BREAK"),
+            TNTPrimeEventPrimeCause::Dispenser { .. } => f.write_str("DISPENSER"),
+        }
     }
 }
+
+impl<'mc> TNTPrimeEventPrimeCause<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<TNTPrimeEventPrimeCause<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/block/TNTPrimeEvent$PrimeCause");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/block/TNTPrimeEvent$PrimeCause;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "FIRE" => Ok(TNTPrimeEventPrimeCause::Fire {
+                inner: TNTPrimeEventPrimeCauseStruct::from_raw(env, obj)?,
+            }),
+            "REDSTONE" => Ok(TNTPrimeEventPrimeCause::Redstone {
+                inner: TNTPrimeEventPrimeCauseStruct::from_raw(env, obj)?,
+            }),
+            "PLAYER" => Ok(TNTPrimeEventPrimeCause::Player {
+                inner: TNTPrimeEventPrimeCauseStruct::from_raw(env, obj)?,
+            }),
+            "EXPLOSION" => Ok(TNTPrimeEventPrimeCause::Explosion {
+                inner: TNTPrimeEventPrimeCauseStruct::from_raw(env, obj)?,
+            }),
+            "PROJECTILE" => Ok(TNTPrimeEventPrimeCause::Projectile {
+                inner: TNTPrimeEventPrimeCauseStruct::from_raw(env, obj)?,
+            }),
+            "BLOCK_BREAK" => Ok(TNTPrimeEventPrimeCause::BlockBreak {
+                inner: TNTPrimeEventPrimeCauseStruct::from_raw(env, obj)?,
+            }),
+            "DISPENSER" => Ok(TNTPrimeEventPrimeCause::Dispenser {
+                inner: TNTPrimeEventPrimeCauseStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct TNTPrimeEventPrimeCause<'mc>(
+pub struct TNTPrimeEventPrimeCauseStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub TNTPrimeEventPrimeCauseEnum,
 );
-impl<'mc> std::ops::Deref for TNTPrimeEventPrimeCause<'mc> {
-    type Target = TNTPrimeEventPrimeCauseEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for TNTPrimeEventPrimeCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Fire { inner } => inner.0.clone(),
+            Self::Redstone { inner } => inner.0.clone(),
+            Self::Player { inner } => inner.0.clone(),
+            Self::Explosion { inner } => inner.0.clone(),
+            Self::Projectile { inner } => inner.0.clone(),
+            Self::BlockBreak { inner } => inner.0.clone(),
+            Self::Dispenser { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Fire { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Redstone { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Player { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Explosion { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Projectile { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BlockBreak { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Dispenser { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for TNTPrimeEventPrimeCause<'mc> {
-    type Enum = TNTPrimeEventPrimeCauseEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for TNTPrimeEventPrimeCause<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -951,70 +1000,77 @@ impl<'mc> JNIInstantiatableEnum<'mc> for TNTPrimeEventPrimeCause<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "FIRE" => Ok(TNTPrimeEventPrimeCause::Fire {
+                    inner: TNTPrimeEventPrimeCauseStruct::from_raw(env, obj)?,
+                }),
+                "REDSTONE" => Ok(TNTPrimeEventPrimeCause::Redstone {
+                    inner: TNTPrimeEventPrimeCauseStruct::from_raw(env, obj)?,
+                }),
+                "PLAYER" => Ok(TNTPrimeEventPrimeCause::Player {
+                    inner: TNTPrimeEventPrimeCauseStruct::from_raw(env, obj)?,
+                }),
+                "EXPLOSION" => Ok(TNTPrimeEventPrimeCause::Explosion {
+                    inner: TNTPrimeEventPrimeCauseStruct::from_raw(env, obj)?,
+                }),
+                "PROJECTILE" => Ok(TNTPrimeEventPrimeCause::Projectile {
+                    inner: TNTPrimeEventPrimeCauseStruct::from_raw(env, obj)?,
+                }),
+                "BLOCK_BREAK" => Ok(TNTPrimeEventPrimeCause::BlockBreak {
+                    inner: TNTPrimeEventPrimeCauseStruct::from_raw(env, obj)?,
+                }),
+                "DISPENSER" => Ok(TNTPrimeEventPrimeCause::Dispenser {
+                    inner: TNTPrimeEventPrimeCauseStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> TNTPrimeEventPrimeCause<'mc> {
-    pub const FIRE: TNTPrimeEventPrimeCauseEnum = TNTPrimeEventPrimeCauseEnum::Fire;
-    pub const REDSTONE: TNTPrimeEventPrimeCauseEnum = TNTPrimeEventPrimeCauseEnum::Redstone;
-    pub const PLAYER: TNTPrimeEventPrimeCauseEnum = TNTPrimeEventPrimeCauseEnum::Player;
-    pub const EXPLOSION: TNTPrimeEventPrimeCauseEnum = TNTPrimeEventPrimeCauseEnum::Explosion;
-    pub const PROJECTILE: TNTPrimeEventPrimeCauseEnum = TNTPrimeEventPrimeCauseEnum::Projectile;
-    pub const BLOCK_BREAK: TNTPrimeEventPrimeCauseEnum = TNTPrimeEventPrimeCauseEnum::BlockBreak;
-    pub const DISPENSER: TNTPrimeEventPrimeCauseEnum = TNTPrimeEventPrimeCauseEnum::Dispenser;
-    pub fn from_string(str: String) -> std::option::Option<TNTPrimeEventPrimeCauseEnum> {
-        match str.as_str() {
-            "FIRE" => Some(TNTPrimeEventPrimeCauseEnum::Fire),
-            "REDSTONE" => Some(TNTPrimeEventPrimeCauseEnum::Redstone),
-            "PLAYER" => Some(TNTPrimeEventPrimeCauseEnum::Player),
-            "EXPLOSION" => Some(TNTPrimeEventPrimeCauseEnum::Explosion),
-            "PROJECTILE" => Some(TNTPrimeEventPrimeCauseEnum::Projectile),
-            "BLOCK_BREAK" => Some(TNTPrimeEventPrimeCauseEnum::BlockBreak),
-            "DISPENSER" => Some(TNTPrimeEventPrimeCauseEnum::Dispenser),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for TNTPrimeEventPrimeCauseStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for TNTPrimeEventPrimeCauseStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate TNTPrimeEventPrimeCauseStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/block/TNTPrimeEvent$PrimeCause")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a TNTPrimeEventPrimeCauseStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<TNTPrimeEventPrimeCause<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/block/TNTPrimeEvent$PrimeCause");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/block/TNTPrimeEvent$PrimeCause;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        TNTPrimeEventPrimeCause::from_raw(
-            &jni,
-            raw_obj,
-            TNTPrimeEventPrimeCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> TNTPrimeEventPrimeCauseStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1022,12 +1078,10 @@ impl<'mc> JNIRaw<'mc> for TNTPrimeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for TNTPrimeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1124,12 +1178,7 @@ impl<'mc> TNTPrimeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::block::TNTPrimeEventPrimeCause::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::block::TNTPrimeEventPrimeCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::block::TNTPrimeEventPrimeCause::from_raw(&self.jni_ref(), raw_obj)
     }
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
@@ -1319,14 +1368,9 @@ impl<'mc> TNTPrimeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1362,12 +1406,10 @@ impl<'mc> JNIRaw<'mc> for BellResonateEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BellResonateEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1560,14 +1602,9 @@ impl<'mc> BellResonateEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1597,12 +1634,10 @@ impl<'mc> JNIRaw<'mc> for BlockExplodeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockExplodeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1835,14 +1870,9 @@ impl<'mc> BlockExplodeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1873,73 +1903,183 @@ pub struct CauldronLevelChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum CauldronLevelChangeEventChangeReasonEnum {
-    BucketFill,
-    BucketEmpty,
-    BottleFill,
-    BottleEmpty,
-    BannerWash,
-    ArmorWash,
-    ShulkerWash,
-    Extinguish,
-    Evaporate,
-    NaturalFill,
-    Unknown,
-}
-impl std::fmt::Display for CauldronLevelChangeEventChangeReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            CauldronLevelChangeEventChangeReasonEnum::BucketFill => f.write_str("BUCKET_FILL"),
-            CauldronLevelChangeEventChangeReasonEnum::BucketEmpty => f.write_str("BUCKET_EMPTY"),
-            CauldronLevelChangeEventChangeReasonEnum::BottleFill => f.write_str("BOTTLE_FILL"),
-            CauldronLevelChangeEventChangeReasonEnum::BottleEmpty => f.write_str("BOTTLE_EMPTY"),
-            CauldronLevelChangeEventChangeReasonEnum::BannerWash => f.write_str("BANNER_WASH"),
-            CauldronLevelChangeEventChangeReasonEnum::ArmorWash => f.write_str("ARMOR_WASH"),
-            CauldronLevelChangeEventChangeReasonEnum::ShulkerWash => f.write_str("SHULKER_WASH"),
-            CauldronLevelChangeEventChangeReasonEnum::Extinguish => f.write_str("EXTINGUISH"),
-            CauldronLevelChangeEventChangeReasonEnum::Evaporate => f.write_str("EVAPORATE"),
-            CauldronLevelChangeEventChangeReasonEnum::NaturalFill => f.write_str("NATURAL_FILL"),
-            CauldronLevelChangeEventChangeReasonEnum::Unknown => f.write_str("UNKNOWN"),
-        }
-    }
+pub enum CauldronLevelChangeEventChangeReason<'mc> {
+    BucketFill {
+        inner: CauldronLevelChangeEventChangeReasonStruct<'mc>,
+    },
+    BucketEmpty {
+        inner: CauldronLevelChangeEventChangeReasonStruct<'mc>,
+    },
+    BottleFill {
+        inner: CauldronLevelChangeEventChangeReasonStruct<'mc>,
+    },
+    BottleEmpty {
+        inner: CauldronLevelChangeEventChangeReasonStruct<'mc>,
+    },
+    BannerWash {
+        inner: CauldronLevelChangeEventChangeReasonStruct<'mc>,
+    },
+    ArmorWash {
+        inner: CauldronLevelChangeEventChangeReasonStruct<'mc>,
+    },
+    ShulkerWash {
+        inner: CauldronLevelChangeEventChangeReasonStruct<'mc>,
+    },
+    Extinguish {
+        inner: CauldronLevelChangeEventChangeReasonStruct<'mc>,
+    },
+    Evaporate {
+        inner: CauldronLevelChangeEventChangeReasonStruct<'mc>,
+    },
+    NaturalFill {
+        inner: CauldronLevelChangeEventChangeReasonStruct<'mc>,
+    },
+    Unknown {
+        inner: CauldronLevelChangeEventChangeReasonStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for CauldronLevelChangeEventChangeReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            CauldronLevelChangeEventChangeReason::BucketFill { .. } => f.write_str("BUCKET_FILL"),
+            CauldronLevelChangeEventChangeReason::BucketEmpty { .. } => f.write_str("BUCKET_EMPTY"),
+            CauldronLevelChangeEventChangeReason::BottleFill { .. } => f.write_str("BOTTLE_FILL"),
+            CauldronLevelChangeEventChangeReason::BottleEmpty { .. } => f.write_str("BOTTLE_EMPTY"),
+            CauldronLevelChangeEventChangeReason::BannerWash { .. } => f.write_str("BANNER_WASH"),
+            CauldronLevelChangeEventChangeReason::ArmorWash { .. } => f.write_str("ARMOR_WASH"),
+            CauldronLevelChangeEventChangeReason::ShulkerWash { .. } => f.write_str("SHULKER_WASH"),
+            CauldronLevelChangeEventChangeReason::Extinguish { .. } => f.write_str("EXTINGUISH"),
+            CauldronLevelChangeEventChangeReason::Evaporate { .. } => f.write_str("EVAPORATE"),
+            CauldronLevelChangeEventChangeReason::NaturalFill { .. } => f.write_str("NATURAL_FILL"),
+            CauldronLevelChangeEventChangeReason::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
     }
 }
+
+impl<'mc> CauldronLevelChangeEventChangeReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<CauldronLevelChangeEventChangeReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/block/CauldronLevelChangeEvent$ChangeReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/block/CauldronLevelChangeEvent$ChangeReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "BUCKET_FILL" => Ok(CauldronLevelChangeEventChangeReason::BucketFill {
+                inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "BUCKET_EMPTY" => Ok(CauldronLevelChangeEventChangeReason::BucketEmpty {
+                inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "BOTTLE_FILL" => Ok(CauldronLevelChangeEventChangeReason::BottleFill {
+                inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "BOTTLE_EMPTY" => Ok(CauldronLevelChangeEventChangeReason::BottleEmpty {
+                inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_WASH" => Ok(CauldronLevelChangeEventChangeReason::BannerWash {
+                inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "ARMOR_WASH" => Ok(CauldronLevelChangeEventChangeReason::ArmorWash {
+                inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "SHULKER_WASH" => Ok(CauldronLevelChangeEventChangeReason::ShulkerWash {
+                inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "EXTINGUISH" => Ok(CauldronLevelChangeEventChangeReason::Extinguish {
+                inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "EVAPORATE" => Ok(CauldronLevelChangeEventChangeReason::Evaporate {
+                inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "NATURAL_FILL" => Ok(CauldronLevelChangeEventChangeReason::NaturalFill {
+                inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(CauldronLevelChangeEventChangeReason::Unknown {
+                inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct CauldronLevelChangeEventChangeReason<'mc>(
+pub struct CauldronLevelChangeEventChangeReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub CauldronLevelChangeEventChangeReasonEnum,
 );
-impl<'mc> std::ops::Deref for CauldronLevelChangeEventChangeReason<'mc> {
-    type Target = CauldronLevelChangeEventChangeReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for CauldronLevelChangeEventChangeReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::BucketFill { inner } => inner.0.clone(),
+            Self::BucketEmpty { inner } => inner.0.clone(),
+            Self::BottleFill { inner } => inner.0.clone(),
+            Self::BottleEmpty { inner } => inner.0.clone(),
+            Self::BannerWash { inner } => inner.0.clone(),
+            Self::ArmorWash { inner } => inner.0.clone(),
+            Self::ShulkerWash { inner } => inner.0.clone(),
+            Self::Extinguish { inner } => inner.0.clone(),
+            Self::Evaporate { inner } => inner.0.clone(),
+            Self::NaturalFill { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::BucketFill { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BucketEmpty { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BottleFill { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BottleEmpty { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerWash { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ArmorWash { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ShulkerWash { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Extinguish { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Evaporate { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NaturalFill { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for CauldronLevelChangeEventChangeReason<'mc> {
-    type Enum = CauldronLevelChangeEventChangeReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for CauldronLevelChangeEventChangeReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -1958,91 +2098,91 @@ impl<'mc> JNIInstantiatableEnum<'mc> for CauldronLevelChangeEventChangeReason<'m
                 )
                 .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "BUCKET_FILL" => Ok(CauldronLevelChangeEventChangeReason::BucketFill {
+                    inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "BUCKET_EMPTY" => Ok(CauldronLevelChangeEventChangeReason::BucketEmpty {
+                    inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "BOTTLE_FILL" => Ok(CauldronLevelChangeEventChangeReason::BottleFill {
+                    inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "BOTTLE_EMPTY" => Ok(CauldronLevelChangeEventChangeReason::BottleEmpty {
+                    inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_WASH" => Ok(CauldronLevelChangeEventChangeReason::BannerWash {
+                    inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "ARMOR_WASH" => Ok(CauldronLevelChangeEventChangeReason::ArmorWash {
+                    inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "SHULKER_WASH" => Ok(CauldronLevelChangeEventChangeReason::ShulkerWash {
+                    inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "EXTINGUISH" => Ok(CauldronLevelChangeEventChangeReason::Extinguish {
+                    inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "EVAPORATE" => Ok(CauldronLevelChangeEventChangeReason::Evaporate {
+                    inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "NATURAL_FILL" => Ok(CauldronLevelChangeEventChangeReason::NaturalFill {
+                    inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(CauldronLevelChangeEventChangeReason::Unknown {
+                    inner: CauldronLevelChangeEventChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> CauldronLevelChangeEventChangeReason<'mc> {
-    pub const BUCKET_FILL: CauldronLevelChangeEventChangeReasonEnum =
-        CauldronLevelChangeEventChangeReasonEnum::BucketFill;
-    pub const BUCKET_EMPTY: CauldronLevelChangeEventChangeReasonEnum =
-        CauldronLevelChangeEventChangeReasonEnum::BucketEmpty;
-    pub const BOTTLE_FILL: CauldronLevelChangeEventChangeReasonEnum =
-        CauldronLevelChangeEventChangeReasonEnum::BottleFill;
-    pub const BOTTLE_EMPTY: CauldronLevelChangeEventChangeReasonEnum =
-        CauldronLevelChangeEventChangeReasonEnum::BottleEmpty;
-    pub const BANNER_WASH: CauldronLevelChangeEventChangeReasonEnum =
-        CauldronLevelChangeEventChangeReasonEnum::BannerWash;
-    pub const ARMOR_WASH: CauldronLevelChangeEventChangeReasonEnum =
-        CauldronLevelChangeEventChangeReasonEnum::ArmorWash;
-    pub const SHULKER_WASH: CauldronLevelChangeEventChangeReasonEnum =
-        CauldronLevelChangeEventChangeReasonEnum::ShulkerWash;
-    pub const EXTINGUISH: CauldronLevelChangeEventChangeReasonEnum =
-        CauldronLevelChangeEventChangeReasonEnum::Extinguish;
-    pub const EVAPORATE: CauldronLevelChangeEventChangeReasonEnum =
-        CauldronLevelChangeEventChangeReasonEnum::Evaporate;
-    pub const NATURAL_FILL: CauldronLevelChangeEventChangeReasonEnum =
-        CauldronLevelChangeEventChangeReasonEnum::NaturalFill;
-    pub const UNKNOWN: CauldronLevelChangeEventChangeReasonEnum =
-        CauldronLevelChangeEventChangeReasonEnum::Unknown;
-    pub fn from_string(
-        str: String,
-    ) -> std::option::Option<CauldronLevelChangeEventChangeReasonEnum> {
-        match str.as_str() {
-            "BUCKET_FILL" => Some(CauldronLevelChangeEventChangeReasonEnum::BucketFill),
-            "BUCKET_EMPTY" => Some(CauldronLevelChangeEventChangeReasonEnum::BucketEmpty),
-            "BOTTLE_FILL" => Some(CauldronLevelChangeEventChangeReasonEnum::BottleFill),
-            "BOTTLE_EMPTY" => Some(CauldronLevelChangeEventChangeReasonEnum::BottleEmpty),
-            "BANNER_WASH" => Some(CauldronLevelChangeEventChangeReasonEnum::BannerWash),
-            "ARMOR_WASH" => Some(CauldronLevelChangeEventChangeReasonEnum::ArmorWash),
-            "SHULKER_WASH" => Some(CauldronLevelChangeEventChangeReasonEnum::ShulkerWash),
-            "EXTINGUISH" => Some(CauldronLevelChangeEventChangeReasonEnum::Extinguish),
-            "EVAPORATE" => Some(CauldronLevelChangeEventChangeReasonEnum::Evaporate),
-            "NATURAL_FILL" => Some(CauldronLevelChangeEventChangeReasonEnum::NaturalFill),
-            "UNKNOWN" => Some(CauldronLevelChangeEventChangeReasonEnum::Unknown),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for CauldronLevelChangeEventChangeReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for CauldronLevelChangeEventChangeReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate CauldronLevelChangeEventChangeReasonStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/block/CauldronLevelChangeEvent$ChangeReason",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a CauldronLevelChangeEventChangeReasonStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<CauldronLevelChangeEventChangeReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/block/CauldronLevelChangeEvent$ChangeReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/block/CauldronLevelChangeEvent$ChangeReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        CauldronLevelChangeEventChangeReason::from_raw(
-            &jni,
-            raw_obj,
-            CauldronLevelChangeEventChangeReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> CauldronLevelChangeEventChangeReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2050,12 +2190,10 @@ impl<'mc> JNIRaw<'mc> for CauldronLevelChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CauldronLevelChangeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2156,8 +2294,6 @@ impl<'mc> CauldronLevelChangeEvent<'mc> {
             crate::event::block::CauldronLevelChangeEventChangeReason::from_raw(
                 &self.jni_ref(),
                 raw_obj,
-                crate::event::block::CauldronLevelChangeEventChangeReason::from_string(variant_str)
-                    .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
             )?,
         ))
     }
@@ -2379,14 +2515,9 @@ impl<'mc> CauldronLevelChangeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2423,12 +2554,10 @@ impl<'mc> JNIRaw<'mc> for BlockMultiPlaceEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockMultiPlaceEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2565,12 +2694,7 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::inventory::EquipmentSlot::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::inventory::EquipmentSlot::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn can_build(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2757,14 +2881,9 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -2784,61 +2903,107 @@ impl<'mc> Into<crate::event::block::BlockPlaceEvent<'mc>> for BlockMultiPlaceEve
         )
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum ActionEnum {
-    LeftClickBlock,
-    RightClickBlock,
-    LeftClickAir,
-    RightClickAir,
-    Physical,
-}
-impl std::fmt::Display for ActionEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ActionEnum::LeftClickBlock => f.write_str("LEFT_CLICK_BLOCK"),
-            ActionEnum::RightClickBlock => f.write_str("RIGHT_CLICK_BLOCK"),
-            ActionEnum::LeftClickAir => f.write_str("LEFT_CLICK_AIR"),
-            ActionEnum::RightClickAir => f.write_str("RIGHT_CLICK_AIR"),
-            ActionEnum::Physical => f.write_str("PHYSICAL"),
-        }
-    }
+pub enum Action<'mc> {
+    LeftClickBlock { inner: ActionStruct<'mc> },
+    RightClickBlock { inner: ActionStruct<'mc> },
+    LeftClickAir { inner: ActionStruct<'mc> },
+    RightClickAir { inner: ActionStruct<'mc> },
+    Physical { inner: ActionStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for Action<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            Action::LeftClickBlock { .. } => f.write_str("LEFT_CLICK_BLOCK"),
+            Action::RightClickBlock { .. } => f.write_str("RIGHT_CLICK_BLOCK"),
+            Action::LeftClickAir { .. } => f.write_str("LEFT_CLICK_AIR"),
+            Action::RightClickAir { .. } => f.write_str("RIGHT_CLICK_AIR"),
+            Action::Physical { .. } => f.write_str("PHYSICAL"),
+        }
     }
 }
+
+impl<'mc> Action<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Action<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/block/Action");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/block/Action;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "LEFT_CLICK_BLOCK" => Ok(Action::LeftClickBlock {
+                inner: ActionStruct::from_raw(env, obj)?,
+            }),
+            "RIGHT_CLICK_BLOCK" => Ok(Action::RightClickBlock {
+                inner: ActionStruct::from_raw(env, obj)?,
+            }),
+            "LEFT_CLICK_AIR" => Ok(Action::LeftClickAir {
+                inner: ActionStruct::from_raw(env, obj)?,
+            }),
+            "RIGHT_CLICK_AIR" => Ok(Action::RightClickAir {
+                inner: ActionStruct::from_raw(env, obj)?,
+            }),
+            "PHYSICAL" => Ok(Action::Physical {
+                inner: ActionStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct Action<'mc>(
+pub struct ActionStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub ActionEnum,
 );
-impl<'mc> std::ops::Deref for Action<'mc> {
-    type Target = ActionEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Action<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::LeftClickBlock { inner } => inner.0.clone(),
+            Self::RightClickBlock { inner } => inner.0.clone(),
+            Self::LeftClickAir { inner } => inner.0.clone(),
+            Self::RightClickAir { inner } => inner.0.clone(),
+            Self::Physical { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::LeftClickBlock { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::RightClickBlock { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::LeftClickAir { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::RightClickAir { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Physical { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for Action<'mc> {
-    type Enum = ActionEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for Action<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Action from null object.").into());
@@ -2851,66 +3016,67 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Action<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "LEFT_CLICK_BLOCK" => Ok(Action::LeftClickBlock {
+                    inner: ActionStruct::from_raw(env, obj)?,
+                }),
+                "RIGHT_CLICK_BLOCK" => Ok(Action::RightClickBlock {
+                    inner: ActionStruct::from_raw(env, obj)?,
+                }),
+                "LEFT_CLICK_AIR" => Ok(Action::LeftClickAir {
+                    inner: ActionStruct::from_raw(env, obj)?,
+                }),
+                "RIGHT_CLICK_AIR" => Ok(Action::RightClickAir {
+                    inner: ActionStruct::from_raw(env, obj)?,
+                }),
+                "PHYSICAL" => Ok(Action::Physical {
+                    inner: ActionStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> Action<'mc> {
-    pub const LEFT_CLICK_BLOCK: ActionEnum = ActionEnum::LeftClickBlock;
-    pub const RIGHT_CLICK_BLOCK: ActionEnum = ActionEnum::RightClickBlock;
-    pub const LEFT_CLICK_AIR: ActionEnum = ActionEnum::LeftClickAir;
-    pub const RIGHT_CLICK_AIR: ActionEnum = ActionEnum::RightClickAir;
-    pub const PHYSICAL: ActionEnum = ActionEnum::Physical;
-    pub fn from_string(str: String) -> std::option::Option<ActionEnum> {
-        match str.as_str() {
-            "LEFT_CLICK_BLOCK" => Some(ActionEnum::LeftClickBlock),
-            "RIGHT_CLICK_BLOCK" => Some(ActionEnum::RightClickBlock),
-            "LEFT_CLICK_AIR" => Some(ActionEnum::LeftClickAir),
-            "RIGHT_CLICK_AIR" => Some(ActionEnum::RightClickAir),
-            "PHYSICAL" => Some(ActionEnum::Physical),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for ActionStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ActionStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate ActionStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/block/Action")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ActionStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Action<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/block/Action");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/block/Action;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Action::from_raw(
-            &jni,
-            raw_obj,
-            Action::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> ActionStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Called when we try to place a block, to see if we can build it here or not.
@@ -2929,12 +3095,10 @@ impl<'mc> JNIRaw<'mc> for BlockCanBuildEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockCanBuildEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3023,12 +3187,7 @@ impl<'mc> BlockCanBuildEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn block_data(
@@ -3217,14 +3376,9 @@ impl<'mc> BlockCanBuildEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3261,12 +3415,10 @@ impl<'mc> JNIRaw<'mc> for BlockSpreadEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockSpreadEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3515,14 +3667,9 @@ impl<'mc> BlockSpreadEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3552,12 +3699,10 @@ impl<'mc> JNIRaw<'mc> for BlockDamageAbortEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockDamageAbortEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3793,14 +3938,9 @@ impl<'mc> BlockDamageAbortEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -3839,12 +3979,10 @@ impl<'mc> JNIRaw<'mc> for BlockFormEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockFormEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4075,14 +4213,9 @@ impl<'mc> BlockFormEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -4101,65 +4234,121 @@ impl<'mc> Into<crate::event::block::BlockGrowEvent<'mc>> for BlockFormEvent<'mc>
             .expect("Error converting BlockFormEvent into crate::event::block::BlockGrowEvent")
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum PrimeCauseEnum {
-    Fire,
-    Redstone,
-    Player,
-    Explosion,
-    Projectile,
-    BlockBreak,
-    Dispenser,
-}
-impl std::fmt::Display for PrimeCauseEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PrimeCauseEnum::Fire => f.write_str("FIRE"),
-            PrimeCauseEnum::Redstone => f.write_str("REDSTONE"),
-            PrimeCauseEnum::Player => f.write_str("PLAYER"),
-            PrimeCauseEnum::Explosion => f.write_str("EXPLOSION"),
-            PrimeCauseEnum::Projectile => f.write_str("PROJECTILE"),
-            PrimeCauseEnum::BlockBreak => f.write_str("BLOCK_BREAK"),
-            PrimeCauseEnum::Dispenser => f.write_str("DISPENSER"),
-        }
-    }
+pub enum PrimeCause<'mc> {
+    Fire { inner: PrimeCauseStruct<'mc> },
+    Redstone { inner: PrimeCauseStruct<'mc> },
+    Player { inner: PrimeCauseStruct<'mc> },
+    Explosion { inner: PrimeCauseStruct<'mc> },
+    Projectile { inner: PrimeCauseStruct<'mc> },
+    BlockBreak { inner: PrimeCauseStruct<'mc> },
+    Dispenser { inner: PrimeCauseStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for PrimeCause<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            PrimeCause::Fire { .. } => f.write_str("FIRE"),
+            PrimeCause::Redstone { .. } => f.write_str("REDSTONE"),
+            PrimeCause::Player { .. } => f.write_str("PLAYER"),
+            PrimeCause::Explosion { .. } => f.write_str("EXPLOSION"),
+            PrimeCause::Projectile { .. } => f.write_str("PROJECTILE"),
+            PrimeCause::BlockBreak { .. } => f.write_str("BLOCK_BREAK"),
+            PrimeCause::Dispenser { .. } => f.write_str("DISPENSER"),
+        }
     }
 }
+
+impl<'mc> PrimeCause<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PrimeCause<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/block/PrimeCause");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/block/PrimeCause;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "FIRE" => Ok(PrimeCause::Fire {
+                inner: PrimeCauseStruct::from_raw(env, obj)?,
+            }),
+            "REDSTONE" => Ok(PrimeCause::Redstone {
+                inner: PrimeCauseStruct::from_raw(env, obj)?,
+            }),
+            "PLAYER" => Ok(PrimeCause::Player {
+                inner: PrimeCauseStruct::from_raw(env, obj)?,
+            }),
+            "EXPLOSION" => Ok(PrimeCause::Explosion {
+                inner: PrimeCauseStruct::from_raw(env, obj)?,
+            }),
+            "PROJECTILE" => Ok(PrimeCause::Projectile {
+                inner: PrimeCauseStruct::from_raw(env, obj)?,
+            }),
+            "BLOCK_BREAK" => Ok(PrimeCause::BlockBreak {
+                inner: PrimeCauseStruct::from_raw(env, obj)?,
+            }),
+            "DISPENSER" => Ok(PrimeCause::Dispenser {
+                inner: PrimeCauseStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct PrimeCause<'mc>(
+pub struct PrimeCauseStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub PrimeCauseEnum,
 );
-impl<'mc> std::ops::Deref for PrimeCause<'mc> {
-    type Target = PrimeCauseEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for PrimeCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Fire { inner } => inner.0.clone(),
+            Self::Redstone { inner } => inner.0.clone(),
+            Self::Player { inner } => inner.0.clone(),
+            Self::Explosion { inner } => inner.0.clone(),
+            Self::Projectile { inner } => inner.0.clone(),
+            Self::BlockBreak { inner } => inner.0.clone(),
+            Self::Dispenser { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Fire { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Redstone { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Player { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Explosion { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Projectile { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BlockBreak { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Dispenser { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for PrimeCause<'mc> {
-    type Enum = PrimeCauseEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for PrimeCause<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate PrimeCause from null object.").into());
@@ -4172,70 +4361,75 @@ impl<'mc> JNIInstantiatableEnum<'mc> for PrimeCause<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "FIRE" => Ok(PrimeCause::Fire {
+                    inner: PrimeCauseStruct::from_raw(env, obj)?,
+                }),
+                "REDSTONE" => Ok(PrimeCause::Redstone {
+                    inner: PrimeCauseStruct::from_raw(env, obj)?,
+                }),
+                "PLAYER" => Ok(PrimeCause::Player {
+                    inner: PrimeCauseStruct::from_raw(env, obj)?,
+                }),
+                "EXPLOSION" => Ok(PrimeCause::Explosion {
+                    inner: PrimeCauseStruct::from_raw(env, obj)?,
+                }),
+                "PROJECTILE" => Ok(PrimeCause::Projectile {
+                    inner: PrimeCauseStruct::from_raw(env, obj)?,
+                }),
+                "BLOCK_BREAK" => Ok(PrimeCause::BlockBreak {
+                    inner: PrimeCauseStruct::from_raw(env, obj)?,
+                }),
+                "DISPENSER" => Ok(PrimeCause::Dispenser {
+                    inner: PrimeCauseStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> PrimeCause<'mc> {
-    pub const FIRE: PrimeCauseEnum = PrimeCauseEnum::Fire;
-    pub const REDSTONE: PrimeCauseEnum = PrimeCauseEnum::Redstone;
-    pub const PLAYER: PrimeCauseEnum = PrimeCauseEnum::Player;
-    pub const EXPLOSION: PrimeCauseEnum = PrimeCauseEnum::Explosion;
-    pub const PROJECTILE: PrimeCauseEnum = PrimeCauseEnum::Projectile;
-    pub const BLOCK_BREAK: PrimeCauseEnum = PrimeCauseEnum::BlockBreak;
-    pub const DISPENSER: PrimeCauseEnum = PrimeCauseEnum::Dispenser;
-    pub fn from_string(str: String) -> std::option::Option<PrimeCauseEnum> {
-        match str.as_str() {
-            "FIRE" => Some(PrimeCauseEnum::Fire),
-            "REDSTONE" => Some(PrimeCauseEnum::Redstone),
-            "PLAYER" => Some(PrimeCauseEnum::Player),
-            "EXPLOSION" => Some(PrimeCauseEnum::Explosion),
-            "PROJECTILE" => Some(PrimeCauseEnum::Projectile),
-            "BLOCK_BREAK" => Some(PrimeCauseEnum::BlockBreak),
-            "DISPENSER" => Some(PrimeCauseEnum::Dispenser),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for PrimeCauseStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PrimeCauseStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PrimeCauseStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/block/PrimeCause")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PrimeCauseStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<PrimeCause<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/block/PrimeCause");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/block/PrimeCause;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        PrimeCause::from_raw(
-            &jni,
-            raw_obj,
-            PrimeCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> PrimeCauseStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Called when a piston retracts
@@ -4249,12 +4443,10 @@ impl<'mc> JNIRaw<'mc> for BlockPistonRetractEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockPistonRetractEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4360,12 +4552,7 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -4514,14 +4701,9 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -4541,73 +4723,161 @@ impl<'mc> Into<crate::event::block::BlockPistonEvent<'mc>> for BlockPistonRetrac
         )
     }
 }
-#[derive(PartialEq, Eq)]
-pub enum ChangeReasonEnum {
-    BucketFill,
-    BucketEmpty,
-    BottleFill,
-    BottleEmpty,
-    BannerWash,
-    ArmorWash,
-    ShulkerWash,
-    Extinguish,
-    Evaporate,
-    NaturalFill,
-    Unknown,
-}
-impl std::fmt::Display for ChangeReasonEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ChangeReasonEnum::BucketFill => f.write_str("BUCKET_FILL"),
-            ChangeReasonEnum::BucketEmpty => f.write_str("BUCKET_EMPTY"),
-            ChangeReasonEnum::BottleFill => f.write_str("BOTTLE_FILL"),
-            ChangeReasonEnum::BottleEmpty => f.write_str("BOTTLE_EMPTY"),
-            ChangeReasonEnum::BannerWash => f.write_str("BANNER_WASH"),
-            ChangeReasonEnum::ArmorWash => f.write_str("ARMOR_WASH"),
-            ChangeReasonEnum::ShulkerWash => f.write_str("SHULKER_WASH"),
-            ChangeReasonEnum::Extinguish => f.write_str("EXTINGUISH"),
-            ChangeReasonEnum::Evaporate => f.write_str("EVAPORATE"),
-            ChangeReasonEnum::NaturalFill => f.write_str("NATURAL_FILL"),
-            ChangeReasonEnum::Unknown => f.write_str("UNKNOWN"),
-        }
-    }
+pub enum ChangeReason<'mc> {
+    BucketFill { inner: ChangeReasonStruct<'mc> },
+    BucketEmpty { inner: ChangeReasonStruct<'mc> },
+    BottleFill { inner: ChangeReasonStruct<'mc> },
+    BottleEmpty { inner: ChangeReasonStruct<'mc> },
+    BannerWash { inner: ChangeReasonStruct<'mc> },
+    ArmorWash { inner: ChangeReasonStruct<'mc> },
+    ShulkerWash { inner: ChangeReasonStruct<'mc> },
+    Extinguish { inner: ChangeReasonStruct<'mc> },
+    Evaporate { inner: ChangeReasonStruct<'mc> },
+    NaturalFill { inner: ChangeReasonStruct<'mc> },
+    Unknown { inner: ChangeReasonStruct<'mc> },
 }
 impl<'mc> std::fmt::Display for ChangeReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            ChangeReason::BucketFill { .. } => f.write_str("BUCKET_FILL"),
+            ChangeReason::BucketEmpty { .. } => f.write_str("BUCKET_EMPTY"),
+            ChangeReason::BottleFill { .. } => f.write_str("BOTTLE_FILL"),
+            ChangeReason::BottleEmpty { .. } => f.write_str("BOTTLE_EMPTY"),
+            ChangeReason::BannerWash { .. } => f.write_str("BANNER_WASH"),
+            ChangeReason::ArmorWash { .. } => f.write_str("ARMOR_WASH"),
+            ChangeReason::ShulkerWash { .. } => f.write_str("SHULKER_WASH"),
+            ChangeReason::Extinguish { .. } => f.write_str("EXTINGUISH"),
+            ChangeReason::Evaporate { .. } => f.write_str("EVAPORATE"),
+            ChangeReason::NaturalFill { .. } => f.write_str("NATURAL_FILL"),
+            ChangeReason::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
     }
 }
+
+impl<'mc> ChangeReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<ChangeReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/block/ChangeReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/block/ChangeReason;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "BUCKET_FILL" => Ok(ChangeReason::BucketFill {
+                inner: ChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "BUCKET_EMPTY" => Ok(ChangeReason::BucketEmpty {
+                inner: ChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "BOTTLE_FILL" => Ok(ChangeReason::BottleFill {
+                inner: ChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "BOTTLE_EMPTY" => Ok(ChangeReason::BottleEmpty {
+                inner: ChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "BANNER_WASH" => Ok(ChangeReason::BannerWash {
+                inner: ChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "ARMOR_WASH" => Ok(ChangeReason::ArmorWash {
+                inner: ChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "SHULKER_WASH" => Ok(ChangeReason::ShulkerWash {
+                inner: ChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "EXTINGUISH" => Ok(ChangeReason::Extinguish {
+                inner: ChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "EVAPORATE" => Ok(ChangeReason::Evaporate {
+                inner: ChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "NATURAL_FILL" => Ok(ChangeReason::NaturalFill {
+                inner: ChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(ChangeReason::Unknown {
+                inner: ChangeReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct ChangeReason<'mc>(
+pub struct ChangeReasonStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub ChangeReasonEnum,
 );
-impl<'mc> std::ops::Deref for ChangeReason<'mc> {
-    type Target = ChangeReasonEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for ChangeReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::BucketFill { inner } => inner.0.clone(),
+            Self::BucketEmpty { inner } => inner.0.clone(),
+            Self::BottleFill { inner } => inner.0.clone(),
+            Self::BottleEmpty { inner } => inner.0.clone(),
+            Self::BannerWash { inner } => inner.0.clone(),
+            Self::ArmorWash { inner } => inner.0.clone(),
+            Self::ShulkerWash { inner } => inner.0.clone(),
+            Self::Extinguish { inner } => inner.0.clone(),
+            Self::Evaporate { inner } => inner.0.clone(),
+            Self::NaturalFill { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::BucketFill { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BucketEmpty { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BottleFill { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BottleEmpty { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::BannerWash { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ArmorWash { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ShulkerWash { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Extinguish { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Evaporate { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NaturalFill { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for ChangeReason<'mc> {
-    type Enum = ChangeReasonEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for ChangeReason<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate ChangeReason from null object.").into());
@@ -4620,141 +4890,211 @@ impl<'mc> JNIInstantiatableEnum<'mc> for ChangeReason<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "BUCKET_FILL" => Ok(ChangeReason::BucketFill {
+                    inner: ChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "BUCKET_EMPTY" => Ok(ChangeReason::BucketEmpty {
+                    inner: ChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "BOTTLE_FILL" => Ok(ChangeReason::BottleFill {
+                    inner: ChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "BOTTLE_EMPTY" => Ok(ChangeReason::BottleEmpty {
+                    inner: ChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "BANNER_WASH" => Ok(ChangeReason::BannerWash {
+                    inner: ChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "ARMOR_WASH" => Ok(ChangeReason::ArmorWash {
+                    inner: ChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "SHULKER_WASH" => Ok(ChangeReason::ShulkerWash {
+                    inner: ChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "EXTINGUISH" => Ok(ChangeReason::Extinguish {
+                    inner: ChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "EVAPORATE" => Ok(ChangeReason::Evaporate {
+                    inner: ChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "NATURAL_FILL" => Ok(ChangeReason::NaturalFill {
+                    inner: ChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(ChangeReason::Unknown {
+                    inner: ChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> ChangeReason<'mc> {
-    pub const BUCKET_FILL: ChangeReasonEnum = ChangeReasonEnum::BucketFill;
-    pub const BUCKET_EMPTY: ChangeReasonEnum = ChangeReasonEnum::BucketEmpty;
-    pub const BOTTLE_FILL: ChangeReasonEnum = ChangeReasonEnum::BottleFill;
-    pub const BOTTLE_EMPTY: ChangeReasonEnum = ChangeReasonEnum::BottleEmpty;
-    pub const BANNER_WASH: ChangeReasonEnum = ChangeReasonEnum::BannerWash;
-    pub const ARMOR_WASH: ChangeReasonEnum = ChangeReasonEnum::ArmorWash;
-    pub const SHULKER_WASH: ChangeReasonEnum = ChangeReasonEnum::ShulkerWash;
-    pub const EXTINGUISH: ChangeReasonEnum = ChangeReasonEnum::Extinguish;
-    pub const EVAPORATE: ChangeReasonEnum = ChangeReasonEnum::Evaporate;
-    pub const NATURAL_FILL: ChangeReasonEnum = ChangeReasonEnum::NaturalFill;
-    pub const UNKNOWN: ChangeReasonEnum = ChangeReasonEnum::Unknown;
-    pub fn from_string(str: String) -> std::option::Option<ChangeReasonEnum> {
-        match str.as_str() {
-            "BUCKET_FILL" => Some(ChangeReasonEnum::BucketFill),
-            "BUCKET_EMPTY" => Some(ChangeReasonEnum::BucketEmpty),
-            "BOTTLE_FILL" => Some(ChangeReasonEnum::BottleFill),
-            "BOTTLE_EMPTY" => Some(ChangeReasonEnum::BottleEmpty),
-            "BANNER_WASH" => Some(ChangeReasonEnum::BannerWash),
-            "ARMOR_WASH" => Some(ChangeReasonEnum::ArmorWash),
-            "SHULKER_WASH" => Some(ChangeReasonEnum::ShulkerWash),
-            "EXTINGUISH" => Some(ChangeReasonEnum::Extinguish),
-            "EVAPORATE" => Some(ChangeReasonEnum::Evaporate),
-            "NATURAL_FILL" => Some(ChangeReasonEnum::NaturalFill),
-            "UNKNOWN" => Some(ChangeReasonEnum::Unknown),
-            _ => None,
-        }
-    }
-
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<ChangeReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/block/ChangeReason");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/block/ChangeReason;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        ChangeReason::from_raw(
-            &jni,
-            raw_obj,
-            ChangeReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
-    }
-}
-#[derive(PartialEq, Eq)]
-pub enum IgniteCauseEnum {
-    Lava,
-    FlintAndSteel,
-    Spread,
-    Lightning,
-    Fireball,
-    EnderCrystal,
-    Explosion,
-    Arrow,
-}
-impl std::fmt::Display for IgniteCauseEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            IgniteCauseEnum::Lava => f.write_str("LAVA"),
-            IgniteCauseEnum::FlintAndSteel => f.write_str("FLINT_AND_STEEL"),
-            IgniteCauseEnum::Spread => f.write_str("SPREAD"),
-            IgniteCauseEnum::Lightning => f.write_str("LIGHTNING"),
-            IgniteCauseEnum::Fireball => f.write_str("FIREBALL"),
-            IgniteCauseEnum::EnderCrystal => f.write_str("ENDER_CRYSTAL"),
-            IgniteCauseEnum::Explosion => f.write_str("EXPLOSION"),
-            IgniteCauseEnum::Arrow => f.write_str("ARROW"),
-        }
-    }
-}
-impl<'mc> std::fmt::Display for IgniteCause<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
-    }
-}
-#[repr(C)]
-pub struct IgniteCause<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub IgniteCauseEnum,
-);
-impl<'mc> std::ops::Deref for IgniteCause<'mc> {
-    type Target = IgniteCauseEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for IgniteCause<'mc> {
+impl<'mc> JNIRaw<'mc> for ChangeReasonStruct<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for IgniteCause<'mc> {
-    type Enum = IgniteCauseEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for ChangeReasonStruct<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate ChangeReasonStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/block/ChangeReason")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ChangeReasonStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
 
-        e: Self::Enum,
+impl<'mc> ChangeReasonStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+pub enum IgniteCause<'mc> {
+    Lava { inner: IgniteCauseStruct<'mc> },
+    FlintAndSteel { inner: IgniteCauseStruct<'mc> },
+    Spread { inner: IgniteCauseStruct<'mc> },
+    Lightning { inner: IgniteCauseStruct<'mc> },
+    Fireball { inner: IgniteCauseStruct<'mc> },
+    EnderCrystal { inner: IgniteCauseStruct<'mc> },
+    Explosion { inner: IgniteCauseStruct<'mc> },
+    Arrow { inner: IgniteCauseStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for IgniteCause<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            IgniteCause::Lava { .. } => f.write_str("LAVA"),
+            IgniteCause::FlintAndSteel { .. } => f.write_str("FLINT_AND_STEEL"),
+            IgniteCause::Spread { .. } => f.write_str("SPREAD"),
+            IgniteCause::Lightning { .. } => f.write_str("LIGHTNING"),
+            IgniteCause::Fireball { .. } => f.write_str("FIREBALL"),
+            IgniteCause::EnderCrystal { .. } => f.write_str("ENDER_CRYSTAL"),
+            IgniteCause::Explosion { .. } => f.write_str("EXPLOSION"),
+            IgniteCause::Arrow { .. } => f.write_str("ARROW"),
+        }
+    }
+}
+
+impl<'mc> IgniteCause<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<IgniteCause<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/block/IgniteCause");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/block/IgniteCause;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "LAVA" => Ok(IgniteCause::Lava {
+                inner: IgniteCauseStruct::from_raw(env, obj)?,
+            }),
+            "FLINT_AND_STEEL" => Ok(IgniteCause::FlintAndSteel {
+                inner: IgniteCauseStruct::from_raw(env, obj)?,
+            }),
+            "SPREAD" => Ok(IgniteCause::Spread {
+                inner: IgniteCauseStruct::from_raw(env, obj)?,
+            }),
+            "LIGHTNING" => Ok(IgniteCause::Lightning {
+                inner: IgniteCauseStruct::from_raw(env, obj)?,
+            }),
+            "FIREBALL" => Ok(IgniteCause::Fireball {
+                inner: IgniteCauseStruct::from_raw(env, obj)?,
+            }),
+            "ENDER_CRYSTAL" => Ok(IgniteCause::EnderCrystal {
+                inner: IgniteCauseStruct::from_raw(env, obj)?,
+            }),
+            "EXPLOSION" => Ok(IgniteCause::Explosion {
+                inner: IgniteCauseStruct::from_raw(env, obj)?,
+            }),
+            "ARROW" => Ok(IgniteCause::Arrow {
+                inner: IgniteCauseStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct IgniteCauseStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for IgniteCause<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Lava { inner } => inner.0.clone(),
+            Self::FlintAndSteel { inner } => inner.0.clone(),
+            Self::Spread { inner } => inner.0.clone(),
+            Self::Lightning { inner } => inner.0.clone(),
+            Self::Fireball { inner } => inner.0.clone(),
+            Self::EnderCrystal { inner } => inner.0.clone(),
+            Self::Explosion { inner } => inner.0.clone(),
+            Self::Arrow { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Lava { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FlintAndSteel { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Spread { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Lightning { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Fireball { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::EnderCrystal { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Explosion { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Arrow { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for IgniteCause<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate IgniteCause from null object.").into());
@@ -4767,72 +5107,78 @@ impl<'mc> JNIInstantiatableEnum<'mc> for IgniteCause<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "LAVA" => Ok(IgniteCause::Lava {
+                    inner: IgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                "FLINT_AND_STEEL" => Ok(IgniteCause::FlintAndSteel {
+                    inner: IgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                "SPREAD" => Ok(IgniteCause::Spread {
+                    inner: IgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                "LIGHTNING" => Ok(IgniteCause::Lightning {
+                    inner: IgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                "FIREBALL" => Ok(IgniteCause::Fireball {
+                    inner: IgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                "ENDER_CRYSTAL" => Ok(IgniteCause::EnderCrystal {
+                    inner: IgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                "EXPLOSION" => Ok(IgniteCause::Explosion {
+                    inner: IgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                "ARROW" => Ok(IgniteCause::Arrow {
+                    inner: IgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> IgniteCause<'mc> {
-    pub const LAVA: IgniteCauseEnum = IgniteCauseEnum::Lava;
-    pub const FLINT_AND_STEEL: IgniteCauseEnum = IgniteCauseEnum::FlintAndSteel;
-    pub const SPREAD: IgniteCauseEnum = IgniteCauseEnum::Spread;
-    pub const LIGHTNING: IgniteCauseEnum = IgniteCauseEnum::Lightning;
-    pub const FIREBALL: IgniteCauseEnum = IgniteCauseEnum::Fireball;
-    pub const ENDER_CRYSTAL: IgniteCauseEnum = IgniteCauseEnum::EnderCrystal;
-    pub const EXPLOSION: IgniteCauseEnum = IgniteCauseEnum::Explosion;
-    pub const ARROW: IgniteCauseEnum = IgniteCauseEnum::Arrow;
-    pub fn from_string(str: String) -> std::option::Option<IgniteCauseEnum> {
-        match str.as_str() {
-            "LAVA" => Some(IgniteCauseEnum::Lava),
-            "FLINT_AND_STEEL" => Some(IgniteCauseEnum::FlintAndSteel),
-            "SPREAD" => Some(IgniteCauseEnum::Spread),
-            "LIGHTNING" => Some(IgniteCauseEnum::Lightning),
-            "FIREBALL" => Some(IgniteCauseEnum::Fireball),
-            "ENDER_CRYSTAL" => Some(IgniteCauseEnum::EnderCrystal),
-            "EXPLOSION" => Some(IgniteCauseEnum::Explosion),
-            "ARROW" => Some(IgniteCauseEnum::Arrow),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for IgniteCauseStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for IgniteCauseStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate IgniteCauseStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/block/IgniteCause")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a IgniteCauseStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<IgniteCause<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/block/IgniteCause");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/block/IgniteCause;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        IgniteCause::from_raw(
-            &jni,
-            raw_obj,
-            IgniteCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> IgniteCauseStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 /// Called when a piston extends
@@ -4846,12 +5192,10 @@ impl<'mc> JNIRaw<'mc> for BlockPistonExtendEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockPistonExtendEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4983,12 +5327,7 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -5137,14 +5476,9 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -5175,12 +5509,10 @@ impl<'mc> JNIRaw<'mc> for BlockFertilizeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockFertilizeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5407,14 +5739,9 @@ impl<'mc> BlockFertilizeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -5450,12 +5777,10 @@ impl<'mc> JNIRaw<'mc> for BrewingStartEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BrewingStartEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5692,14 +6017,9 @@ impl<'mc> BrewingStartEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -5735,12 +6055,10 @@ impl<'mc> JNIRaw<'mc> for InventoryBlockStartEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for InventoryBlockStartEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5952,14 +6270,9 @@ impl<'mc> InventoryBlockStartEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -6000,12 +6313,10 @@ impl<'mc> JNIRaw<'mc> for BlockGrowEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockGrowEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6237,14 +6548,9 @@ impl<'mc> BlockGrowEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -6281,12 +6587,10 @@ impl<'mc> JNIRaw<'mc> for BlockDispenseArmorEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockDispenseArmorEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6584,14 +6888,9 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -6622,12 +6921,10 @@ impl<'mc> JNIRaw<'mc> for BlockCookEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockCookEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6893,14 +7190,9 @@ impl<'mc> BlockCookEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -6936,12 +7228,10 @@ impl<'mc> JNIRaw<'mc> for BlockPistonEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockPistonEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7017,12 +7307,7 @@ impl<'mc> BlockPistonEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
@@ -7183,14 +7468,9 @@ impl<'mc> BlockPistonEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -7235,12 +7515,10 @@ impl<'mc> JNIRaw<'mc> for BlockFadeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockFadeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7472,14 +7750,9 @@ impl<'mc> BlockFadeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -7516,12 +7789,10 @@ impl<'mc> JNIRaw<'mc> for BlockPlaceEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockPlaceEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7692,12 +7963,7 @@ impl<'mc> BlockPlaceEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::inventory::EquipmentSlot::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::inventory::EquipmentSlot::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn can_build(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7884,14 +8150,9 @@ impl<'mc> BlockPlaceEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -7933,12 +8194,10 @@ impl<'mc> JNIRaw<'mc> for BlockPhysicsEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockPhysicsEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8069,12 +8328,7 @@ impl<'mc> BlockPhysicsEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::Material::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
@@ -8201,14 +8455,9 @@ impl<'mc> BlockPhysicsEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -8249,12 +8498,10 @@ impl<'mc> JNIRaw<'mc> for EntityBlockFormEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for EntityBlockFormEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8504,14 +8751,9 @@ impl<'mc> EntityBlockFormEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -8546,12 +8788,10 @@ impl<'mc> JNIRaw<'mc> for SpongeAbsorbEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SpongeAbsorbEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8762,14 +9002,9 @@ impl<'mc> SpongeAbsorbEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -8805,12 +9040,10 @@ impl<'mc> JNIRaw<'mc> for BlockExpEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockExpEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9026,14 +9259,9 @@ impl<'mc> BlockExpEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -9064,12 +9292,10 @@ impl<'mc> JNIRaw<'mc> for SignChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for SignChangeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9205,12 +9431,7 @@ impl<'mc> SignChangeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::sign::Side::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::sign::Side::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::sign::Side::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn player(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
@@ -9378,14 +9599,9 @@ impl<'mc> SignChangeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -9422,12 +9638,10 @@ impl<'mc> JNIRaw<'mc> for LeavesDecayEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for LeavesDecayEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9641,14 +9855,9 @@ impl<'mc> LeavesDecayEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -9685,12 +9894,10 @@ impl<'mc> JNIRaw<'mc> for BlockFromToEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockFromToEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9777,12 +9984,7 @@ impl<'mc> BlockFromToEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
@@ -9946,14 +10148,9 @@ impl<'mc> BlockFromToEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -9989,12 +10186,10 @@ impl<'mc> JNIRaw<'mc> for BlockShearEntityEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockShearEntityEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10246,14 +10441,9 @@ impl<'mc> BlockShearEntityEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -10289,12 +10479,10 @@ impl<'mc> JNIRaw<'mc> for FluidLevelChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for FluidLevelChangeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10548,14 +10736,9 @@ impl<'mc> FluidLevelChangeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -10592,12 +10775,10 @@ impl<'mc> JNIRaw<'mc> for BlockBurnEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockBurnEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10839,14 +11020,9 @@ impl<'mc> BlockBurnEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -10883,12 +11059,10 @@ impl<'mc> JNIRaw<'mc> for BlockDispenseEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockDispenseEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11174,14 +11348,9 @@ impl<'mc> BlockDispenseEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -11217,12 +11386,10 @@ impl<'mc> JNIRaw<'mc> for BellRingEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BellRingEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11314,12 +11481,7 @@ impl<'mc> BellRingEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
@@ -11483,14 +11645,9 @@ impl<'mc> BellRingEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -11527,12 +11684,10 @@ impl<'mc> JNIRaw<'mc> for BlockDamageEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockDamageEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11812,14 +11967,9 @@ impl<'mc> BlockDamageEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -11855,12 +12005,10 @@ impl<'mc> JNIRaw<'mc> for CampfireStartEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for CampfireStartEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12116,14 +12264,9 @@ impl<'mc> CampfireStartEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -12161,12 +12304,10 @@ impl<'mc> JNIRaw<'mc> for BlockBreakEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockBreakEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12446,14 +12587,9 @@ impl<'mc> BlockBreakEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -12489,12 +12625,10 @@ impl<'mc> JNIRaw<'mc> for BlockRedstoneEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockRedstoneEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12724,14 +12858,9 @@ impl<'mc> BlockRedstoneEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -12757,67 +12886,144 @@ pub struct BlockIgniteEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum BlockIgniteEventIgniteCauseEnum {
-    Lava,
-    FlintAndSteel,
-    Spread,
-    Lightning,
-    Fireball,
-    EnderCrystal,
-    Explosion,
-    Arrow,
-}
-impl std::fmt::Display for BlockIgniteEventIgniteCauseEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            BlockIgniteEventIgniteCauseEnum::Lava => f.write_str("LAVA"),
-            BlockIgniteEventIgniteCauseEnum::FlintAndSteel => f.write_str("FLINT_AND_STEEL"),
-            BlockIgniteEventIgniteCauseEnum::Spread => f.write_str("SPREAD"),
-            BlockIgniteEventIgniteCauseEnum::Lightning => f.write_str("LIGHTNING"),
-            BlockIgniteEventIgniteCauseEnum::Fireball => f.write_str("FIREBALL"),
-            BlockIgniteEventIgniteCauseEnum::EnderCrystal => f.write_str("ENDER_CRYSTAL"),
-            BlockIgniteEventIgniteCauseEnum::Explosion => f.write_str("EXPLOSION"),
-            BlockIgniteEventIgniteCauseEnum::Arrow => f.write_str("ARROW"),
-        }
-    }
+pub enum BlockIgniteEventIgniteCause<'mc> {
+    Lava {
+        inner: BlockIgniteEventIgniteCauseStruct<'mc>,
+    },
+    FlintAndSteel {
+        inner: BlockIgniteEventIgniteCauseStruct<'mc>,
+    },
+    Spread {
+        inner: BlockIgniteEventIgniteCauseStruct<'mc>,
+    },
+    Lightning {
+        inner: BlockIgniteEventIgniteCauseStruct<'mc>,
+    },
+    Fireball {
+        inner: BlockIgniteEventIgniteCauseStruct<'mc>,
+    },
+    EnderCrystal {
+        inner: BlockIgniteEventIgniteCauseStruct<'mc>,
+    },
+    Explosion {
+        inner: BlockIgniteEventIgniteCauseStruct<'mc>,
+    },
+    Arrow {
+        inner: BlockIgniteEventIgniteCauseStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for BlockIgniteEventIgniteCause<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            BlockIgniteEventIgniteCause::Lava { .. } => f.write_str("LAVA"),
+            BlockIgniteEventIgniteCause::FlintAndSteel { .. } => f.write_str("FLINT_AND_STEEL"),
+            BlockIgniteEventIgniteCause::Spread { .. } => f.write_str("SPREAD"),
+            BlockIgniteEventIgniteCause::Lightning { .. } => f.write_str("LIGHTNING"),
+            BlockIgniteEventIgniteCause::Fireball { .. } => f.write_str("FIREBALL"),
+            BlockIgniteEventIgniteCause::EnderCrystal { .. } => f.write_str("ENDER_CRYSTAL"),
+            BlockIgniteEventIgniteCause::Explosion { .. } => f.write_str("EXPLOSION"),
+            BlockIgniteEventIgniteCause::Arrow { .. } => f.write_str("ARROW"),
+        }
     }
 }
+
+impl<'mc> BlockIgniteEventIgniteCause<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<BlockIgniteEventIgniteCause<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/block/BlockIgniteEvent$IgniteCause");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/block/BlockIgniteEvent$IgniteCause;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "LAVA" => Ok(BlockIgniteEventIgniteCause::Lava {
+                inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+            }),
+            "FLINT_AND_STEEL" => Ok(BlockIgniteEventIgniteCause::FlintAndSteel {
+                inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+            }),
+            "SPREAD" => Ok(BlockIgniteEventIgniteCause::Spread {
+                inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+            }),
+            "LIGHTNING" => Ok(BlockIgniteEventIgniteCause::Lightning {
+                inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+            }),
+            "FIREBALL" => Ok(BlockIgniteEventIgniteCause::Fireball {
+                inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+            }),
+            "ENDER_CRYSTAL" => Ok(BlockIgniteEventIgniteCause::EnderCrystal {
+                inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+            }),
+            "EXPLOSION" => Ok(BlockIgniteEventIgniteCause::Explosion {
+                inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+            }),
+            "ARROW" => Ok(BlockIgniteEventIgniteCause::Arrow {
+                inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct BlockIgniteEventIgniteCause<'mc>(
+pub struct BlockIgniteEventIgniteCauseStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub BlockIgniteEventIgniteCauseEnum,
 );
-impl<'mc> std::ops::Deref for BlockIgniteEventIgniteCause<'mc> {
-    type Target = BlockIgniteEventIgniteCauseEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for BlockIgniteEventIgniteCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Lava { inner } => inner.0.clone(),
+            Self::FlintAndSteel { inner } => inner.0.clone(),
+            Self::Spread { inner } => inner.0.clone(),
+            Self::Lightning { inner } => inner.0.clone(),
+            Self::Fireball { inner } => inner.0.clone(),
+            Self::EnderCrystal { inner } => inner.0.clone(),
+            Self::Explosion { inner } => inner.0.clone(),
+            Self::Arrow { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Lava { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FlintAndSteel { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Spread { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Lightning { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Fireball { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::EnderCrystal { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Explosion { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Arrow { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for BlockIgniteEventIgniteCause<'mc> {
-    type Enum = BlockIgniteEventIgniteCauseEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for BlockIgniteEventIgniteCause<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -12834,76 +13040,80 @@ impl<'mc> JNIInstantiatableEnum<'mc> for BlockIgniteEventIgniteCause<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "LAVA" => Ok(BlockIgniteEventIgniteCause::Lava {
+                    inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                "FLINT_AND_STEEL" => Ok(BlockIgniteEventIgniteCause::FlintAndSteel {
+                    inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                "SPREAD" => Ok(BlockIgniteEventIgniteCause::Spread {
+                    inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                "LIGHTNING" => Ok(BlockIgniteEventIgniteCause::Lightning {
+                    inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                "FIREBALL" => Ok(BlockIgniteEventIgniteCause::Fireball {
+                    inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                "ENDER_CRYSTAL" => Ok(BlockIgniteEventIgniteCause::EnderCrystal {
+                    inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                "EXPLOSION" => Ok(BlockIgniteEventIgniteCause::Explosion {
+                    inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                "ARROW" => Ok(BlockIgniteEventIgniteCause::Arrow {
+                    inner: BlockIgniteEventIgniteCauseStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> BlockIgniteEventIgniteCause<'mc> {
-    pub const LAVA: BlockIgniteEventIgniteCauseEnum = BlockIgniteEventIgniteCauseEnum::Lava;
-    pub const FLINT_AND_STEEL: BlockIgniteEventIgniteCauseEnum =
-        BlockIgniteEventIgniteCauseEnum::FlintAndSteel;
-    pub const SPREAD: BlockIgniteEventIgniteCauseEnum = BlockIgniteEventIgniteCauseEnum::Spread;
-    pub const LIGHTNING: BlockIgniteEventIgniteCauseEnum =
-        BlockIgniteEventIgniteCauseEnum::Lightning;
-    pub const FIREBALL: BlockIgniteEventIgniteCauseEnum = BlockIgniteEventIgniteCauseEnum::Fireball;
-    pub const ENDER_CRYSTAL: BlockIgniteEventIgniteCauseEnum =
-        BlockIgniteEventIgniteCauseEnum::EnderCrystal;
-    pub const EXPLOSION: BlockIgniteEventIgniteCauseEnum =
-        BlockIgniteEventIgniteCauseEnum::Explosion;
-    pub const ARROW: BlockIgniteEventIgniteCauseEnum = BlockIgniteEventIgniteCauseEnum::Arrow;
-    pub fn from_string(str: String) -> std::option::Option<BlockIgniteEventIgniteCauseEnum> {
-        match str.as_str() {
-            "LAVA" => Some(BlockIgniteEventIgniteCauseEnum::Lava),
-            "FLINT_AND_STEEL" => Some(BlockIgniteEventIgniteCauseEnum::FlintAndSteel),
-            "SPREAD" => Some(BlockIgniteEventIgniteCauseEnum::Spread),
-            "LIGHTNING" => Some(BlockIgniteEventIgniteCauseEnum::Lightning),
-            "FIREBALL" => Some(BlockIgniteEventIgniteCauseEnum::Fireball),
-            "ENDER_CRYSTAL" => Some(BlockIgniteEventIgniteCauseEnum::EnderCrystal),
-            "EXPLOSION" => Some(BlockIgniteEventIgniteCauseEnum::Explosion),
-            "ARROW" => Some(BlockIgniteEventIgniteCauseEnum::Arrow),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for BlockIgniteEventIgniteCauseStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for BlockIgniteEventIgniteCauseStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate BlockIgniteEventIgniteCauseStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/block/BlockIgniteEvent$IgniteCause")?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a BlockIgniteEventIgniteCauseStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<BlockIgniteEventIgniteCause<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/block/BlockIgniteEvent$IgniteCause");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/block/BlockIgniteEvent$IgniteCause;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        BlockIgniteEventIgniteCause::from_raw(
-            &jni,
-            raw_obj,
-            BlockIgniteEventIgniteCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> BlockIgniteEventIgniteCauseStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -12911,12 +13121,10 @@ impl<'mc> JNIRaw<'mc> for BlockIgniteEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockIgniteEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13019,12 +13227,7 @@ impl<'mc> BlockIgniteEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::block::BlockIgniteEventIgniteCause::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::block::BlockIgniteEventIgniteCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::block::BlockIgniteEventIgniteCause::from_raw(&self.jni_ref(), raw_obj)
     }
 
     pub fn player(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
@@ -13232,14 +13435,9 @@ impl<'mc> BlockIgniteEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -13275,12 +13473,10 @@ impl<'mc> JNIRaw<'mc> for NotePlayEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for NotePlayEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13374,12 +13570,7 @@ impl<'mc> NotePlayEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        Ok(Some(crate::Instrument::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Instrument::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )?))
+        Ok(Some(crate::Instrument::from_raw(&self.jni_ref(), raw_obj)?))
     }
 
     pub fn set_instrument(
@@ -13579,14 +13770,9 @@ impl<'mc> NotePlayEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -13622,12 +13808,10 @@ impl<'mc> JNIRaw<'mc> for BlockEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for BlockEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13804,14 +13988,9 @@ impl<'mc> BlockEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 

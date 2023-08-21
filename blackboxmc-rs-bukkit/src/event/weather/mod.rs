@@ -9,65 +9,127 @@ pub struct LightningStrikeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-#[derive(PartialEq, Eq)]
-pub enum LightningStrikeEventCauseEnum {
-    Command,
-    Custom,
-    Spawner,
-    Trident,
-    Trap,
-    Weather,
-    Unknown,
-}
-impl std::fmt::Display for LightningStrikeEventCauseEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            LightningStrikeEventCauseEnum::Command => f.write_str("COMMAND"),
-            LightningStrikeEventCauseEnum::Custom => f.write_str("CUSTOM"),
-            LightningStrikeEventCauseEnum::Spawner => f.write_str("SPAWNER"),
-            LightningStrikeEventCauseEnum::Trident => f.write_str("TRIDENT"),
-            LightningStrikeEventCauseEnum::Trap => f.write_str("TRAP"),
-            LightningStrikeEventCauseEnum::Weather => f.write_str("WEATHER"),
-            LightningStrikeEventCauseEnum::Unknown => f.write_str("UNKNOWN"),
-        }
-    }
+pub enum LightningStrikeEventCause<'mc> {
+    Command {
+        inner: LightningStrikeEventCauseStruct<'mc>,
+    },
+    Custom {
+        inner: LightningStrikeEventCauseStruct<'mc>,
+    },
+    Spawner {
+        inner: LightningStrikeEventCauseStruct<'mc>,
+    },
+    Trident {
+        inner: LightningStrikeEventCauseStruct<'mc>,
+    },
+    Trap {
+        inner: LightningStrikeEventCauseStruct<'mc>,
+    },
+    Weather {
+        inner: LightningStrikeEventCauseStruct<'mc>,
+    },
+    Unknown {
+        inner: LightningStrikeEventCauseStruct<'mc>,
+    },
 }
 impl<'mc> std::fmt::Display for LightningStrikeEventCause<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.2.fmt(f)
+        match self {
+            LightningStrikeEventCause::Command { .. } => f.write_str("COMMAND"),
+            LightningStrikeEventCause::Custom { .. } => f.write_str("CUSTOM"),
+            LightningStrikeEventCause::Spawner { .. } => f.write_str("SPAWNER"),
+            LightningStrikeEventCause::Trident { .. } => f.write_str("TRIDENT"),
+            LightningStrikeEventCause::Trap { .. } => f.write_str("TRAP"),
+            LightningStrikeEventCause::Weather { .. } => f.write_str("WEATHER"),
+            LightningStrikeEventCause::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
     }
 }
+
+impl<'mc> LightningStrikeEventCause<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<LightningStrikeEventCause<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/weather/LightningStrikeEvent$Cause");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/weather/LightningStrikeEvent$Cause;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "COMMAND" => Ok(LightningStrikeEventCause::Command {
+                inner: LightningStrikeEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "CUSTOM" => Ok(LightningStrikeEventCause::Custom {
+                inner: LightningStrikeEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "SPAWNER" => Ok(LightningStrikeEventCause::Spawner {
+                inner: LightningStrikeEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "TRIDENT" => Ok(LightningStrikeEventCause::Trident {
+                inner: LightningStrikeEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "TRAP" => Ok(LightningStrikeEventCause::Trap {
+                inner: LightningStrikeEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "WEATHER" => Ok(LightningStrikeEventCause::Weather {
+                inner: LightningStrikeEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(LightningStrikeEventCause::Unknown {
+                inner: LightningStrikeEventCauseStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
 #[repr(C)]
-pub struct LightningStrikeEventCause<'mc>(
+pub struct LightningStrikeEventCauseStruct<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub LightningStrikeEventCauseEnum,
 );
-impl<'mc> std::ops::Deref for LightningStrikeEventCause<'mc> {
-    type Target = LightningStrikeEventCauseEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for LightningStrikeEventCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        match self {
+            Self::Command { inner } => inner.0.clone(),
+            Self::Custom { inner } => inner.0.clone(),
+            Self::Spawner { inner } => inner.0.clone(),
+            Self::Trident { inner } => inner.0.clone(),
+            Self::Trap { inner } => inner.0.clone(),
+            Self::Weather { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        match self {
+            Self::Command { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Custom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Spawner { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Trident { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Trap { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Weather { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
-
-impl<'mc> JNIInstantiatableEnum<'mc> for LightningStrikeEventCause<'mc> {
-    type Enum = LightningStrikeEventCauseEnum;
-
+impl<'mc> JNIInstantiatable<'mc> for LightningStrikeEventCause<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -84,70 +146,77 @@ impl<'mc> JNIInstantiatableEnum<'mc> for LightningStrikeEventCause<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "COMMAND" => Ok(LightningStrikeEventCause::Command {
+                    inner: LightningStrikeEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "CUSTOM" => Ok(LightningStrikeEventCause::Custom {
+                    inner: LightningStrikeEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "SPAWNER" => Ok(LightningStrikeEventCause::Spawner {
+                    inner: LightningStrikeEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "TRIDENT" => Ok(LightningStrikeEventCause::Trident {
+                    inner: LightningStrikeEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "TRAP" => Ok(LightningStrikeEventCause::Trap {
+                    inner: LightningStrikeEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "WEATHER" => Ok(LightningStrikeEventCause::Weather {
+                    inner: LightningStrikeEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(LightningStrikeEventCause::Unknown {
+                    inner: LightningStrikeEventCauseStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
         }
     }
 }
 
-impl<'mc> LightningStrikeEventCause<'mc> {
-    pub const COMMAND: LightningStrikeEventCauseEnum = LightningStrikeEventCauseEnum::Command;
-    pub const CUSTOM: LightningStrikeEventCauseEnum = LightningStrikeEventCauseEnum::Custom;
-    pub const SPAWNER: LightningStrikeEventCauseEnum = LightningStrikeEventCauseEnum::Spawner;
-    pub const TRIDENT: LightningStrikeEventCauseEnum = LightningStrikeEventCauseEnum::Trident;
-    pub const TRAP: LightningStrikeEventCauseEnum = LightningStrikeEventCauseEnum::Trap;
-    pub const WEATHER: LightningStrikeEventCauseEnum = LightningStrikeEventCauseEnum::Weather;
-    pub const UNKNOWN: LightningStrikeEventCauseEnum = LightningStrikeEventCauseEnum::Unknown;
-    pub fn from_string(str: String) -> std::option::Option<LightningStrikeEventCauseEnum> {
-        match str.as_str() {
-            "COMMAND" => Some(LightningStrikeEventCauseEnum::Command),
-            "CUSTOM" => Some(LightningStrikeEventCauseEnum::Custom),
-            "SPAWNER" => Some(LightningStrikeEventCauseEnum::Spawner),
-            "TRIDENT" => Some(LightningStrikeEventCauseEnum::Trident),
-            "TRAP" => Some(LightningStrikeEventCauseEnum::Trap),
-            "WEATHER" => Some(LightningStrikeEventCauseEnum::Weather),
-            "UNKNOWN" => Some(LightningStrikeEventCauseEnum::Unknown),
-            _ => None,
+impl<'mc> JNIRaw<'mc> for LightningStrikeEventCauseStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for LightningStrikeEventCauseStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate LightningStrikeEventCauseStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/weather/LightningStrikeEvent$Cause")?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a LightningStrikeEventCauseStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
         }
     }
+}
 
-    pub fn value_of(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<LightningStrikeEventCause<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/event/weather/LightningStrikeEvent$Cause");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/weather/LightningStrikeEvent$Cause;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        LightningStrikeEventCause::from_raw(
-            &jni,
-            raw_obj,
-            LightningStrikeEventCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+impl<'mc> LightningStrikeEventCauseStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -155,12 +224,10 @@ impl<'mc> JNIRaw<'mc> for LightningStrikeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for LightningStrikeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -258,12 +325,7 @@ impl<'mc> LightningStrikeEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::event::weather::LightningStrikeEventCause::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::weather::LightningStrikeEventCause::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        crate::event::weather::LightningStrikeEventCause::from_raw(&self.jni_ref(), raw_obj)
     }
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
@@ -429,14 +491,9 @@ impl<'mc> LightningStrikeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -473,12 +530,10 @@ impl<'mc> JNIRaw<'mc> for ThunderChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for ThunderChangeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -707,14 +762,9 @@ impl<'mc> ThunderChangeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -750,12 +800,10 @@ impl<'mc> JNIRaw<'mc> for WeatherChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for WeatherChangeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -984,14 +1032,9 @@ impl<'mc> WeatherChangeEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
@@ -1027,12 +1070,10 @@ impl<'mc> JNIRaw<'mc> for WeatherEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
-
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-
 impl<'mc> JNIInstantiatable<'mc> for WeatherEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1209,14 +1250,9 @@ impl<'mc> WeatherEvent<'mc> {
         Ok(())
     }
 
-    pub fn instance_of<A>(&self, other: A) -> bool
-    where
-        A: blackboxmc_general::JNIProvidesClassName,
-    {
-        let cls = &self.jni_ref().find_class(other.class_name()).unwrap();
-        self.jni_ref()
-            .is_instance_of(&self.jni_object(), cls)
-            .unwrap()
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 
