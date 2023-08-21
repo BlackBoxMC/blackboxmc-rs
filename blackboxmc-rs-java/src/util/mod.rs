@@ -1,6 +1,5 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIInstantiatable;
-use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Resizable-array implementation of the <tt>List</tt> interface. Implements all optional list operations, and permits all elements, including <tt>null</tt>. In addition to implementing the <tt>List</tt> interface, this class provides methods to manipulate the size of the array that is used internally to store the list. (This class is roughly equivalent to <tt>Vector</tt>, except that it is unsynchronized.)

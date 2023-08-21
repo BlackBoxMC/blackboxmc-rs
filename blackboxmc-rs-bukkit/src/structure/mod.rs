@@ -1,6 +1,5 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIInstantiatable;
-use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represent a variation of a structure. Most structures, like the ones generated with structure blocks, only have a single variant.

@@ -1,6 +1,5 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIInstantiatable;
-use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Various settings for controlling the input and output of a <a href="MemoryConfiguration.html" title="class in org.bukkit.configuration"><code>MemoryConfiguration</code></a>

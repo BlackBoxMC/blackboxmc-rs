@@ -1,6 +1,5 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIInstantiatable;
-use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// NumericPrompt is the base class for any prompt that requires a <a class="external-link" title="class or interface in java.lang" href="https://docs.oracle.com/javase/8/docs/api/java/lang/Number.html"><code>Number</code></a> response from the user.

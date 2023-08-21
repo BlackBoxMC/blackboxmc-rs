@@ -1,6 +1,5 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIInstantiatable;
-use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// This class represents an enum with a generic content type. It defines the types a custom item tag can have.

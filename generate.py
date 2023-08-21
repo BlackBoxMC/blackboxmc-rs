@@ -1355,7 +1355,7 @@ def parse_classes(library, val, classes):
         parsed_classes[mod_path] = [full_name]
 
     if mod_path not in file_cache:
-        file_cache[mod_path] = ["#![allow(deprecated)]\nuse blackboxmc_general::JNIRaw;\nuse blackboxmc_general::JNIInstantiatable;\nuse blackboxmc_general::JNIInstantiatableEnum;\nuse color_eyre::eyre::Result;"]
+        file_cache[mod_path] = ["#![allow(deprecated)]\nuse blackboxmc_general::JNIRaw;\nuse blackboxmc_general::JNIInstantiatable;\nuse color_eyre::eyre::Result;"]
 
     if (name == ""):
         return

@@ -1,6 +1,5 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIInstantiatable;
-use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// This event is called when a command is received over RCON. See the javadocs of <a href="ServerCommandEvent.html" title="class in org.bukkit.event.server"><code>ServerCommandEvent</code></a> for more information.

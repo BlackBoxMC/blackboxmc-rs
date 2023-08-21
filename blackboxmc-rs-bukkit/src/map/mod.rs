@@ -1,6 +1,5 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIInstantiatable;
-use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents all the map cursors on a <a title="interface in org.bukkit.map" href="MapCanvas.html"><code>MapCanvas</code></a>. Like MapCanvas, a MapCursorCollection is linked to a specific <a title="class in org.bukkit.map" href="MapRenderer.html"><code>MapRenderer</code></a>.

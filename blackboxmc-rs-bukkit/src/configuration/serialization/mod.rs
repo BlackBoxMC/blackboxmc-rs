@@ -1,6 +1,5 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIInstantiatable;
-use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Utility class for storing and retrieving classes for <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a>.

@@ -1,6 +1,5 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIInstantiatable;
-use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Provides access to the textures stored inside a <a title="interface in org.bukkit.profile" href="PlayerProfile.html"><code>PlayerProfile</code></a>.

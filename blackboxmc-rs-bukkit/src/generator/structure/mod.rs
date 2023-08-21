@@ -1,6 +1,5 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIInstantiatable;
-use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represent a StructureType of a <a title="class in org.bukkit.generator.structure" href="Structure.html"><code>Structure</code></a>. Listed structure types are present in the default server. Depending on the server there might be additional structure types present (for example structure types added by data packs), which can be received via <a href="../../Registry.html#STRUCTURE_TYPE"><code>Registry.STRUCTURE_TYPE</code></a>.

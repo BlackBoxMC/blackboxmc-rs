@@ -1,6 +1,5 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIInstantiatable;
-use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// The <a title="interface in org.bukkit.persistence" href="PersistentDataHolder.html"><code>PersistentDataHolder</code></a> interface defines an object that can store custom persistent meta data on it.

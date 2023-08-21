@@ -1,6 +1,5 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIInstantiatable;
-use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents a supplier of <code>int</code>-valued results. This is the <code>int</code>-producing primitive specialization of <a title="interface in java.util.function" href="../../../java/util/function/Supplier.html"><code>Supplier</code></a>.
