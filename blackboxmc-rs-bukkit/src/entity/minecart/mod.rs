@@ -411,17 +411,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::EntityType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -439,17 +431,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -526,17 +510,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
@@ -1020,17 +996,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSwimSound", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
@@ -1042,17 +1010,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn swim_high_speed_splash_sound(
@@ -1066,17 +1026,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1314,17 +1266,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getPose", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::Pose::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::Pose::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn spawn_category(
@@ -1338,17 +1282,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn spigot(
@@ -2094,17 +2030,9 @@ impl<'mc> HopperMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::EntityType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2122,17 +2050,9 @@ impl<'mc> HopperMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -2209,17 +2129,9 @@ impl<'mc> HopperMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
@@ -2703,17 +2615,9 @@ impl<'mc> HopperMinecart<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSwimSound", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
@@ -2725,17 +2629,9 @@ impl<'mc> HopperMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn swim_high_speed_splash_sound(
@@ -2749,17 +2645,9 @@ impl<'mc> HopperMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2997,17 +2885,9 @@ impl<'mc> HopperMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getPose", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::Pose::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::Pose::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn spawn_category(
@@ -3021,17 +2901,9 @@ impl<'mc> HopperMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn spigot(
@@ -3838,17 +3710,9 @@ impl<'mc> StorageMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::EntityType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3866,17 +3730,9 @@ impl<'mc> StorageMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -3953,17 +3809,9 @@ impl<'mc> StorageMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
@@ -4447,17 +4295,9 @@ impl<'mc> StorageMinecart<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSwimSound", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
@@ -4469,17 +4309,9 @@ impl<'mc> StorageMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn swim_high_speed_splash_sound(
@@ -4493,17 +4325,9 @@ impl<'mc> StorageMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4741,17 +4565,9 @@ impl<'mc> StorageMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getPose", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::Pose::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::Pose::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn spawn_category(
@@ -4765,17 +4581,9 @@ impl<'mc> StorageMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn spigot(
@@ -5582,17 +5390,9 @@ impl<'mc> SpawnerMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::EntityType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5610,17 +5410,9 @@ impl<'mc> SpawnerMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -5697,17 +5489,9 @@ impl<'mc> SpawnerMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
@@ -6191,17 +5975,9 @@ impl<'mc> SpawnerMinecart<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSwimSound", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
@@ -6213,17 +5989,9 @@ impl<'mc> SpawnerMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn swim_high_speed_splash_sound(
@@ -6237,17 +6005,9 @@ impl<'mc> SpawnerMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6485,17 +6245,9 @@ impl<'mc> SpawnerMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getPose", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::Pose::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::Pose::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn spawn_category(
@@ -6509,17 +6261,9 @@ impl<'mc> SpawnerMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn spigot(
@@ -7267,17 +7011,9 @@ impl<'mc> PoweredMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::EntityType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7295,17 +7031,9 @@ impl<'mc> PoweredMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -7382,17 +7110,9 @@ impl<'mc> PoweredMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
@@ -7876,17 +7596,9 @@ impl<'mc> PoweredMinecart<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSwimSound", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
@@ -7898,17 +7610,9 @@ impl<'mc> PoweredMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn swim_high_speed_splash_sound(
@@ -7922,17 +7626,9 @@ impl<'mc> PoweredMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8170,17 +7866,9 @@ impl<'mc> PoweredMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getPose", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::Pose::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::Pose::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn spawn_category(
@@ -8194,17 +7882,9 @@ impl<'mc> PoweredMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn spigot(
@@ -8929,17 +8609,9 @@ impl<'mc> RideableMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::EntityType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8957,17 +8629,9 @@ impl<'mc> RideableMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -9044,17 +8708,9 @@ impl<'mc> RideableMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
@@ -9538,17 +9194,9 @@ impl<'mc> RideableMinecart<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSwimSound", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
@@ -9560,17 +9208,9 @@ impl<'mc> RideableMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn swim_high_speed_splash_sound(
@@ -9584,17 +9224,9 @@ impl<'mc> RideableMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9832,17 +9464,9 @@ impl<'mc> RideableMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getPose", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::Pose::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::Pose::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn spawn_category(
@@ -9856,17 +9480,9 @@ impl<'mc> RideableMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn spigot(
@@ -10634,17 +10250,9 @@ impl<'mc> CommandMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::EntityType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10662,17 +10270,9 @@ impl<'mc> CommandMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -10749,17 +10349,9 @@ impl<'mc> CommandMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
@@ -11243,17 +10835,9 @@ impl<'mc> CommandMinecart<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSwimSound", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
@@ -11265,17 +10849,9 @@ impl<'mc> CommandMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn swim_high_speed_splash_sound(
@@ -11289,17 +10865,9 @@ impl<'mc> CommandMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Sound::from_raw(&self.jni_ref(), raw_obj)
+        crate::Sound::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11537,17 +11105,9 @@ impl<'mc> CommandMinecart<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getPose", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::Pose::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::Pose::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn spawn_category(
@@ -11561,17 +11121,9 @@ impl<'mc> CommandMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::SpawnCategory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn spigot(

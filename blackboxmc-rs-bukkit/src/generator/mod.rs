@@ -94,17 +94,9 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     /// Get the type and data of the block at x, y, z. Getting blocks outside the chunk's bounds returns air.
     pub fn get_block_data(
@@ -154,17 +146,9 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::Biome::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::Biome::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_block_with_int(
@@ -384,17 +368,9 @@ impl<'mc> BiomeProvider<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getBiome", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::Biome::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::Biome::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_biomes(
@@ -598,17 +574,9 @@ impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getBiome", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::Biome::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::Biome::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_biome_with_int(
@@ -1205,17 +1173,9 @@ impl<'mc> LimitedRegion<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getType", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_type_with_int(
@@ -1379,17 +1339,9 @@ impl<'mc> LimitedRegion<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getBiome", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::Biome::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::Biome::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_biome_with_int(
@@ -1740,17 +1692,9 @@ impl<'mc> WorldInfo<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getEnvironment", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::WorldEnvironment::from_raw(&self.jni_ref(), raw_obj)
+        crate::WorldEnvironment::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn min_height(&self) -> Result<i32, Box<dyn std::error::Error>> {

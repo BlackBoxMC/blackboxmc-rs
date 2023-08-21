@@ -122,17 +122,9 @@ impl<'mc> Chest<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -207,17 +199,9 @@ impl<'mc> Chest<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -443,17 +427,9 @@ impl<'mc> Diode<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -560,17 +536,9 @@ impl<'mc> Diode<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -796,17 +764,9 @@ impl<'mc> Pumpkin<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -890,17 +850,9 @@ impl<'mc> Pumpkin<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -1179,17 +1131,9 @@ impl<'mc> FlowerPot<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -1440,17 +1384,9 @@ impl<'mc> PoweredRail<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getDirection", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_on_slope(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1516,17 +1452,9 @@ impl<'mc> PoweredRail<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -1748,17 +1676,9 @@ impl<'mc> TripwireHook<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAttachedFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_powered(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1822,17 +1742,9 @@ impl<'mc> TripwireHook<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -1889,17 +1801,9 @@ impl<'mc> TripwireHook<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -2105,17 +2009,9 @@ impl<'mc> SimpleAttachableMaterialData<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -2172,17 +2068,9 @@ impl<'mc> SimpleAttachableMaterialData<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -2266,17 +2154,9 @@ impl<'mc> SimpleAttachableMaterialData<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAttachedFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -2500,17 +2380,9 @@ impl<'mc> Torch<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAttachedFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     #[doc(hidden)]
@@ -2533,17 +2405,9 @@ impl<'mc> Torch<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -2600,17 +2464,9 @@ impl<'mc> Torch<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -2838,17 +2694,9 @@ impl<'mc> Comparator<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -2967,17 +2815,9 @@ impl<'mc> Comparator<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -3205,17 +3045,9 @@ impl<'mc> Button<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAttachedFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_powered(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3247,17 +3079,9 @@ impl<'mc> Button<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -3314,17 +3138,9 @@ impl<'mc> Button<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -3544,17 +3360,9 @@ impl<'mc> Coal<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::CoalType::from_raw(&self.jni_ref(), raw_obj)
+        crate::CoalType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_type(
@@ -3629,17 +3437,9 @@ impl<'mc> Coal<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -3802,17 +3602,9 @@ impl<'mc> Colorable<'mc> {
         if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
             return Ok(None);
         }
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Ok(Some(crate::DyeColor::from_raw(&self.jni_ref(), raw_obj)?))
+        Ok(Some(crate::DyeColor::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })?))
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -3953,17 +3745,9 @@ impl<'mc> Tree<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getDirection", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_direction(
@@ -4008,17 +3792,9 @@ impl<'mc> Tree<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSpecies", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::TreeSpecies::from_raw(&self.jni_ref(), raw_obj)
+        crate::TreeSpecies::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -4075,17 +3851,9 @@ impl<'mc> Tree<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -4267,17 +4035,9 @@ impl<'mc> PistonBaseMaterial<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -4398,17 +4158,9 @@ impl<'mc> PistonBaseMaterial<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -4645,17 +4397,9 @@ impl<'mc> TrapDoor<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAttachedFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     /// <span class="deprecated-label">Deprecated.</span>
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Openable.html#setOpen(boolean)">Openable</a></code></span>
@@ -4702,17 +4446,9 @@ impl<'mc> TrapDoor<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -4769,17 +4505,9 @@ impl<'mc> TrapDoor<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -5017,17 +4745,9 @@ impl<'mc> Crops<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getState", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::CropState::from_raw(&self.jni_ref(), raw_obj)
+        crate::CropState::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -5084,17 +4804,9 @@ impl<'mc> Crops<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -5310,17 +5022,9 @@ impl<'mc> SpawnEgg<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSpawnedType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::EntityType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_spawned_type(
@@ -5395,17 +5099,9 @@ impl<'mc> SpawnEgg<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -5617,17 +5313,9 @@ impl<'mc> MonsterEggs<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_material(
@@ -5702,17 +5390,9 @@ impl<'mc> MonsterEggs<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -5928,17 +5608,9 @@ impl<'mc> Furnace<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -6013,17 +5685,9 @@ impl<'mc> Furnace<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -6217,17 +5881,9 @@ impl<'mc> Rails<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getDirection", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_direction(
@@ -6325,17 +5981,9 @@ impl<'mc> Rails<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -6607,17 +6255,9 @@ impl<'mc> Sapling<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSpecies", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::TreeSpecies::from_raw(&self.jni_ref(), raw_obj)
+        crate::TreeSpecies::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -6674,17 +6314,9 @@ impl<'mc> Sapling<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -6923,17 +6555,9 @@ impl<'mc> PistonExtensionMaterial<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -6962,17 +6586,9 @@ impl<'mc> PistonExtensionMaterial<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAttachedFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_sticky(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7066,17 +6682,9 @@ impl<'mc> PistonExtensionMaterial<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -7298,17 +6906,9 @@ impl<'mc> Lever<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAttachedFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_powered(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7340,17 +6940,9 @@ impl<'mc> Lever<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -7407,17 +6999,9 @@ impl<'mc> Lever<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -7619,17 +7203,9 @@ impl<'mc> DirectionalContainer<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -7704,17 +7280,9 @@ impl<'mc> DirectionalContainer<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -7934,17 +7502,9 @@ impl<'mc> NetherWarts<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getState", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::NetherWartsState::from_raw(&self.jni_ref(), raw_obj)
+        crate::NetherWartsState::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -8001,17 +7561,9 @@ impl<'mc> NetherWarts<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -8251,17 +7803,9 @@ impl<'mc> MaterialData<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     /// <span class="deprecated-label">Deprecated.</span>
     /// Creates a new ItemStack based on this MaterialData
@@ -8488,17 +8032,9 @@ impl<'mc> LongGrass<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSpecies", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::GrassSpecies::from_raw(&self.jni_ref(), raw_obj)
+        crate::GrassSpecies::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -8555,17 +8091,9 @@ impl<'mc> LongGrass<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -8856,17 +8384,9 @@ impl<'mc> Tripwire<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -9062,17 +8582,9 @@ impl<'mc> TexturedMaterial<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn textures(&self) -> Result<Vec<crate::Material<'mc>>, Box<dyn std::error::Error>> {
@@ -9163,17 +8675,9 @@ impl<'mc> TexturedMaterial<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -9430,17 +8934,9 @@ impl<'mc> Dispenser<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -9529,17 +9025,9 @@ impl<'mc> Dispenser<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -9830,17 +9318,9 @@ impl<'mc> Cake<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -10045,17 +9525,9 @@ impl<'mc> Gate<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -10145,17 +9617,9 @@ impl<'mc> Gate<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -10554,17 +10018,9 @@ impl<'mc> Step<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_material(
@@ -10639,17 +10095,9 @@ impl<'mc> Step<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -10861,17 +10309,9 @@ impl<'mc> SmoothBrick<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_material(
@@ -10946,17 +10386,9 @@ impl<'mc> SmoothBrick<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -11248,17 +10680,9 @@ impl<'mc> Leaves<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSpecies", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::TreeSpecies::from_raw(&self.jni_ref(), raw_obj)
+        crate::TreeSpecies::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -11315,17 +10739,9 @@ impl<'mc> Leaves<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -11542,17 +10958,9 @@ impl<'mc> Dye<'mc> {
         if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
             return Ok(None);
         }
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Ok(Some(crate::DyeColor::from_raw(&self.jni_ref(), raw_obj)?))
+        Ok(Some(crate::DyeColor::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })?))
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -11609,17 +11017,9 @@ impl<'mc> Dye<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -11878,17 +11278,9 @@ impl<'mc> PressurePlate<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -12108,17 +11500,9 @@ impl<'mc> Observer<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -12202,17 +11586,9 @@ impl<'mc> Observer<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -12418,17 +11794,9 @@ impl<'mc> Stairs<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -12483,17 +11851,9 @@ impl<'mc> Stairs<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn descending_direction(
@@ -12507,17 +11867,9 @@ impl<'mc> Stairs<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -12574,17 +11926,9 @@ impl<'mc> Stairs<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -12804,17 +12148,9 @@ impl<'mc> Sandstone<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::SandstoneType::from_raw(&self.jni_ref(), raw_obj)
+        crate::SandstoneType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_type(
@@ -12889,17 +12225,9 @@ impl<'mc> Sandstone<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -13115,17 +12443,9 @@ impl<'mc> EnderChest<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -13200,17 +12520,9 @@ impl<'mc> EnderChest<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -13408,17 +12720,9 @@ impl<'mc> FurnaceAndDispenser<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -13493,17 +12797,9 @@ impl<'mc> FurnaceAndDispenser<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -13720,17 +13016,9 @@ impl<'mc> Bed<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -13828,17 +13116,9 @@ impl<'mc> Bed<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -14097,17 +13377,9 @@ impl<'mc> RedstoneWire<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -14350,17 +13622,9 @@ impl<'mc> WoodenStep<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSpecies", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::TreeSpecies::from_raw(&self.jni_ref(), raw_obj)
+        crate::TreeSpecies::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -14417,17 +13681,9 @@ impl<'mc> WoodenStep<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -14745,17 +14001,9 @@ impl<'mc> Vine<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -14989,17 +14237,9 @@ impl<'mc> Wood<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSpecies", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::TreeSpecies::from_raw(&self.jni_ref(), raw_obj)
+        crate::TreeSpecies::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -15056,17 +14296,9 @@ impl<'mc> Wood<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -15260,17 +14492,9 @@ impl<'mc> Banner<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -15299,17 +14523,9 @@ impl<'mc> Banner<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAttachedFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_wall_banner(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15375,17 +14591,9 @@ impl<'mc> Banner<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -15604,17 +14812,9 @@ impl<'mc> Mushroom<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getBlockTexture", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::material::types::MushroomBlockTexture::from_raw(&self.jni_ref(), raw_obj)
+        crate::material::types::MushroomBlockTexture::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_block_texture(
@@ -15743,17 +14943,9 @@ impl<'mc> Mushroom<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -15978,17 +15170,9 @@ impl<'mc> RedstoneTorch<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAttachedFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -15997,17 +15181,9 @@ impl<'mc> RedstoneTorch<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -16064,17 +15240,9 @@ impl<'mc> RedstoneTorch<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -16456,17 +15624,9 @@ impl<'mc> CocoaPlant<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getSize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::material::CocoaPlantCocoaPlantSize::from_raw(&self.jni_ref(), raw_obj)
+        crate::material::CocoaPlantCocoaPlantSize::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -16475,17 +15635,9 @@ impl<'mc> CocoaPlant<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -16514,17 +15666,9 @@ impl<'mc> CocoaPlant<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAttachedFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -16581,17 +15725,9 @@ impl<'mc> CocoaPlant<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -16846,17 +15982,9 @@ impl<'mc> Door<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -16946,14 +16074,7 @@ impl<'mc> Door<'mc> {
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&jni, raw_obj)
+        crate::Material::from_raw(&jni, obj)
     }
 
     pub fn is_top_half(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16972,17 +16093,9 @@ impl<'mc> Door<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getHingeCorner", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -17039,17 +16152,9 @@ impl<'mc> Door<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -17203,17 +16308,9 @@ impl<'mc> Directional<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -17368,17 +16465,9 @@ impl<'mc> ExtendedRails<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getDirection", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_on_slope(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17444,17 +16533,9 @@ impl<'mc> ExtendedRails<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -17714,17 +16795,9 @@ impl<'mc> Cauldron<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -17926,17 +16999,9 @@ impl<'mc> Ladder<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAttachedFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     #[doc(hidden)]
@@ -17959,17 +17024,9 @@ impl<'mc> Ladder<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -18026,17 +17083,9 @@ impl<'mc> Ladder<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -18301,17 +17350,9 @@ impl<'mc> Command<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -18567,17 +17608,9 @@ impl<'mc> DetectorRail<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getDirection", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_on_slope(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18643,17 +17676,9 @@ impl<'mc> DetectorRail<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -18888,17 +17913,9 @@ impl<'mc> Hopper<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -18996,17 +18013,9 @@ impl<'mc> Hopper<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -19232,17 +18241,9 @@ impl<'mc> Skull<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -19317,17 +18318,9 @@ impl<'mc> Skull<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -19527,17 +18520,9 @@ impl<'mc> Sign<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(
@@ -19566,17 +18551,9 @@ impl<'mc> Sign<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAttachedFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_wall_sign(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -19642,17 +18619,9 @@ impl<'mc> Sign<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -19895,17 +18864,9 @@ impl<'mc> Wool<'mc> {
         if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
             return Ok(None);
         }
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Ok(Some(crate::DyeColor::from_raw(&self.jni_ref(), raw_obj)?))
+        Ok(Some(crate::DyeColor::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })?))
     }
 
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -19962,17 +18923,9 @@ impl<'mc> Wool<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn to_item_stack_with_int(
@@ -20122,17 +19075,9 @@ impl<'mc> Attachable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAttachedFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -20141,17 +19086,9 @@ impl<'mc> Attachable<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing_direction(

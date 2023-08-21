@@ -168,17 +168,9 @@ impl<'mc> Hatchable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -271,17 +263,9 @@ impl<'mc> Hatchable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -318,17 +302,9 @@ impl<'mc> Hatchable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -532,17 +508,9 @@ impl<'mc> Lightable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -635,17 +603,9 @@ impl<'mc> Lightable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -682,17 +642,9 @@ impl<'mc> Lightable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -792,17 +744,9 @@ impl<'mc> FaceAttachable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAttachedFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::data::FaceAttachableAttachedFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::data::FaceAttachableAttachedFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_attached_face(
@@ -918,17 +862,9 @@ impl<'mc> FaceAttachable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -1021,17 +957,9 @@ impl<'mc> FaceAttachable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -1068,17 +996,9 @@ impl<'mc> FaceAttachable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -1443,17 +1363,9 @@ impl<'mc> Ageable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -1546,17 +1458,9 @@ impl<'mc> Ageable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -1593,17 +1497,9 @@ impl<'mc> Ageable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -1807,17 +1703,9 @@ impl<'mc> Openable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -1910,17 +1798,9 @@ impl<'mc> Openable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -1957,17 +1837,9 @@ impl<'mc> Openable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -2062,17 +1934,9 @@ impl<'mc> Rail<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getShape", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::data::RailShape::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::data::RailShape::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_shape(
@@ -2223,17 +2087,9 @@ impl<'mc> Rail<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -2326,17 +2182,9 @@ impl<'mc> Rail<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -2373,17 +2221,9 @@ impl<'mc> Rail<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -2565,17 +2405,9 @@ impl<'mc> BlockData<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     /// Gets a string, which when passed into a method such as <a href="../../Server.html#createBlockData(java.lang.String)"><code>Server.createBlockData(java.lang.String)</code></a> will recreate this or a similar instance where unspecified states (if any) may be optionally omitted. If this instance was parsed and states are omitted, this exact instance will be creatable when parsed again, else their equality cannot be guaranteed.
     /// <p>This method will only take effect for BlockData instances created by methods such as <a href="../../Server.html#createBlockData(java.lang.String)"><code>Server.createBlockData(String)</code></a> or any similar method whereby states are optionally defined. If otherwise, the result of <a href="#getAsString()"><code>getAsString()</code></a> will be returned. The following behaviour would be expected:</p>
@@ -2676,17 +2508,9 @@ impl<'mc> BlockData<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -2723,17 +2547,9 @@ impl<'mc> BlockData<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -2822,17 +2638,9 @@ impl<'mc> Orientable<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getAxis", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Axis::from_raw(&self.jni_ref(), raw_obj)
+        crate::Axis::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_axis(
@@ -2959,17 +2767,9 @@ impl<'mc> Orientable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -3062,17 +2862,9 @@ impl<'mc> Orientable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -3109,17 +2901,9 @@ impl<'mc> Orientable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -3323,17 +3107,9 @@ impl<'mc> Powerable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -3426,17 +3202,9 @@ impl<'mc> Powerable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -3473,17 +3241,9 @@ impl<'mc> Powerable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -3864,17 +3624,9 @@ impl<'mc> Levelled<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -3967,17 +3719,9 @@ impl<'mc> Levelled<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -4014,17 +3758,9 @@ impl<'mc> Levelled<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -4275,17 +4011,9 @@ impl<'mc> MultipleFacing<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -4378,17 +4106,9 @@ impl<'mc> MultipleFacing<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -4425,17 +4145,9 @@ impl<'mc> MultipleFacing<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -4878,17 +4590,9 @@ impl<'mc> Snowable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -4981,17 +4685,9 @@ impl<'mc> Snowable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -5028,17 +4724,9 @@ impl<'mc> Snowable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -5133,17 +4821,9 @@ impl<'mc> Directional<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_facing(
@@ -5270,17 +4950,9 @@ impl<'mc> Directional<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -5373,17 +5045,9 @@ impl<'mc> Directional<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -5420,17 +5084,9 @@ impl<'mc> Directional<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -5661,17 +5317,9 @@ impl<'mc> Rotatable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getRotation", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_rotation(
@@ -5787,17 +5435,9 @@ impl<'mc> Rotatable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -5890,17 +5530,9 @@ impl<'mc> Rotatable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -5937,17 +5569,9 @@ impl<'mc> Rotatable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -6151,17 +5775,9 @@ impl<'mc> Hangable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -6254,17 +5870,9 @@ impl<'mc> Hangable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -6301,17 +5909,9 @@ impl<'mc> Hangable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -6515,17 +6115,9 @@ impl<'mc> Waterlogged<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -6618,17 +6210,9 @@ impl<'mc> Waterlogged<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -6665,17 +6249,9 @@ impl<'mc> Waterlogged<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -6892,17 +6468,9 @@ impl<'mc> AnaloguePowerable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -6995,17 +6563,9 @@ impl<'mc> AnaloguePowerable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -7042,17 +6602,9 @@ impl<'mc> AnaloguePowerable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -7268,17 +6820,9 @@ impl<'mc> Brushable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -7371,17 +6915,9 @@ impl<'mc> Brushable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -7418,17 +6954,9 @@ impl<'mc> Brushable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -7634,17 +7162,9 @@ impl<'mc> Attachable<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -7737,17 +7257,9 @@ impl<'mc> Attachable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -7784,17 +7296,9 @@ impl<'mc> Attachable<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(
@@ -7891,17 +7395,9 @@ impl<'mc> Bisected<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getHalf", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::data::BisectedHalf::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::data::BisectedHalf::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_half(
@@ -8017,17 +7513,9 @@ impl<'mc> Bisected<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
@@ -8120,17 +7608,9 @@ impl<'mc> Bisected<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_face_sturdy(
@@ -8167,17 +7647,9 @@ impl<'mc> Bisected<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn mirror(

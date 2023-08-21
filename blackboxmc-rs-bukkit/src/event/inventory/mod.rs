@@ -2118,17 +2118,9 @@ impl<'mc> SmithItemEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSlotType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::inventory::InventoryTypeSlotType::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::inventory::InventoryTypeSlotType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn handler_list(
@@ -2151,17 +2143,9 @@ impl<'mc> SmithItemEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getAction", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::inventory::InventoryAction::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::inventory::InventoryAction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_shift_click(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2275,19 +2259,9 @@ impl<'mc> SmithItemEvent<'mc> {
         if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
             return Ok(None);
         }
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
         Ok(Some(crate::event::inventory::ClickType::from_raw(
             &self.jni_ref(),
-            raw_obj,
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
 
@@ -2306,17 +2280,9 @@ impl<'mc> SmithItemEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getResult", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::EventResult::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::EventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_result(
@@ -3739,19 +3705,9 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
         crate::event::inventory::HopperInventorySearchEventContainerType::from_raw(
             &self.jni_ref(),
-            raw_obj,
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
 
@@ -4100,17 +4056,9 @@ impl<'mc> CraftItemEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSlotType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::inventory::InventoryTypeSlotType::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::inventory::InventoryTypeSlotType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn handler_list(
@@ -4133,17 +4081,9 @@ impl<'mc> CraftItemEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getAction", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::inventory::InventoryAction::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::inventory::InventoryAction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_shift_click(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4257,19 +4197,9 @@ impl<'mc> CraftItemEvent<'mc> {
         if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
             return Ok(None);
         }
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
         Ok(Some(crate::event::inventory::ClickType::from_raw(
             &self.jni_ref(),
-            raw_obj,
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
 
@@ -4288,17 +4218,9 @@ impl<'mc> CraftItemEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getResult", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::EventResult::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::EventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_result(
@@ -5156,17 +5078,9 @@ impl<'mc> InventoryInteractEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getResult", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::EventResult::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::EventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_result(
@@ -5817,17 +5731,9 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSlotType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::inventory::InventoryTypeSlotType::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::inventory::InventoryTypeSlotType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn handler_list(
@@ -5850,17 +5756,9 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getAction", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::inventory::InventoryAction::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::inventory::InventoryAction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_shift_click(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5974,19 +5872,9 @@ impl<'mc> InventoryCreativeEvent<'mc> {
         if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
             return Ok(None);
         }
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
         Ok(Some(crate::event::inventory::ClickType::from_raw(
             &self.jni_ref(),
-            raw_obj,
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
 
@@ -6005,17 +5893,9 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getResult", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::EventResult::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::EventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_result(
@@ -6337,17 +6217,9 @@ impl<'mc> FurnaceExtractEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn item_amount(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -7833,17 +7705,9 @@ impl<'mc> TradeSelectEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getResult", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::EventResult::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::EventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_result(
@@ -8751,17 +8615,9 @@ impl<'mc> InventoryClickEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSlotType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::inventory::InventoryTypeSlotType::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::inventory::InventoryTypeSlotType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn handler_list(
@@ -8784,17 +8640,9 @@ impl<'mc> InventoryClickEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getAction", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::inventory::InventoryAction::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::inventory::InventoryAction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_shift_click(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8908,19 +8756,9 @@ impl<'mc> InventoryClickEvent<'mc> {
         if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
             return Ok(None);
         }
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
         Ok(Some(crate::event::inventory::ClickType::from_raw(
             &self.jni_ref(),
-            raw_obj,
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
 
@@ -8939,17 +8777,9 @@ impl<'mc> InventoryClickEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getResult", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::EventResult::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::EventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_result(
@@ -9281,17 +9111,9 @@ impl<'mc> InventoryDragEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::inventory::DragType::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::inventory::DragType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_cursor(
@@ -9411,17 +9233,9 @@ impl<'mc> InventoryDragEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getResult", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::EventResult::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::EventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_result(

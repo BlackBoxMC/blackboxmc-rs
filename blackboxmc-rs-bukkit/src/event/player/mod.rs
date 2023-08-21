@@ -607,17 +607,9 @@ impl<'mc> PlayerFishEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getState", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::player::PlayerFishEventState::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::player::PlayerFishEventState::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
@@ -652,17 +644,9 @@ impl<'mc> PlayerFishEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn caught(&self) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
@@ -1025,17 +1009,9 @@ impl<'mc> PlayerShearEntityEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn player(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
@@ -1340,17 +1316,9 @@ impl<'mc> PlayerInteractEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     /// Sets the cancellation state of this event. A canceled event will not be executed in the server, but will still pass to other plugins
     /// <p>Canceling this event will prevent use of food (player won't lose the food item), prevent bows/snowballs/eggs from firing, etc. (player won't lose the ammo)</p>
@@ -1385,17 +1353,9 @@ impl<'mc> PlayerInteractEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn block_face(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -1404,17 +1364,9 @@ impl<'mc> PlayerInteractEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getBlockFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn action(&self) -> Result<crate::event::block::Action<'mc>, Box<dyn std::error::Error>> {
@@ -1423,17 +1375,9 @@ impl<'mc> PlayerInteractEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getAction", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::block::Action::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::block::Action::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn use_interacted_block(
@@ -1447,17 +1391,9 @@ impl<'mc> PlayerInteractEvent<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::EventResult::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::EventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_use_interacted_block(
@@ -1559,17 +1495,9 @@ impl<'mc> PlayerInteractEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "useItemInHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::EventResult::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::EventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn player(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
@@ -2195,17 +2123,9 @@ impl<'mc> PlayerAnimationEvent<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::player::PlayerAnimationType::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::player::PlayerAnimationType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn player(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
@@ -2509,17 +2429,9 @@ impl<'mc> PlayerBucketEntityEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn original_bucket(
@@ -2912,17 +2824,9 @@ impl<'mc> PlayerPortalEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getCause", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::player::PlayerTeleportEventTeleportCause::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::player::PlayerTeleportEventTeleportCause::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3716,19 +3620,9 @@ impl<'mc> PlayerResourcePackStatusEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getStatus", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
         crate::event::player::PlayerResourcePackStatusEventStatus::from_raw(
             &self.jni_ref(),
-            raw_obj,
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
 
@@ -4139,20 +4033,10 @@ impl<'mc> PlayerExpCooldownChangeEvent<'mc> {
         if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
             return Ok(None);
         }
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
         Ok(Some(
             crate::event::player::PlayerExpCooldownChangeEventChangeReason::from_raw(
                 &self.jni_ref(),
-                raw_obj,
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
             )?,
         ))
     }
@@ -5007,19 +4891,9 @@ impl<'mc> PlayerArmorStandManipulateEvent<'mc> {
         if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
             return Ok(None);
         }
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
         Ok(Some(crate::inventory::EquipmentSlot::from_raw(
             &self.jni_ref(),
-            raw_obj,
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
 
@@ -5041,17 +4915,9 @@ impl<'mc> PlayerArmorStandManipulateEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn right_clicked(
@@ -5400,17 +5266,9 @@ impl<'mc> PlayerInteractEntityEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn right_clicked(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
@@ -5773,17 +5631,9 @@ impl<'mc> PlayerBucketFillEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn block_face(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -5792,17 +5642,9 @@ impl<'mc> PlayerBucketFillEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getBlockFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn bucket(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -5811,17 +5653,9 @@ impl<'mc> PlayerBucketFillEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getBucket", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn block_clicked(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
@@ -6144,17 +5978,9 @@ impl<'mc> PlayerItemConsumeEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn player(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
@@ -6904,17 +6730,9 @@ impl<'mc> PlayerTeleportEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getCause", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::player::PlayerTeleportEventTeleportCause::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::player::PlayerTeleportEventTeleportCause::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn handler_list(
@@ -8914,17 +8732,9 @@ impl<'mc> PlayerSignOpenEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getCause", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::player::PlayerSignOpenEventCause::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::player::PlayerSignOpenEventCause::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn side(&self) -> Result<crate::block::sign::Side<'mc>, Box<dyn std::error::Error>> {
@@ -8933,17 +8743,9 @@ impl<'mc> PlayerSignOpenEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getSide", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::sign::Side::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::sign::Side::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -10230,17 +10032,9 @@ impl<'mc> PlayerBedEnterEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "useBed", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::EventResult::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::EventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn bed_enter_result(
@@ -10257,17 +10051,9 @@ impl<'mc> PlayerBedEnterEvent<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::player::PlayerBedEnterEventBedEnterResult::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::player::PlayerBedEnterEventBedEnterResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_use_bed(
@@ -10636,17 +10422,9 @@ impl<'mc> PlayerBucketEmptyEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn block_face(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -10655,17 +10433,9 @@ impl<'mc> PlayerBucketEmptyEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getBlockFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn bucket(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -10674,17 +10444,9 @@ impl<'mc> PlayerBucketEmptyEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getBucket", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn block_clicked(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
@@ -11807,17 +11569,9 @@ impl<'mc> PlayerSpawnChangeEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getCause", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::player::PlayerSpawnChangeEventCause::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::player::PlayerSpawnChangeEventCause::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
@@ -13701,17 +13455,9 @@ impl<'mc> PlayerBucketEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn block_face(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -13720,17 +13466,9 @@ impl<'mc> PlayerBucketEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getBlockFace", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(&self.jni_ref(), raw_obj)
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn bucket(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -13739,17 +13477,9 @@ impl<'mc> PlayerBucketEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getBucket", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn block_clicked(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
@@ -14269,17 +13999,9 @@ impl<'mc> PlayerRespawnEvent<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::player::PlayerRespawnEventRespawnReason::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::player::PlayerRespawnEventRespawnReason::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn player(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
@@ -14550,17 +14272,9 @@ impl<'mc> PlayerUnleashEntityEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn reason(
@@ -14577,20 +14291,10 @@ impl<'mc> PlayerUnleashEntityEvent<'mc> {
         if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
             return Ok(None);
         }
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
         Ok(Some(
             crate::event::entity::EntityUnleashEventUnleashReason::from_raw(
                 &self.jni_ref(),
-                raw_obj,
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
             )?,
         ))
     }
@@ -14637,17 +14341,9 @@ impl<'mc> PlayerUnleashEntityEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getEntityType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::EntityType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -15539,17 +15235,9 @@ impl<'mc> PlayerGameModeChangeEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getNewGameMode", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::GameMode::from_raw(&self.jni_ref(), raw_obj)
+        crate::GameMode::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn player(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
@@ -16370,17 +16058,9 @@ impl<'mc> PlayerStatisticIncrementEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(&self.jni_ref(), raw_obj)
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn statistic(&self) -> Result<crate::Statistic<'mc>, Box<dyn std::error::Error>> {
@@ -16389,17 +16069,9 @@ impl<'mc> PlayerStatisticIncrementEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getStatistic", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Statistic::from_raw(&self.jni_ref(), raw_obj)
+        crate::Statistic::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
@@ -16436,17 +16108,9 @@ impl<'mc> PlayerStatisticIncrementEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getEntityType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::EntityType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn previous_value(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -16783,17 +16447,9 @@ impl<'mc> PlayerInteractAtEntityEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn right_clicked(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
@@ -17087,19 +16743,9 @@ impl<'mc> PlayerItemMendEvent<'mc> {
         if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
             return Ok(None);
         }
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
         Ok(Some(crate::inventory::EquipmentSlot::from_raw(
             &self.jni_ref(),
-            raw_obj,
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
@@ -17661,17 +17307,9 @@ impl<'mc> PlayerChangedMainHandEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMainHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::MainHand::from_raw(&self.jni_ref(), raw_obj)
+        crate::inventory::MainHand::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn handler_list(
@@ -18128,17 +17766,9 @@ impl<'mc> PlayerLoginEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getResult", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::player::PlayerLoginEventResult::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::player::PlayerLoginEventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_result(
@@ -18959,17 +18589,9 @@ impl<'mc> PlayerPreLoginEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getResult", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::player::PlayerPreLoginEventResult::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::player::PlayerPreLoginEventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_result(
@@ -21053,17 +20675,9 @@ impl<'mc> PlayerHarvestBlockEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn harvested_block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
@@ -22241,17 +21855,9 @@ impl<'mc> PlayerBucketFishEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), raw_obj)
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn original_bucket(
@@ -23247,17 +22853,9 @@ impl<'mc> AsyncPlayerPreLoginEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getResult", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::player::PlayerPreLoginEventResult::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::player::PlayerPreLoginEventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_result(
@@ -23384,17 +22982,9 @@ impl<'mc> AsyncPlayerPreLoginEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getLoginResult", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::player::AsyncPlayerPreLoginEventResult::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::player::AsyncPlayerPreLoginEventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_login_result(
@@ -23712,17 +23302,9 @@ impl<'mc> PlayerEggThrowEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getHatchingType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(&self.jni_ref(), raw_obj)
+        crate::entity::EntityType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_hatching_type(

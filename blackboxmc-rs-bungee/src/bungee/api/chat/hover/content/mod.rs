@@ -129,8 +129,7 @@ self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni()
 let res = self.jni_ref().call_method(&self.jni_object(),"requiredAction",sig.as_str(),vec![]);
 let res = 
 self.jni_ref().translate_error(res)?;
-let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };let variant = self.0.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]); let variant = self.jni_ref().translate_error(variant)?;let variant_str = self.0    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?    .to_string_lossy()    .to_string();
-crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
+crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
 )}
 
 	pub fn set_tag(&self,arg0: impl Into<crate::bungee::api::chat::ItemTag<'mc>>) 
@@ -394,8 +393,7 @@ self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni()
 let res = self.jni_ref().call_method(&self.jni_object(),"requiredAction",sig.as_str(),vec![]);
 let res = 
 self.jni_ref().translate_error(res)?;
-let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };let variant = self.0.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]); let variant = self.jni_ref().translate_error(variant)?;let variant_str = self.0    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?    .to_string_lossy()    .to_string();
-crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
+crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
 )}
 
 	pub fn set_type(&self,arg0: impl Into<String>) 
@@ -1027,8 +1025,7 @@ Ok(
 let res = self.jni_ref().call_method(&self.jni_object(),"requiredAction",sig.as_str(),vec![]);
 let res = 
 self.jni_ref().translate_error(res)?;
-let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };let variant = self.0.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]); let variant = self.jni_ref().translate_error(variant)?;let variant_str = self.0    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?    .to_string_lossy()    .to_string();
-crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
+crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
 )}
 
 	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
@@ -1210,8 +1207,7 @@ res.l()?
 let res = self.jni_ref().call_method(&self.jni_object(),"requiredAction",sig.as_str(),vec![]);
 let res = 
 self.jni_ref().translate_error(res)?;
-let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };let variant = self.0.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]); let variant = self.jni_ref().translate_error(variant)?;let variant_str = self.0    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?    .to_string_lossy()    .to_string();
-crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
+crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
 )}
 
 	pub fn assert_action(&self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 

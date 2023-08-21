@@ -1319,14 +1319,7 @@ impl<'mc> MapCursorTypeStruct<'mc> {
             return Ok(None);
         }
         let obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = jni.translate_error(variant)?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        Ok(Some(crate::map::MapCursorType::from_raw(&jni, raw_obj)?))
+        Ok(Some(crate::map::MapCursorType::from_raw(&jni, obj)?))
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1414,17 +1407,9 @@ impl<'mc> MapCursor<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::map::MapCursorType::from_raw(&self.jni_ref(), raw_obj)
+        crate::map::MapCursorType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     #[deprecated]
 
@@ -2520,17 +2505,9 @@ impl<'mc> MapView<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getScale", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::map::MapViewScale::from_raw(&self.jni_ref(), raw_obj)
+        crate::map::MapViewScale::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_world(

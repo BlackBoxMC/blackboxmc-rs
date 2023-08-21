@@ -438,17 +438,9 @@ impl<'mc> AttributeInstance<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAttribute", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::attribute::Attribute::from_raw(&self.jni_ref(), raw_obj)
+        crate::attribute::Attribute::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn base_value(&self) -> Result<f64, Box<dyn std::error::Error>> {
@@ -985,19 +977,9 @@ impl<'mc> AttributeModifier<'mc> {
         if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
             return Ok(None);
         }
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
         Ok(Some(crate::inventory::EquipmentSlot::from_raw(
             &self.jni_ref(),
-            raw_obj,
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
 
@@ -1065,17 +1047,9 @@ impl<'mc> AttributeModifier<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getOperation", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::attribute::AttributeModifierOperation::from_raw(&self.jni_ref(), raw_obj)
+        crate::attribute::AttributeModifierOperation::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn wait_with_long(

@@ -14,7 +14,7 @@ pub extern "system" fn __on__BlockBreakEvent(env: JNIEnv<'_>, obj: JObject<'_>) 
     if let Some(player) = player {
         println!(
             "{}",
-            *player
+            player
                 .inventory()
                 .expect("Couldn't get inventory")
                 .item_in_hand()

@@ -554,14 +554,6 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
             if static and not is_constructor:
                 code.append("let obj = res.l()"+end_line+";")
 
-            if return_group["type_name_original"] in enums:
-                code.append("let raw_obj = "+val_2+";let variant = "+val_1+".call_method(&raw_obj, \"toString\", \"()Ljava/lang/String;\", vec![]); let variant = "+prefix+".translate_error(variant)"+end_line+";"+
-                            "let variant_str = "+val_1+""+
-                            "    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })"+end_line+
-                            "    .to_string_lossy()"+
-                            "    .to_string();")
-                val_2 = "raw_obj"
-
             if nullable:
                 code.append("Ok(Some(")
             code.append(return_group["type_name_resolved"]+"::from_raw(&"+

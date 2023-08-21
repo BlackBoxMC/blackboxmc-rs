@@ -988,18 +988,11 @@ impl<'mc> PortalCreateEvent<'mc> {
         if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
             return Ok(None);
         }
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
         Ok(Some(
-            crate::event::world::PortalCreateEventCreateReason::from_raw(&self.jni_ref(), raw_obj)?,
+            crate::event::world::PortalCreateEventCreateReason::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
         ))
     }
 
@@ -4480,17 +4473,9 @@ impl<'mc> StructureGrowEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSpecies", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::TreeType::from_raw(&self.jni_ref(), raw_obj)
+        crate::TreeType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn is_from_bonemeal(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4939,17 +4924,9 @@ impl<'mc> TimeSkipEvent<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "getSkipReason", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::world::TimeSkipEventSkipReason::from_raw(&self.jni_ref(), raw_obj)
+        crate::event::world::TimeSkipEventSkipReason::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn skip_amount(&self) -> Result<i64, Box<dyn std::error::Error>> {
