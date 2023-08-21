@@ -6,6 +6,7 @@ use color_eyre::eyre::Result;
 /// 'hatch' is the number of entities which may hatch from these eggs.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Hatchable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -397,17 +398,10 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Hatchable<'mc> {
             .expect("Error converting Hatchable into crate::block::data::BlockData")
     }
 }
-
-pub struct HatchableClass;
-impl blackboxmc_general::JNIProvidesClassName for HatchableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Hatchable"
-    }
-}
-
 /// 'lit' denotes whether this block (either a redstone torch or furnace) is currently lit - that is not burned out.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Lightable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -790,19 +784,12 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Lightable<'mc> {
             .expect("Error converting Lightable into crate::block::data::BlockData")
     }
 }
-
-pub struct LightableClass;
-impl blackboxmc_general::JNIProvidesClassName for LightableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Lightable"
-    }
-}
-
 /// 'face' represents the face to which a lever or button is stuck.
 ///
 /// This is used in conjunction with <a title="interface in org.bukkit.block.data" href="Directional.html"><code>Directional</code></a> to compute the orientation of these blocks.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct FaceAttachable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1210,14 +1197,6 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for FaceAttachable<'mc> {
             .expect("Error converting FaceAttachable into crate::block::data::BlockData")
     }
 }
-
-pub struct FaceAttachableClass;
-impl blackboxmc_general::JNIProvidesClassName for FaceAttachableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/FaceAttachable"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum AttachedFaceEnum {
     Floor,
@@ -1238,6 +1217,7 @@ impl<'mc> std::fmt::Display for AttachedFace<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct AttachedFace<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1338,19 +1318,12 @@ impl<'mc> AttachedFace<'mc> {
             .unwrap()
     }
 }
-
-pub struct AttachedFaceClass;
-impl blackboxmc_general::JNIProvidesClassName for AttachedFaceClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/AttachedFace"
-    }
-}
-
 /// 'age' represents the different growth stages that a crop-like block can go through.
 ///
 /// A value of 0 indicates that the crop was freshly planted, whilst a value equal to <a href="#getMaximumAge()"><code>getMaximumAge()</code></a> indicates that the crop is ripe and ready to be harvested.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Ageable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1742,17 +1715,10 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Ageable<'mc> {
             .expect("Error converting Ageable into crate::block::data::BlockData")
     }
 }
-
-pub struct AgeableClass;
-impl blackboxmc_general::JNIProvidesClassName for AgeableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Ageable"
-    }
-}
-
 /// 'open' denotes whether this block is currently opened.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Openable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2135,19 +2101,12 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Openable<'mc> {
             .expect("Error converting Openable into crate::block::data::BlockData")
     }
 }
-
-pub struct OpenableClass;
-impl blackboxmc_general::JNIProvidesClassName for OpenableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Openable"
-    }
-}
-
 /// 'shape' represents the current layout of a minecart rail.
 ///
 /// Some types of rail may not be able to be laid out in all shapes, use <a href="#getShapes()"><code>getShapes()</code></a> to get those applicable to this block.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Rail<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2586,15 +2545,9 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Rail<'mc> {
     }
 }
 
-pub struct RailClass;
-impl blackboxmc_general::JNIProvidesClassName for RailClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Rail"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct BlockData<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2957,19 +2910,12 @@ impl<'mc> BlockData<'mc> {
             .unwrap()
     }
 }
-
-pub struct BlockDataClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockDataClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/BlockData"
-    }
-}
-
 /// 'axis' represents the axis along whilst this block is oriented.
 ///
 /// Some blocks such as the portal block may not be able to be placed in all orientations, use <a href="#getAxes()"><code>getAxes()</code></a> to retrieve all possible such orientations.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Orientable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3383,17 +3329,10 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Orientable<'mc> {
             .expect("Error converting Orientable into crate::block::data::BlockData")
     }
 }
-
-pub struct OrientableClass;
-impl blackboxmc_general::JNIProvidesClassName for OrientableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Orientable"
-    }
-}
-
 /// 'powered' indicates whether this block is in the powered state or not, i.e. receiving a redstone current of power &gt; 0.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Powerable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3776,14 +3715,6 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Powerable<'mc> {
             .expect("Error converting Powerable into crate::block::data::BlockData")
     }
 }
-
-pub struct PowerableClass;
-impl blackboxmc_general::JNIProvidesClassName for PowerableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Powerable"
-    }
-}
-
 /// The face to which a switch type block is stuck.
 #[derive(PartialEq, Eq)]
 pub enum FaceAttachableAttachedFaceEnum {
@@ -3805,6 +3736,7 @@ impl<'mc> std::fmt::Display for FaceAttachableAttachedFace<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct FaceAttachableAttachedFace<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3909,14 +3841,6 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
             .unwrap()
     }
 }
-
-pub struct FaceAttachableAttachedFaceClass;
-impl blackboxmc_general::JNIProvidesClassName for FaceAttachableAttachedFaceClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/FaceAttachable$AttachedFace"
-    }
-}
-
 /// 'level' represents the amount of fluid contained within this block, either by itself or inside a cauldron.
 ///
 /// In the case of water and lava blocks the levels have special meanings: a level of 0 corresponds to a source block, 1-7 regular fluid heights, and 8-15 to "falling" fluids. All falling fluids have the same behaviour, but the level corresponds to that of the block above them, equal to <code>this.level - 8</code> <b>Note that counterintuitively, an adjusted level of 1 is the highest level, whilst 7 is the lowest.</b>
@@ -3924,6 +3848,7 @@ impl blackboxmc_general::JNIProvidesClassName for FaceAttachableAttachedFaceClas
 /// May not be higher than <a href="#getMaximumLevel()"><code>getMaximumLevel()</code></a>.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Levelled<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4316,19 +4241,12 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Levelled<'mc> {
             .expect("Error converting Levelled into crate::block::data::BlockData")
     }
 }
-
-pub struct LevelledClass;
-impl blackboxmc_general::JNIProvidesClassName for LevelledClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Levelled"
-    }
-}
-
 /// This class encompasses the 'north', 'east', 'south', 'west', 'up', 'down' boolean flags which are used to set which faces of the block textures are displayed on.
 ///
 /// Some blocks may not be able to have faces on all directions, use <a href="#getAllowedFaces()"><code>getAllowedFaces()</code></a> to get all possible faces for this block. It is not valid to call any methods on non-allowed faces.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct MultipleFacing<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4756,14 +4674,6 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for MultipleFacing<'mc> {
             .expect("Error converting MultipleFacing into crate::block::data::BlockData")
     }
 }
-
-pub struct MultipleFacingClass;
-impl blackboxmc_general::JNIProvidesClassName for MultipleFacingClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/MultipleFacing"
-    }
-}
-
 /// The different types of shapes a rail block can occupy.
 #[derive(PartialEq, Eq)]
 pub enum RailShapeEnum {
@@ -4799,6 +4709,7 @@ impl<'mc> std::fmt::Display for RailShape<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct RailShape<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4913,17 +4824,10 @@ impl<'mc> RailShape<'mc> {
             .unwrap()
     }
 }
-
-pub struct RailShapeClass;
-impl blackboxmc_general::JNIProvidesClassName for RailShapeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Rail$Shape"
-    }
-}
-
 /// 'snowy' denotes whether this block has a snow covered side and top texture (normally because the block above is snow).
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Snowable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5306,19 +5210,12 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Snowable<'mc> {
             .expect("Error converting Snowable into crate::block::data::BlockData")
     }
 }
-
-pub struct SnowableClass;
-impl blackboxmc_general::JNIProvidesClassName for SnowableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Snowable"
-    }
-}
-
 /// 'facing' represents the face towards which the block is pointing.
 ///
 /// Some blocks may not be able to face in all directions, use <a href="#getFaces()"><code>getFaces()</code></a> to get all possible directions for this block.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Directional<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5732,14 +5629,6 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Directional<'mc> {
             .expect("Error converting Directional into crate::block::data::BlockData")
     }
 }
-
-pub struct DirectionalClass;
-impl blackboxmc_general::JNIProvidesClassName for DirectionalClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Directional"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum HalfEnum {
     Top,
@@ -5758,6 +5647,7 @@ impl<'mc> std::fmt::Display for Half<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Half<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5856,17 +5746,10 @@ impl<'mc> Half<'mc> {
             .unwrap()
     }
 }
-
-pub struct HalfClass;
-impl blackboxmc_general::JNIProvidesClassName for HalfClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Half"
-    }
-}
-
 /// 'rotation' represents the current rotation of this block.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Rotatable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6269,17 +6152,10 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Rotatable<'mc> {
             .expect("Error converting Rotatable into crate::block::data::BlockData")
     }
 }
-
-pub struct RotatableClass;
-impl blackboxmc_general::JNIProvidesClassName for RotatableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Rotatable"
-    }
-}
-
 /// 'hanging' denotes whether the lantern is hanging from a block.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Hangable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6662,17 +6538,10 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Hangable<'mc> {
             .expect("Error converting Hangable into crate::block::data::BlockData")
     }
 }
-
-pub struct HangableClass;
-impl blackboxmc_general::JNIProvidesClassName for HangableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Hangable"
-    }
-}
-
 /// 'waterlogged' denotes whether this block has fluid in it.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Waterlogged<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7055,19 +6924,12 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Waterlogged<'mc> {
             .expect("Error converting Waterlogged into crate::block::data::BlockData")
     }
 }
-
-pub struct WaterloggedClass;
-impl blackboxmc_general::JNIProvidesClassName for WaterloggedClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Waterlogged"
-    }
-}
-
 /// 'power' represents the redstone power level currently being emitted or transmitted via this block.
 ///
 /// May not be over 9000 or <a href="#getMaximumPower()"><code>getMaximumPower()</code></a> (usually 15).
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct AnaloguePowerable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7461,17 +7323,10 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for AnaloguePowerable<'mc> {
             .expect("Error converting AnaloguePowerable into crate::block::data::BlockData")
     }
 }
-
-pub struct AnaloguePowerableClass;
-impl blackboxmc_general::JNIProvidesClassName for AnaloguePowerableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/AnaloguePowerable"
-    }
-}
-
 /// 'dusted' represents how far uncovered by brush the block is.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Brushable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7866,19 +7721,12 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Brushable<'mc> {
             .expect("Error converting Brushable into crate::block::data::BlockData")
     }
 }
-
-pub struct BrushableClass;
-impl blackboxmc_general::JNIProvidesClassName for BrushableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Brushable"
-    }
-}
-
 /// 'attached' denotes whether a tripwire hook or string forms a complete tripwire circuit and is ready to trigger.
 ///
 /// Updating the property on a tripwire hook will change the texture to indicate a connected string, but will not have any effect when used on the tripwire string itself. It may however still be used to check whether the string forms a circuit.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Attachable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8261,19 +8109,12 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Attachable<'mc> {
             .expect("Error converting Attachable into crate::block::data::BlockData")
     }
 }
-
-pub struct AttachableClass;
-impl blackboxmc_general::JNIProvidesClassName for AttachableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Attachable"
-    }
-}
-
 /// 'half' denotes which half of a two block tall material this block is.
 ///
 /// In game it may be referred to as either (top, bottom) or (upper, lower).
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Bisected<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8678,14 +8519,6 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Bisected<'mc> {
             .expect("Error converting Bisected into crate::block::data::BlockData")
     }
 }
-
-pub struct BisectedClass;
-impl blackboxmc_general::JNIProvidesClassName for BisectedClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Bisected"
-    }
-}
-
 /// The half of a vertically bisected block.
 #[derive(PartialEq, Eq)]
 pub enum BisectedHalfEnum {
@@ -8705,6 +8538,7 @@ impl<'mc> std::fmt::Display for BisectedHalf<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct BisectedHalf<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8803,12 +8637,4 @@ impl<'mc> BisectedHalf<'mc> {
             .unwrap()
     }
 }
-
-pub struct BisectedHalfClass;
-impl blackboxmc_general::JNIProvidesClassName for BisectedHalfClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/Bisected$Half"
-    }
-}
-
 pub mod mod_type;

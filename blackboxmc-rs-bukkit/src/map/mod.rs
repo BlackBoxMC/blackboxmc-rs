@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents all the map cursors on a <a title="interface in org.bukkit.map" href="MapCanvas.html"><code>MapCanvas</code></a>. Like MapCanvas, a MapCursorCollection is linked to a specific <a title="class in org.bukkit.map" href="MapRenderer.html"><code>MapRenderer</code></a>.
+#[repr(C)]
 pub struct MapCursorCollection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -261,13 +262,6 @@ impl<'mc> std::string::ToString for MapCursorCollection<'mc> {
     }
 }
 
-pub struct MapCursorCollectionClass;
-impl blackboxmc_general::JNIProvidesClassName for MapCursorCollectionClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/map/MapCursorCollection"
-    }
-}
-
 /// An enum representing all possible scales a map can be set to.
 #[derive(PartialEq, Eq)]
 pub enum MapViewScaleEnum {
@@ -293,6 +287,7 @@ impl<'mc> std::fmt::Display for MapViewScale<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct MapViewScale<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -408,14 +403,6 @@ impl<'mc> MapViewScale<'mc> {
             .unwrap()
     }
 }
-
-pub struct MapViewScaleClass;
-impl blackboxmc_general::JNIProvidesClassName for MapViewScaleClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/map/MapView$Scale"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum ScaleEnum {
     Closest,
@@ -440,6 +427,7 @@ impl<'mc> std::fmt::Display for Scale<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Scale<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -544,15 +532,8 @@ impl<'mc> Scale<'mc> {
             .unwrap()
     }
 }
-
-pub struct ScaleClass;
-impl blackboxmc_general::JNIProvidesClassName for ScaleClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/map/Scale"
-    }
-}
-
 /// Represents the built-in Minecraft font.
+#[repr(C)]
 pub struct MinecraftFont<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -802,15 +783,8 @@ impl<'mc> Into<crate::map::MapFont<'mc>> for MinecraftFont<'mc> {
             .expect("Error converting MinecraftFont into crate::map::MapFont")
     }
 }
-
-pub struct MinecraftFontClass;
-impl blackboxmc_general::JNIProvidesClassName for MinecraftFontClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/map/MinecraftFont"
-    }
-}
-
 /// Represents a cursor on a map.
+#[repr(C)]
 pub struct MapCursor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -883,6 +857,7 @@ impl<'mc> std::fmt::Display for MapCursorType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct MapCursorType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1075,13 +1050,6 @@ impl<'mc> MapCursorType<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct MapCursorTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for MapCursorTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/map/MapCursor$Type"
     }
 }
 
@@ -1457,14 +1425,8 @@ impl<'mc> std::string::ToString for MapCursor<'mc> {
     }
 }
 
-pub struct MapCursorClass;
-impl blackboxmc_general::JNIProvidesClassName for MapCursorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/map/MapCursor"
-    }
-}
-
 /// Represents the graphics for a single character in a MapFont.
+#[repr(C)]
 pub struct MapFontCharacterSprite<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1674,16 +1636,10 @@ impl<'mc> std::string::ToString for MapFontCharacterSprite<'mc> {
     }
 }
 
-pub struct MapFontCharacterSpriteClass;
-impl blackboxmc_general::JNIProvidesClassName for MapFontCharacterSpriteClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/map/MapFont$CharacterSprite"
-    }
-}
-
 /// Represents a canvas for drawing to a map. Each canvas is associated with a specific <a href="MapRenderer.html" title="class in org.bukkit.map"><code>MapRenderer</code></a> and represents that renderer's layer on the map.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct MapCanvas<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1985,15 +1941,8 @@ impl<'mc> MapCanvas<'mc> {
             .unwrap()
     }
 }
-
-pub struct MapCanvasClass;
-impl blackboxmc_general::JNIProvidesClassName for MapCanvasClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/map/MapCanvas"
-    }
-}
-
 /// Represents a renderer for a map.
+#[repr(C)]
 pub struct MapRenderer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2230,16 +2179,10 @@ impl<'mc> std::string::ToString for MapRenderer<'mc> {
     }
 }
 
-pub struct MapRendererClass;
-impl blackboxmc_general::JNIProvidesClassName for MapRendererClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/map/MapRenderer"
-    }
-}
-
 /// Represents a map item.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct MapView<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2546,15 +2489,8 @@ impl<'mc> MapView<'mc> {
             .unwrap()
     }
 }
-
-pub struct MapViewClass;
-impl blackboxmc_general::JNIProvidesClassName for MapViewClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/map/MapView"
-    }
-}
-
 /// Represents a bitmap font drawable to a map.
+#[repr(C)]
 pub struct MapFont<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2798,21 +2734,16 @@ impl<'mc> std::string::ToString for MapFont<'mc> {
     }
 }
 
-pub struct MapFontClass;
-impl blackboxmc_general::JNIProvidesClassName for MapFontClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/map/MapFont"
-    }
-}
-
 /// Represents the palette that map items use.
 /// <p>These fields are hee base color ranges. Each entry corresponds to four colors of varying shades with values entry to entry + 3.</p>
+#[repr(C)]
 pub struct MapPalette<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct MapPaletteMapColorCache<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2870,13 +2801,6 @@ impl<'mc> MapPaletteMapColorCache<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct MapPaletteMapColorCacheClass;
-impl blackboxmc_general::JNIProvidesClassName for MapPaletteMapColorCacheClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/map/MapPalette$MapColorCache"
     }
 }
 
@@ -3129,12 +3053,5 @@ impl<'mc> std::string::ToString for MapPalette<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling MapPalette.toString: {}", err),
         }
-    }
-}
-
-pub struct MapPaletteClass;
-impl blackboxmc_general::JNIProvidesClassName for MapPaletteClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/map/MapPalette"
     }
 }

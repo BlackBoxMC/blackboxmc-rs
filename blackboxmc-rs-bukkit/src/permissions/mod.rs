@@ -6,6 +6,7 @@ use color_eyre::eyre::Result;
 /// Represents an object that may become a server operator, such as a <a title="interface in org.bukkit.entity" href="../entity/Player.html"><code>Player</code></a>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ServerOperator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -77,15 +78,8 @@ impl<'mc> ServerOperator<'mc> {
             .unwrap()
     }
 }
-
-pub struct ServerOperatorClass;
-impl blackboxmc_general::JNIProvidesClassName for ServerOperatorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/permissions/ServerOperator"
-    }
-}
-
 /// Base Permissible for use in any Permissible object via proxy or extension
+#[repr(C)]
 pub struct PermissibleBase<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -421,14 +415,6 @@ impl<'mc> Into<crate::permissions::Permissible<'mc>> for PermissibleBase<'mc> {
             .expect("Error converting PermissibleBase into crate::permissions::Permissible")
     }
 }
-
-pub struct PermissibleBaseClass;
-impl blackboxmc_general::JNIProvidesClassName for PermissibleBaseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/permissions/PermissibleBase"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum PermissionDefaultEnum {
     VariantTrue,
@@ -451,6 +437,7 @@ impl<'mc> std::fmt::Display for PermissionDefault<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct PermissionDefault<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -555,17 +542,10 @@ impl<'mc> PermissionDefault<'mc> {
             .unwrap()
     }
 }
-
-pub struct PermissionDefaultClass;
-impl blackboxmc_general::JNIProvidesClassName for PermissionDefaultClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/permissions/PermissionDefault"
-    }
-}
-
 /// Represents an object that may be assigned permissions
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Permissible<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -766,15 +746,8 @@ impl<'mc> Into<crate::permissions::ServerOperator<'mc>> for Permissible<'mc> {
             .expect("Error converting Permissible into crate::permissions::ServerOperator")
     }
 }
-
-pub struct PermissibleClass;
-impl blackboxmc_general::JNIProvidesClassName for PermissibleClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/permissions/Permissible"
-    }
-}
-
 /// Represents a unique permission that may be attached to a <a title="interface in org.bukkit.permissions" href="Permissible.html"><code>Permissible</code></a>
+#[repr(C)]
 pub struct Permission<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1156,14 +1129,8 @@ impl<'mc> std::string::ToString for Permission<'mc> {
     }
 }
 
-pub struct PermissionClass;
-impl blackboxmc_general::JNIProvidesClassName for PermissionClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/permissions/Permission"
-    }
-}
-
 /// Holds information on a permission and which <a href="PermissionAttachment.html" title="class in org.bukkit.permissions"><code>PermissionAttachment</code></a> provides it
+#[repr(C)]
 pub struct PermissionAttachmentInfo<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1403,14 +1370,8 @@ impl<'mc> std::string::ToString for PermissionAttachmentInfo<'mc> {
     }
 }
 
-pub struct PermissionAttachmentInfoClass;
-impl blackboxmc_general::JNIProvidesClassName for PermissionAttachmentInfoClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/permissions/PermissionAttachmentInfo"
-    }
-}
-
 /// Holds information about a permission attachment on a <a href="Permissible.html" title="interface in org.bukkit.permissions"><code>Permissible</code></a> object
+#[repr(C)]
 pub struct PermissionAttachment<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1718,16 +1679,10 @@ impl<'mc> std::string::ToString for PermissionAttachment<'mc> {
     }
 }
 
-pub struct PermissionAttachmentClass;
-impl blackboxmc_general::JNIProvidesClassName for PermissionAttachmentClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/permissions/PermissionAttachment"
-    }
-}
-
 /// Represents a class which is to be notified when a <a href="PermissionAttachment.html" title="class in org.bukkit.permissions"><code>PermissionAttachment</code></a> is removed from a <a title="interface in org.bukkit.permissions" href="Permissible.html"><code>Permissible</code></a>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PermissionRemovedExecutor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1795,12 +1750,5 @@ impl<'mc> PermissionRemovedExecutor<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct PermissionRemovedExecutorClass;
-impl blackboxmc_general::JNIProvidesClassName for PermissionRemovedExecutorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/permissions/PermissionRemovedExecutor"
     }
 }

@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 
+#[repr(C)]
 pub struct TextComponent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -759,14 +760,6 @@ impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for TextComponent<'
             .expect("Error converting TextComponent into crate::bungee::api::chat::BaseComponent")
     }
 }
-
-pub struct TextComponentClass;
-impl blackboxmc_general::JNIProvidesClassName for TextComponentClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/TextComponent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum FormatRetentionEnum {
     None,
@@ -789,6 +782,7 @@ impl<'mc> std::fmt::Display for FormatRetention<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct FormatRetention<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -894,13 +888,7 @@ impl<'mc> FormatRetention<'mc> {
     }
 }
 
-pub struct FormatRetentionClass;
-impl blackboxmc_general::JNIProvidesClassName for FormatRetentionClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/FormatRetention"
-    }
-}
-
+#[repr(C)]
 pub struct HoverEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -927,6 +915,7 @@ impl<'mc> std::fmt::Display for HoverEventAction<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct HoverEventAction<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1030,13 +1019,6 @@ impl<'mc> HoverEventAction<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct HoverEventActionClass;
-impl blackboxmc_general::JNIProvidesClassName for HoverEventActionClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/HoverEvent$Action"
     }
 }
 
@@ -1272,13 +1254,7 @@ impl<'mc> std::string::ToString for HoverEvent<'mc> {
     }
 }
 
-pub struct HoverEventClass;
-impl blackboxmc_general::JNIProvidesClassName for HoverEventClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/HoverEvent"
-    }
-}
-
+#[repr(C)]
 pub struct BaseComponent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1977,13 +1953,7 @@ impl<'mc> std::string::ToString for BaseComponent<'mc> {
     }
 }
 
-pub struct BaseComponentClass;
-impl blackboxmc_general::JNIProvidesClassName for BaseComponentClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/BaseComponent"
-    }
-}
-
+#[repr(C)]
 pub struct SelectorComponent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2729,13 +2699,7 @@ impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for SelectorCompone
     }
 }
 
-pub struct SelectorComponentClass;
-impl blackboxmc_general::JNIProvidesClassName for SelectorComponentClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/SelectorComponent"
-    }
-}
-
+#[repr(C)]
 pub struct ScoreComponent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3551,13 +3515,7 @@ impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for ScoreComponent<
     }
 }
 
-pub struct ScoreComponentClass;
-impl blackboxmc_general::JNIProvidesClassName for ScoreComponentClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/ScoreComponent"
-    }
-}
-
+#[repr(C)]
 pub struct ClickEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3588,6 +3546,7 @@ impl<'mc> std::fmt::Display for ClickEventAction<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct ClickEventAction<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3695,13 +3654,6 @@ impl<'mc> ClickEventAction<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct ClickEventActionClass;
-impl blackboxmc_general::JNIProvidesClassName for ClickEventActionClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/ClickEvent$Action"
     }
 }
 
@@ -3913,15 +3865,9 @@ impl<'mc> std::string::ToString for ClickEvent<'mc> {
     }
 }
 
-pub struct ClickEventClass;
-impl blackboxmc_general::JNIProvidesClassName for ClickEventClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/ClickEvent"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Keybinds<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3970,13 +3916,7 @@ impl<'mc> Keybinds<'mc> {
     }
 }
 
-pub struct KeybindsClass;
-impl blackboxmc_general::JNIProvidesClassName for KeybindsClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/Keybinds"
-    }
-}
-
+#[repr(C)]
 pub struct ItemTagSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4197,13 +4137,7 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for ItemTagSerializer<'mc> {
     }
 }
 
-pub struct ItemTagSerializerClass;
-impl blackboxmc_general::JNIProvidesClassName for ItemTagSerializerClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/ItemTag$Serializer"
-    }
-}
-
+#[repr(C)]
 pub struct TranslatableComponent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5035,15 +4969,9 @@ impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for TranslatableCom
     }
 }
 
-pub struct TranslatableComponentClass;
-impl blackboxmc_general::JNIProvidesClassName for TranslatableComponentClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/TranslatableComponent"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ComponentBuilderJoiner<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5123,13 +5051,7 @@ impl<'mc> ComponentBuilderJoiner<'mc> {
     }
 }
 
-pub struct ComponentBuilderJoinerClass;
-impl blackboxmc_general::JNIProvidesClassName for ComponentBuilderJoinerClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/ComponentBuilder$Joiner"
-    }
-}
-
+#[repr(C)]
 pub struct ItemTag<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5312,13 +5234,7 @@ impl<'mc> std::string::ToString for ItemTag<'mc> {
     }
 }
 
-pub struct ItemTagClass;
-impl blackboxmc_general::JNIProvidesClassName for ItemTagClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/ItemTag"
-    }
-}
-
+#[repr(C)]
 pub struct KeybindComponent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6065,13 +5981,7 @@ impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for KeybindComponen
     }
 }
 
-pub struct KeybindComponentClass;
-impl blackboxmc_general::JNIProvidesClassName for KeybindComponentClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/KeybindComponent"
-    }
-}
-
+#[repr(C)]
 pub struct ComponentBuilder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6098,6 +6008,7 @@ impl<'mc> std::fmt::Display for ComponentBuilderFormatRetention<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct ComponentBuilderFormatRetention<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6206,13 +6117,6 @@ impl<'mc> ComponentBuilderFormatRetention<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct ComponentBuilderFormatRetentionClass;
-impl blackboxmc_general::JNIProvidesClassName for ComponentBuilderFormatRetentionClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/ComponentBuilder$FormatRetention"
     }
 }
 
@@ -6851,13 +6755,6 @@ impl<'mc> std::string::ToString for ComponentBuilder<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ComponentBuilder.toString: {}", err),
         }
-    }
-}
-
-pub struct ComponentBuilderClass;
-impl blackboxmc_general::JNIProvidesClassName for ComponentBuilderClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/chat/ComponentBuilder"
     }
 }
 

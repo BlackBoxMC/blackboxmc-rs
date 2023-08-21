@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 
+#[repr(C)]
 pub struct ReloadCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -582,13 +583,7 @@ impl<'mc> Into<crate::command::defaults::BukkitCommand<'mc>> for ReloadCommand<'
     }
 }
 
-pub struct ReloadCommandClass;
-impl blackboxmc_general::JNIProvidesClassName for ReloadCommandClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/defaults/ReloadCommand"
-    }
-}
-
+#[repr(C)]
 pub struct TimingsCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1189,13 +1184,7 @@ impl<'mc> Into<crate::command::defaults::BukkitCommand<'mc>> for TimingsCommand<
     }
 }
 
-pub struct TimingsCommandClass;
-impl blackboxmc_general::JNIProvidesClassName for TimingsCommandClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/defaults/TimingsCommand"
-    }
-}
-
+#[repr(C)]
 pub struct BukkitCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1755,13 +1744,7 @@ impl<'mc> Into<crate::command::Command<'mc>> for BukkitCommand<'mc> {
     }
 }
 
-pub struct BukkitCommandClass;
-impl blackboxmc_general::JNIProvidesClassName for BukkitCommandClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/defaults/BukkitCommand"
-    }
-}
-
+#[repr(C)]
 pub struct VersionCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2343,13 +2326,7 @@ impl<'mc> Into<crate::command::defaults::BukkitCommand<'mc>> for VersionCommand<
     }
 }
 
-pub struct VersionCommandClass;
-impl blackboxmc_general::JNIProvidesClassName for VersionCommandClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/defaults/VersionCommand"
-    }
-}
-
+#[repr(C)]
 pub struct HelpCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2920,13 +2897,7 @@ impl<'mc> Into<crate::command::defaults::BukkitCommand<'mc>> for HelpCommand<'mc
     }
 }
 
-pub struct HelpCommandClass;
-impl blackboxmc_general::JNIProvidesClassName for HelpCommandClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/defaults/HelpCommand"
-    }
-}
-
+#[repr(C)]
 pub struct PluginsCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3505,12 +3476,5 @@ impl<'mc> Into<crate::command::defaults::BukkitCommand<'mc>> for PluginsCommand<
     fn into(self) -> crate::command::defaults::BukkitCommand<'mc> {
         crate::command::defaults::BukkitCommand::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting PluginsCommand into crate::command::defaults::BukkitCommand")
-    }
-}
-
-pub struct PluginsCommandClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginsCommandClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/defaults/PluginsCommand"
     }
 }

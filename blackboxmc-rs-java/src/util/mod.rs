@@ -12,6 +12,7 @@ use color_eyre::eyre::Result;
 /// <p><a name="fail-fast"> The iterators returned by this class's </a><a href="../../java/util/ArrayList.html#iterator--"><code>iterator</code></a> and <a href="../../java/util/ArrayList.html#listIterator-int-"><code>listIterator</code></a> methods are <em>fail-fast</em>: if the list is structurally modified at any time after the iterator is created, in any way except through the iterator's own <a href="../../java/util/ListIterator.html#remove--"><code>remove</code></a> or <a href="../../java/util/ListIterator.html#add-E-"><code>add</code></a> methods, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaArrayList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -574,20 +575,13 @@ impl<'mc> Into<crate::util::JavaAbstractList<'mc>> for JavaArrayList<'mc> {
             .expect("Error converting JavaArrayList into crate::util::JavaAbstractList")
     }
 }
-
-pub struct JavaArrayListClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaArrayListClass {
-    fn class_name(&self) -> &str {
-        "java/util/ArrayList"
-    }
-}
-
 /// This class provides a skeletal implementation of the <tt>Map</tt> interface, to minimize the effort required to implement this interface.
 /// <p>To implement an unmodifiable map, the programmer needs only to extend this class and provide an implementation for the <tt>entrySet</tt> method, which returns a set-view of the map's mappings. Typically, the returned set will, in turn, be implemented atop <tt>AbstractSet</tt>. This set should not support the <tt>add</tt> or <tt>remove</tt> methods, and its iterator should not support the <tt>remove</tt> method.</p>
 /// <p>To implement a modifiable map, the programmer must additionally override this class's <tt>put</tt> method (which otherwise throws an <tt>UnsupportedOperationException</tt>), and the iterator returned by <tt>entrySet().iterator()</tt> must additionally implement its <tt>remove</tt> method.</p>
 /// <p>The programmer should generally provide a void (no argument) and map constructor, as per the recommendation in the <tt>Map</tt> interface specification.</p>
 /// <p>The documentation for each non-abstract method in this class describes its implementation in detail. Each of these methods may be overridden if the map being implemented admits a more efficient implementation.</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaAbstractMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1108,14 +1102,6 @@ impl<'mc> Into<crate::util::JavaMap<'mc>> for JavaAbstractMap<'mc> {
             .expect("Error converting JavaAbstractMap into crate::util::JavaMap")
     }
 }
-
-pub struct JavaAbstractMapClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaAbstractMapClass {
-    fn class_name(&self) -> &str {
-        "java/util/AbstractMap"
-    }
-}
-
 /// A <a title="interface in java.util" href="../../java/util/NavigableSet.html"><code>NavigableSet</code></a> implementation based on a <a title="class in java.util" href="../../java/util/TreeMap.html"><code>TreeMap</code></a>. The elements are ordered using their <a title="interface in java.lang" href="../../java/lang/Comparable.html">natural ordering</a>, or by a <a href="../../java/util/Comparator.html" title="interface in java.util"><code>Comparator</code></a> provided at set creation time, depending on which constructor is used.
 /// <p>This implementation provides guaranteed log(n) time cost for the basic operations (<code>add</code>, <code>remove</code> and <code>contains</code>).</p>
 /// <p>Note that the ordering maintained by a set (whether or not an explicit comparator is provided) must be <i>consistent with equals</i> if it is to correctly implement the <code>Set</code> interface. (See <code>Comparable</code> or <code>Comparator</code> for a precise definition of <i>consistent with equals</i>.) This is so because the <code>Set</code> interface is defined in terms of the <code>equals</code> operation, but a <code>TreeSet</code> instance performs all element comparisons using its <code>compareTo</code> (or <code>compare</code>) method, so two elements that are deemed equal by this method are, from the standpoint of the set, equal. The behavior of a set <i>is</i> well-defined even if its ordering is inconsistent with equals; it just fails to obey the general contract of the <code>Set</code> interface.</p>
@@ -1124,6 +1110,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaAbstractMapClass {
 /// <p>The iterators returned by this class's <code>iterator</code> method are <i>fail-fast</i>: if the set is modified at any time after the iterator is created, in any way except through the iterator's own <code>remove</code> method, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaTreeSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1622,19 +1609,12 @@ impl<'mc> Into<crate::util::JavaAbstractSet<'mc>> for JavaTreeSet<'mc> {
             .expect("Error converting JavaTreeSet into crate::util::JavaAbstractSet")
     }
 }
-
-pub struct JavaTreeSetClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaTreeSetClass {
-    fn class_name(&self) -> &str {
-        "java/util/TreeSet"
-    }
-}
-
 /// The <code>Vector</code> class implements a growable array of objects. Like an array, it contains components that can be accessed using an integer index. However, the size of a <code>Vector</code> can grow or shrink as needed to accommodate adding and removing items after the <code>Vector</code> has been created.
 /// <p>Each vector tries to optimize storage management by maintaining a <code>capacity</code> and a <code>capacityIncrement</code>. The <code>capacity</code> is always at least as large as the vector size; it is usually larger because as components are added to the vector, the vector's storage increases in chunks the size of <code>capacityIncrement</code>. An application can increase the capacity of a vector before inserting a large number of components; this reduces the amount of incremental reallocation.</p>
 /// <p><a name="fail-fast"> The iterators returned by this class's </a><a href="../../java/util/Vector.html#iterator--"><code>iterator</code></a> and <a href="../../java/util/Vector.html#listIterator-int-"><code>listIterator</code></a> methods are <em>fail-fast</em>: if the vector is structurally modified at any time after the iterator is created, in any way except through the iterator's own <a href="../../java/util/ListIterator.html#remove--"><code>remove</code></a> or <a href="../../java/util/ListIterator.html#add-E-"><code>add</code></a> methods, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future. The <a title="interface in java.util" href="../../java/util/Enumeration.html"><code>Enumerations</code></a> returned by the <a href="../../java/util/Vector.html#elements--"><code>elements</code></a> method are <em>not</em> fail-fast.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>As of the Java 2 platform v1.2, this class was retrofitted to implement the <a title="interface in java.util" href="../../java/util/List.html"><code>List</code></a> interface, making it a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>. Unlike the new collection implementations, <code>Vector</code> is synchronized. If a thread-safe implementation is not needed, it is recommended to use <a title="class in java.util" href="../../java/util/ArrayList.html"><code>ArrayList</code></a> in place of <code>Vector</code>.</p>
+#[repr(C)]
 pub struct JavaVector<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2417,14 +2397,6 @@ impl<'mc> Into<crate::util::JavaAbstractList<'mc>> for JavaVector<'mc> {
             .expect("Error converting JavaVector into crate::util::JavaAbstractList")
     }
 }
-
-pub struct JavaVectorClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaVectorClass {
-    fn class_name(&self) -> &str {
-        "java/util/Vector"
-    }
-}
-
 /// Marker interface used by <tt>List</tt> implementations to indicate that they support fast (generally constant time) random access. The primary purpose of this interface is to allow generic algorithms to alter their behavior to provide good performance when applied to either random or sequential access lists.
 /// <p>The best algorithms for manipulating random access lists (such as <tt>ArrayList</tt>) can produce quadratic behavior when applied to sequential access lists (such as <tt>LinkedList</tt>). Generic list algorithms are encouraged to check whether the given list is an <tt>instanceof</tt> this interface before applying an algorithm that would provide poor performance if it were applied to a sequential access list, and to alter their behavior if necessary to guarantee acceptable performance.</p>
 /// <p>It is recognized that the distinction between random and sequential access is often fuzzy. For example, some <tt>List</tt> implementations provide asymptotically linear access times if they get huge, but constant access times in practice. Such a <tt>List</tt> implementation should generally implement this interface. As a rule of thumb, a <tt>List</tt> implementation should implement this interface if, for typical instances of the class, this loop:</p>
@@ -2437,6 +2409,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaVectorClass {
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaRandomAccess<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2486,14 +2459,6 @@ impl<'mc> JavaRandomAccess<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaRandomAccessClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaRandomAccessClass {
-    fn class_name(&self) -> &str {
-        "java/util/RandomAccess"
-    }
-}
-
 /// A <a title="interface in java.util" href="../../java/util/Map.html"><code>Map</code></a> that further provides a <em>total ordering</em> on its keys. The map is ordered according to the <a title="interface in java.lang" href="../../java/lang/Comparable.html">natural ordering</a> of its keys, or by a <a title="interface in java.util" href="../../java/util/Comparator.html"><code>Comparator</code></a> typically provided at sorted map creation time. This order is reflected when iterating over the sorted map's collection views (returned by the <code>entrySet</code>, <code>keySet</code> and <code>values</code> methods). Several additional operations are provided to take advantage of the ordering. (This interface is the map analogue of <a href="../../java/util/SortedSet.html" title="interface in java.util"><code>SortedSet</code></a>.)
 /// <p>All keys inserted into a sorted map must implement the <code>Comparable</code> interface (or be accepted by the specified comparator). Furthermore, all such keys must be <em>mutually comparable</em>: <code>k1.compareTo(k2)</code> (or <code>comparator.compare(k1, k2)</code>) must not throw a <code>ClassCastException</code> for any keys <code>k1</code> and <code>k2</code> in the sorted map. Attempts to violate this restriction will cause the offending method or constructor invocation to throw a <code>ClassCastException</code>.</p>
 /// <p>Note that the ordering maintained by a sorted map (whether or not an explicit comparator is provided) must be <em>consistent with equals</em> if the sorted map is to correctly implement the <code>Map</code> interface. (See the <code>Comparable</code> interface or <code>Comparator</code> interface for a precise definition of <em>consistent with equals</em>.) This is so because the <code>Map</code> interface is defined in terms of the <code>equals</code> operation, but a sorted map performs all key comparisons using its <code>compareTo</code> (or <code>compare</code>) method, so two keys that are deemed equal by this method are, from the standpoint of the sorted map, equal. The behavior of a tree map <em>is</em> well-defined even if its ordering is inconsistent with equals; it just fails to obey the general contract of the <code>Map</code> interface.</p>
@@ -2510,6 +2475,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaRandomAccessClass {
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaSortedMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2992,14 +2958,6 @@ impl<'mc> Into<crate::util::JavaMap<'mc>> for JavaSortedMap<'mc> {
             .expect("Error converting JavaSortedMap into crate::util::JavaMap")
     }
 }
-
-pub struct JavaSortedMapClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaSortedMapClass {
-    fn class_name(&self) -> &str {
-        "java/util/SortedMap"
-    }
-}
-
 /// An object that maps keys to values. A map cannot contain duplicate keys; each key can map to at most one value.
 /// <p>This interface takes the place of the <tt>Dictionary</tt> class, which was a totally abstract class rather than an interface.</p>
 /// <p>The <tt>Map</tt> interface provides three <i>collection views</i>, which allow a map's contents to be viewed as a set of keys, collection of values, or set of key-value mappings. The <i>order</i> of a map is defined as the order in which the iterators on the map's collection views return their elements. Some map implementations, like the <tt>TreeMap</tt> class, make specific guarantees as to their order; others, like the <tt>HashMap</tt> class, do not.</p>
@@ -3012,6 +2970,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaSortedMapClass {
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3649,14 +3608,6 @@ impl<'mc> JavaMap<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaMapClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaMapClass {
-    fn class_name(&self) -> &str {
-        "java/util/Map"
-    }
-}
-
 /// Hash table based implementation of the <tt>Map</tt> interface, with <em>weak keys</em>. An entry in a <tt>WeakHashMap</tt> will automatically be removed when its key is no longer in ordinary use. More precisely, the presence of a mapping for a given key will not prevent the key from being discarded by the garbage collector, that is, made finalizable, finalized, and then reclaimed. When a key has been discarded its entry is effectively removed from the map, so this class behaves somewhat differently from other <tt>Map</tt> implementations.
 /// <p>Both null values and the null key are supported. This class has performance characteristics similar to those of the <tt>HashMap</tt> class, and has the same efficiency parameters of <em>initial capacity</em> and <em>load factor</em>.</p>
 /// <p>Like most collection classes, this class is not synchronized. A synchronized <tt>WeakHashMap</tt> may be constructed using the <a href="../../java/util/Collections.html#synchronizedMap-java.util.Map-"><code>Collections.synchronizedMap</code></a> method.</p>
@@ -3667,6 +3618,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaMapClass {
 /// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's "collection view methods" are <i>fail-fast</i>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaWeakHashMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4218,14 +4170,6 @@ impl<'mc> Into<crate::util::JavaAbstractMap<'mc>> for JavaWeakHashMap<'mc> {
             .expect("Error converting JavaWeakHashMap into crate::util::JavaAbstractMap")
     }
 }
-
-pub struct JavaWeakHashMapClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaWeakHashMapClass {
-    fn class_name(&self) -> &str {
-        "java/util/WeakHashMap"
-    }
-}
-
 /// A collection that contains no duplicate elements. More formally, sets contain no pair of elements <code>e1</code> and <code>e2</code> such that <code>e1.equals(e2)</code>, and at most one null element. As implied by its name, this interface models the mathematical <i>set</i> abstraction.
 /// <p>The <tt>Set</tt> interface places additional stipulations, beyond those inherited from the <tt>Collection</tt> interface, on the contracts of all constructors and on the contracts of the <tt>add</tt>, <tt>equals</tt> and <tt>hashCode</tt> methods. Declarations for other inherited methods are also included here for convenience. (The specifications accompanying these declarations have been tailored to the <tt>Set</tt> interface, but they do not contain any additional stipulations.)</p>
 /// <p>The additional stipulation on constructors is, not surprisingly, that all constructors must create a set that contains no duplicate elements (as defined above).</p>
@@ -4234,6 +4178,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaWeakHashMapClass {
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4616,14 +4561,6 @@ impl<'mc> Into<crate::util::JavaCollection<'mc>> for JavaSet<'mc> {
             .expect("Error converting JavaSet into crate::util::JavaCollection")
     }
 }
-
-pub struct JavaSetClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaSetClass {
-    fn class_name(&self) -> &str {
-        "java/util/Set"
-    }
-}
-
 /// This class consists exclusively of static methods for obtaining encoders and decoders for the Base64 encoding scheme. The implementation of this class supports the following types of Base64 as specified in <a href="http://www.ietf.org/rfc/rfc4648.txt">RFC 4648</a> and <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a>.
 /// <ul>
 /// <li><a name="basic"><b>Basic</b></a>
@@ -4634,6 +4571,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaSetClass {
 /// <p>Uses the "The Base64 Alphabet" as specified in Table 1 of RFC 2045 for encoding and decoding operation. The encoded output must be represented in lines of no more than 76 characters each and uses a carriage return <code>'\r'</code> followed immediately by a linefeed <code>'\n'</code> as the line separator. No line separator is added to the end of the encoded output. All line separators or other characters not found in the base64 alphabet table are ignored in decoding operation.</p></li>
 /// </ul>
 /// <p>Unless otherwise noted, passing a <code>null</code> argument to a method of this class will cause a <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a> to be thrown.</p>
+#[repr(C)]
 pub struct JavaBase64<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4773,19 +4711,13 @@ impl<'mc> std::string::ToString for JavaBase64<'mc> {
     }
 }
 
-pub struct JavaBase64Class;
-impl blackboxmc_general::JNIProvidesClassName for JavaBase64Class {
-    fn class_name(&self) -> &str {
-        "java/util/Base64"
-    }
-}
-
 /// This class provides a skeletal implementation of the <tt>Collection</tt> interface, to minimize the effort required to implement this interface.
 /// <p>To implement an unmodifiable collection, the programmer needs only to extend this class and provide implementations for the <tt>iterator</tt> and <tt>size</tt> methods. (The iterator returned by the <tt>iterator</tt> method must implement <tt>hasNext</tt> and <tt>next</tt>.)</p>
 /// <p>To implement a modifiable collection, the programmer must additionally override this class's <tt>add</tt> method (which otherwise throws an <tt>UnsupportedOperationException</tt>), and the iterator returned by the <tt>iterator</tt> method must additionally implement its <tt>remove</tt> method.</p>
 /// <p>The programmer should generally provide a void (no argument) and <tt>Collection</tt> constructor, as per the recommendation in the <tt>Collection</tt> interface specification.</p>
 /// <p>The documentation for each non-abstract method in this class describes its implementation in detail. Each of these methods may be overridden if the collection being implemented admits a more efficient implementation.</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaAbstractCollection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5128,14 +5060,6 @@ impl<'mc> Into<crate::util::JavaCollection<'mc>> for JavaAbstractCollection<'mc>
             .expect("Error converting JavaAbstractCollection into crate::util::JavaCollection")
     }
 }
-
-pub struct JavaAbstractCollectionClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaAbstractCollectionClass {
-    fn class_name(&self) -> &str {
-        "java/util/AbstractCollection"
-    }
-}
-
 /// A <a title="interface in java.util" href="../../java/util/Set.html"><code>Set</code></a> that further provides a <i>total ordering</i> on its elements. The elements are ordered using their <a title="interface in java.lang" href="../../java/lang/Comparable.html">natural ordering</a>, or by a <a title="interface in java.util" href="../../java/util/Comparator.html"><code>Comparator</code></a> typically provided at sorted set creation time. The set's iterator will traverse the set in ascending element order. Several additional operations are provided to take advantage of the ordering. (This interface is the set analogue of <a title="interface in java.util" href="../../java/util/SortedMap.html"><code>SortedMap</code></a>.)
 /// <p>All elements inserted into a sorted set must implement the <tt>Comparable</tt> interface (or be accepted by the specified comparator). Furthermore, all such elements must be <i>mutually comparable</i>: <tt>e1.compareTo(e2)</tt> (or <tt>comparator.compare(e1, e2)</tt>) must not throw a <tt>ClassCastException</tt> for any elements <tt>e1</tt> and <tt>e2</tt> in the sorted set. Attempts to violate this restriction will cause the offending method or constructor invocation to throw a <tt>ClassCastException</tt>.</p>
 /// <p>Note that the ordering maintained by a sorted set (whether or not an explicit comparator is provided) must be <i>consistent with equals</i> if the sorted set is to correctly implement the <tt>Set</tt> interface. (See the <tt>Comparable</tt> interface or <tt>Comparator</tt> interface for a precise definition of <i>consistent with equals</i>.) This is so because the <tt>Set</tt> interface is defined in terms of the <tt>equals</tt> operation, but a sorted set performs all element comparisons using its <tt>compareTo</tt> (or <tt>compare</tt>) method, so two elements that are deemed equal by this method are, from the standpoint of the sorted set, equal. The behavior of a sorted set <i>is</i> well-defined even if its ordering is inconsistent with equals; it just fails to obey the general contract of the <tt>Set</tt> interface.</p>
@@ -5146,6 +5070,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaAbstractCollectionClass {
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaSortedSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5449,17 +5374,10 @@ impl<'mc> Into<crate::util::JavaSet<'mc>> for JavaSortedSet<'mc> {
             .expect("Error converting JavaSortedSet into crate::util::JavaSet")
     }
 }
-
-pub struct JavaSortedSetClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaSortedSetClass {
-    fn class_name(&self) -> &str {
-        "java/util/SortedSet"
-    }
-}
-
 /// This class provides skeletal implementations of some <a title="interface in java.util" href="../../java/util/Queue.html"><code>Queue</code></a> operations. The implementations in this class are appropriate when the base implementation does <em>not</em> allow <tt>null</tt> elements. Methods <a href="../../java/util/AbstractQueue.html#add-E-"><code>add</code></a>, <a href="../../java/util/AbstractQueue.html#remove--"><code>remove</code></a>, and <a href="../../java/util/AbstractQueue.html#element--"><code>element</code></a> are based on <a href="../../java/util/Queue.html#offer-E-"><code>offer</code></a>, <a href="../../java/util/Queue.html#poll--"><code>poll</code></a>, and <a href="../../java/util/Queue.html#peek--"><code>peek</code></a>, respectively, but throw exceptions instead of indicating failure via <tt>false</tt> or <tt>null</tt> returns.
 /// <p>A <tt>Queue</tt> implementation that extends this class must minimally define a method <a href="../../java/util/Queue.html#offer-E-"><code>Queue.offer(E)</code></a> which does not permit insertion of <tt>null</tt> elements, along with methods <a href="../../java/util/Queue.html#peek--"><code>Queue.peek()</code></a>, <a href="../../java/util/Queue.html#poll--"><code>Queue.poll()</code></a>, <a href="../../java/util/Collection.html#size--"><code>Collection.size()</code></a>, and <a href="../../java/util/Collection.html#iterator--"><code>Collection.iterator()</code></a>. Typically, additional methods will be overridden as well. If these requirements cannot be met, consider instead subclassing <a href="../../java/util/AbstractCollection.html" title="class in java.util"><code>AbstractCollection</code></a>.</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaAbstractQueue<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5853,15 +5771,8 @@ impl<'mc> Into<crate::util::JavaAbstractCollection<'mc>> for JavaAbstractQueue<'
             .expect("Error converting JavaAbstractQueue into crate::util::JavaAbstractCollection")
     }
 }
-
-pub struct JavaAbstractQueueClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaAbstractQueueClass {
-    fn class_name(&self) -> &str {
-        "java/util/AbstractQueue"
-    }
-}
-
 /// An Entry maintaining a key and a value. The value may be changed using the <tt>setValue</tt> method. This class facilitates the process of building custom map implementations. For example, it may be convenient to return arrays of <tt>SimpleEntry</tt> instances in method <tt>Map.entrySet().toArray</tt>.
+#[repr(C)]
 pub struct JavaAbstractMapSimpleEntry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6067,17 +5978,10 @@ impl<'mc> Into<crate::util::JavaMapEntry<'mc>> for JavaAbstractMapSimpleEntry<'m
             .expect("Error converting JavaAbstractMapSimpleEntry into crate::util::JavaMapEntry")
     }
 }
-
-pub struct JavaAbstractMapSimpleEntryClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaAbstractMapSimpleEntryClass {
-    fn class_name(&self) -> &str {
-        "java/util/AbstractMap$SimpleEntry"
-    }
-}
-
 /// A class can implement the <code>Observer</code> interface when it wants to be informed of changes in observable objects.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaObserver<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6125,17 +6029,10 @@ impl<'mc> JavaObserver<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaObserverClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaObserverClass {
-    fn class_name(&self) -> &str {
-        "java/util/Observer"
-    }
-}
-
 /// A tagging interface that all event listener interfaces must extend.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaEventListener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6185,14 +6082,6 @@ impl<'mc> JavaEventListener<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaEventListenerClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaEventListenerClass {
-    fn class_name(&self) -> &str {
-        "java/util/EventListener"
-    }
-}
-
 /// A collection designed for holding elements prior to processing. Besides basic <a href="../../java/util/Collection.html" title="interface in java.util"><code>Collection</code></a> operations, queues provide additional insertion, extraction, and inspection operations. Each of these methods exists in two forms: one throws an exception if the operation fails, the other returns a special value (either <code>null</code> or <code>false</code>, depending on the operation). The latter form of the insert operation is designed specifically for use with capacity-restricted <code>Queue</code> implementations; in most implementations, insert operations cannot fail.
 /// <table cellpadding="3" border="" cellspacing="1">
 /// <caption>
@@ -6231,6 +6120,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaEventListenerClass {
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaQueue<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6549,14 +6439,6 @@ impl<'mc> Into<crate::util::JavaCollection<'mc>> for JavaQueue<'mc> {
             .expect("Error converting JavaQueue into crate::util::JavaCollection")
     }
 }
-
-pub struct JavaQueueClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaQueueClass {
-    fn class_name(&self) -> &str {
-        "java/util/Queue"
-    }
-}
-
 /// An object that implements the Enumeration interface generates a series of elements, one at a time. Successive calls to the <code>nextElement</code> method return successive elements of the series.
 /// <p>For example, to print all elements of a <tt>Vector&lt;E&gt;</tt> <i>v</i>:</p>
 /// <pre> for (Enumeration&lt;E&gt; e = v.elements(); e.hasMoreElements();)
@@ -6565,6 +6447,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaQueueClass {
 /// <p>NOTE: The functionality of this interface is duplicated by the Iterator interface. In addition, Iterator adds an optional remove operation, and has shorter method names. New implementations should consider using Iterator in preference to Enumeration.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaEnumeration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6645,14 +6528,6 @@ impl<'mc> JavaEnumeration<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaEnumerationClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaEnumerationClass {
-    fn class_name(&self) -> &str {
-        "java/util/Enumeration"
-    }
-}
-
 /// This class implements a hash table, which maps keys to values. Any non-<code>null</code> object can be used as a key or as a value.
 /// <p>To successfully store and retrieve objects from a hashtable, the objects used as keys must implement the <code>hashCode</code> method and the <code>equals</code> method.</p>
 /// <p>An instance of <code>Hashtable</code> has two parameters that affect its performance: <i>initial capacity</i> and <i>load factor</i>. The <i>capacity</i> is the number of <i>buckets</i> in the hash table, and the <i>initial capacity</i> is simply the capacity at the time the hash table is created. Note that the hash table is <i>open</i>: in the case of a "hash collision", a single bucket stores multiple entries, which must be searched sequentially. The <i>load factor</i> is a measure of how full the hash table is allowed to get before its capacity is automatically increased. The initial capacity and load factor parameters are merely hints to the implementation. The exact details as to when and whether the rehash method is invoked are implementation-dependent.</p>
@@ -6675,6 +6550,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaEnumerationClass {
 /// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's "collection view methods" are <em>fail-fast</em>: if the Hashtable is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future. The Enumerations returned by Hashtable's keys and elements methods are <em>not</em> fail-fast.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>As of the Java 2 platform v1.2, this class was retrofitted to implement the <a href="../../java/util/Map.html" title="interface in java.util"><code>Map</code></a> interface, making it a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>. Unlike the new collection implementations, <code>Hashtable</code> is synchronized. If a thread-safe implementation is not needed, it is recommended to use <a title="class in java.util" href="../../java/util/HashMap.html"><code>HashMap</code></a> in place of <code>Hashtable</code>. If a thread-safe highly-concurrent implementation is desired, then it is recommended to use <a href="../../java/util/concurrent/ConcurrentHashMap.html" title="class in java.util.concurrent"><code>ConcurrentHashMap</code></a> in place of <code>Hashtable</code>.</p>
+#[repr(C)]
 pub struct JavaHashtable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7267,18 +7143,11 @@ impl<'mc> Into<crate::util::JavaMap<'mc>> for JavaHashtable<'mc> {
             .expect("Error converting JavaHashtable into crate::util::JavaMap")
     }
 }
-
-pub struct JavaHashtableClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaHashtableClass {
-    fn class_name(&self) -> &str {
-        "java/util/Hashtable"
-    }
-}
-
 /// This class provides a skeletal implementation of the <tt>Set</tt> interface to minimize the effort required to implement this interface.
 /// <p>The process of implementing a set by extending this class is identical to that of implementing a Collection by extending AbstractCollection, except that all of the methods and constructors in subclasses of this class must obey the additional constraints imposed by the <tt>Set</tt> interface (for instance, the add method must not permit addition of multiple instances of an object to a set).</p>
 /// <p>Note that this class does not override any of the implementations from the <tt>AbstractCollection</tt> class. It merely adds implementations for <tt>equals</tt> and <tt>hashCode</tt>.</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaAbstractSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7626,17 +7495,10 @@ impl<'mc> Into<crate::util::JavaAbstractCollection<'mc>> for JavaAbstractSet<'mc
             .expect("Error converting JavaAbstractSet into crate::util::JavaAbstractCollection")
     }
 }
-
-pub struct JavaAbstractSetClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaAbstractSetClass {
-    fn class_name(&self) -> &str {
-        "java/util/AbstractSet"
-    }
-}
-
 /// A container object which may or may not contain a <code>int</code> value. If a value is present, <code>isPresent()</code> will return <code>true</code> and <code>getAsInt()</code> will return the value.
 /// <p>Additional methods that depend on the presence or absence of a contained value are provided, such as <a href="../../java/util/OptionalInt.html#orElse-int-"><code>orElse()</code></a> (return a default value if value not present) and <a href="../../java/util/OptionalInt.html#ifPresent-java.util.function.IntConsumer-"><code>ifPresent()</code></a> (execute a block of code if the value is present).</p>
 /// <p>This is a <a href="../lang/doc-files/ValueBased.html">value-based</a> class; use of identity-sensitive operations (including reference equality (<code>==</code>), identity hash code, or synchronization) on instances of <code>OptionalInt</code> may have unpredictable results and should be avoided.</p>
+#[repr(C)]
 pub struct JavaOptionalInt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7906,13 +7768,6 @@ impl<'mc> std::string::ToString for JavaOptionalInt<'mc> {
     }
 }
 
-pub struct JavaOptionalIntClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaOptionalIntClass {
-    fn class_name(&self) -> &str {
-        "java/util/OptionalInt"
-    }
-}
-
 /// A Red-Black tree based <a title="interface in java.util" href="../../java/util/NavigableMap.html"><code>NavigableMap</code></a> implementation. The map is sorted according to the <a title="interface in java.lang" href="../../java/lang/Comparable.html">natural ordering</a> of its keys, or by a <a title="interface in java.util" href="../../java/util/Comparator.html"><code>Comparator</code></a> provided at map creation time, depending on which constructor is used.
 /// <p>This implementation provides guaranteed log(n) time cost for the <code>containsKey</code>, <code>get</code>, <code>put</code> and <code>remove</code> operations. Algorithms are adaptations of those in Cormen, Leiserson, and Rivest's <em>Introduction to Algorithms</em>.</p>
 /// <p>Note that the ordering maintained by a tree map, like any sorted map, and whether or not an explicit comparator is provided, must be <em>consistent with <code>equals</code></em> if this sorted map is to correctly implement the <code>Map</code> interface. (See <code>Comparable</code> or <code>Comparator</code> for a precise definition of <em>consistent with equals</em>.) This is so because the <code>Map</code> interface is defined in terms of the <code>equals</code> operation, but a sorted map performs all key comparisons using its <code>compareTo</code> (or <code>compare</code>) method, so two keys that are deemed equal by this method are, from the standpoint of the sorted map, equal. The behavior of a sorted map <em>is</em> well-defined even if its ordering is inconsistent with <code>equals</code>; it just fails to obey the general contract of the <code>Map</code> interface.</p>
@@ -7922,6 +7777,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaOptionalIntClass {
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <em>the fail-fast behavior of iterators should be used only to detect bugs.</em></p>
 /// <p>All <code>Map.Entry</code> pairs returned by methods in this class and its views represent snapshots of mappings at the time they were produced. They do <strong>not</strong> support the <code>Entry.setValue</code> method. (Note however that it is possible to change mappings in the associated map using <code>put</code>.)</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaTreeMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8687,14 +8543,6 @@ impl<'mc> Into<crate::util::JavaAbstractMap<'mc>> for JavaTreeMap<'mc> {
             .expect("Error converting JavaTreeMap into crate::util::JavaAbstractMap")
     }
 }
-
-pub struct JavaTreeMapClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaTreeMapClass {
-    fn class_name(&self) -> &str {
-        "java/util/TreeMap"
-    }
-}
-
 /// A linear collection that supports element insertion and removal at both ends. The name <i>deque</i> is short for "double ended queue" and is usually pronounced "deck". Most <code>Deque</code> implementations place no fixed limits on the number of elements they may contain, but this interface supports capacity-restricted deques as well as those with no fixed size limit.
 /// <p>This interface defines methods to access the elements at both ends of the deque. Methods are provided to insert, remove, and examine the element. Each of these methods exists in two forms: one throws an exception if the operation fails, the other returns a special value (either <code>null</code> or <code>false</code>, depending on the operation). The latter form of the insert operation is designed specifically for use with capacity-restricted <code>Deque</code> implementations; in most implementations, insert operations cannot fail.</p>
 /// <p>The twelve methods described above are summarized in the following table:</p>
@@ -8806,6 +8654,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaTreeMapClass {
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaDeque<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9330,20 +9179,13 @@ impl<'mc> Into<crate::util::JavaQueue<'mc>> for JavaDeque<'mc> {
             .expect("Error converting JavaDeque into crate::util::JavaQueue")
     }
 }
-
-pub struct JavaDequeClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaDequeClass {
-    fn class_name(&self) -> &str {
-        "java/util/Deque"
-    }
-}
-
 /// The <tt>Formattable</tt> interface must be implemented by any class that needs to perform custom formatting using the <tt>'s'</tt> conversion specifier of <a href="../../java/util/Formatter.html" title="class in java.util"><code>Formatter</code></a>. This interface allows basic control for formatting arbitrary objects. For example, the following class prints out different representations of a stock's name depending on the flags and length constraints: <code>import java.nio.CharBuffer; import java.util.Formatter; import java.util.Formattable; import java.util.Locale; import static java.util.FormattableFlags.*; ... public class StockName implements Formattable { private String symbol, companyName, frenchCompanyName; public StockName(String symbol, String companyName, String frenchCompanyName) { ... } ... public void formatTo(Formatter fmt, int f, int width, int precision) { StringBuilder sb = new StringBuilder(); // decide form of name String name = companyName; if (fmt.locale().equals(Locale.FRANCE)) name = frenchCompanyName; boolean alternate = (f &amp; ALTERNATE) == ALTERNATE; boolean usesymbol = alternate || (precision != -1 &amp;&amp; precision &lt; 10); String out = (usesymbol ? symbol : name); // apply precision if (precision == -1 || out.length() &lt; precision) { // write it all sb.append(out); } else { sb.append(out.substring(0, precision - 1)).append('*'); } // apply width and justification int len = sb.length(); if (len &lt; width) for (int i = 0; i &lt; width - len; i++) if ((f &amp; LEFT_JUSTIFY) == LEFT_JUSTIFY) sb.append(' '); else sb.insert(0, ' '); fmt.format(sb.toString()); } public String toString() { return String.format("%s - %s", symbol, companyName); } } </code>
 /// <p>When used in conjunction with the <a href="../../java/util/Formatter.html" title="class in java.util"><code>Formatter</code></a>, the above class produces the following output for various format strings. <code>Formatter fmt = new Formatter(); StockName sn = new StockName("HUGE", "Huge Fruit, Inc.", "Fruit Titanesque, Inc."); fmt.format("%s", sn); // -&gt; "Huge Fruit, Inc." fmt.format("%s", sn.toString()); // -&gt; "HUGE - Huge Fruit, Inc." fmt.format("%#s", sn); // -&gt; "HUGE" fmt.format("%-10.8s", sn); // -&gt; "HUGE " fmt.format("%.12s", sn); // -&gt; "Huge Fruit,*" fmt.format(Locale.FRANCE, "%25s", sn); // -&gt; " Fruit Titanesque, Inc." </code></p>
 /// <p>Formattables are not necessarily safe for multithreaded access. Thread safety is optional and may be enforced by classes that extend and implement this interface.</p>
 /// <p>Unless otherwise specified, passing a <tt>null</tt> argument to any method in this interface will cause a <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a> to be thrown.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaFormattable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9393,17 +9235,10 @@ impl<'mc> JavaFormattable<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaFormattableClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaFormattableClass {
-    fn class_name(&self) -> &str {
-        "java/util/Formattable"
-    }
-}
-
 /// A container object which may or may not contain a <code>double</code> value. If a value is present, <code>isPresent()</code> will return <code>true</code> and <code>getAsDouble()</code> will return the value.
 /// <p>Additional methods that depend on the presence or absence of a contained value are provided, such as <a href="../../java/util/OptionalDouble.html#orElse-double-"><code>orElse()</code></a> (return a default value if value not present) and <a href="../../java/util/OptionalDouble.html#ifPresent-java.util.function.DoubleConsumer-"><code>ifPresent()</code></a> (execute a block of code if the value is present).</p>
 /// <p>This is a <a href="../lang/doc-files/ValueBased.html">value-based</a> class; use of identity-sensitive operations (including reference equality (<code>==</code>), identity hash code, or synchronization) on instances of <code>OptionalDouble</code> may have unpredictable results and should be avoided.</p>
+#[repr(C)]
 pub struct JavaOptionalDouble<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9673,16 +9508,10 @@ impl<'mc> std::string::ToString for JavaOptionalDouble<'mc> {
     }
 }
 
-pub struct JavaOptionalDoubleClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaOptionalDoubleClass {
-    fn class_name(&self) -> &str {
-        "java/util/OptionalDouble"
-    }
-}
-
 /// A container object which may or may not contain a <code>long</code> value. If a value is present, <code>isPresent()</code> will return <code>true</code> and <code>getAsLong()</code> will return the value.
 /// <p>Additional methods that depend on the presence or absence of a contained value are provided, such as <a href="../../java/util/OptionalLong.html#orElse-long-"><code>orElse()</code></a> (return a default value if value not present) and <a href="../../java/util/OptionalLong.html#ifPresent-java.util.function.LongConsumer-"><code>ifPresent()</code></a> (execute a block of code if the value is present).</p>
 /// <p>This is a <a href="../lang/doc-files/ValueBased.html">value-based</a> class; use of identity-sensitive operations (including reference equality (<code>==</code>), identity hash code, or synchronization) on instances of <code>OptionalLong</code> may have unpredictable results and should be avoided.</p>
+#[repr(C)]
 pub struct JavaOptionalLong<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9952,13 +9781,6 @@ impl<'mc> std::string::ToString for JavaOptionalLong<'mc> {
     }
 }
 
-pub struct JavaOptionalLongClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaOptionalLongClass {
-    fn class_name(&self) -> &str {
-        "java/util/OptionalLong"
-    }
-}
-
 /// <p>Hash table and linked list implementation of the <tt>Set</tt> interface, with predictable iteration order. This implementation differs from <tt>HashSet</tt> in that it maintains a doubly-linked list running through all of its entries. This linked list defines the iteration ordering, which is the order in which elements were inserted into the set (<i>insertion-order</i>). Note that insertion order is <i>not</i> affected if an element is <i>re-inserted</i> into the set. (An element <tt>e</tt> is reinserted into a set <tt>s</tt> if <tt>s.add(e)</tt> is invoked when <tt>s.contains(e)</tt> would return <tt>true</tt> immediately prior to the invocation.)</p>
 /// <p>This implementation spares its clients from the unspecified, generally chaotic ordering provided by <a title="class in java.util" href="../../java/util/HashSet.html"><code>HashSet</code></a>, without incurring the increased cost associated with <a href="../../java/util/TreeSet.html" title="class in java.util"><code>TreeSet</code></a>. It can be used to produce a copy of a set that has the same order as the original, regardless of the original set's implementation:</p>
 /// <pre> void foo(Set s) {
@@ -9973,6 +9795,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaOptionalLongClass {
 /// <p>The iterators returned by this class's <tt>iterator</tt> method are <em>fail-fast</em>: if the set is modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaLinkedHashSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10354,14 +10177,6 @@ impl<'mc> Into<crate::util::JavaHashSet<'mc>> for JavaLinkedHashSet<'mc> {
             .expect("Error converting JavaLinkedHashSet into crate::util::JavaHashSet")
     }
 }
-
-pub struct JavaLinkedHashSetClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaLinkedHashSetClass {
-    fn class_name(&self) -> &str {
-        "java/util/LinkedHashSet"
-    }
-}
-
 /// A <code>Locale</code> object represents a specific geographical, political, or cultural region. An operation that requires a <code>Locale</code> to perform its task is called <em>locale-sensitive</em> and uses the <code>Locale</code> to tailor information for the user. For example, displaying a number is a locale-sensitive operation— the number should be formatted according to the customs and conventions of the user's native country, region, or culture.
 /// <p>The <code>Locale</code> class implements IETF BCP 47 which is composed of <a href="http://tools.ietf.org/html/rfc4647">RFC 4647 "Matching of Language Tags"</a> and <a href="http://tools.ietf.org/html/rfc5646">RFC 5646 "Tags for Identifying Languages"</a> with support for the LDML (UTS#35, "Unicode Locale Data Markup Language") BCP 47-compatible extensions for locale data exchange.</p>
 /// <p>A <code>Locale</code> object logically consists of the fields described below.</p>
@@ -10508,6 +10323,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaLinkedHashSetClass {
 /// <p>The APIs added in 1.7 map between the old and new language codes, maintaining the old codes internal to Locale (so that <code>getLanguage</code> and <code>toString</code> reflect the old code), but using the new codes in the BCP 47 language tag APIs (so that <code>toLanguageTag</code> reflects the new one). This preserves the equivalence between Locales no matter which code or API is used to construct them. Java's default resource bundle lookup mechanism also implements this mapping, so that resources can be named using either convention, see <a href="../../java/util/ResourceBundle.Control.html" title="class in java.util"><code>ResourceBundle.Control</code></a>.</p>
 /// <h5>Three-letter language/country(region) codes</h5>
 /// <p>The Locale constructors have always specified that the language and the country param be two characters in length, although in practice they have accepted any length. The specification has now been relaxed to allow language codes of two to eight characters and country (region) codes of two to three characters, and in particular, three-letter language codes and three-digit region codes as specified in the IANA Language Subtag Registry. For compatibility, the implementation still does not impose a length constraint.</p>
+#[repr(C)]
 pub struct JavaLocale<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11069,13 +10885,6 @@ impl<'mc> std::string::ToString for JavaLocale<'mc> {
     }
 }
 
-pub struct JavaLocaleClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaLocaleClass {
-    fn class_name(&self) -> &str {
-        "java/util/Locale"
-    }
-}
-
 /// Hash table based implementation of the <tt>Map</tt> interface. This implementation provides all of the optional map operations, and permits <tt>null</tt> values and the <tt>null</tt> key. (The <tt>HashMap</tt> class is roughly equivalent to <tt>Hashtable</tt>, except that it is unsynchronized and permits nulls.) This class makes no guarantees as to the order of the map; in particular, it does not guarantee that the order will remain constant over time.
 /// <p>This implementation provides constant-time performance for the basic operations (<tt>get</tt> and <tt>put</tt>), assuming the hash function disperses the elements properly among the buckets. Iteration over collection views requires time proportional to the "capacity" of the <tt>HashMap</tt> instance (the number of buckets) plus its size (the number of key-value mappings). Thus, it's very important not to set the initial capacity too high (or the load factor too low) if iteration performance is important.</p>
 /// <p>An instance of <tt>HashMap</tt> has two parameters that affect its performance: <i>initial capacity</i> and <i>load factor</i>. The <i>capacity</i> is the number of buckets in the hash table, and the initial capacity is simply the capacity at the time the hash table is created. The <i>load factor</i> is a measure of how full the hash table is allowed to get before its capacity is automatically increased. When the number of entries in the hash table exceeds the product of the load factor and the current capacity, the hash table is <i>rehashed</i> (that is, internal data structures are rebuilt) so that the hash table has approximately twice the number of buckets.</p>
@@ -11086,6 +10895,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaLocaleClass {
 /// <p>The iterators returned by all of this class's "collection view methods" are <i>fail-fast</i>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaHashMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11664,14 +11474,6 @@ impl<'mc> Into<crate::util::JavaAbstractMap<'mc>> for JavaHashMap<'mc> {
             .expect("Error converting JavaHashMap into crate::util::JavaAbstractMap")
     }
 }
-
-pub struct JavaHashMapClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaHashMapClass {
-    fn class_name(&self) -> &str {
-        "java/util/HashMap"
-    }
-}
-
 /// This class implements the <tt>Map</tt> interface with a hash table, using reference-equality in place of object-equality when comparing keys (and values). In other words, in an <tt>IdentityHashMap</tt>, two keys <tt>k1</tt> and <tt>k2</tt> are considered equal if and only if <tt>(k1==k2)</tt>. (In normal <tt>Map</tt> implementations (like <tt>HashMap</tt>) two keys <tt>k1</tt> and <tt>k2</tt> are considered equal if and only if <tt>(k1==null ? k2==null : k1.equals(k2))</tt>.)
 /// <p><b>This class is <i>not</i> a general-purpose <tt>Map</tt> implementation! While this class implements the <tt>Map</tt> interface, it intentionally violates <tt>Map's</tt> general contract, which mandates the use of the <tt>equals</tt> method when comparing objects. This class is designed for use only in the rare cases wherein reference-equality semantics are required.</b></p>
 /// <p>A typical use of this class is <i>topology-preserving object graph transformations</i>, such as serialization or deep-copying. To perform such a transformation, a program must maintain a "node table" that keeps track of all the object references that have already been processed. The node table must not equate distinct objects even if they happen to be equal. Another typical use of this class is to maintain <i>proxy objects</i>. For example, a debugging facility might wish to maintain a proxy object for each object in the program being debugged.</p>
@@ -11685,6 +11487,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaHashMapClass {
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>fail-fast iterators should be used only to detect bugs.</i></p>
 /// <p>Implementation note: This is a simple <i>linear-probe</i> hash table, as described for example in texts by Sedgewick and Knuth. The array alternates holding keys and values. (This has better locality for large tables than does using separate arrays.) For many JRE implementations and operation mixes, this class will yield better performance than <a href="../../java/util/HashMap.html" title="class in java.util"><code>HashMap</code></a> (which uses <i>chaining</i> rather than linear-probing).</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaIdentityHashMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12239,14 +12042,6 @@ impl<'mc> Into<crate::util::JavaAbstractMap<'mc>> for JavaIdentityHashMap<'mc> {
             .expect("Error converting JavaIdentityHashMap into crate::util::JavaAbstractMap")
     }
 }
-
-pub struct JavaIdentityHashMapClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaIdentityHashMapClass {
-    fn class_name(&self) -> &str {
-        "java/util/IdentityHashMap"
-    }
-}
-
 /// <p>Hash table and linked list implementation of the <tt>Map</tt> interface, with predictable iteration order. This implementation differs from <tt>HashMap</tt> in that it maintains a doubly-linked list running through all of its entries. This linked list defines the iteration ordering, which is normally the order in which keys were inserted into the map (<i>insertion-order</i>). Note that insertion order is not affected if a key is <i>re-inserted</i> into the map. (A key <tt>k</tt> is reinserted into a map <tt>m</tt> if <tt>m.put(k, v)</tt> is invoked when <tt>m.containsKey(k)</tt> would return <tt>true</tt> immediately prior to the invocation.)</p>
 /// <p>This implementation spares its clients from the unspecified, generally chaotic ordering provided by <a title="class in java.util" href="../../java/util/HashMap.html"><code>HashMap</code></a> (and <a href="../../java/util/Hashtable.html" title="class in java.util"><code>Hashtable</code></a>), without incurring the increased cost associated with <a href="../../java/util/TreeMap.html" title="class in java.util"><code>TreeMap</code></a>. It can be used to produce a copy of a map that has the same order as the original, regardless of the original map's implementation:</p>
 /// <pre> void foo(Map m) {
@@ -12264,6 +12059,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaIdentityHashMapClass {
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>The spliterators returned by the spliterator method of the collections returned by all of this class's collection view methods are <em><a href="Spliterator.html#binding">late-binding</a></em>, <em>fail-fast</em>, and additionally report <a href="../../java/util/Spliterator.html#ORDERED"><code>Spliterator.ORDERED</code></a>.</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaLinkedHashMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12850,20 +12646,13 @@ impl<'mc> Into<crate::util::JavaHashMap<'mc>> for JavaLinkedHashMap<'mc> {
             .expect("Error converting JavaLinkedHashMap into crate::util::JavaHashMap")
     }
 }
-
-pub struct JavaLinkedHashMapClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaLinkedHashMapClass {
-    fn class_name(&self) -> &str {
-        "java/util/LinkedHashMap"
-    }
-}
-
 /// This class provides a skeletal implementation of the <tt>List</tt> interface to minimize the effort required to implement this interface backed by a "sequential access" data store (such as a linked list). For random access data (such as an array), <tt>AbstractList</tt> should be used in preference to this class.
 /// <p>This class is the opposite of the <tt>AbstractList</tt> class in the sense that it implements the "random access" methods (<tt>get(int index)</tt>, <tt>set(int index, E element)</tt>, <tt>add(int index, E element)</tt> and <tt>remove(int index)</tt>) on top of the list's list iterator, instead of the other way around.</p>
 /// <p>To implement a list the programmer needs only to extend this class and provide implementations for the <tt>listIterator</tt> and <tt>size</tt> methods. For an unmodifiable list, the programmer need only implement the list iterator's <tt>hasNext</tt>, <tt>next</tt>, <tt>hasPrevious</tt>, <tt>previous</tt> and <tt>index</tt> methods.</p>
 /// <p>For a modifiable list the programmer should additionally implement the list iterator's <tt>set</tt> method. For a variable-size list the programmer should additionally implement the list iterator's <tt>remove</tt> and <tt>add</tt> methods.</p>
 /// <p>The programmer should generally provide a void (no argument) and collection constructor, as per the recommendation in the <tt>Collection</tt> interface specification.</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaAbstractSequentialList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13368,14 +13157,6 @@ impl<'mc> Into<crate::util::JavaAbstractList<'mc>> for JavaAbstractSequentialLis
         )
     }
 }
-
-pub struct JavaAbstractSequentialListClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaAbstractSequentialListClass {
-    fn class_name(&self) -> &str {
-        "java/util/AbstractSequentialList"
-    }
-}
-
 /// A comparison function, which imposes a <i>total ordering</i> on some collection of objects. Comparators can be passed to a sort method (such as <a href="../../java/util/Collections.html#sort-java.util.List-java.util.Comparator-"><code>Collections.sort</code></a> or <a href="../../java/util/Arrays.html#sort-T:A-java.util.Comparator-"><code>Arrays.sort</code></a>) to allow precise control over the sort order. Comparators can also be used to control the order of certain data structures (such as <a href="../../java/util/SortedSet.html" title="interface in java.util"><code>sorted sets</code></a> or <a href="../../java/util/SortedMap.html" title="interface in java.util"><code>sorted maps</code></a>), or to provide an ordering for collections of objects that don't have a <a title="interface in java.lang" href="../../java/lang/Comparable.html"><code>natural ordering</code></a>.
 /// <p>The ordering imposed by a comparator <tt>c</tt> on a set of elements <tt>S</tt> is said to be <i>consistent with equals</i> if and only if <tt>c.compare(e1, e2)==0</tt> has the same boolean value as <tt>e1.equals(e2)</tt> for every <tt>e1</tt> and <tt>e2</tt> in <tt>S</tt>.</p>
 /// <p>Caution should be exercised when using a comparator capable of imposing an ordering inconsistent with equals to order a sorted set (or sorted map). Suppose a sorted set (or sorted map) with an explicit comparator <tt>c</tt> is used with elements (or keys) drawn from a set <tt>S</tt>. If the ordering imposed by <tt>c</tt> on <tt>S</tt> is inconsistent with equals, the sorted set (or sorted map) will behave "strangely." In particular the sorted set (or sorted map) will violate the general contract for set (or map), which is defined in terms of <tt>equals</tt>.</p>
@@ -13391,6 +13172,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaAbstractSequentialListClas
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaComparator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13734,20 +13516,13 @@ impl<'mc> JavaComparator<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaComparatorClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaComparatorClass {
-    fn class_name(&self) -> &str {
-        "java/util/Comparator"
-    }
-}
-
 /// An instance of this class is used to generate a stream of pseudorandom numbers. The class uses a 48-bit seed, which is modified using a linear congruential formula. (See Donald Knuth, <i>The Art of Computer Programming, Volume 2</i>, Section 3.2.1.)
 /// <p>If two instances of <code>Random</code> are created with the same seed, and the same sequence of method calls is made for each, they will generate and return identical sequences of numbers. In order to guarantee this property, particular algorithms are specified for the class <code>Random</code>. Java implementations must use all the algorithms shown here for the class <code>Random</code>, for the sake of absolute portability of Java code. However, subclasses of class <code>Random</code> are permitted to use other algorithms, so long as they adhere to the general contracts for all the methods.</p>
 /// <p>The algorithms implemented by class <code>Random</code> use a <code>protected</code> utility method that on each invocation can supply up to 32 pseudorandomly generated bits.</p>
 /// <p>Many applications will find the method <a href="../../java/lang/Math.html#random--"><code>Math.random()</code></a> simpler to use.</p>
 /// <p>Instances of <code>java.util.Random</code> are threadsafe. However, the concurrent use of the same <code>java.util.Random</code> instance across threads may encounter contention and consequent poor performance. Consider instead using <a href="../../java/util/concurrent/ThreadLocalRandom.html" title="class in java.util.concurrent"><code>ThreadLocalRandom</code></a> in multithreaded designs.</p>
 /// <p>Instances of <code>java.util.Random</code> are not cryptographically secure. Consider instead using <a title="class in java.security" href="../../java/security/SecureRandom.html"><code>SecureRandom</code></a> to get a cryptographically secure pseudo-random number generator for use by security-sensitive applications.</p>
+#[repr(C)]
 pub struct JavaRandom<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14086,14 +13861,6 @@ impl<'mc> Into<crate::util::random::JavaRandomGenerator<'mc>> for JavaRandom<'mc
             .expect("Error converting JavaRandom into crate::util::random::JavaRandomGenerator")
     }
 }
-
-pub struct JavaRandomClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaRandomClass {
-    fn class_name(&self) -> &str {
-        "java/util/Random"
-    }
-}
-
 /// An ordered collection (also known as a <i>sequence</i>). The user of this interface has precise control over where in the list each element is inserted. The user can access elements by their integer index (position in the list), and search for elements in the list.
 /// <p>Unlike sets, lists typically allow duplicate elements. More formally, lists typically allow pairs of elements <tt>e1</tt> and <tt>e2</tt> such that <tt>e1.equals(e2)</tt>, and they typically allow multiple null elements if they allow null elements at all. It is not inconceivable that someone might wish to implement a list that prohibits duplicates, by throwing runtime exceptions when the user attempts to insert them, but we expect this usage to be rare.</p>
 /// <p>The <tt>List</tt> interface places additional stipulations, beyond those specified in the <tt>Collection</tt> interface, on the contracts of the <tt>iterator</tt>, <tt>add</tt>, <tt>remove</tt>, <tt>equals</tt>, and <tt>hashCode</tt> methods. Declarations for other inherited methods are also included here for convenience.</p>
@@ -14106,6 +13873,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaRandomClass {
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14649,14 +14417,6 @@ impl<'mc> Into<crate::util::JavaCollection<'mc>> for JavaList<'mc> {
             .expect("Error converting JavaList into crate::util::JavaCollection")
     }
 }
-
-pub struct JavaListClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaListClass {
-    fn class_name(&self) -> &str {
-        "java/util/List"
-    }
-}
-
 /// A class that represents an immutable universally unique identifier (UUID). A UUID represents a 128-bit value.
 /// <p>There exist different variants of these global identifiers. The methods of this class are for manipulating the Leach-Salz variant, although the constructors allow the creation of any variant of UUID (described below).</p>
 /// <p>The layout of a variant 2 (Leach-Salz) UUID is as follows: The most significant long consists of the following unsigned fields:</p>
@@ -14672,6 +14432,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaListClass {
 /// <p>The variant field contains a value which identifies the layout of the <code>UUID</code>. The bit layout described above is valid only for a <code>UUID</code> with a variant value of 2, which indicates the Leach-Salz variant.</p>
 /// <p>The version field holds a value that describes the type of this <code>UUID</code>. There are four different basic types of UUIDs: time-based, DCE security, name-based, and randomly generated UUIDs. These types have a version value of 1, 2, 3 and 4, respectively.</p>
 /// <p>For more information including algorithms used to create <code>UUID</code>s, see <a href="http://www.ietf.org/rfc/rfc4122.txt"> <i>RFC&nbsp;4122: A Universally Unique IDentifier (UUID) URN Namespace</i></a>, section 4.2 "Algorithms for Creating a Time-Based UUID".</p>
+#[repr(C)]
 pub struct JavaUUID<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14965,13 +14726,6 @@ impl<'mc> std::string::ToString for JavaUUID<'mc> {
     }
 }
 
-pub struct JavaUUIDClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaUUIDClass {
-    fn class_name(&self) -> &str {
-        "java/util/UUID"
-    }
-}
-
 /// This class implements the <tt>Set</tt> interface, backed by a hash table (actually a <tt>HashMap</tt> instance). It makes no guarantees as to the iteration order of the set; in particular, it does not guarantee that the order will remain constant over time. This class permits the <tt>null</tt> element.
 /// <p>This class offers constant time performance for the basic operations (<tt>add</tt>, <tt>remove</tt>, <tt>contains</tt> and <tt>size</tt>), assuming the hash function disperses the elements properly among the buckets. Iterating over this set requires time proportional to the sum of the <tt>HashSet</tt> instance's size (the number of elements) plus the "capacity" of the backing <tt>HashMap</tt> instance (the number of buckets). Thus, it's very important not to set the initial capacity too high (or the load factor too low) if iteration performance is important.</p>
 /// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a hash set concurrently, and at least one of the threads modifies the set, it <i>must</i> be synchronized externally. This is typically accomplished by synchronizing on some object that naturally encapsulates the set. If no such object exists, the set should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedSet-java.util.Set-"><code>Collections.synchronizedSet</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the set:</p>
@@ -14979,6 +14733,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaUUIDClass {
 /// <p>The iterators returned by this class's <tt>iterator</tt> method are <i>fail-fast</i>: if the set is modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the Iterator throws a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaHashSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15378,14 +15133,6 @@ impl<'mc> Into<crate::util::JavaAbstractSet<'mc>> for JavaHashSet<'mc> {
             .expect("Error converting JavaHashSet into crate::util::JavaAbstractSet")
     }
 }
-
-pub struct JavaHashSetClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaHashSetClass {
-    fn class_name(&self) -> &str {
-        "java/util/HashSet"
-    }
-}
-
 /// This class provides a skeletal implementation of the <a href="../../java/util/List.html" title="interface in java.util"><code>List</code></a> interface to minimize the effort required to implement this interface backed by a "random access" data store (such as an array). For sequential access data (such as a linked list), <a title="class in java.util" href="../../java/util/AbstractSequentialList.html"><code>AbstractSequentialList</code></a> should be used in preference to this class.
 /// <p>To implement an unmodifiable list, the programmer needs only to extend this class and provide implementations for the <a href="../../java/util/AbstractList.html#get-int-"><code>get(int)</code></a> and <a href="../../java/util/List.html#size--"><code>size()</code></a> methods.</p>
 /// <p>To implement a modifiable list, the programmer must additionally override the <a href="../../java/util/AbstractList.html#set-int-E-"><code>set(int, E)</code></a> method (which otherwise throws an <code>UnsupportedOperationException</code>). If the list is variable-size the programmer must additionally override the <a href="../../java/util/AbstractList.html#add-int-E-"><code>add(int, E)</code></a> and <a href="../../java/util/AbstractList.html#remove-int-"><code>remove(int)</code></a> methods.</p>
@@ -15393,6 +15140,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaHashSetClass {
 /// <p>Unlike the other abstract collection implementations, the programmer does <i>not</i> have to provide an iterator implementation; the iterator and list iterator are implemented by this class, on top of the "random access" methods: <a href="../../java/util/AbstractList.html#get-int-"><code>get(int)</code></a>, <a href="../../java/util/AbstractList.html#set-int-E-"><code>set(int, E)</code></a>, <a href="../../java/util/AbstractList.html#add-int-E-"><code>add(int, E)</code></a> and <a href="../../java/util/AbstractList.html#remove-int-"><code>remove(int)</code></a>.</p>
 /// <p>The documentation for each non-abstract method in this class describes its implementation in detail. Each of these methods may be overridden if the collection being implemented admits a more efficient implementation.</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaAbstractList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15901,17 +15649,10 @@ impl<'mc> Into<crate::util::JavaAbstractCollection<'mc>> for JavaAbstractList<'m
             .expect("Error converting JavaAbstractList into crate::util::JavaAbstractCollection")
     }
 }
-
-pub struct JavaAbstractListClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaAbstractListClass {
-    fn class_name(&self) -> &str {
-        "java/util/AbstractList"
-    }
-}
-
 /// A container object which may or may not contain a non-null value. If a value is present, <code>isPresent()</code> will return <code>true</code> and <code>get()</code> will return the value.
 /// <p>Additional methods that depend on the presence or absence of a contained value are provided, such as <a href="../../java/util/Optional.html#orElse-T-"><code>orElse()</code></a> (return a default value if value not present) and <a href="../../java/util/Optional.html#ifPresent-java.util.function.Consumer-"><code>ifPresent()</code></a> (execute a block of code if the value is present).</p>
 /// <p>This is a <a href="../lang/doc-files/ValueBased.html">value-based</a> class; use of identity-sensitive operations (including reference equality (<code>==</code>), identity hash code, or synchronization) on instances of <code>Optional</code> may have unpredictable results and should be avoided.</p>
+#[repr(C)]
 pub struct JavaOptional<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16281,13 +16022,6 @@ impl<'mc> std::string::ToString for JavaOptional<'mc> {
     }
 }
 
-pub struct JavaOptionalClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaOptionalClass {
-    fn class_name(&self) -> &str {
-        "java/util/Optional"
-    }
-}
-
 /// An iterator for lists that allows the programmer to traverse the list in either direction, modify the list during iteration, and obtain the iterator's current position in the list. A <code>ListIterator</code> has no current element; its <i>cursor position</i> always lies between the element that would be returned by a call to <code>previous()</code> and the element that would be returned by a call to <code>next()</code>. An iterator for a list of length <code>n</code> has <code>n+1</code> possible cursor positions, as illustrated by the carets (<code>^</code>) below:
 /// <pre>Element(0) Element(1) Element(2) ... Element(n-1)
 /// cursor positions:^^^^^
@@ -16295,6 +16029,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaOptionalClass {
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaListIterator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16457,14 +16192,6 @@ impl<'mc> Into<crate::util::JavaIterator<'mc>> for JavaListIterator<'mc> {
             .expect("Error converting JavaListIterator into crate::util::JavaIterator")
     }
 }
-
-pub struct JavaListIteratorClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaListIteratorClass {
-    fn class_name(&self) -> &str {
-        "java/util/ListIterator"
-    }
-}
-
 /// Doubly-linked list implementation of the <code>List</code> and <code>Deque</code> interfaces. Implements all optional list operations, and permits all elements (including <code>null</code>).
 /// <p>All of the operations perform as could be expected for a doubly-linked list. Operations that index into the list will traverse the list from the beginning or the end, whichever is closer to the specified index.</p>
 /// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a linked list concurrently, and at least one of the threads modifies the list structurally, it <i>must</i> be synchronized externally. (A structural modification is any operation that adds or deletes one or more elements; merely setting the value of an element is not a structural modification.) This is typically accomplished by synchronizing on some object that naturally encapsulates the list. If no such object exists, the list should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedList-java.util.List-"><code>Collections.synchronizedList</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the list:</p>
@@ -16472,6 +16199,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaListIteratorClass {
 /// <p>The iterators returned by this class's <code>iterator</code> and <code>listIterator</code> methods are <i>fail-fast</i>: if the list is structurally modified at any time after the iterator is created, in any way except through the Iterator's own <code>remove</code> or <code>add</code> methods, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaLinkedList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17267,14 +16995,6 @@ impl<'mc> Into<crate::util::JavaAbstractSequentialList<'mc>> for JavaLinkedList<
             .expect("Error converting JavaLinkedList into crate::util::JavaAbstractSequentialList")
     }
 }
-
-pub struct JavaLinkedListClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaLinkedListClass {
-    fn class_name(&self) -> &str {
-        "java/util/LinkedList"
-    }
-}
-
 /// This class expresses a <em>Language Range</em> defined in <a href="http://tools.ietf.org/html/rfc4647">RFC 4647 Matching of Language Tags</a>. A language range is an identifier which is used to select language tag(s) meeting specific requirements by using the mechanisms described in <a href="Locale.html#LocaleMatching">Locale Matching</a>. A list which represents a user's preferences and consists of language ranges is called a <em>Language Priority List</em>.
 /// <p>There are two types of language ranges: basic and extended. In RFC 4647, the syntax of language ranges is expressed in <a href="http://tools.ietf.org/html/rfc4234">ABNF</a> as follows:</p>
 /// <blockquote>
@@ -17284,6 +17004,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaLinkedListClass {
 /// alphanum= ALPHA / DIGIT
 /// </pre>
 /// </blockquote> For example, <code>"en"</code> (English), <code>"ja-JP"</code> (Japanese, Japan), <code>"*"</code> (special language range which matches any language tag) are basic language ranges, whereas <code>"*-CH"</code> (any languages, Switzerland), <code>"es-*"</code> (Spanish, any regions), and <code>"zh-Hant-*"</code> (Traditional Chinese, any regions) are extended language ranges.
+#[repr(C)]
 pub struct JavaLocaleLanguageRange<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17529,13 +17250,6 @@ impl<'mc> std::string::ToString for JavaLocaleLanguageRange<'mc> {
     }
 }
 
-pub struct JavaLocaleLanguageRangeClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaLocaleLanguageRangeClass {
-    fn class_name(&self) -> &str {
-        "java/util/Locale$LanguageRange"
-    }
-}
-
 /// The root interface in the <i>collection hierarchy</i>. A collection represents a group of objects, known as its <i>elements</i>. Some collections allow duplicate elements and others do not. Some are ordered and others unordered. The JDK does not provide any <i>direct</i> implementations of this interface: it provides implementations of more specific subinterfaces like <tt>Set</tt> and <tt>List</tt>. This interface is typically used to pass collections around and manipulate them where maximum generality is desired.
 /// <p><i>Bags</i> or <i>multisets</i> (unordered collections that may contain duplicate elements) should implement this interface directly.</p>
 /// <p>All general-purpose <tt>Collection</tt> implementation classes (which typically implement <tt>Collection</tt> indirectly through one of its subinterfaces) should provide two "standard" constructors: a void (no arguments) constructor, which creates an empty collection, and a constructor with a single argument of type <tt>Collection</tt>, which creates a new collection with the same elements as its argument. In effect, the latter constructor allows the user to copy any collection, producing an equivalent collection of the desired implementation type. There is no way to enforce this convention (as interfaces cannot contain constructors) but all of the general-purpose <tt>Collection</tt> implementations in the Java platform libraries comply.</p>
@@ -17547,6 +17261,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaLocaleLanguageRangeClass {
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaCollection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17815,17 +17530,10 @@ impl<'mc> JavaCollection<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaCollectionClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaCollectionClass {
-    fn class_name(&self) -> &str {
-        "java/util/Collection"
-    }
-}
-
 /// An Iterator specialized for <code>int</code> values.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaPrimitiveIteratorOfInt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17952,17 +17660,10 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaPrimitiveIteratorOfIntClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaPrimitiveIteratorOfIntClass {
-    fn class_name(&self) -> &str {
-        "java/util/PrimitiveIterator$OfInt"
-    }
-}
-
 /// An Iterator specialized for <code>long</code> values.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaPrimitiveIteratorOfLong<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18089,14 +17790,6 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaPrimitiveIteratorOfLongClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaPrimitiveIteratorOfLongClass {
-    fn class_name(&self) -> &str {
-        "java/util/PrimitiveIterator$OfLong"
-    }
-}
-
 /// An iterator over a collection. <code>Iterator</code> takes the place of <a title="interface in java.util" href="../../java/util/Enumeration.html"><code>Enumeration</code></a> in the Java Collections Framework. Iterators differ from enumerations in two ways:
 /// <ul>
 /// <li>Iterators allow the caller to remove elements from the underlying collection during the iteration with well-defined semantics.</li>
@@ -18105,6 +17798,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaPrimitiveIteratorOfLongCla
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaIterator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18197,19 +17891,12 @@ impl<'mc> JavaIterator<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaIteratorClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaIteratorClass {
-    fn class_name(&self) -> &str {
-        "java/util/Iterator"
-    }
-}
-
 /// A base type for primitive specializations of <code>Iterator</code>. Specialized subtypes are provided for <a href="../../java/util/PrimitiveIterator.OfInt.html" title="interface in java.util"><code>int</code></a>, <a href="../../java/util/PrimitiveIterator.OfLong.html" title="interface in java.util"><code>long</code></a>, and <a title="interface in java.util" href="../../java/util/PrimitiveIterator.OfDouble.html"><code>double</code></a> values.
 /// <p>The specialized subtype default implementations of <a href="../../java/util/Iterator.html#next--"><code>Iterator.next()</code></a> and <a href="../../java/util/Iterator.html#forEachRemaining-java.util.function.Consumer-"><code>Iterator.forEachRemaining(java.util.function.Consumer)</code></a> box primitive values to instances of their corresponding wrapper class. Such boxing may offset any advantages gained when using the primitive specializations. To avoid boxing, the corresponding primitive-based methods should be used. For example, <a href="../../java/util/PrimitiveIterator.OfInt.html#nextInt--"><code>PrimitiveIterator.OfInt.nextInt()</code></a> and <a href="../../java/util/PrimitiveIterator.OfInt.html#forEachRemaining-java.util.function.IntConsumer-"><code>PrimitiveIterator.OfInt.forEachRemaining(java.util.function.IntConsumer)</code></a> should be used in preference to <a href="../../java/util/PrimitiveIterator.OfInt.html#next--"><code>PrimitiveIterator.OfInt.next()</code></a> and <a href="../../java/util/PrimitiveIterator.OfInt.html#forEachRemaining-java.util.function.Consumer-"><code>PrimitiveIterator.OfInt.forEachRemaining(java.util.function.Consumer)</code></a>.</p>
 /// <p>Iteration of primitive values using boxing-based methods <a href="../../java/util/Iterator.html#next--"><code>next()</code></a> and <a href="../../java/util/Iterator.html#forEachRemaining-java.util.function.Consumer-"><code>forEachRemaining()</code></a>, does not affect the order in which the values, transformed to boxed values, are encountered.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaPrimitiveIterator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18312,17 +17999,10 @@ impl<'mc> Into<crate::util::JavaIterator<'mc>> for JavaPrimitiveIterator<'mc> {
             .expect("Error converting JavaPrimitiveIterator into crate::util::JavaIterator")
     }
 }
-
-pub struct JavaPrimitiveIteratorClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaPrimitiveIteratorClass {
-    fn class_name(&self) -> &str {
-        "java/util/PrimitiveIterator"
-    }
-}
-
 /// A map entry (key-value pair). The <tt>Map.entrySet</tt> method returns a collection-view of the map, whose elements are of this class. The <i>only</i> way to obtain a reference to a map entry is from the iterator of this collection-view. These <tt>Map.Entry</tt> objects are valid <i>only</i> for the duration of the iteration; more formally, the behavior of a map entry is undefined if the backing map has been modified after the entry was returned by the iterator, except through the <tt>setValue</tt> operation on the map entry.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaMapEntry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18494,14 +18174,6 @@ impl<'mc> JavaMapEntry<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaMapEntryClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaMapEntryClass {
-    fn class_name(&self) -> &str {
-        "java/util/Map$Entry"
-    }
-}
-
 /// A specialized <a title="interface in java.util" href="../../java/util/Set.html"><code>Set</code></a> implementation for use with enum types. All of the elements in an enum set must come from a single enum type that is specified, explicitly or implicitly, when the set is created. Enum sets are represented internally as bit vectors. This representation is extremely compact and efficient. The space and time performance of this class should be good enough to allow its use as a high-quality, typesafe alternative to traditional <tt>int</tt>-based "bit flags." Even bulk operations (such as <tt>containsAll</tt> and <tt>retainAll</tt>) should run very quickly if their argument is also an enum set.
 /// <p>The iterator returned by the <tt>iterator</tt> method traverses the elements in their <i>natural order</i> (the order in which the enum constants are declared). The returned iterator is <i>weakly consistent</i>: it will never throw <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a> and it may or may not show the effects of any modifications to the set that occur while the iteration is in progress.</p>
 /// <p>Null elements are not permitted. Attempts to insert a null element will throw <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a>. Attempts to test for the presence of a null element or to remove one will, however, function properly.</p>
@@ -18510,6 +18182,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaMapEntryClass {
 /// </pre>
 /// <p>Implementation note: All basic operations execute in constant time. They are likely (though not guaranteed) to be much faster than their <a title="class in java.util" href="../../java/util/HashSet.html"><code>HashSet</code></a> counterparts. Even bulk operations execute in constant time if their argument is also an enum set.</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaEnumSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18882,14 +18555,6 @@ impl<'mc> Into<crate::util::JavaAbstractSet<'mc>> for JavaEnumSet<'mc> {
             .expect("Error converting JavaEnumSet into crate::util::JavaAbstractSet")
     }
 }
-
-pub struct JavaEnumSetClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaEnumSetClass {
-    fn class_name(&self) -> &str {
-        "java/util/EnumSet"
-    }
-}
-
 /// The class <code>Date</code> represents a specific instant in time, with millisecond precision.
 /// <p>Prior to JDK&nbsp;1.1, the class <code>Date</code> had two additional functions. It allowed the interpretation of dates as year, month, day, hour, minute, and second values. It also allowed the formatting and parsing of date strings. Unfortunately, the API for these functions was not amenable to internationalization. As of JDK&nbsp;1.1, the <code>Calendar</code> class should be used to convert between dates and time fields and the <code>DateFormat</code> class should be used to format and parse date strings. The corresponding methods in <code>Date</code> are deprecated.</p>
 /// <p>Although the <code>Date</code> class is intended to reflect coordinated universal time (UTC), it may not do so exactly, depending on the host environment of the Java Virtual Machine. Nearly all modern operating systems assume that 1&nbsp;day&nbsp;= 24&nbsp;×&nbsp;60&nbsp;×&nbsp;60&nbsp;= 86400 seconds in all cases. In UTC, however, about once every year or two there is an extra second, called a "leap second." The leap second is always added as the last second of the day, and always on December 31 or June 30. For example, the last minute of the year 1995 was 61 seconds long, thanks to an added leap second. Most computer clocks are not accurate enough to be able to reflect the leap-second distinction.</p>
@@ -18913,6 +18578,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaEnumSetClass {
 /// <li>A second is represented by an integer from 0 to 61; the values 60 and 61 occur only for leap seconds and even then only in Java implementations that actually track leap seconds correctly. Because of the manner in which leap seconds are currently introduced, it is extremely unlikely that two leap seconds will occur in the same minute, but this specification follows the date and time conventions for ISO C.</li>
 /// </ul>
 /// <p>In all cases, arguments given to methods for these purposes need not fall within the indicated ranges; for example, a date may be specified as January 32 and is interpreted as meaning February 1.</p>
+#[repr(C)]
 pub struct JavaDate<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19471,19 +19137,13 @@ impl<'mc> std::string::ToString for JavaDate<'mc> {
     }
 }
 
-pub struct JavaDateClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaDateClass {
-    fn class_name(&self) -> &str {
-        "java/util/Date"
-    }
-}
-
 /// Resizable-array implementation of the <a href="../../java/util/Deque.html" title="interface in java.util"><code>Deque</code></a> interface. Array deques have no capacity restrictions; they grow as necessary to support usage. They are not thread-safe; in the absence of external synchronization, they do not support concurrent access by multiple threads. Null elements are prohibited. This class is likely to be faster than <a title="class in java.util" href="../../java/util/Stack.html"><code>Stack</code></a> when used as a stack, and faster than <a title="class in java.util" href="../../java/util/LinkedList.html"><code>LinkedList</code></a> when used as a queue.
 /// <p>Most <code>ArrayDeque</code> operations run in amortized constant time. Exceptions include <a href="../../java/util/ArrayDeque.html#remove-java.lang.Object-"><code>remove</code></a>, <a href="../../java/util/ArrayDeque.html#removeFirstOccurrence-java.lang.Object-"><code>removeFirstOccurrence</code></a>, <a href="../../java/util/ArrayDeque.html#removeLastOccurrence-java.lang.Object-"><code>removeLastOccurrence</code></a>, <a href="../../java/util/ArrayDeque.html#contains-java.lang.Object-"><code>contains</code></a>, <a href="../../java/util/ArrayDeque.html#iterator--"><code>iterator.remove()</code></a>, and the bulk operations, all of which run in linear time.</p>
 /// <p>The iterators returned by this class's <code>iterator</code> method are <i>fail-fast</i>: If the deque is modified at any time after the iterator is created, in any way except through the iterator's own <code>remove</code> method, the iterator will generally throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>This class and its iterator implement all of the <em>optional</em> methods of the <a href="../../java/util/Collection.html" title="interface in java.util"><code>Collection</code></a> and <a title="interface in java.util" href="../../java/util/Iterator.html"><code>Iterator</code></a> interfaces.</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+#[repr(C)]
 pub struct JavaArrayDeque<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20115,17 +19775,10 @@ impl<'mc> Into<crate::util::JavaAbstractCollection<'mc>> for JavaArrayDeque<'mc>
             .expect("Error converting JavaArrayDeque into crate::util::JavaAbstractCollection")
     }
 }
-
-pub struct JavaArrayDequeClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaArrayDequeClass {
-    fn class_name(&self) -> &str {
-        "java/util/ArrayDeque"
-    }
-}
-
 /// An Iterator specialized for <code>double</code> values.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaPrimitiveIteratorOfDouble<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20252,14 +19905,6 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaPrimitiveIteratorOfDoubleClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaPrimitiveIteratorOfDoubleClass {
-    fn class_name(&self) -> &str {
-        "java/util/PrimitiveIterator$OfDouble"
-    }
-}
-
 /// <code>Builder</code> is used to build instances of <code>Locale</code> from values configured by the setters. Unlike the <code>Locale</code> constructors, the <code>Builder</code> checks if a value configured by a setter satisfies the syntax requirements defined by the <code>Locale</code> class. A <code>Locale</code> object created by a <code>Builder</code> is well-formed and can be transformed to a well-formed IETF BCP 47 language tag without losing information.
 /// <p><b>Note:</b> The <code>Locale</code> class does not provide any syntactic restrictions on variant, while BCP 47 requires each variant subtag to be 5 to 8 alphanumerics or a single numeric followed by 3 alphanumerics. The method <code>setVariant</code> throws <code>IllformedLocaleException</code> for a variant that does not satisfy this restriction. If it is necessary to support such a variant, use a Locale constructor. However, keep in mind that a <code>Locale</code> object created this way might lose the variant information when transformed to a BCP 47 language tag.</p>
 /// <p>The following example shows how to create a <code>Locale</code> object with the <code>Builder</code>.</p>
@@ -20268,6 +19913,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaPrimitiveIteratorOfDoubleC
 /// </pre>
 /// </blockquote>
 /// <p>Builders can be reused; <code>clear()</code> resets all fields to their default values.</p>
+#[repr(C)]
 pub struct JavaLocaleBuilder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20664,13 +20310,6 @@ impl<'mc> std::string::ToString for JavaLocaleBuilder<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling JavaLocaleBuilder.toString: {}", err),
         }
-    }
-}
-
-pub struct JavaLocaleBuilderClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaLocaleBuilderClass {
-    fn class_name(&self) -> &str {
-        "java/util/Locale$Builder"
     }
 }
 

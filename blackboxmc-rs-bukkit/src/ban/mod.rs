@@ -6,6 +6,7 @@ use color_eyre::eyre::Result;
 /// A <a href="../BanList.html" title="interface in org.bukkit"><code>BanList</code></a> targeting player profile bans.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ProfileBanList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -217,17 +218,10 @@ impl<'mc> Into<crate::BanList<'mc>> for ProfileBanList<'mc> {
             .expect("Error converting ProfileBanList into crate::BanList")
     }
 }
-
-pub struct ProfileBanListClass;
-impl blackboxmc_general::JNIProvidesClassName for ProfileBanListClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/ban/ProfileBanList"
-    }
-}
-
 /// A <a href="../BanList.html" title="interface in org.bukkit"><code>BanList</code></a> targeting IP bans.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct IpBanList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -435,12 +429,5 @@ impl<'mc> Into<crate::BanList<'mc>> for IpBanList<'mc> {
     fn into(self) -> crate::BanList<'mc> {
         crate::BanList::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting IpBanList into crate::BanList")
-    }
-}
-
-pub struct IpBanListClass;
-impl blackboxmc_general::JNIProvidesClassName for IpBanListClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/ban/IpBanList"
     }
 }

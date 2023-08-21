@@ -6,6 +6,7 @@ use color_eyre::eyre::Result;
 /// The <a title="interface in org.bukkit.persistence" href="PersistentDataHolder.html"><code>PersistentDataHolder</code></a> interface defines an object that can store custom persistent meta data on it.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PersistentDataHolder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -72,16 +73,9 @@ impl<'mc> PersistentDataHolder<'mc> {
             .unwrap()
     }
 }
-
-pub struct PersistentDataHolderClass;
-impl blackboxmc_general::JNIProvidesClassName for PersistentDataHolderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/persistence/PersistentDataHolder"
-    }
-}
-
 /// A default implementation that simply exists to pass on the retrieved or inserted value to the next layer.
 /// <p>This implementation does not add any kind of logic, but is used to provide default implementations for the primitive types.</p>
+#[repr(C)]
 pub struct PersistentDataTypePrimitivePersistentDataType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -305,18 +299,10 @@ impl<'mc> std::string::ToString for PersistentDataTypePrimitivePersistentDataTyp
     }
 }
 
-pub struct PersistentDataTypePrimitivePersistentDataTypeClass;
-impl blackboxmc_general::JNIProvidesClassName
-    for PersistentDataTypePrimitivePersistentDataTypeClass
-{
-    fn class_name(&self) -> &str {
-        "org/bukkit/persistence/PersistentDataType$PrimitivePersistentDataType"
-    }
-}
-
 /// This interface represents the context in which the <a href="PersistentDataType.html" title="interface in org.bukkit.persistence"><code>PersistentDataType</code></a> can serialize and deserialize the passed values.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PersistentDataAdapterContext<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -384,14 +370,6 @@ impl<'mc> PersistentDataAdapterContext<'mc> {
             .unwrap()
     }
 }
-
-pub struct PersistentDataAdapterContextClass;
-impl blackboxmc_general::JNIProvidesClassName for PersistentDataAdapterContextClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/persistence/PersistentDataAdapterContext"
-    }
-}
-
 /// This class represents an enum with a generic content type. It defines the types a custom tag can have.
 /// <p>This interface can be used to create your own custom <a title="interface in org.bukkit.persistence" href="PersistentDataType.html"><code>PersistentDataType</code></a> with different complex types. This may be useful for the likes of a UUIDTagType:</p>
 /// <pre> <code>
@@ -421,6 +399,7 @@ impl blackboxmc_general::JNIProvidesClassName for PersistentDataAdapterContextCl
 /// }</code></pre>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PersistentDataType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -548,17 +527,10 @@ impl<'mc> PersistentDataType<'mc> {
             .unwrap()
     }
 }
-
-pub struct PersistentDataTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for PersistentDataTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/persistence/PersistentDataType"
-    }
-}
-
 /// A convenience implementation to convert between Byte and Boolean as there is no native implementation for booleans.
 ///
 /// Any byte value not equal to 0 is considered to be true.
+#[repr(C)]
 pub struct PersistentDataTypeBooleanPersistentDataType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -801,16 +773,10 @@ impl<'mc> std::string::ToString for PersistentDataTypeBooleanPersistentDataType<
     }
 }
 
-pub struct PersistentDataTypeBooleanPersistentDataTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for PersistentDataTypeBooleanPersistentDataTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/persistence/PersistentDataType$BooleanPersistentDataType"
-    }
-}
-
 /// This interface represents a map like object, capable of storing custom tags in it.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PersistentDataContainer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1023,12 +989,5 @@ impl<'mc> PersistentDataContainer<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct PersistentDataContainerClass;
-impl blackboxmc_general::JNIProvidesClassName for PersistentDataContainerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/persistence/PersistentDataContainer"
     }
 }

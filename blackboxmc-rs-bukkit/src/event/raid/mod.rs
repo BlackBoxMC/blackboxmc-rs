@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents events related to raids.
+#[repr(C)]
 pub struct RaidEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -216,15 +217,8 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for RaidEvent<'mc> {
             .expect("Error converting RaidEvent into crate::event::world::WorldEvent")
     }
 }
-
-pub struct RaidEventClass;
-impl blackboxmc_general::JNIProvidesClassName for RaidEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/raid/RaidEvent"
-    }
-}
-
 /// Called when a raid wave spawns.
+#[repr(C)]
 pub struct RaidSpawnWaveEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -484,15 +478,8 @@ impl<'mc> Into<crate::event::raid::RaidEvent<'mc>> for RaidSpawnWaveEvent<'mc> {
             .expect("Error converting RaidSpawnWaveEvent into crate::event::raid::RaidEvent")
     }
 }
-
-pub struct RaidSpawnWaveEventClass;
-impl blackboxmc_general::JNIProvidesClassName for RaidSpawnWaveEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/raid/RaidSpawnWaveEvent"
-    }
-}
-
 /// Called when a <a title="interface in org.bukkit" href="../../Raid.html"><code>Raid</code></a> is triggered (e.g: a player with Bad Omen effect enters a village).
+#[repr(C)]
 pub struct RaidTriggerEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -794,15 +781,8 @@ impl<'mc> Into<crate::event::raid::RaidEvent<'mc>> for RaidTriggerEvent<'mc> {
             .expect("Error converting RaidTriggerEvent into crate::event::raid::RaidEvent")
     }
 }
-
-pub struct RaidTriggerEventClass;
-impl blackboxmc_general::JNIProvidesClassName for RaidTriggerEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/raid/RaidTriggerEvent"
-    }
-}
-
 /// This event is called when a <a title="interface in org.bukkit" href="../../Raid.html"><code>Raid</code></a> was complete with a clear result.
+#[repr(C)]
 pub struct RaidFinishEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1045,15 +1025,8 @@ impl<'mc> Into<crate::event::raid::RaidEvent<'mc>> for RaidFinishEvent<'mc> {
             .expect("Error converting RaidFinishEvent into crate::event::raid::RaidEvent")
     }
 }
-
-pub struct RaidFinishEventClass;
-impl blackboxmc_general::JNIProvidesClassName for RaidFinishEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/raid/RaidFinishEvent"
-    }
-}
-
 /// Called when a <a title="interface in org.bukkit" href="../../Raid.html"><code>Raid</code></a> is stopped.
+#[repr(C)]
 pub struct RaidStopEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1082,6 +1055,7 @@ impl<'mc> std::fmt::Display for RaidStopEventReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct RaidStopEventReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1187,13 +1161,6 @@ impl<'mc> RaidStopEventReason<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct RaidStopEventReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for RaidStopEventReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/raid/RaidStopEvent$Reason"
     }
 }
 
@@ -1479,14 +1446,6 @@ impl<'mc> Into<crate::event::raid::RaidEvent<'mc>> for RaidStopEvent<'mc> {
             .expect("Error converting RaidStopEvent into crate::event::raid::RaidEvent")
     }
 }
-
-pub struct RaidStopEventClass;
-impl blackboxmc_general::JNIProvidesClassName for RaidStopEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/raid/RaidStopEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum ReasonEnum {
     Peace,
@@ -1511,6 +1470,7 @@ impl<'mc> std::fmt::Display for Reason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Reason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1613,12 +1573,5 @@ impl<'mc> Reason<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct ReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for ReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/raid/Reason"
     }
 }

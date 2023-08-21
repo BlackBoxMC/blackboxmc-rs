@@ -1,6 +1,6 @@
 [package]
 name = "blackboxmc_bukkit"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2021"
 license = "LGPL-2.0-or-later"
 description = "BlackboxMC bindings for org.bukkit"
@@ -11,6 +11,6 @@ description = "BlackboxMC bindings for org.bukkit"
 color-eyre = "0.6.2"
 eyre = "0.6.8"
 jni = "0.21.1"
-blackboxmc_general = {version = "0.3.0", path = "../blackboxmc-rs-general"}
-blackboxmc_bungee = {version = "0.3.0", path = "../blackboxmc-rs-bungee"}
-blackboxmc_java = {version = "0.3.0", path = "../blackboxmc-rs-java"}
+blackboxmc_general = {version = "0.3.1", path = "../blackboxmc-rs-general"}
+blackboxmc_bungee = {version = "0.3.1", path = "../blackboxmc-rs-bungee"}
+blackboxmc_java = {version = "0.3.1", path = "../blackboxmc-rs-java"}

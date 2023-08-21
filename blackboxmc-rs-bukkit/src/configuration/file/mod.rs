@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// This is a base class for all File based implementations of <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a>
+#[repr(C)]
 pub struct FileConfiguration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1276,15 +1277,8 @@ impl<'mc> Into<crate::configuration::MemoryConfiguration<'mc>> for FileConfigura
         )
     }
 }
-
-pub struct FileConfigurationClass;
-impl blackboxmc_general::JNIProvidesClassName for FileConfigurationClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/configuration/file/FileConfiguration"
-    }
-}
-
 /// Various settings for controlling the input and output of a <a title="class in org.bukkit.configuration.file" href="FileConfiguration.html"><code>FileConfiguration</code></a>
+#[repr(C)]
 pub struct FileConfigurationOptions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1604,15 +1598,8 @@ impl<'mc> Into<crate::configuration::MemoryConfigurationOptions<'mc>>
         crate::configuration::MemoryConfigurationOptions::from_raw(&self.jni_ref(), self.1).expect("Error converting FileConfigurationOptions into crate::configuration::MemoryConfigurationOptions")
     }
 }
-
-pub struct FileConfigurationOptionsClass;
-impl blackboxmc_general::JNIProvidesClassName for FileConfigurationOptionsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/configuration/file/FileConfigurationOptions"
-    }
-}
-
 /// Various settings for controlling the input and output of a <a title="class in org.bukkit.configuration.file" href="YamlConfiguration.html"><code>YamlConfiguration</code></a>
+#[repr(C)]
 pub struct YamlConfigurationOptions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1974,15 +1961,8 @@ impl<'mc> Into<crate::configuration::file::FileConfigurationOptions<'mc>>
         crate::configuration::file::FileConfigurationOptions::from_raw(&self.jni_ref(), self.1).expect("Error converting YamlConfigurationOptions into crate::configuration::file::FileConfigurationOptions")
     }
 }
-
-pub struct YamlConfigurationOptionsClass;
-impl blackboxmc_general::JNIProvidesClassName for YamlConfigurationOptionsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/configuration/file/YamlConfigurationOptions"
-    }
-}
-
 /// An implementation of <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> which saves all files in Yaml. Note that this implementation is not synchronized.
+#[repr(C)]
 pub struct YamlConfiguration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3262,12 +3242,5 @@ impl<'mc> Into<crate::configuration::file::FileConfiguration<'mc>> for YamlConfi
         crate::configuration::file::FileConfiguration::from_raw(&self.jni_ref(), self.1).expect(
             "Error converting YamlConfiguration into crate::configuration::file::FileConfiguration",
         )
-    }
-}
-
-pub struct YamlConfigurationClass;
-impl blackboxmc_general::JNIProvidesClassName for YamlConfigurationClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/configuration/file/YamlConfiguration"
     }
 }

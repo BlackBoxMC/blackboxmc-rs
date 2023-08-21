@@ -6,6 +6,7 @@ use color_eyre::eyre::Result;
 
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct MetadataStore<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -186,15 +187,9 @@ impl<'mc> MetadataStore<'mc> {
     }
 }
 
-pub struct MetadataStoreClass;
-impl blackboxmc_general::JNIProvidesClassName for MetadataStoreClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/metadata/MetadataStore"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct MetadataValue<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -364,17 +359,10 @@ impl<'mc> MetadataValue<'mc> {
             .unwrap()
     }
 }
-
-pub struct MetadataValueClass;
-impl blackboxmc_general::JNIProvidesClassName for MetadataValueClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/metadata/MetadataValue"
-    }
-}
-
 /// This interface is implemented by all objects that can provide metadata about themselves.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Metadatable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -519,13 +507,7 @@ impl<'mc> Metadatable<'mc> {
     }
 }
 
-pub struct MetadatableClass;
-impl blackboxmc_general::JNIProvidesClassName for MetadatableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/metadata/Metadatable"
-    }
-}
-
+#[repr(C)]
 pub struct MetadataStoreBase<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -816,15 +798,9 @@ impl<'mc> std::string::ToString for MetadataStoreBase<'mc> {
     }
 }
 
-pub struct MetadataStoreBaseClass;
-impl blackboxmc_general::JNIProvidesClassName for MetadataStoreBaseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/metadata/MetadataStoreBase"
-    }
-}
-
 /// The LazyMetadataValue class implements a type of metadata that is not computed until another plugin asks for it.
 /// <p>By making metadata values lazy, no computation is done by the providing plugin until absolutely necessary (if ever). Additionally, LazyMetadataValue objects cache their values internally unless overridden by a <a href="LazyMetadataValue.CacheStrategy.html" title="enum in org.bukkit.metadata"><code>LazyMetadataValue.CacheStrategy</code></a> or invalidated at the individual or plugin level. Once invalidated, the LazyMetadataValue will recompute its value when asked.</p>
+#[repr(C)]
 pub struct LazyMetadataValue<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -851,6 +827,7 @@ impl<'mc> std::fmt::Display for LazyMetadataValueCacheStrategy<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct LazyMetadataValueCacheStrategy<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -958,13 +935,6 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct LazyMetadataValueCacheStrategyClass;
-impl blackboxmc_general::JNIProvidesClassName for LazyMetadataValueCacheStrategyClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/metadata/LazyMetadataValue$CacheStrategy"
     }
 }
 
@@ -1230,16 +1200,9 @@ impl<'mc> Into<crate::metadata::MetadataValueAdapter<'mc>> for LazyMetadataValue
             .expect("Error converting LazyMetadataValue into crate::metadata::MetadataValueAdapter")
     }
 }
-
-pub struct LazyMetadataValueClass;
-impl blackboxmc_general::JNIProvidesClassName for LazyMetadataValueClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/metadata/LazyMetadataValue"
-    }
-}
-
 /// A FixedMetadataValue is a special case metadata item that contains the same value forever after initialization. Invalidating a FixedMetadataValue has no effect.
 /// <p>This class extends LazyMetadataValue for historical reasons, even though it overrides all the implementation methods. it is possible that in the future that the inheritance hierarchy may change.</p>
+#[repr(C)]
 pub struct FixedMetadataValue<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1531,16 +1494,9 @@ impl<'mc> Into<crate::metadata::LazyMetadataValue<'mc>> for FixedMetadataValue<'
             .expect("Error converting FixedMetadataValue into crate::metadata::LazyMetadataValue")
     }
 }
-
-pub struct FixedMetadataValueClass;
-impl blackboxmc_general::JNIProvidesClassName for FixedMetadataValueClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/metadata/FixedMetadataValue"
-    }
-}
-
 /// Optional base class for facilitating MetadataValue implementations.
 /// <p>This provides all the conversion functions for MetadataValue so that writing an implementation of MetadataValue is as simple as implementing value() and invalidate().</p>
+#[repr(C)]
 pub struct MetadataValueAdapter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1808,14 +1764,6 @@ impl<'mc> Into<crate::metadata::MetadataValue<'mc>> for MetadataValueAdapter<'mc
             .expect("Error converting MetadataValueAdapter into crate::metadata::MetadataValue")
     }
 }
-
-pub struct MetadataValueAdapterClass;
-impl blackboxmc_general::JNIProvidesClassName for MetadataValueAdapterClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/metadata/MetadataValueAdapter"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum CacheStrategyEnum {
     CacheAfterFirstEval,
@@ -1836,6 +1784,7 @@ impl<'mc> std::fmt::Display for CacheStrategy<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct CacheStrategy<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1934,12 +1883,5 @@ impl<'mc> CacheStrategy<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct CacheStrategyClass;
-impl blackboxmc_general::JNIProvidesClassName for CacheStrategyClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/metadata/CacheStrategy"
     }
 }

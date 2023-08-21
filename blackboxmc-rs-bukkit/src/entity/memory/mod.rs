@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents a key used for accessing memory values of a <a title="interface in org.bukkit.entity" href="../LivingEntity.html"><code>LivingEntity</code></a>.
+#[repr(C)]
 pub struct MemoryKey<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -209,12 +210,5 @@ impl<'mc> Into<crate::Keyed<'mc>> for MemoryKey<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting MemoryKey into crate::Keyed")
-    }
-}
-
-pub struct MemoryKeyClass;
-impl blackboxmc_general::JNIProvidesClassName for MemoryKeyClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/entity/memory/MemoryKey"
     }
 }

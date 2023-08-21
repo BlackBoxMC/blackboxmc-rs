@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 
+#[repr(C)]
 pub struct DefaultPermissions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -246,13 +247,7 @@ impl<'mc> std::string::ToString for DefaultPermissions<'mc> {
     }
 }
 
-pub struct DefaultPermissionsClass;
-impl blackboxmc_general::JNIProvidesClassName for DefaultPermissionsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/permissions/DefaultPermissions"
-    }
-}
-
+#[repr(C)]
 pub struct CommandPermissions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -427,13 +422,7 @@ impl<'mc> std::string::ToString for CommandPermissions<'mc> {
     }
 }
 
-pub struct CommandPermissionsClass;
-impl blackboxmc_general::JNIProvidesClassName for CommandPermissionsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/permissions/CommandPermissions"
-    }
-}
-
+#[repr(C)]
 pub struct BroadcastPermissions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -605,12 +594,5 @@ impl<'mc> std::string::ToString for BroadcastPermissions<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling BroadcastPermissions.toString: {}", err),
         }
-    }
-}
-
-pub struct BroadcastPermissionsClass;
-impl blackboxmc_general::JNIProvidesClassName for BroadcastPermissionsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/permissions/BroadcastPermissions"
     }
 }

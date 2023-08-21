@@ -6,6 +6,7 @@ use color_eyre::eyre::Result;
 /// Represents a valid source of a projectile.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ProjectileSource<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -83,15 +84,9 @@ impl<'mc> ProjectileSource<'mc> {
     }
 }
 
-pub struct ProjectileSourceClass;
-impl blackboxmc_general::JNIProvidesClassName for ProjectileSourceClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/projectiles/ProjectileSource"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct BlockProjectileSource<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -186,12 +181,5 @@ impl<'mc> Into<crate::projectiles::ProjectileSource<'mc>> for BlockProjectileSou
         crate::projectiles::ProjectileSource::from_raw(&self.jni_ref(), self.1).expect(
             "Error converting BlockProjectileSource into crate::projectiles::ProjectileSource",
         )
-    }
-}
-
-pub struct BlockProjectileSourceClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockProjectileSourceClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/projectiles/BlockProjectileSource"
     }
 }

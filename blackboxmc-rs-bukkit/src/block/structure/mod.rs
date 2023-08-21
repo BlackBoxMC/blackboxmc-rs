@@ -25,6 +25,7 @@ impl<'mc> std::fmt::Display for StructureRotation<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct StructureRotation<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -131,14 +132,6 @@ impl<'mc> StructureRotation<'mc> {
             .unwrap()
     }
 }
-
-pub struct StructureRotationClass;
-impl blackboxmc_general::JNIProvidesClassName for StructureRotationClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/structure/StructureRotation"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum UsageModeEnum {
     Save,
@@ -161,6 +154,7 @@ impl<'mc> std::fmt::Display for UsageMode<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct UsageMode<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -263,14 +257,6 @@ impl<'mc> UsageMode<'mc> {
             .unwrap()
     }
 }
-
-pub struct UsageModeClass;
-impl blackboxmc_general::JNIProvidesClassName for UsageModeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/structure/UsageMode"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum MirrorEnum {
     None,
@@ -291,6 +277,7 @@ impl<'mc> std::fmt::Display for Mirror<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Mirror<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -389,12 +376,5 @@ impl<'mc> Mirror<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct MirrorClass;
-impl blackboxmc_general::JNIProvidesClassName for MirrorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/structure/Mirror"
     }
 }

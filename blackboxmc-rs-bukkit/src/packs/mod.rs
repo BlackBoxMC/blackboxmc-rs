@@ -24,6 +24,7 @@ impl<'mc> std::fmt::Display for DataPackCompatibility<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct DataPackCompatibility<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -127,17 +128,10 @@ impl<'mc> DataPackCompatibility<'mc> {
             .unwrap()
     }
 }
-
-pub struct DataPackCompatibilityClass;
-impl blackboxmc_general::JNIProvidesClassName for DataPackCompatibilityClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/packs/DataPack$Compatibility"
-    }
-}
-
 /// Represents a data pack.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct DataPack<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -324,17 +318,10 @@ impl<'mc> Into<crate::Keyed<'mc>> for DataPack<'mc> {
             .expect("Error converting DataPack into crate::Keyed")
     }
 }
-
-pub struct DataPackClass;
-impl blackboxmc_general::JNIProvidesClassName for DataPackClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/packs/DataPack"
-    }
-}
-
 /// Manager of data packs.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct DataPackManager<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -500,14 +487,6 @@ impl<'mc> DataPackManager<'mc> {
             .unwrap()
     }
 }
-
-pub struct DataPackManagerClass;
-impl blackboxmc_general::JNIProvidesClassName for DataPackManagerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/packs/DataPackManager"
-    }
-}
-
 /// Represent the source of a data pack.
 #[derive(PartialEq, Eq)]
 pub enum DataPackSourceEnum {
@@ -533,6 +512,7 @@ impl<'mc> std::fmt::Display for DataPackSource<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct DataPackSource<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -639,14 +619,6 @@ impl<'mc> DataPackSource<'mc> {
             .unwrap()
     }
 }
-
-pub struct DataPackSourceClass;
-impl blackboxmc_general::JNIProvidesClassName for DataPackSourceClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/packs/DataPack$Source"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum CompatibilityEnum {
     New,
@@ -667,6 +639,7 @@ impl<'mc> std::fmt::Display for Compatibility<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Compatibility<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -767,14 +740,6 @@ impl<'mc> Compatibility<'mc> {
             .unwrap()
     }
 }
-
-pub struct CompatibilityClass;
-impl blackboxmc_general::JNIProvidesClassName for CompatibilityClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/packs/Compatibility"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum SourceEnum {
     Default,
@@ -799,6 +764,7 @@ impl<'mc> std::fmt::Display for Source<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Source<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -901,12 +867,5 @@ impl<'mc> Source<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct SourceClass;
-impl blackboxmc_general::JNIProvidesClassName for SourceClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/packs/Source"
     }
 }

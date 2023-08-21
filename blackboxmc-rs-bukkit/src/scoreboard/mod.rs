@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Criteria names which trigger an objective to be modified by actions in-game
+#[repr(C)]
 pub struct Criterias<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -152,13 +153,6 @@ impl<'mc> std::string::ToString for Criterias<'mc> {
     }
 }
 
-pub struct CriteriasClass;
-impl blackboxmc_general::JNIProvidesClassName for CriteriasClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scoreboard/Criterias"
-    }
-}
-
 /// How an option may be applied to members of this team.
 #[derive(PartialEq, Eq)]
 pub enum TeamOptionStatusEnum {
@@ -182,6 +176,7 @@ impl<'mc> std::fmt::Display for TeamOptionStatus<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct TeamOptionStatus<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -286,18 +281,11 @@ impl<'mc> TeamOptionStatus<'mc> {
             .unwrap()
     }
 }
-
-pub struct TeamOptionStatusClass;
-impl blackboxmc_general::JNIProvidesClassName for TeamOptionStatusClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scoreboard/Team$OptionStatus"
-    }
-}
-
 /// Represents a scoreboard criteria, either custom or built-in to the Minecraft server, used to keep track of and manually or automatically change scores on a scoreboard.
 /// <p>While this class outlines constants for standard criteria, see <a href="#statistic(org.bukkit.Statistic)"><code>statistic(Statistic)</code></a> (and its overloads) to create instances for statistically-backed criteria.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Criteria<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -445,14 +433,6 @@ impl<'mc> Criteria<'mc> {
             .unwrap()
     }
 }
-
-pub struct CriteriaClass;
-impl blackboxmc_general::JNIProvidesClassName for CriteriaClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scoreboard/Criteria"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum NameTagVisibilityEnum {
     Always,
@@ -475,6 +455,7 @@ impl<'mc> std::fmt::Display for NameTagVisibility<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct NameTagVisibility<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -580,14 +561,6 @@ impl<'mc> NameTagVisibility<'mc> {
             .unwrap()
     }
 }
-
-pub struct NameTagVisibilityClass;
-impl blackboxmc_general::JNIProvidesClassName for NameTagVisibilityClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scoreboard/NameTagVisibility"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum RenderTypeEnum {
     Integer,
@@ -606,6 +579,7 @@ impl<'mc> std::fmt::Display for RenderType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct RenderType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -704,17 +678,10 @@ impl<'mc> RenderType<'mc> {
             .unwrap()
     }
 }
-
-pub struct RenderTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for RenderTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scoreboard/RenderType"
-    }
-}
-
 /// An objective on a scoreboard that can show scores specific to entries. This objective is only relevant to the display of the associated <a href="#getScoreboard()"><code>scoreboard</code></a>.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Objective<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -982,17 +949,10 @@ impl<'mc> Objective<'mc> {
             .unwrap()
     }
 }
-
-pub struct ObjectiveClass;
-impl blackboxmc_general::JNIProvidesClassName for ObjectiveClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scoreboard/Objective"
-    }
-}
-
 /// A score entry for an <a href="#getEntry()"><code>entry</code></a> on an <a href="#getObjective()"><code>objective</code></a>. Changing this will not affect any other objective or scoreboard.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Score<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1129,17 +1089,10 @@ impl<'mc> Score<'mc> {
             .unwrap()
     }
 }
-
-pub struct ScoreClass;
-impl blackboxmc_general::JNIProvidesClassName for ScoreClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scoreboard/Score"
-    }
-}
-
 /// A scoreboard
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Scoreboard<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1467,14 +1420,6 @@ impl<'mc> Scoreboard<'mc> {
             .unwrap()
     }
 }
-
-pub struct ScoreboardClass;
-impl blackboxmc_general::JNIProvidesClassName for ScoreboardClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scoreboard/Scoreboard"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum DisplaySlotEnum {
     BelowName,
@@ -1527,6 +1472,7 @@ impl<'mc> std::fmt::Display for DisplaySlot<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct DisplaySlot<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1659,17 +1605,10 @@ impl<'mc> DisplaySlot<'mc> {
             .unwrap()
     }
 }
-
-pub struct DisplaySlotClass;
-impl blackboxmc_general::JNIProvidesClassName for DisplaySlotClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scoreboard/DisplaySlot"
-    }
-}
-
 /// A team on a scoreboard that has a common display theme and other properties. This team is only relevant to the display of the associated <a href="#getScoreboard()"><code>scoreboard</code></a>.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Team<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2180,17 +2119,10 @@ impl<'mc> Team<'mc> {
             .unwrap()
     }
 }
-
-pub struct TeamClass;
-impl blackboxmc_general::JNIProvidesClassName for TeamClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scoreboard/Team"
-    }
-}
-
 /// Manager of Scoreboards
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ScoreboardManager<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2272,14 +2204,6 @@ impl<'mc> ScoreboardManager<'mc> {
             .unwrap()
     }
 }
-
-pub struct ScoreboardManagerClass;
-impl blackboxmc_general::JNIProvidesClassName for ScoreboardManagerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scoreboard/ScoreboardManager"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum SpigotOptionEnum {
     NameTagVisibility,
@@ -2300,6 +2224,7 @@ impl<'mc> std::fmt::Display for SpigotOption<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct SpigotOption<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2400,14 +2325,6 @@ impl<'mc> SpigotOption<'mc> {
             .unwrap()
     }
 }
-
-pub struct SpigotOptionClass;
-impl blackboxmc_general::JNIProvidesClassName for SpigotOptionClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scoreboard/SpigotOption"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum OptionStatusEnum {
     Always,
@@ -2430,6 +2347,7 @@ impl<'mc> std::fmt::Display for OptionStatus<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct OptionStatus<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2532,14 +2450,6 @@ impl<'mc> OptionStatus<'mc> {
             .unwrap()
     }
 }
-
-pub struct OptionStatusClass;
-impl blackboxmc_general::JNIProvidesClassName for OptionStatusClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scoreboard/OptionStatus"
-    }
-}
-
 /// Represents an option which may be applied to this team.
 #[derive(PartialEq, Eq)]
 pub enum TeamOptionEnum {
@@ -2561,6 +2471,7 @@ impl<'mc> std::fmt::Display for TeamOption<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct TeamOption<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2659,12 +2570,5 @@ impl<'mc> TeamOption<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct TeamOptionClass;
-impl blackboxmc_general::JNIProvidesClassName for TeamOptionClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scoreboard/Team$Option"
     }
 }

@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// A simple wrapper for ease of selecting <a href="Enchantment.html" title="class in org.bukkit.enchantments"><code>Enchantment</code></a>s
+#[repr(C)]
 pub struct EnchantmentWrapper<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -400,15 +401,8 @@ impl<'mc> Into<crate::enchantments::Enchantment<'mc>> for EnchantmentWrapper<'mc
             .expect("Error converting EnchantmentWrapper into crate::enchantments::Enchantment")
     }
 }
-
-pub struct EnchantmentWrapperClass;
-impl blackboxmc_general::JNIProvidesClassName for EnchantmentWrapperClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/enchantments/EnchantmentWrapper"
-    }
-}
-
 /// A class for the available enchantment offers in the enchantment table.
+#[repr(C)]
 pub struct EnchantmentOffer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -664,13 +658,6 @@ impl<'mc> std::string::ToString for EnchantmentOffer<'mc> {
     }
 }
 
-pub struct EnchantmentOfferClass;
-impl blackboxmc_general::JNIProvidesClassName for EnchantmentOfferClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/enchantments/EnchantmentOffer"
-    }
-}
-
 /// Represents the applicable target for a <a href="Enchantment.html" title="class in org.bukkit.enchantments"><code>Enchantment</code></a>
 #[derive(PartialEq, Eq)]
 pub enum EnchantmentTargetEnum {
@@ -716,6 +703,7 @@ impl<'mc> std::fmt::Display for EnchantmentTarget<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct EnchantmentTarget<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -861,15 +849,8 @@ impl<'mc> EnchantmentTarget<'mc> {
             .unwrap()
     }
 }
-
-pub struct EnchantmentTargetClass;
-impl blackboxmc_general::JNIProvidesClassName for EnchantmentTargetClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/enchantments/EnchantmentTarget"
-    }
-}
-
 /// The various type of enchantments that may be added to armour or weapons
+#[repr(C)]
 pub struct Enchantment<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1248,12 +1229,5 @@ impl<'mc> Into<crate::Keyed<'mc>> for Enchantment<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Enchantment into crate::Keyed")
-    }
-}
-
-pub struct EnchantmentClass;
-impl blackboxmc_general::JNIProvidesClassName for EnchantmentClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/enchantments/Enchantment"
     }
 }

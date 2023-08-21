@@ -32,6 +32,7 @@ use color_eyre::eyre::Result;
 /// }</code></pre>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ItemTagType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -147,17 +148,10 @@ impl<'mc> ItemTagType<'mc> {
             .unwrap()
     }
 }
-
-pub struct ItemTagTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for ItemTagTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/inventory/meta/tags/ItemTagType"
-    }
-}
-
 /// This interface represents the context in which the <a href="ItemTagType.html" title="interface in org.bukkit.inventory.meta.tags"><code>ItemTagType</code></a> can serialize and deserialize the passed values.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ItemTagAdapterContext<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -223,15 +217,8 @@ impl<'mc> ItemTagAdapterContext<'mc> {
             .unwrap()
     }
 }
-
-pub struct ItemTagAdapterContextClass;
-impl blackboxmc_general::JNIProvidesClassName for ItemTagAdapterContextClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/inventory/meta/tags/ItemTagAdapterContext"
-    }
-}
-
 /// A default implementation that simply exists to pass on the retrieved or inserted value to the next layer. This implementation does not add any kind of logic, but is used to provide default implementations for the primitive types.
+#[repr(C)]
 pub struct ItemTagTypePrimitiveTagType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -456,16 +443,10 @@ impl<'mc> std::string::ToString for ItemTagTypePrimitiveTagType<'mc> {
     }
 }
 
-pub struct ItemTagTypePrimitiveTagTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for ItemTagTypePrimitiveTagTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/inventory/meta/tags/ItemTagType$PrimitiveTagType"
-    }
-}
-
 /// This interface represents a map like object, capable of storing custom tags in it.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct CustomItemTagContainer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -641,12 +622,5 @@ impl<'mc> CustomItemTagContainer<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct CustomItemTagContainerClass;
-impl blackboxmc_general::JNIProvidesClassName for CustomItemTagContainerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/inventory/meta/tags/CustomItemTagContainer"
     }
 }

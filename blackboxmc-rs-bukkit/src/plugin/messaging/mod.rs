@@ -21,6 +21,7 @@ impl<'mc> std::fmt::Display for PluginChannelDirection<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct PluginChannelDirection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -123,17 +124,10 @@ impl<'mc> PluginChannelDirection<'mc> {
             .unwrap()
     }
 }
-
-pub struct PluginChannelDirectionClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginChannelDirectionClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/messaging/PluginChannelDirection"
-    }
-}
-
 /// A listener for a specific Plugin Channel, which will receive notifications of messages sent from a client.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PluginMessageListener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -211,15 +205,8 @@ impl<'mc> PluginMessageListener<'mc> {
             .unwrap()
     }
 }
-
-pub struct PluginMessageListenerClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginMessageListenerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/messaging/PluginMessageListener"
-    }
-}
-
 /// Contains information about a <a title="interface in org.bukkit.plugin" href="../Plugin.html"><code>Plugin</code></a>s registration to a plugin channel.
+#[repr(C)]
 pub struct PluginMessageListenerRegistration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -463,16 +450,10 @@ impl<'mc> std::string::ToString for PluginMessageListenerRegistration<'mc> {
     }
 }
 
-pub struct PluginMessageListenerRegistrationClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginMessageListenerRegistrationClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/messaging/PluginMessageListenerRegistration"
-    }
-}
-
 /// A class responsible for managing the registrations of plugin channels and their listeners. Channel names must contain a colon separator and consist of only [a-z0-9/._-] - i.e. they MUST be valid <a title="class in org.bukkit" href="../../NamespacedKey.html"><code>NamespacedKey</code></a>. The "BungeeCord" channel is an exception and may only take this form.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Messenger<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -826,15 +807,8 @@ impl<'mc> Messenger<'mc> {
             .unwrap()
     }
 }
-
-pub struct MessengerClass;
-impl blackboxmc_general::JNIProvidesClassName for MessengerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/messaging/Messenger"
-    }
-}
-
 /// Standard implementation to <a href="Messenger.html" title="interface in org.bukkit.plugin.messaging"><code>Messenger</code></a>
+#[repr(C)]
 pub struct StandardMessenger<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1413,17 +1387,10 @@ impl<'mc> Into<crate::plugin::messaging::Messenger<'mc>> for StandardMessenger<'
             .expect("Error converting StandardMessenger into crate::plugin::messaging::Messenger")
     }
 }
-
-pub struct StandardMessengerClass;
-impl blackboxmc_general::JNIProvidesClassName for StandardMessengerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/messaging/StandardMessenger"
-    }
-}
-
 /// Represents a possible recipient for a Plugin Message.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PluginMessageRecipient<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1515,12 +1482,5 @@ impl<'mc> PluginMessageRecipient<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct PluginMessageRecipientClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginMessageRecipientClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/messaging/PluginMessageRecipient"
     }
 }

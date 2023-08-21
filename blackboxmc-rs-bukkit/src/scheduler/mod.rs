@@ -6,6 +6,7 @@ use color_eyre::eyre::Result;
 /// Represents a task being executed by the scheduler
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct BukkitTask<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -104,18 +105,11 @@ impl<'mc> BukkitTask<'mc> {
             .unwrap()
     }
 }
-
-pub struct BukkitTaskClass;
-impl blackboxmc_general::JNIProvidesClassName for BukkitTaskClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scheduler/BukkitTask"
-    }
-}
-
 /// Represents a worker thread for the scheduler. This gives information about the Thread object for the task, owner of the task and the taskId.
 /// <p>Workers are used to execute async tasks.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct BukkitWorker<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -188,15 +182,9 @@ impl<'mc> BukkitWorker<'mc> {
     }
 }
 
-pub struct BukkitWorkerClass;
-impl blackboxmc_general::JNIProvidesClassName for BukkitWorkerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scheduler/BukkitWorker"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct BukkitScheduler<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -386,15 +374,8 @@ impl<'mc> BukkitScheduler<'mc> {
             .unwrap()
     }
 }
-
-pub struct BukkitSchedulerClass;
-impl blackboxmc_general::JNIProvidesClassName for BukkitSchedulerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scheduler/BukkitScheduler"
-    }
-}
-
 /// This class is provided as an easy way to handle scheduling tasks.
+#[repr(C)]
 pub struct BukkitRunnable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -745,12 +726,5 @@ impl<'mc> std::string::ToString for BukkitRunnable<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling BukkitRunnable.toString: {}", err),
         }
-    }
-}
-
-pub struct BukkitRunnableClass;
-impl blackboxmc_general::JNIProvidesClassName for BukkitRunnableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/scheduler/BukkitRunnable"
     }
 }

@@ -99,6 +99,7 @@ impl<'mc> std::fmt::Display for PatternType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct PatternType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -276,13 +277,7 @@ impl<'mc> PatternType<'mc> {
     }
 }
 
-pub struct PatternTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for PatternTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/banner/PatternType"
-    }
-}
-
+#[repr(C)]
 pub struct Pattern<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -529,12 +524,5 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
 {
     fn into(self) -> crate::configuration::serialization::ConfigurationSerializable<'mc> {
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting Pattern into crate::configuration::serialization::ConfigurationSerializable")
-    }
-}
-
-pub struct PatternClass;
-impl blackboxmc_general::JNIProvidesClassName for PatternClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/banner/Pattern"
     }
 }

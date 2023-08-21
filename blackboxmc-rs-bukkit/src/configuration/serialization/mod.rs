@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Utility class for storing and retrieving classes for <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a>.
+#[repr(C)]
 pub struct ConfigurationSerialization<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -297,13 +298,6 @@ impl<'mc> std::string::ToString for ConfigurationSerialization<'mc> {
     }
 }
 
-pub struct ConfigurationSerializationClass;
-impl blackboxmc_general::JNIProvidesClassName for ConfigurationSerializationClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/configuration/serialization/ConfigurationSerialization"
-    }
-}
-
 /// Represents an object that may be serialized.
 /// <p>These objects MUST implement one of the following, in addition to the methods as defined by this interface:</p>
 /// <ul>
@@ -313,6 +307,7 @@ impl blackboxmc_general::JNIProvidesClassName for ConfigurationSerializationClas
 /// </ul> In addition to implementing this interface, you must register the class with <a href="ConfigurationSerialization.html#registerClass(java.lang.Class)"><code>ConfigurationSerialization.registerClass(Class)</code></a>.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ConfigurationSerializable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -390,19 +385,12 @@ impl<'mc> ConfigurationSerializable<'mc> {
             .unwrap()
     }
 }
-
-pub struct ConfigurationSerializableClass;
-impl blackboxmc_general::JNIProvidesClassName for ConfigurationSerializableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/configuration/serialization/ConfigurationSerializable"
-    }
-}
-
 /// Represents an "alias" that a <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> may be stored as. If this is not present on a <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> class, it will use the fully qualified name of the class.
 /// <p>This value will be stored in the configuration so that the configuration deserialization can determine what type it is.</p>
 /// <p>Using this annotation on any other class than a <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> will have no effect.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct SerializableAs<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -526,16 +514,10 @@ impl<'mc> std::string::ToString for SerializableAs<'mc> {
     }
 }
 
-pub struct SerializableAsClass;
-impl blackboxmc_general::JNIProvidesClassName for SerializableAsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/configuration/serialization/SerializableAs"
-    }
-}
-
 /// Applies to a <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> that will delegate all deserialization to another <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a>.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct DelegateDeserialization<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -653,12 +635,5 @@ impl<'mc> std::string::ToString for DelegateDeserialization<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling DelegateDeserialization.toString: {}", err),
         }
-    }
-}
-
-pub struct DelegateDeserializationClass;
-impl blackboxmc_general::JNIProvidesClassName for DelegateDeserializationClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/configuration/serialization/DelegateDeserialization"
     }
 }

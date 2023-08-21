@@ -23,6 +23,7 @@ impl<'mc> std::fmt::Display for CookingBookCategory<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct CookingBookCategory<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -126,14 +127,6 @@ impl<'mc> CookingBookCategory<'mc> {
             .unwrap()
     }
 }
-
-pub struct CookingBookCategoryClass;
-impl blackboxmc_general::JNIProvidesClassName for CookingBookCategoryClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/inventory/recipe/CookingBookCategory"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum CraftingBookCategoryEnum {
     Building,
@@ -156,6 +149,7 @@ impl<'mc> std::fmt::Display for CraftingBookCategory<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct CraftingBookCategory<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -259,12 +253,5 @@ impl<'mc> CraftingBookCategory<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct CraftingBookCategoryClass;
-impl blackboxmc_general::JNIProvidesClassName for CraftingBookCategoryClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/inventory/recipe/CraftingBookCategory"
     }
 }

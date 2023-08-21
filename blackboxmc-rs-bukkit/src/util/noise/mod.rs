@@ -5,6 +5,7 @@ use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Generates simplex-based noise.
 /// <p>This is a modified version of the freely published version in the paper by Stefan Gustavson at <a href="http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf"> http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf</a></p>
+#[repr(C)]
 pub struct SimplexNoiseGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -331,15 +332,8 @@ impl<'mc> Into<crate::util::noise::PerlinNoiseGenerator<'mc>> for SimplexNoiseGe
         )
     }
 }
-
-pub struct SimplexNoiseGeneratorClass;
-impl blackboxmc_general::JNIProvidesClassName for SimplexNoiseGeneratorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/noise/SimplexNoiseGenerator"
-    }
-}
-
 /// Generates noise using the "classic" perlin generator
+#[repr(C)]
 pub struct PerlinNoiseGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -662,15 +656,8 @@ impl<'mc> Into<crate::util::noise::NoiseGenerator<'mc>> for PerlinNoiseGenerator
             .expect("Error converting PerlinNoiseGenerator into crate::util::noise::NoiseGenerator")
     }
 }
-
-pub struct PerlinNoiseGeneratorClass;
-impl blackboxmc_general::JNIProvidesClassName for PerlinNoiseGeneratorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/noise/PerlinNoiseGenerator"
-    }
-}
-
 /// Creates simplex noise through unbiased octaves
+#[repr(C)]
 pub struct SimplexOctaveGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1025,15 +1012,8 @@ impl<'mc> Into<crate::util::noise::OctaveGenerator<'mc>> for SimplexOctaveGenera
         )
     }
 }
-
-pub struct SimplexOctaveGeneratorClass;
-impl blackboxmc_general::JNIProvidesClassName for SimplexOctaveGeneratorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/noise/SimplexOctaveGenerator"
-    }
-}
-
 /// Creates noise using unbiased octaves
+#[repr(C)]
 pub struct OctaveGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1308,14 +1288,8 @@ impl<'mc> std::string::ToString for OctaveGenerator<'mc> {
     }
 }
 
-pub struct OctaveGeneratorClass;
-impl blackboxmc_general::JNIProvidesClassName for OctaveGeneratorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/noise/OctaveGenerator"
-    }
-}
-
 /// Creates perlin noise through unbiased octaves
+#[repr(C)]
 pub struct PerlinOctaveGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1640,15 +1614,8 @@ impl<'mc> Into<crate::util::noise::OctaveGenerator<'mc>> for PerlinOctaveGenerat
         )
     }
 }
-
-pub struct PerlinOctaveGeneratorClass;
-impl blackboxmc_general::JNIProvidesClassName for PerlinOctaveGeneratorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/noise/PerlinOctaveGenerator"
-    }
-}
-
 /// Base class for all noise generators
+#[repr(C)]
 pub struct NoiseGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1888,12 +1855,5 @@ impl<'mc> std::string::ToString for NoiseGenerator<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling NoiseGenerator.toString: {}", err),
         }
-    }
-}
-
-pub struct NoiseGeneratorClass;
-impl blackboxmc_general::JNIProvidesClassName for NoiseGeneratorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/noise/NoiseGenerator"
     }
 }

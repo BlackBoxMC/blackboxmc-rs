@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Called when the moisture level of a soil block changes.
+#[repr(C)]
 pub struct MoistureChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -283,15 +284,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for MoistureChangeEvent<'mc
             .expect("Error converting MoistureChangeEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct MoistureChangeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for MoistureChangeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/MoistureChangeEvent"
-    }
-}
-
 /// Called when a Sculk sensor receives a game event and hence might activate. Will be called cancelled if the block's default behavior is to ignore the event.
+#[repr(C)]
 pub struct BlockReceiveGameEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -590,15 +584,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockReceiveGameEvent<'
             .expect("Error converting BlockReceiveGameEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockReceiveGameEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockReceiveGameEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockReceiveGameEvent"
-    }
-}
-
 /// Called if a block broken by a player drops an item. If the block break is cancelled, this event won't be called. If isDropItems in BlockBreakEvent is set to false, this event won't be called. This event will also be called if the player breaks a multi block structure, for example a torch on top of a stone. Both items will have an event call. The Block is already broken as this event is called, so #getBlock() will be AIR in most cases. Use #getBlockState() for more Information about the broken block.
+#[repr(C)]
 pub struct BlockDropItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -882,16 +869,9 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockDropItemEvent<'mc>
             .expect("Error converting BlockDropItemEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockDropItemEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockDropItemEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockDropItemEvent"
-    }
-}
-
 /// Called when a block of TNT in the world become primed.
 /// <p>If a TNT Prime event is cancelled, the block of TNT will not become primed.</p>
+#[repr(C)]
 pub struct TNTPrimeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -924,6 +904,7 @@ impl<'mc> std::fmt::Display for TNTPrimeEventPrimeCause<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct TNTPrimeEventPrimeCause<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1034,13 +1015,6 @@ impl<'mc> TNTPrimeEventPrimeCause<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct TNTPrimeEventPrimeCauseClass;
-impl blackboxmc_general::JNIProvidesClassName for TNTPrimeEventPrimeCauseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/TNTPrimeEvent$PrimeCause"
     }
 }
 
@@ -1377,15 +1351,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for TNTPrimeEvent<'mc> {
             .expect("Error converting TNTPrimeEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct TNTPrimeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for TNTPrimeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/TNTPrimeEvent"
-    }
-}
-
 /// Called when a bell resonated after being rung and highlights nearby raiders. A bell will only resonate if raiders are in the vicinity of the bell.
+#[repr(C)]
 pub struct BellResonateEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1619,15 +1586,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BellResonateEvent<'mc> 
             .expect("Error converting BellResonateEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BellResonateEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BellResonateEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BellResonateEvent"
-    }
-}
-
 /// Called when a block explodes
+#[repr(C)]
 pub struct BlockExplodeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1908,13 +1868,7 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockExplodeEvent<'mc> 
     }
 }
 
-pub struct BlockExplodeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockExplodeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockExplodeEvent"
-    }
-}
-
+#[repr(C)]
 pub struct CauldronLevelChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1955,6 +1909,7 @@ impl<'mc> std::fmt::Display for CauldronLevelChangeEventChangeReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct CauldronLevelChangeEventChangeReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2088,13 +2043,6 @@ impl<'mc> CauldronLevelChangeEventChangeReason<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct CauldronLevelChangeEventChangeReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for CauldronLevelChangeEventChangeReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/CauldronLevelChangeEvent$ChangeReason"
     }
 }
 
@@ -2464,15 +2412,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for CauldronLevelChangeEven
         )
     }
 }
-
-pub struct CauldronLevelChangeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for CauldronLevelChangeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/CauldronLevelChangeEvent"
-    }
-}
-
 /// Fired when a single block placement action of a player triggers the creation of multiple blocks(e.g. placing a bed block). The block returned by <a href="BlockPlaceEvent.html#getBlockPlaced()"><code>BlockPlaceEvent.getBlockPlaced()</code></a> and its related methods is the block where the placed block would exist if the placement only affected a single block.
+#[repr(C)]
 pub struct BlockMultiPlaceEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2843,14 +2784,6 @@ impl<'mc> Into<crate::event::block::BlockPlaceEvent<'mc>> for BlockMultiPlaceEve
         )
     }
 }
-
-pub struct BlockMultiPlaceEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockMultiPlaceEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockMultiPlaceEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum ActionEnum {
     LeftClickBlock,
@@ -2875,6 +2808,7 @@ impl<'mc> std::fmt::Display for Action<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Action<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2979,20 +2913,13 @@ impl<'mc> Action<'mc> {
             .unwrap()
     }
 }
-
-pub struct ActionClass;
-impl blackboxmc_general::JNIProvidesClassName for ActionClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/Action"
-    }
-}
-
 /// Called when we try to place a block, to see if we can build it here or not.
 /// <p>Note:</p>
 /// <ul>
 /// <li>The Block returned by getBlock() is the block we are trying to place on, not the block we are trying to place.</li>
 /// <li>If you want to figure out what is being placed, use <a href="#getMaterial()"><code>getMaterial()</code></a> instead.</li>
 /// </ul>
+#[repr(C)]
 pub struct BlockCanBuildEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3316,14 +3243,6 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockCanBuildEvent<'mc>
             .expect("Error converting BlockCanBuildEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockCanBuildEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockCanBuildEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockCanBuildEvent"
-    }
-}
-
 /// Called when a block spreads based on world conditions.
 /// <p>Use <a title="class in org.bukkit.event.block" href="BlockFormEvent.html"><code>BlockFormEvent</code></a> to catch blocks that "randomly" form instead of actually spread.</p>
 /// <p>Examples:</p>
@@ -3332,6 +3251,7 @@ impl blackboxmc_general::JNIProvidesClassName for BlockCanBuildEventClass {
 /// <li>Fire spreading.</li>
 /// </ul>
 /// <p>If a Block Spread event is cancelled, the block will not spread.</p>
+#[repr(C)]
 pub struct BlockSpreadEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3621,15 +3541,8 @@ impl<'mc> Into<crate::event::block::BlockFormEvent<'mc>> for BlockSpreadEvent<'m
             .expect("Error converting BlockSpreadEvent into crate::event::block::BlockFormEvent")
     }
 }
-
-pub struct BlockSpreadEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockSpreadEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockSpreadEvent"
-    }
-}
-
 /// Called when a player stops damaging a Block.
+#[repr(C)]
 pub struct BlockDamageAbortEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3906,14 +3819,6 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockDamageAbortEvent<'
             .expect("Error converting BlockDamageAbortEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockDamageAbortEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockDamageAbortEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockDamageAbortEvent"
-    }
-}
-
 /// Called when a block is formed or spreads based on world conditions.
 /// <p>Use <a href="BlockSpreadEvent.html" title="class in org.bukkit.event.block"><code>BlockSpreadEvent</code></a> to catch blocks that actually spread and don't just "randomly" form.</p>
 /// <p>Examples:</p>
@@ -3924,6 +3829,7 @@ impl blackboxmc_general::JNIProvidesClassName for BlockDamageAbortEventClass {
 /// <li>Concrete forming due to mixing of concrete powder and water.</li>
 /// </ul>
 /// <p>If a Block Form event is cancelled, the block will not be formed.</p>
+#[repr(C)]
 pub struct BlockFormEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4195,14 +4101,6 @@ impl<'mc> Into<crate::event::block::BlockGrowEvent<'mc>> for BlockFormEvent<'mc>
             .expect("Error converting BlockFormEvent into crate::event::block::BlockGrowEvent")
     }
 }
-
-pub struct BlockFormEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockFormEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockFormEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum PrimeCauseEnum {
     Fire,
@@ -4231,6 +4129,7 @@ impl<'mc> std::fmt::Display for PrimeCause<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct PrimeCause<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4339,15 +4238,8 @@ impl<'mc> PrimeCause<'mc> {
             .unwrap()
     }
 }
-
-pub struct PrimeCauseClass;
-impl blackboxmc_general::JNIProvidesClassName for PrimeCauseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/PrimeCause"
-    }
-}
-
 /// Called when a piston retracts
+#[repr(C)]
 pub struct BlockPistonRetractEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4649,14 +4541,6 @@ impl<'mc> Into<crate::event::block::BlockPistonEvent<'mc>> for BlockPistonRetrac
         )
     }
 }
-
-pub struct BlockPistonRetractEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockPistonRetractEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockPistonRetractEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum ChangeReasonEnum {
     BucketFill,
@@ -4693,6 +4577,7 @@ impl<'mc> std::fmt::Display for ChangeReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct ChangeReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4809,14 +4694,6 @@ impl<'mc> ChangeReason<'mc> {
             .unwrap()
     }
 }
-
-pub struct ChangeReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for ChangeReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/ChangeReason"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum IgniteCauseEnum {
     Lava,
@@ -4847,6 +4724,7 @@ impl<'mc> std::fmt::Display for IgniteCause<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct IgniteCause<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4957,15 +4835,8 @@ impl<'mc> IgniteCause<'mc> {
             .unwrap()
     }
 }
-
-pub struct IgniteCauseClass;
-impl blackboxmc_general::JNIProvidesClassName for IgniteCauseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/IgniteCause"
-    }
-}
-
 /// Called when a piston extends
+#[repr(C)]
 pub struct BlockPistonExtendEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5293,15 +5164,8 @@ impl<'mc> Into<crate::event::block::BlockPistonEvent<'mc>> for BlockPistonExtend
         )
     }
 }
-
-pub struct BlockPistonExtendEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockPistonExtendEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockPistonExtendEvent"
-    }
-}
-
 /// Called with the block changes resulting from a player fertilizing a given block with bonemeal. Will be called after the applicable <a href="../world/StructureGrowEvent.html" title="class in org.bukkit.event.world"><code>StructureGrowEvent</code></a>.
+#[repr(C)]
 pub struct BlockFertilizeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5575,15 +5439,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockFertilizeEvent<'mc
             .expect("Error converting BlockFertilizeEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockFertilizeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockFertilizeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockFertilizeEvent"
-    }
-}
-
 /// Called when a brewing stand starts to brew.
+#[repr(C)]
 pub struct BrewingStartEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5862,20 +5719,13 @@ impl<'mc> Into<crate::event::block::InventoryBlockStartEvent<'mc>> for BrewingSt
         )
     }
 }
-
-pub struct BrewingStartEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BrewingStartEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BrewingStartEvent"
-    }
-}
-
 /// Used when:
 /// <ul>
 /// <li>A Furnace starts smelting <a title="class in org.bukkit.event.inventory" href="../inventory/FurnaceStartSmeltEvent.html"><code>FurnaceStartSmeltEvent</code></a></li>
 /// <li>A Brewing-Stand starts brewing <a title="class in org.bukkit.event.block" href="BrewingStartEvent.html"><code>BrewingStartEvent</code></a></li>
 /// <li>A Campfire starts cooking <a href="CampfireStartEvent.html" title="class in org.bukkit.event.block"><code>CampfireStartEvent</code></a></li>
 /// </ul>
+#[repr(C)]
 pub struct InventoryBlockStartEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6129,14 +5979,6 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for InventoryBlockStartEven
         )
     }
 }
-
-pub struct InventoryBlockStartEventClass;
-impl blackboxmc_general::JNIProvidesClassName for InventoryBlockStartEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/InventoryBlockStartEvent"
-    }
-}
-
 /// Called when a block grows naturally in the world.
 /// <p>Examples:</p>
 /// <ul>
@@ -6148,6 +5990,7 @@ impl blackboxmc_general::JNIProvidesClassName for InventoryBlockStartEventClass 
 /// <li>Turtle Egg</li>
 /// </ul>
 /// <p>If a Block Grow event is cancelled, the block will not grow.</p>
+#[repr(C)]
 pub struct BlockGrowEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6426,16 +6269,9 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockGrowEvent<'mc> {
             .expect("Error converting BlockGrowEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockGrowEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockGrowEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockGrowEvent"
-    }
-}
-
 /// Called when an equippable item is dispensed from a block and equipped on a nearby entity.
 /// <p>If a Block Dispense Armor event is cancelled, the equipment will not be equipped on the target entity.</p>
+#[repr(C)]
 pub struct BlockDispenseArmorEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6775,15 +6611,8 @@ impl<'mc> Into<crate::event::block::BlockDispenseEvent<'mc>> for BlockDispenseAr
         )
     }
 }
-
-pub struct BlockDispenseArmorEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockDispenseArmorEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockDispenseArmorEvent"
-    }
-}
-
 /// Called when an ItemStack is successfully cooked in a block.
+#[repr(C)]
 pub struct BlockCookEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7096,15 +6925,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockCookEvent<'mc> {
             .expect("Error converting BlockCookEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockCookEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockCookEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockCookEvent"
-    }
-}
-
 /// Called when a piston block is triggered
+#[repr(C)]
 pub struct BlockPistonEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7393,14 +7215,6 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockPistonEvent<'mc> {
             .expect("Error converting BlockPistonEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockPistonEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockPistonEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockPistonEvent"
-    }
-}
-
 /// Called when a block fades, melts or disappears based on world conditions
 /// <p>Examples:</p>
 /// <ul>
@@ -7411,6 +7225,7 @@ impl blackboxmc_general::JNIProvidesClassName for BlockPistonEventClass {
 /// <li>Turtle Egg bursting when a turtle hatches</li>
 /// </ul>
 /// <p>If a Block Fade event is cancelled, the block will not fade, melt or disappear.</p>
+#[repr(C)]
 pub struct BlockFadeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7689,16 +7504,9 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockFadeEvent<'mc> {
             .expect("Error converting BlockFadeEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockFadeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockFadeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockFadeEvent"
-    }
-}
-
 /// Called when a block is placed by a player.
 /// <p>If a Block Place event is cancelled, the block will not be placed.</p>
+#[repr(C)]
 pub struct BlockPlaceEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8108,14 +7916,6 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockPlaceEvent<'mc> {
             .expect("Error converting BlockPlaceEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockPlaceEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockPlaceEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockPlaceEvent"
-    }
-}
-
 /// Thrown when a block physics check is called.
 ///
 /// This event is a high frequency event, it may be called thousands of times per a second on a busy server. Plugins are advised to listen to the event with caution and only perform lightweight checks when using it.
@@ -8123,6 +7923,7 @@ impl blackboxmc_general::JNIProvidesClassName for BlockPlaceEventClass {
 /// In addition to this, cancelling the event is liable to leave the world in an inconsistent state. For example if you use the event to leave a block floating in mid air when that block has a requirement to be attached to something, there is no guarantee that the floating block will persist across server restarts or map upgrades.
 ///
 /// Plugins should also note that where possible this event may only called for the "root" block of physics updates in order to limit event spam. Physics updates that cause other blocks to change their state may not result in an event for each of those blocks (usually adjacent). If you are concerned about monitoring these changes then you should check adjacent blocks yourself.
+#[repr(C)]
 pub struct BlockPhysicsEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8432,20 +8233,13 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockPhysicsEvent<'mc> 
             .expect("Error converting BlockPhysicsEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockPhysicsEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockPhysicsEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockPhysicsEvent"
-    }
-}
-
 /// Called when a block is formed by entities.
 /// <p>Examples:</p>
 /// <ul>
 /// <li>Snow formed by a <a href="../../entity/Snowman.html" title="interface in org.bukkit.entity"><code>Snowman</code></a>.</li>
 /// <li>Frosted Ice formed by the Frost Walker enchantment.</li>
 /// </ul>
+#[repr(C)]
 pub struct EntityBlockFormEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8737,19 +8531,12 @@ impl<'mc> Into<crate::event::block::BlockFormEvent<'mc>> for EntityBlockFormEven
         )
     }
 }
-
-pub struct EntityBlockFormEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityBlockFormEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/EntityBlockFormEvent"
-    }
-}
-
 /// Called when a sponge absorbs water from the world.
 ///
 /// The world will be in its previous state, and <a href="#getBlocks()"><code>getBlocks()</code></a> will represent the changes to be made to the world, if the event is not cancelled.
 ///
 /// As this is a physics based event it may be called multiple times for "the same" changes.
+#[repr(C)]
 pub struct SpongeAbsorbEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9007,15 +8794,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for SpongeAbsorbEvent<'mc> 
             .expect("Error converting SpongeAbsorbEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct SpongeAbsorbEventClass;
-impl blackboxmc_general::JNIProvidesClassName for SpongeAbsorbEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/SpongeAbsorbEvent"
-    }
-}
-
 /// An event that's called when a block yields experience.
+#[repr(C)]
 pub struct BlockExpEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9272,16 +9052,9 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockExpEvent<'mc> {
             .expect("Error converting BlockExpEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockExpEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockExpEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockExpEvent"
-    }
-}
-
 /// Called when a sign is changed by a player.
 /// <p>If a Sign Change event is cancelled, the sign will not be changed.</p>
+#[repr(C)]
 pub struct SignChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9637,16 +9410,9 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for SignChangeEvent<'mc> {
             .expect("Error converting SignChangeEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct SignChangeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for SignChangeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/SignChangeEvent"
-    }
-}
-
 /// Called when leaves are decaying naturally.
 /// <p>If a Leaves Decay event is cancelled, the leaves will not decay.</p>
+#[repr(C)]
 pub struct LeavesDecayEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9907,16 +9673,9 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for LeavesDecayEvent<'mc> {
             .expect("Error converting LeavesDecayEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct LeavesDecayEventClass;
-impl blackboxmc_general::JNIProvidesClassName for LeavesDecayEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/LeavesDecayEvent"
-    }
-}
-
 /// Represents events with a source block and a destination block, currently only applies to liquid (lava and water) and teleporting dragon eggs.
 /// <p>If a Block From To event is cancelled, the block will not move (the liquid will not flow).</p>
+#[repr(C)]
 pub struct BlockFromToEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10219,15 +9978,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockFromToEvent<'mc> {
             .expect("Error converting BlockFromToEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockFromToEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockFromToEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockFromToEvent"
-    }
-}
-
 /// Event fired when a dispenser shears a nearby sheep.
+#[repr(C)]
 pub struct BlockShearEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10526,15 +10278,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockShearEntityEvent<'
             .expect("Error converting BlockShearEntityEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockShearEntityEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockShearEntityEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockShearEntityEvent"
-    }
-}
-
 /// Called when the fluid level of a block changes due to changes in adjacent blocks.
+#[repr(C)]
 pub struct FluidLevelChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10835,16 +10580,9 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for FluidLevelChangeEvent<'
             .expect("Error converting FluidLevelChangeEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct FluidLevelChangeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for FluidLevelChangeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/FluidLevelChangeEvent"
-    }
-}
-
 /// Called when a block is destroyed as a result of being burnt by fire.
 /// <p>If a Block Burn event is cancelled, the block will not be destroyed as a result of being burnt by fire.</p>
+#[repr(C)]
 pub struct BlockBurnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11133,16 +10871,9 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockBurnEvent<'mc> {
             .expect("Error converting BlockBurnEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockBurnEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockBurnEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockBurnEvent"
-    }
-}
-
 /// Called when an item is dispensed from a block.
 /// <p>If a Block Dispense event is cancelled, the block will not dispense the item.</p>
+#[repr(C)]
 pub struct BlockDispenseEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11475,15 +11206,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockDispenseEvent<'mc>
             .expect("Error converting BlockDispenseEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockDispenseEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockDispenseEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockDispenseEvent"
-    }
-}
-
 /// Called when a bell is being rung.
+#[repr(C)]
 pub struct BellRingEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11791,16 +11515,9 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BellRingEvent<'mc> {
             .expect("Error converting BellRingEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BellRingEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BellRingEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BellRingEvent"
-    }
-}
-
 /// Called when a block is damaged by a player.
 /// <p>If a Block Damage event is cancelled, the block will not be damaged.</p>
+#[repr(C)]
 pub struct BlockDamageEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12127,15 +11844,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockDamageEvent<'mc> {
             .expect("Error converting BlockDamageEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockDamageEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockDamageEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockDamageEvent"
-    }
-}
-
 /// Called when a Campfire starts to cook.
+#[repr(C)]
 pub struct CampfireStartEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12431,14 +12141,6 @@ impl<'mc> Into<crate::event::block::InventoryBlockStartEvent<'mc>> for CampfireS
         crate::event::block::InventoryBlockStartEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting CampfireStartEvent into crate::event::block::InventoryBlockStartEvent")
     }
 }
-
-pub struct CampfireStartEventClass;
-impl blackboxmc_general::JNIProvidesClassName for CampfireStartEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/CampfireStartEvent"
-    }
-}
-
 /// Called when a block is broken by a player.
 /// <p>If you wish to have the block drop experience, you must set the experience value above 0. By default, experience will be set in the event if:</p>
 /// <ol>
@@ -12449,6 +12151,7 @@ impl blackboxmc_general::JNIProvidesClassName for CampfireStartEventClass {
 /// </ol>
 /// <p>Note: Plugins wanting to simulate a traditional block drop should set the block to air and utilize their own methods for determining what the default drop for the block being broken is and what to do about it, if anything.</p>
 /// <p>If a Block Break event is cancelled, the block will not break and experience will not drop.</p>
+#[repr(C)]
 pub struct BlockBreakEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12775,15 +12478,8 @@ impl<'mc> Into<crate::event::block::BlockExpEvent<'mc>> for BlockBreakEvent<'mc>
             .expect("Error converting BlockBreakEvent into crate::event::block::BlockExpEvent")
     }
 }
-
-pub struct BlockBreakEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockBreakEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockBreakEvent"
-    }
-}
-
 /// Called when a redstone current changes
+#[repr(C)]
 pub struct BlockRedstoneEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13054,16 +12750,9 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockRedstoneEvent<'mc>
             .expect("Error converting BlockRedstoneEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockRedstoneEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockRedstoneEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockRedstoneEvent"
-    }
-}
-
 /// Called when a block is ignited. If you want to catch when a Player places fire, you need to use <a title="class in org.bukkit.event.block" href="BlockPlaceEvent.html"><code>BlockPlaceEvent</code></a>.
 /// <p>If a Block Ignite event is cancelled, the block will not be ignited.</p>
+#[repr(C)]
 pub struct BlockIgniteEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13098,6 +12787,7 @@ impl<'mc> std::fmt::Display for BlockIgniteEventIgniteCause<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct BlockIgniteEventIgniteCause<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13214,13 +12904,6 @@ impl<'mc> BlockIgniteEventIgniteCause<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct BlockIgniteEventIgniteCauseClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockIgniteEventIgniteCauseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockIgniteEvent$IgniteCause"
     }
 }
 
@@ -13581,15 +13264,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockIgniteEvent<'mc> {
             .expect("Error converting BlockIgniteEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BlockIgniteEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockIgniteEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockIgniteEvent"
-    }
-}
-
 /// Called when a note block is being played through player interaction or a redstone current.
+#[repr(C)]
 pub struct NotePlayEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13935,15 +13611,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for NotePlayEvent<'mc> {
             .expect("Error converting NotePlayEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct NotePlayEventClass;
-impl blackboxmc_general::JNIProvidesClassName for NotePlayEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/NotePlayEvent"
-    }
-}
-
 /// Represents a block related event.
+#[repr(C)]
 pub struct BlockEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14159,12 +13828,5 @@ impl<'mc> Into<crate::event::Event<'mc>> for BlockEvent<'mc> {
     fn into(self) -> crate::event::Event<'mc> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting BlockEvent into crate::event::Event")
-    }
-}
-
-pub struct BlockEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/block/BlockEvent"
     }
 }

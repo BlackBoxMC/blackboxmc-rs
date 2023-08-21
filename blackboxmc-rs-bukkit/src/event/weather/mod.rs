@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Stores data for lightning striking
+#[repr(C)]
 pub struct LightningStrikeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -36,6 +37,7 @@ impl<'mc> std::fmt::Display for LightningStrikeEventCause<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct LightningStrikeEventCause<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -146,13 +148,6 @@ impl<'mc> LightningStrikeEventCause<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct LightningStrikeEventCauseClass;
-impl blackboxmc_general::JNIProvidesClassName for LightningStrikeEventCauseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/weather/LightningStrikeEvent$Cause"
     }
 }
 
@@ -467,15 +462,8 @@ impl<'mc> Into<crate::event::weather::WeatherEvent<'mc>> for LightningStrikeEven
         )
     }
 }
-
-pub struct LightningStrikeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for LightningStrikeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/weather/LightningStrikeEvent"
-    }
-}
-
 /// Stores data for thunder state changing in a world
+#[repr(C)]
 pub struct ThunderChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -751,15 +739,8 @@ impl<'mc> Into<crate::event::weather::WeatherEvent<'mc>> for ThunderChangeEvent<
             .expect("Error converting ThunderChangeEvent into crate::event::weather::WeatherEvent")
     }
 }
-
-pub struct ThunderChangeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for ThunderChangeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/weather/ThunderChangeEvent"
-    }
-}
-
 /// Stores data for weather changing in a world
+#[repr(C)]
 pub struct WeatherChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1035,15 +1016,8 @@ impl<'mc> Into<crate::event::weather::WeatherEvent<'mc>> for WeatherChangeEvent<
             .expect("Error converting WeatherChangeEvent into crate::event::weather::WeatherEvent")
     }
 }
-
-pub struct WeatherChangeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for WeatherChangeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/weather/WeatherChangeEvent"
-    }
-}
-
 /// Represents a Weather-related event
+#[repr(C)]
 pub struct WeatherEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1259,12 +1233,5 @@ impl<'mc> Into<crate::event::Event<'mc>> for WeatherEvent<'mc> {
     fn into(self) -> crate::event::Event<'mc> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting WeatherEvent into crate::event::Event")
-    }
-}
-
-pub struct WeatherEventClass;
-impl blackboxmc_general::JNIProvidesClassName for WeatherEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/weather/WeatherEvent"
     }
 }

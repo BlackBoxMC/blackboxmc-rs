@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 
+#[repr(C)]
 pub struct SelectorComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -236,13 +237,7 @@ impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
     }
 }
 
-pub struct SelectorComponentSerializerClass;
-impl blackboxmc_general::JNIProvidesClassName for SelectorComponentSerializerClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/chat/SelectorComponentSerializer"
-    }
-}
-
+#[repr(C)]
 pub struct TextComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -469,13 +464,7 @@ impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>> for TextCompon
     }
 }
 
-pub struct TextComponentSerializerClass;
-impl blackboxmc_general::JNIProvidesClassName for TextComponentSerializerClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/chat/TextComponentSerializer"
-    }
-}
-
+#[repr(C)]
 pub struct BaseComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -639,13 +628,7 @@ impl<'mc> std::string::ToString for BaseComponentSerializer<'mc> {
     }
 }
 
-pub struct BaseComponentSerializerClass;
-impl blackboxmc_general::JNIProvidesClassName for BaseComponentSerializerClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/chat/BaseComponentSerializer"
-    }
-}
-
+#[repr(C)]
 pub struct ScoreComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -875,13 +858,7 @@ impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
     }
 }
 
-pub struct ScoreComponentSerializerClass;
-impl blackboxmc_general::JNIProvidesClassName for ScoreComponentSerializerClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/chat/ScoreComponentSerializer"
-    }
-}
-
+#[repr(C)]
 pub struct TranslatableComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1114,13 +1091,7 @@ impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
     }
 }
 
-pub struct TranslatableComponentSerializerClass;
-impl blackboxmc_general::JNIProvidesClassName for TranslatableComponentSerializerClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/chat/TranslatableComponentSerializer"
-    }
-}
-
+#[repr(C)]
 pub struct KeybindComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1350,13 +1321,7 @@ impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
     }
 }
 
-pub struct KeybindComponentSerializerClass;
-impl blackboxmc_general::JNIProvidesClassName for KeybindComponentSerializerClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/chat/KeybindComponentSerializer"
-    }
-}
-
+#[repr(C)]
 pub struct TranslationRegistry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1526,13 +1491,7 @@ impl<'mc> std::string::ToString for TranslationRegistry<'mc> {
     }
 }
 
-pub struct TranslationRegistryClass;
-impl blackboxmc_general::JNIProvidesClassName for TranslationRegistryClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/chat/TranslationRegistry"
-    }
-}
-
+#[repr(C)]
 pub struct ComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1746,12 +1705,5 @@ impl<'mc> ComponentSerializer<'mc> {
 impl<'mc> Into<jni::objects::JObject<'mc>> for ComponentSerializer<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
-    }
-}
-
-pub struct ComponentSerializerClass;
-impl blackboxmc_general::JNIProvidesClassName for ComponentSerializerClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/chat/ComponentSerializer"
     }
 }

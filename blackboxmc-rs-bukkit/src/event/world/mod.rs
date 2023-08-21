@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Called when a World is unloaded
+#[repr(C)]
 pub struct WorldUnloadEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -264,15 +265,8 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for WorldUnloadEvent<'mc> {
             .expect("Error converting WorldUnloadEvent into crate::event::world::WorldEvent")
     }
 }
-
-pub struct WorldUnloadEventClass;
-impl blackboxmc_general::JNIProvidesClassName for WorldUnloadEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/WorldUnloadEvent"
-    }
-}
-
 /// An event that is called when a world's spawn changes. The world's previous spawn location is included.
+#[repr(C)]
 pub struct SpawnChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -525,15 +519,8 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for SpawnChangeEvent<'mc> {
             .expect("Error converting SpawnChangeEvent into crate::event::world::WorldEvent")
     }
 }
-
-pub struct SpawnChangeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for SpawnChangeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/SpawnChangeEvent"
-    }
-}
-
 /// Called when a chunk is loaded
+#[repr(C)]
 pub struct ChunkLoadEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -790,15 +777,8 @@ impl<'mc> Into<crate::event::world::ChunkEvent<'mc>> for ChunkLoadEvent<'mc> {
             .expect("Error converting ChunkLoadEvent into crate::event::world::ChunkEvent")
     }
 }
-
-pub struct ChunkLoadEventClass;
-impl blackboxmc_general::JNIProvidesClassName for ChunkLoadEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/ChunkLoadEvent"
-    }
-}
-
 /// Called when a portal is created
+#[repr(C)]
 pub struct PortalCreateEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -823,6 +803,7 @@ impl<'mc> std::fmt::Display for PortalCreateEventCreateReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct PortalCreateEventCreateReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -929,13 +910,6 @@ impl<'mc> PortalCreateEventCreateReason<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct PortalCreateEventCreateReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for PortalCreateEventCreateReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/PortalCreateEvent$CreateReason"
     }
 }
 
@@ -1236,14 +1210,6 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for PortalCreateEvent<'mc> 
             .expect("Error converting PortalCreateEvent into crate::event::world::WorldEvent")
     }
 }
-
-pub struct PortalCreateEventClass;
-impl blackboxmc_general::JNIProvidesClassName for PortalCreateEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/PortalCreateEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum CreateReasonEnum {
     Fire,
@@ -1264,6 +1230,7 @@ impl<'mc> std::fmt::Display for CreateReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct CreateReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1364,17 +1331,10 @@ impl<'mc> CreateReason<'mc> {
             .unwrap()
     }
 }
-
-pub struct CreateReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for CreateReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/CreateReason"
-    }
-}
-
 /// Called when a World is initializing.
 /// <p>To get every world it is recommended to add following to the plugin.yml.</p>
 /// <pre>load: STARTUP</pre>
+#[repr(C)]
 pub struct WorldInitEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1606,14 +1566,6 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for WorldInitEvent<'mc> {
             .expect("Error converting WorldInitEvent into crate::event::world::WorldEvent")
     }
 }
-
-pub struct WorldInitEventClass;
-impl blackboxmc_general::JNIProvidesClassName for WorldInitEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/WorldInitEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum SkipReasonEnum {
     Command,
@@ -1634,6 +1586,7 @@ impl<'mc> std::fmt::Display for SkipReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct SkipReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1734,15 +1687,8 @@ impl<'mc> SkipReason<'mc> {
             .unwrap()
     }
 }
-
-pub struct SkipReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for SkipReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/SkipReason"
-    }
-}
-
 /// Called when a <a title="interface in org.bukkit.loot" href="../../loot/LootTable.html"><code>LootTable</code></a> is generated in the world for an <a title="interface in org.bukkit.inventory" href="../../inventory/InventoryHolder.html"><code>InventoryHolder</code></a>. This event is NOT currently called when an entity's loot table has been generated (use <a href="../entity/EntityDeathEvent.html#getDrops()"><code>EntityDeathEvent.getDrops()</code></a>, but WILL be called by plugins invoking <a href="../../loot/LootTable.html#fillInventory(org.bukkit.inventory.Inventory,java.util.Random,org.bukkit.loot.LootContext)"><code>LootTable.fillInventory(org.bukkit.inventory.Inventory, java.util.Random, LootContext)</code></a>.
+#[repr(C)]
 pub struct LootGenerateEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2072,15 +2018,8 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for LootGenerateEvent<'mc> 
             .expect("Error converting LootGenerateEvent into crate::event::world::WorldEvent")
     }
 }
-
-pub struct LootGenerateEventClass;
-impl blackboxmc_general::JNIProvidesClassName for LootGenerateEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/LootGenerateEvent"
-    }
-}
-
 /// Called when a World is loaded
+#[repr(C)]
 pub struct WorldLoadEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2312,15 +2251,8 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for WorldLoadEvent<'mc> {
             .expect("Error converting WorldLoadEvent into crate::event::world::WorldEvent")
     }
 }
-
-pub struct WorldLoadEventClass;
-impl blackboxmc_general::JNIProvidesClassName for WorldLoadEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/WorldLoadEvent"
-    }
-}
-
 /// Called when a <a href="../../generator/structure/Structure.html" title="class in org.bukkit.generator.structure"><code>Structure</code></a> is naturally generated in the world.
+#[repr(C)]
 pub struct AsyncStructureSpawnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2647,16 +2579,9 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for AsyncStructureSpawnEven
         )
     }
 }
-
-pub struct AsyncStructureSpawnEventClass;
-impl blackboxmc_general::JNIProvidesClassName for AsyncStructureSpawnEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/AsyncStructureSpawnEvent"
-    }
-}
-
 /// Thrown when a newly generated chunk has finished being populated.
 /// <p><b>Note:</b> Do not use this to generated blocks in a newly generated chunk. Use a <a href="../../generator/BlockPopulator.html" title="class in org.bukkit.generator"><code>BlockPopulator</code></a> instead.</p>
+#[repr(C)]
 pub struct ChunkPopulateEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2899,15 +2824,8 @@ impl<'mc> Into<crate::event::world::ChunkEvent<'mc>> for ChunkPopulateEvent<'mc>
             .expect("Error converting ChunkPopulateEvent into crate::event::world::ChunkEvent")
     }
 }
-
-pub struct ChunkPopulateEventClass;
-impl blackboxmc_general::JNIProvidesClassName for ChunkPopulateEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/ChunkPopulateEvent"
-    }
-}
-
 /// Called when a chunk is unloaded
+#[repr(C)]
 pub struct ChunkUnloadEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3178,15 +3096,8 @@ impl<'mc> Into<crate::event::world::ChunkEvent<'mc>> for ChunkUnloadEvent<'mc> {
             .expect("Error converting ChunkUnloadEvent into crate::event::world::ChunkEvent")
     }
 }
-
-pub struct ChunkUnloadEventClass;
-impl blackboxmc_general::JNIProvidesClassName for ChunkUnloadEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/ChunkUnloadEvent"
-    }
-}
-
 /// Called when entities are unloaded. The provided chunk may or may not be loaded.
+#[repr(C)]
 pub struct EntitiesUnloadEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3427,15 +3338,8 @@ impl<'mc> Into<crate::event::world::ChunkEvent<'mc>> for EntitiesUnloadEvent<'mc
             .expect("Error converting EntitiesUnloadEvent into crate::event::world::ChunkEvent")
     }
 }
-
-pub struct EntitiesUnloadEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntitiesUnloadEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/EntitiesUnloadEvent"
-    }
-}
-
 /// Called when entities are loaded. The provided chunk may or may not be loaded.
+#[repr(C)]
 pub struct EntitiesLoadEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3675,15 +3579,8 @@ impl<'mc> Into<crate::event::world::ChunkEvent<'mc>> for EntitiesLoadEvent<'mc> 
             .expect("Error converting EntitiesLoadEvent into crate::event::world::ChunkEvent")
     }
 }
-
-pub struct EntitiesLoadEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntitiesLoadEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/EntitiesLoadEvent"
-    }
-}
-
 /// Represents a generic Mojang game event. Specific Bukkit events should be used where possible, this event is mainly used internally by Sculk sensors.
+#[repr(C)]
 pub struct GenericGameEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4019,15 +3916,8 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for GenericGameEvent<'mc> {
             .expect("Error converting GenericGameEvent into crate::event::world::WorldEvent")
     }
 }
-
-pub struct GenericGameEventClass;
-impl blackboxmc_general::JNIProvidesClassName for GenericGameEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/GenericGameEvent"
-    }
-}
-
 /// Represents events within a world
+#[repr(C)]
 pub struct WorldEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4251,15 +4141,8 @@ impl<'mc> Into<crate::event::Event<'mc>> for WorldEvent<'mc> {
             .expect("Error converting WorldEvent into crate::event::Event")
     }
 }
-
-pub struct WorldEventClass;
-impl blackboxmc_general::JNIProvidesClassName for WorldEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/WorldEvent"
-    }
-}
-
 /// Represents a Chunk related event
+#[repr(C)]
 pub struct ChunkEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4469,15 +4352,8 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for ChunkEvent<'mc> {
             .expect("Error converting ChunkEvent into crate::event::world::WorldEvent")
     }
 }
-
-pub struct ChunkEventClass;
-impl blackboxmc_general::JNIProvidesClassName for ChunkEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/ChunkEvent"
-    }
-}
-
 /// Event that is called when an organic structure attempts to grow (Sapling -&gt; Tree), (Mushroom -&gt; Huge Mushroom), naturally or using bonemeal.
+#[repr(C)]
 pub struct StructureGrowEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4794,16 +4670,9 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for StructureGrowEvent<'mc>
             .expect("Error converting StructureGrowEvent into crate::event::world::WorldEvent")
     }
 }
-
-pub struct StructureGrowEventClass;
-impl blackboxmc_general::JNIProvidesClassName for StructureGrowEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/StructureGrowEvent"
-    }
-}
-
 /// Called when the time skips in a world.
 /// <p>If the event is cancelled the time will not change.</p>
+#[repr(C)]
 pub struct TimeSkipEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4828,6 +4697,7 @@ impl<'mc> std::fmt::Display for TimeSkipEventSkipReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct TimeSkipEventSkipReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4930,13 +4800,6 @@ impl<'mc> TimeSkipEventSkipReason<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct TimeSkipEventSkipReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for TimeSkipEventSkipReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/TimeSkipEvent$SkipReason"
     }
 }
 
@@ -5252,15 +5115,8 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for TimeSkipEvent<'mc> {
             .expect("Error converting TimeSkipEvent into crate::event::world::WorldEvent")
     }
 }
-
-pub struct TimeSkipEventClass;
-impl blackboxmc_general::JNIProvidesClassName for TimeSkipEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/TimeSkipEvent"
-    }
-}
-
 /// Called when a World is saved.
+#[repr(C)]
 pub struct WorldSaveEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5490,12 +5346,5 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for WorldSaveEvent<'mc> {
     fn into(self) -> crate::event::world::WorldEvent<'mc> {
         crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting WorldSaveEvent into crate::event::world::WorldEvent")
-    }
-}
-
-pub struct WorldSaveEventClass;
-impl blackboxmc_general::JNIProvidesClassName for WorldSaveEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/world/WorldSaveEvent"
     }
 }

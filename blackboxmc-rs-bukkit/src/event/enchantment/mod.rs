@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Called when an ItemStack is successfully enchanted (currently at enchantment table)
+#[repr(C)]
 pub struct EnchantItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -438,15 +439,8 @@ impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for EnchantItemEven
         )
     }
 }
-
-pub struct EnchantItemEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EnchantItemEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/enchantment/EnchantItemEvent"
-    }
-}
-
 /// Called when an ItemStack is inserted in an enchantment table - can be called multiple times
+#[repr(C)]
 pub struct PrepareItemEnchantEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -806,12 +800,5 @@ impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for PrepareItemEnch
         crate::event::inventory::InventoryEvent::from_raw(&self.jni_ref(), self.1).expect(
             "Error converting PrepareItemEnchantEvent into crate::event::inventory::InventoryEvent",
         )
-    }
-}
-
-pub struct PrepareItemEnchantEventClass;
-impl blackboxmc_general::JNIProvidesClassName for PrepareItemEnchantEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/enchantment/PrepareItemEnchantEvent"
     }
 }

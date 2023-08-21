@@ -139,6 +139,7 @@ def snake_case_to_camel_case(string):
                     string.lower()).replace("_","")
 
 def func_signature_format(ty, increment, returning, options_start_at=-1):
+    thing_start = ""
     thing = ""
     ty["type_name_resolved"] = ty["type_name_resolved"].replace("<T>","")
     internal_do_into = ty["type_name_resolved"].startswith("crate") or ty["type_name_resolved"].startswith("bukkit") or ty["type_name_resolved"].startswith("blackbox")
@@ -147,10 +148,10 @@ def func_signature_format(ty, increment, returning, options_start_at=-1):
     generic_letters = []
     generic_args = []
     if(ty["type_name_lhand"] == "" and not returning):
-        thing += ty["type_name_resolved"]
+        thing_start += ty["type_name_resolved"]
     else:
         if not returning:
-            thing += ty["type_name_lhand"]+": "
+            thing_start += ty["type_name_lhand"]+": "
 
         if(options_start_at > -1):
             if increment >= options_start_at:
@@ -209,8 +210,11 @@ def func_signature_format(ty, increment, returning, options_start_at=-1):
             if increment >= options_start_at:
                 thing += ">"
 
+    name_only = ""
     return {
-        "result": thing,
+        "result": thing_start+thing,
+        "result_name_only": thing_start.split(":")[0],
+        "result_type_only": thing,
         "generic_letters": generic_letters,
         "generic_args": generic_args,
     }
@@ -952,6 +956,7 @@ def gen_jniraw_impl(name, is_enum, mod_path, full_name):
 def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,variants,is_constructor,full_name):
     og_name = name
     impl_signature = []
+    extern_signature = []
     methods = list(filter(lambda f: f["name"] != "valueOf",methods))
 
     if is_enum and not is_trait and not is_constructor:
@@ -1275,6 +1280,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
         func_signature_resolved = ""
         func_signature_resolved_parts = []
+        func_signature_resolved_parts_names_only = []
         generic_letters = []
         generic_args = []
         j = 0
@@ -1287,6 +1293,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
             if group["result"] != "":
                 func_signature_resolved_parts.append(group["result"])
+                func_signature_resolved_parts_names_only.append(group["result_name_only"])
                 j += 1
 
             generic_letters += group["generic_letters"]
@@ -1305,6 +1312,9 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             generic_args_str = " where "+",".join(generic_args)
 
         func_signature_resolved = ",".join(func_signature_resolved_parts)
+        func_signature_resolved_raw = ",".join(list(map(lambda f: f.replace("&self","this: "+og_name).replace(": ",": *mut ").replace("<'mc>","<'static>"),func_signature_resolved_parts)))
+        
+        func_signature_resolved_names_only = ",".join(list(map(lambda f: "*"+f+".as_ref().unwrap()", filter(lambda f: f != "&self",func_signature_resolved_parts_names_only))))
 
         if "comment" in method["method"]:
             impl_signature.append(format_comment(method["method"]["comment"]))
@@ -1326,12 +1336,23 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         else:
             impl_signature.append("{"+"\n".join(code)+"}")
 
+        raw_return = "*mut "+return_type["result"].replace("<'mc>","<'static>")
+        # c binding.
+        #if static:
+        #    extern_signature.append("#[no_mangle]\npub extern fn "+camel_case_to_snake_case(og_name)+"_"+name+"("+func_signature_resolved_raw+") -> Result<"+raw_return+", Box<dyn std::error::Error>> ")
+        #    extern_signature.append("{\n\tunsafe {\n\t\tOk(Box::leak(Box::new("+og_name+"::"+name+"("+func_signature_resolved_names_only+")?)) as "+raw_return+")\n\t}\n}")
+        #else:
+        #    extern_signature.append("#[no_mangle]\npub extern fn "+camel_case_to_snake_case(og_name)+"_"+name+"("+func_signature_resolved_raw+") -> Result<"+raw_return+", Box<dyn std::error::Error>> ")
+        #    extern_signature.append("{\n\tunsafe {\n\t\tOk(Box::leak(Box::new(this.as_ref().unwrap()."+name+"("+func_signature_resolved_names_only+")?)) as "+raw_return+")\n\t}\n}")
+
     for impl in impl_signature:
         file_cache[mod_path].append(impl)
+
 
     return {
         "has_to_string": has_to_string,
         "has_to_string_is_static": has_to_string_is_static,
+        "extern_signature": extern_signature,
     }
 
 def format_comment(comment):
@@ -1436,7 +1457,7 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("}")
 
         file_cache[mod_path].append(
-            "pub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>, pub "+name+"Enum);")
+            "#[repr(C)]\npub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>, pub "+name+"Enum);")
 
         file_cache[mod_path].append("impl<'mc> std::ops::Deref for "+name+"<'mc> {")
         file_cache[mod_path].append("   type Target = "+name+"Enum;")
@@ -1456,14 +1477,19 @@ def parse_classes(library, val, classes):
 
         has_to_string = False
         has_to_string_is_static = False
+        extern = []
         if "methods" in val:
             grp = parse_methods(library, name,val["methods"],mod_path,True,False,False,variants,False,full_name)
             has_to_string = grp["has_to_string"]
             has_to_string_is_static = grp["has_to_string_is_static"]
+            extern += grp["extern_signature"]
 
         gen_instance_of_func( mod_path)
 
         file_cache[mod_path].append("}")
+
+        for ex in extern:
+            file_cache[mod_path].append(ex)
 
         if has_to_string:
             file_cache[mod_path].append(gen_to_string_func(name,has_to_string_is_static))
@@ -1473,7 +1499,7 @@ def parse_classes(library, val, classes):
             "///\n/// This is a representation of an abstract class."
         )
         file_cache[mod_path].append(
-            "pub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
+            "#[repr(C)]\npub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
         )
 
         gen_jniraw_impl(name, False, mod_path, full_name)
@@ -1484,14 +1510,20 @@ def parse_classes(library, val, classes):
         has_to_string = False
         has_to_string_is_static = False
 
+        extern = []
         if "methods" in val:
             grp = parse_methods(library,name,val["methods"],mod_path,False,True,True,[],False,full_name)
             has_to_string = grp["has_to_string"]
             has_to_string_is_static = grp["has_to_string_is_static"]
+            extern += grp["extern_signature"]
+
 
         gen_instance_of_func( mod_path)
 
         file_cache[mod_path].append("}")
+
+        for ex in extern:
+            file_cache[mod_path].append(ex)
 
         if has_to_string:
             file_cache[mod_path].append(gen_to_string_func(name,has_to_string_is_static))
@@ -1501,7 +1533,7 @@ def parse_classes(library, val, classes):
         #        print(inter["name"])
     else:  # struct generation
         file_cache[mod_path].append(
-            "pub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
+            "#[repr(C)]\npub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
         )
 
         if "classes" in val:
@@ -1518,14 +1550,18 @@ def parse_classes(library, val, classes):
         has_to_string = False
         has_to_string_is_static = False
 
+        extern = []
         if "methods" in val:
             grp = parse_methods(library,name,val["methods"],mod_path,False,False,False,[],False,full_name)
             has_to_string = grp["has_to_string"]
             has_to_string_is_static = grp["has_to_string_is_static"]
+            extern += grp["extern_signature"]
 
         gen_instance_of_func( mod_path)
 
         file_cache[mod_path].append("}")
+        for ex in extern:
+            file_cache[mod_path].append(ex)
 
         if has_to_string:
             file_cache[mod_path].append(gen_to_string_func(name,has_to_string_is_static))
@@ -1538,15 +1574,17 @@ def parse_classes(library, val, classes):
             super_class = val["superClass"]
             parse_into_impl(super_class,name,mod_path)
     
+    
     # make a blank, "Class" struct that can be passed as a function.
-    file_cache[mod_path].append("""
-        pub struct """+name+"""Class;
-        impl blackboxmc_general::JNIProvidesClassName for """+name+"""Class {
-            fn class_name(&self) -> &str {
-                \""""+val["packageName"].replace(".","/")+"/"+val["name"]+"""\"
-            }
-        }
-    """)
+    #file_cache[mod_path].append("""
+    #    #[repr(C)]
+    #    pub struct """+name+"""Class;
+    #    impl blackboxmc_general::JNIProvidesClassName for """+name+"""Class {
+    #        fn class_name(&self) -> &str {
+    #            \""""+val["packageName"].replace(".","/")+"/"+val["name"]+"""\"
+    #        }
+    #    }
+    #""")
 
 
 def parse_into_impl(val,name,mod_path):

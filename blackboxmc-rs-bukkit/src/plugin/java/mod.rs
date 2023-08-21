@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents a Java plugin loader, allowing plugins in the form of .jar
+#[repr(C)]
 pub struct JavaPluginLoader<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -281,15 +282,8 @@ impl<'mc> Into<crate::plugin::PluginLoader<'mc>> for JavaPluginLoader<'mc> {
             .expect("Error converting JavaPluginLoader into crate::plugin::PluginLoader")
     }
 }
-
-pub struct JavaPluginLoaderClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaPluginLoaderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/java/JavaPluginLoader"
-    }
-}
-
 /// Represents a Java plugin and its main class. It contains fundamental methods and fields for a plugin to be loaded and work properly. This is an indirect implementation of <a href="../Plugin.html" title="interface in org.bukkit.plugin"><code>Plugin</code></a>.
+#[repr(C)]
 pub struct JavaPlugin<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -859,12 +853,5 @@ impl<'mc> Into<crate::plugin::PluginBase<'mc>> for JavaPlugin<'mc> {
     fn into(self) -> crate::plugin::PluginBase<'mc> {
         crate::plugin::PluginBase::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting JavaPlugin into crate::plugin::PluginBase")
-    }
-}
-
-pub struct JavaPluginClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaPluginClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/java/JavaPlugin"
     }
 }

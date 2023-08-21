@@ -21,6 +21,7 @@ impl<'mc> std::fmt::Display for Side<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Side<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -119,17 +120,10 @@ impl<'mc> Side<'mc> {
             .unwrap()
     }
 }
-
-pub struct SideClass;
-impl blackboxmc_general::JNIProvidesClassName for SideClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/sign/Side"
-    }
-}
-
 /// Represents a side of a sign.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct SignSide<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -292,12 +286,5 @@ impl<'mc> Into<crate::material::Colorable<'mc>> for SignSide<'mc> {
     fn into(self) -> crate::material::Colorable<'mc> {
         crate::material::Colorable::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting SignSide into crate::material::Colorable")
-    }
-}
-
-pub struct SignSideClass;
-impl blackboxmc_general::JNIProvidesClassName for SignSideClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/sign/SignSide"
     }
 }

@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents an armor trim that may be applied to an item.
+#[repr(C)]
 pub struct ArmorTrim<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -204,16 +205,10 @@ impl<'mc> std::string::ToString for ArmorTrim<'mc> {
     }
 }
 
-pub struct ArmorTrimClass;
-impl blackboxmc_general::JNIProvidesClassName for ArmorTrimClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/inventory/meta/trim/ArmorTrim"
-    }
-}
-
 /// Represents a material that may be used in an <a title="class in org.bukkit.inventory.meta.trim" href="ArmorTrim.html"><code>ArmorTrim</code></a>.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct TrimMaterial<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -279,17 +274,10 @@ impl<'mc> Into<crate::Keyed<'mc>> for TrimMaterial<'mc> {
             .expect("Error converting TrimMaterial into crate::Keyed")
     }
 }
-
-pub struct TrimMaterialClass;
-impl blackboxmc_general::JNIProvidesClassName for TrimMaterialClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/inventory/meta/trim/TrimMaterial"
-    }
-}
-
 /// Represents a pattern that may be used in an <a href="ArmorTrim.html" title="class in org.bukkit.inventory.meta.trim"><code>ArmorTrim</code></a>.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct TrimPattern<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -353,12 +341,5 @@ impl<'mc> Into<crate::Keyed<'mc>> for TrimPattern<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting TrimPattern into crate::Keyed")
-    }
-}
-
-pub struct TrimPatternClass;
-impl blackboxmc_general::JNIProvidesClassName for TrimPatternClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/inventory/meta/trim/TrimPattern"
     }
 }

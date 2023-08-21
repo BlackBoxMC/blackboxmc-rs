@@ -7,6 +7,7 @@ use color_eyre::eyre::Result;
 /// <p>Modifying the textures immediately invalidates and clears any previously present attributes that are specific to official player profiles, such as the <a href="#getTimestamp()"><code>timestamp</code></a> and <a href="#isSigned()"><code>signature</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PlayerTextures<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -183,14 +184,6 @@ impl<'mc> PlayerTextures<'mc> {
             .unwrap()
     }
 }
-
-pub struct PlayerTexturesClass;
-impl blackboxmc_general::JNIProvidesClassName for PlayerTexturesClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/profile/PlayerTextures"
-    }
-}
-
 /// The different Minecraft skin models.
 #[derive(PartialEq, Eq)]
 pub enum PlayerTexturesSkinModelEnum {
@@ -210,6 +203,7 @@ impl<'mc> std::fmt::Display for PlayerTexturesSkinModel<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct PlayerTexturesSkinModel<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -312,19 +306,12 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
             .unwrap()
     }
 }
-
-pub struct PlayerTexturesSkinModelClass;
-impl blackboxmc_general::JNIProvidesClassName for PlayerTexturesSkinModelClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/profile/PlayerTextures$SkinModel"
-    }
-}
-
 /// A player profile.
 /// <p>A player profile always provides a unique id, a non-empty name, or both. Its unique id and name are immutable, but other properties (such as its textures) can be altered.</p>
 /// <p>New profiles can be created via <a href="../Server.html#createPlayerProfile(java.util.UUID,java.lang.String)"><code>Server.createPlayerProfile(UUID, String)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PlayerProfile<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -469,14 +456,6 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting PlayerProfile into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
-
-pub struct PlayerProfileClass;
-impl blackboxmc_general::JNIProvidesClassName for PlayerProfileClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/profile/PlayerProfile"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum SkinModelEnum {
     Classic,
@@ -495,6 +474,7 @@ impl<'mc> std::fmt::Display for SkinModel<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct SkinModel<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -591,12 +571,5 @@ impl<'mc> SkinModel<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct SkinModelClass;
-impl blackboxmc_general::JNIProvidesClassName for SkinModelClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/profile/SkinModel"
     }
 }

@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents a chest
+#[repr(C)]
 pub struct Chest<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -330,15 +331,8 @@ impl<'mc> Into<crate::material::DirectionalContainer<'mc>> for Chest<'mc> {
             .expect("Error converting Chest into crate::material::DirectionalContainer")
     }
 }
-
-pub struct ChestClass;
-impl blackboxmc_general::JNIProvidesClassName for ChestClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Chest"
-    }
-}
-
 /// Represents a diode/repeater in the on or off state, with a delay and facing in a specific direction.
+#[repr(C)]
 pub struct Diode<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -719,15 +713,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Diode<'mc> {
             .expect("Error converting Diode into crate::material::MaterialData")
     }
 }
-
-pub struct DiodeClass;
-impl blackboxmc_general::JNIProvidesClassName for DiodeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Diode"
-    }
-}
-
 /// Represents a pumpkin.
+#[repr(C)]
 pub struct Pumpkin<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1067,15 +1054,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Pumpkin<'mc> {
             .expect("Error converting Pumpkin into crate::material::MaterialData")
     }
 }
-
-pub struct PumpkinClass;
-impl blackboxmc_general::JNIProvidesClassName for PumpkinClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Pumpkin"
-    }
-}
-
 /// Represents a flower pot.
+#[repr(C)]
 pub struct FlowerPot<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1369,15 +1349,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for FlowerPot<'mc> {
             .expect("Error converting FlowerPot into crate::material::MaterialData")
     }
 }
-
-pub struct FlowerPotClass;
-impl blackboxmc_general::JNIProvidesClassName for FlowerPotClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/FlowerPot"
-    }
-}
-
 /// Represents a powered rail
+#[repr(C)]
 pub struct PoweredRail<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1736,15 +1709,8 @@ impl<'mc> Into<crate::material::ExtendedRails<'mc>> for PoweredRail<'mc> {
             .expect("Error converting PoweredRail into crate::material::ExtendedRails")
     }
 }
-
-pub struct PoweredRailClass;
-impl blackboxmc_general::JNIProvidesClassName for PoweredRailClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/PoweredRail"
-    }
-}
-
 /// Represents the tripwire hook
+#[repr(C)]
 pub struct TripwireHook<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2139,15 +2105,8 @@ impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for TripwireH
         )
     }
 }
-
-pub struct TripwireHookClass;
-impl blackboxmc_general::JNIProvidesClassName for TripwireHookClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/TripwireHook"
-    }
-}
-
 /// Simple utility class for attachable MaterialData subclasses
+#[repr(C)]
 pub struct SimpleAttachableMaterialData<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2495,15 +2454,9 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for SimpleAttachableMaterialD
     }
 }
 
-pub struct SimpleAttachableMaterialDataClass;
-impl blackboxmc_general::JNIProvidesClassName for SimpleAttachableMaterialDataClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/SimpleAttachableMaterialData"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Openable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2573,15 +2526,8 @@ impl<'mc> Openable<'mc> {
             .unwrap()
     }
 }
-
-pub struct OpenableClass;
-impl blackboxmc_general::JNIProvidesClassName for OpenableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Openable"
-    }
-}
-
 /// MaterialData for torches
+#[repr(C)]
 pub struct Torch<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2914,15 +2860,8 @@ impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for Torch<'mc
             .expect("Error converting Torch into crate::material::SimpleAttachableMaterialData")
     }
 }
-
-pub struct TorchClass;
-impl blackboxmc_general::JNIProvidesClassName for TorchClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Torch"
-    }
-}
-
 /// Represents a comparator in the on or off state, in normal or subtraction mode and facing in a specific direction.
+#[repr(C)]
 pub struct Comparator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3317,15 +3256,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Comparator<'mc> {
             .expect("Error converting Comparator into crate::material::MaterialData")
     }
 }
-
-pub struct ComparatorClass;
-impl blackboxmc_general::JNIProvidesClassName for ComparatorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Comparator"
-    }
-}
-
 /// Represents a button
+#[repr(C)]
 pub struct Button<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3687,15 +3619,8 @@ impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for Button<'m
             .expect("Error converting Button into crate::material::SimpleAttachableMaterialData")
     }
 }
-
-pub struct ButtonClass;
-impl blackboxmc_general::JNIProvidesClassName for ButtonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Button"
-    }
-}
-
 /// Represents the different types of coals.
+#[repr(C)]
 pub struct Coal<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4020,17 +3945,10 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Coal<'mc> {
             .expect("Error converting Coal into crate::material::MaterialData")
     }
 }
-
-pub struct CoalClass;
-impl blackboxmc_general::JNIProvidesClassName for CoalClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Coal"
-    }
-}
-
 /// An object that can be colored.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Colorable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4123,15 +4041,8 @@ impl<'mc> Colorable<'mc> {
             .unwrap()
     }
 }
-
-pub struct ColorableClass;
-impl blackboxmc_general::JNIProvidesClassName for ColorableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Colorable"
-    }
-}
-
 /// Represents the different types of Tree block that face a direction.
+#[repr(C)]
 pub struct Tree<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4514,15 +4425,8 @@ impl<'mc> Into<crate::material::Wood<'mc>> for Tree<'mc> {
             .expect("Error converting Tree into crate::material::Wood")
     }
 }
-
-pub struct TreeClass;
-impl blackboxmc_general::JNIProvidesClassName for TreeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Tree"
-    }
-}
-
 /// Material data for the piston base block
+#[repr(C)]
 pub struct PistonBaseMaterial<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4873,15 +4777,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for PistonBaseMaterial<'mc> {
             .expect("Error converting PistonBaseMaterial into crate::material::MaterialData")
     }
 }
-
-pub struct PistonBaseMaterialClass;
-impl blackboxmc_general::JNIProvidesClassName for PistonBaseMaterialClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/PistonBaseMaterial"
-    }
-}
-
 /// Represents a trap door
+#[repr(C)]
 pub struct TrapDoor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5267,15 +5164,8 @@ impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for TrapDoor<
             .expect("Error converting TrapDoor into crate::material::SimpleAttachableMaterialData")
     }
 }
-
-pub struct TrapDoorClass;
-impl blackboxmc_general::JNIProvidesClassName for TrapDoorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/TrapDoor"
-    }
-}
-
 /// Represents the different types of crops in different states of growth.
+#[repr(C)]
 pub struct Crops<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5600,15 +5490,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Crops<'mc> {
             .expect("Error converting Crops into crate::material::MaterialData")
     }
 }
-
-pub struct CropsClass;
-impl blackboxmc_general::JNIProvidesClassName for CropsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Crops"
-    }
-}
-
 /// Represents a spawn egg that can be used to spawn mobs
+#[repr(C)]
 pub struct SpawnEgg<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5935,15 +5818,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for SpawnEgg<'mc> {
             .expect("Error converting SpawnEgg into crate::material::MaterialData")
     }
 }
-
-pub struct SpawnEggClass;
-impl blackboxmc_general::JNIProvidesClassName for SpawnEggClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/SpawnEgg"
-    }
-}
-
 /// Represents the different types of monster eggs
+#[repr(C)]
 pub struct MonsterEggs<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6280,15 +6156,8 @@ impl<'mc> Into<crate::material::TexturedMaterial<'mc>> for MonsterEggs<'mc> {
             .expect("Error converting MonsterEggs into crate::material::TexturedMaterial")
     }
 }
-
-pub struct MonsterEggsClass;
-impl blackboxmc_general::JNIProvidesClassName for MonsterEggsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/MonsterEggs"
-    }
-}
-
 /// Represents a furnace.
+#[repr(C)]
 pub struct Furnace<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6615,15 +6484,8 @@ impl<'mc> Into<crate::material::FurnaceAndDispenser<'mc>> for Furnace<'mc> {
             .expect("Error converting Furnace into crate::material::FurnaceAndDispenser")
     }
 }
-
-pub struct FurnaceClass;
-impl blackboxmc_general::JNIProvidesClassName for FurnaceClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Furnace"
-    }
-}
-
 /// Represents minecart rails.
+#[repr(C)]
 pub struct Rails<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6951,15 +6813,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Rails<'mc> {
             .expect("Error converting Rails into crate::material::MaterialData")
     }
 }
-
-pub struct RailsClass;
-impl blackboxmc_general::JNIProvidesClassName for RailsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Rails"
-    }
-}
-
 /// Represents the different types of Tree block that face a direction.
+#[repr(C)]
 pub struct Sapling<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7324,17 +7179,10 @@ impl<'mc> Into<crate::material::Wood<'mc>> for Sapling<'mc> {
             .expect("Error converting Sapling into crate::material::Wood")
     }
 }
-
-pub struct SaplingClass;
-impl blackboxmc_general::JNIProvidesClassName for SaplingClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Sapling"
-    }
-}
-
 /// Indicated a Material that may carry or create a Redstone current
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Redstone<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7391,15 +7239,8 @@ impl<'mc> Redstone<'mc> {
             .unwrap()
     }
 }
-
-pub struct RedstoneClass;
-impl blackboxmc_general::JNIProvidesClassName for RedstoneClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Redstone"
-    }
-}
-
 /// Material data for the piston extension block
+#[repr(C)]
 pub struct PistonExtensionMaterial<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7765,15 +7606,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for PistonExtensionMaterial<'
             .expect("Error converting PistonExtensionMaterial into crate::material::MaterialData")
     }
 }
-
-pub struct PistonExtensionMaterialClass;
-impl blackboxmc_general::JNIProvidesClassName for PistonExtensionMaterialClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/PistonExtensionMaterial"
-    }
-}
-
 /// Represents a lever
+#[repr(C)]
 pub struct Lever<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8135,15 +7969,8 @@ impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for Lever<'mc
             .expect("Error converting Lever into crate::material::SimpleAttachableMaterialData")
     }
 }
-
-pub struct LeverClass;
-impl blackboxmc_general::JNIProvidesClassName for LeverClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Lever"
-    }
-}
-
 /// Represents a furnace or a dispenser.
+#[repr(C)]
 pub struct DirectionalContainer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8456,15 +8283,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for DirectionalContainer<'mc>
             .expect("Error converting DirectionalContainer into crate::material::MaterialData")
     }
 }
-
-pub struct DirectionalContainerClass;
-impl blackboxmc_general::JNIProvidesClassName for DirectionalContainerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/DirectionalContainer"
-    }
-}
-
 /// Represents nether wart
+#[repr(C)]
 pub struct NetherWarts<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8771,15 +8591,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for NetherWarts<'mc> {
             .expect("Error converting NetherWarts into crate::material::MaterialData")
     }
 }
-
-pub struct NetherWartsClass;
-impl blackboxmc_general::JNIProvidesClassName for NetherWartsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/NetherWarts"
-    }
-}
-
 /// Handles specific metadata for certain items or blocks
+#[repr(C)]
 pub struct MaterialData<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9035,14 +8848,8 @@ impl<'mc> std::string::ToString for MaterialData<'mc> {
     }
 }
 
-pub struct MaterialDataClass;
-impl blackboxmc_general::JNIProvidesClassName for MaterialDataClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/MaterialData"
-    }
-}
-
 /// Represents the different types of long grasses.
+#[repr(C)]
 pub struct LongGrass<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9367,15 +9174,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for LongGrass<'mc> {
             .expect("Error converting LongGrass into crate::material::MaterialData")
     }
 }
-
-pub struct LongGrassClass;
-impl blackboxmc_general::JNIProvidesClassName for LongGrassClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/LongGrass"
-    }
-}
-
 /// Represents the tripwire
+#[repr(C)]
 pub struct Tripwire<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9687,15 +9487,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Tripwire<'mc> {
             .expect("Error converting Tripwire into crate::material::MaterialData")
     }
 }
-
-pub struct TripwireClass;
-impl blackboxmc_general::JNIProvidesClassName for TripwireClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Tripwire"
-    }
-}
-
 /// Represents textured materials like steps and smooth bricks
+#[repr(C)]
 pub struct TexturedMaterial<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10033,15 +9826,9 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for TexturedMaterial<'mc> {
     }
 }
 
-pub struct TexturedMaterialClass;
-impl blackboxmc_general::JNIProvidesClassName for TexturedMaterialClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/TexturedMaterial"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PressureSensor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10100,15 +9887,8 @@ impl<'mc> PressureSensor<'mc> {
             .unwrap()
     }
 }
-
-pub struct PressureSensorClass;
-impl blackboxmc_general::JNIProvidesClassName for PressureSensorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/PressureSensor"
-    }
-}
-
 /// Represents a dispenser.
+#[repr(C)]
 pub struct Dispenser<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10436,13 +10216,7 @@ impl<'mc> Into<crate::material::FurnaceAndDispenser<'mc>> for Dispenser<'mc> {
     }
 }
 
-pub struct DispenserClass;
-impl blackboxmc_general::JNIProvidesClassName for DispenserClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Dispenser"
-    }
-}
-
+#[repr(C)]
 pub struct Cake<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10754,15 +10528,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Cake<'mc> {
             .expect("Error converting Cake into crate::material::MaterialData")
     }
 }
-
-pub struct CakeClass;
-impl blackboxmc_general::JNIProvidesClassName for CakeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Cake"
-    }
-}
-
 /// Represents a fence gate
+#[repr(C)]
 pub struct Gate<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11105,14 +10872,6 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Gate<'mc> {
             .expect("Error converting Gate into crate::material::MaterialData")
     }
 }
-
-pub struct GateClass;
-impl blackboxmc_general::JNIProvidesClassName for GateClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Gate"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum CocoaPlantSizeEnum {
     Small,
@@ -11133,6 +10892,7 @@ impl<'mc> std::fmt::Display for CocoaPlantSize<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct CocoaPlantSize<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11235,15 +10995,8 @@ impl<'mc> CocoaPlantSize<'mc> {
             .unwrap()
     }
 }
-
-pub struct CocoaPlantSizeClass;
-impl blackboxmc_general::JNIProvidesClassName for CocoaPlantSizeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/CocoaPlantSize"
-    }
-}
-
 /// Represents the different types of steps.
+#[repr(C)]
 pub struct Step<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11603,15 +11356,8 @@ impl<'mc> Into<crate::material::TexturedMaterial<'mc>> for Step<'mc> {
             .expect("Error converting Step into crate::material::TexturedMaterial")
     }
 }
-
-pub struct StepClass;
-impl blackboxmc_general::JNIProvidesClassName for StepClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Step"
-    }
-}
-
 /// Represents the different types of smooth bricks.
+#[repr(C)]
 pub struct SmoothBrick<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11948,15 +11694,8 @@ impl<'mc> Into<crate::material::TexturedMaterial<'mc>> for SmoothBrick<'mc> {
             .expect("Error converting SmoothBrick into crate::material::TexturedMaterial")
     }
 }
-
-pub struct SmoothBrickClass;
-impl blackboxmc_general::JNIProvidesClassName for SmoothBrickClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/SmoothBrick"
-    }
-}
-
 /// Represents the different types of leaf block that may be permanent or can decay when too far from a log.
+#[repr(C)]
 pub struct Leaves<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12341,15 +12080,8 @@ impl<'mc> Into<crate::material::Wood<'mc>> for Leaves<'mc> {
             .expect("Error converting Leaves into crate::material::Wood")
     }
 }
-
-pub struct LeavesClass;
-impl blackboxmc_general::JNIProvidesClassName for LeavesClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Leaves"
-    }
-}
-
 /// Represents dye
+#[repr(C)]
 pub struct Dye<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12665,15 +12397,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Dye<'mc> {
             .expect("Error converting Dye into crate::material::MaterialData")
     }
 }
-
-pub struct DyeClass;
-impl blackboxmc_general::JNIProvidesClassName for DyeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Dye"
-    }
-}
-
 /// Represents a pressure plate
+#[repr(C)]
 pub struct PressurePlate<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12953,15 +12678,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for PressurePlate<'mc> {
             .expect("Error converting PressurePlate into crate::material::MaterialData")
     }
 }
-
-pub struct PressurePlateClass;
-impl blackboxmc_general::JNIProvidesClassName for PressurePlateClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/PressurePlate"
-    }
-}
-
 /// Represents an observer.
+#[repr(C)]
 pub struct Observer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13307,15 +13025,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Observer<'mc> {
             .expect("Error converting Observer into crate::material::MaterialData")
     }
 }
-
-pub struct ObserverClass;
-impl blackboxmc_general::JNIProvidesClassName for ObserverClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Observer"
-    }
-}
-
 /// Represents stairs.
+#[repr(C)]
 pub struct Stairs<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13707,15 +13418,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Stairs<'mc> {
             .expect("Error converting Stairs into crate::material::MaterialData")
     }
 }
-
-pub struct StairsClass;
-impl blackboxmc_general::JNIProvidesClassName for StairsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Stairs"
-    }
-}
-
 /// Represents the different types of sandstone.
+#[repr(C)]
 pub struct Sandstone<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14040,15 +13744,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Sandstone<'mc> {
             .expect("Error converting Sandstone into crate::material::MaterialData")
     }
 }
-
-pub struct SandstoneClass;
-impl blackboxmc_general::JNIProvidesClassName for SandstoneClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Sandstone"
-    }
-}
-
 /// Represents an ender chest
+#[repr(C)]
 pub struct EnderChest<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14375,15 +14072,8 @@ impl<'mc> Into<crate::material::DirectionalContainer<'mc>> for EnderChest<'mc> {
             .expect("Error converting EnderChest into crate::material::DirectionalContainer")
     }
 }
-
-pub struct EnderChestClass;
-impl blackboxmc_general::JNIProvidesClassName for EnderChestClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/EnderChest"
-    }
-}
-
 /// Represents a furnace or dispenser, two types of directional containers
+#[repr(C)]
 pub struct FurnaceAndDispenser<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14693,15 +14383,8 @@ impl<'mc> Into<crate::material::DirectionalContainer<'mc>> for FurnaceAndDispens
         )
     }
 }
-
-pub struct FurnaceAndDispenserClass;
-impl blackboxmc_general::JNIProvidesClassName for FurnaceAndDispenserClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/FurnaceAndDispenser"
-    }
-}
-
 /// Represents a bed.
+#[repr(C)]
 pub struct Bed<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15057,15 +14740,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Bed<'mc> {
             .expect("Error converting Bed into crate::material::MaterialData")
     }
 }
-
-pub struct BedClass;
-impl blackboxmc_general::JNIProvidesClassName for BedClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Bed"
-    }
-}
-
 /// Represents redstone wire
+#[repr(C)]
 pub struct RedstoneWire<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15345,15 +15021,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for RedstoneWire<'mc> {
             .expect("Error converting RedstoneWire into crate::material::MaterialData")
     }
 }
-
-pub struct RedstoneWireClass;
-impl blackboxmc_general::JNIProvidesClassName for RedstoneWireClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/RedstoneWire"
-    }
-}
-
 /// Represents the different types of wooden steps.
+#[repr(C)]
 pub struct WoodenStep<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15683,15 +15352,8 @@ impl<'mc> Into<crate::material::Wood<'mc>> for WoodenStep<'mc> {
             .expect("Error converting WoodenStep into crate::material::Wood")
     }
 }
-
-pub struct WoodenStepClass;
-impl blackboxmc_general::JNIProvidesClassName for WoodenStepClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/WoodenStep"
-    }
-}
-
 /// Represents a vine
+#[repr(C)]
 pub struct Vine<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16030,15 +15692,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Vine<'mc> {
             .expect("Error converting Vine into crate::material::MaterialData")
     }
 }
-
-pub struct VineClass;
-impl blackboxmc_general::JNIProvidesClassName for VineClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Vine"
-    }
-}
-
 /// Represents wood blocks of different species.
+#[repr(C)]
 pub struct Wood<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16366,13 +16021,7 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Wood<'mc> {
     }
 }
 
-pub struct WoodClass;
-impl blackboxmc_general::JNIProvidesClassName for WoodClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Wood"
-    }
-}
-
+#[repr(C)]
 pub struct Banner<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16718,15 +16367,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Banner<'mc> {
             .expect("Error converting Banner into crate::material::MaterialData")
     }
 }
-
-pub struct BannerClass;
-impl blackboxmc_general::JNIProvidesClassName for BannerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Banner"
-    }
-}
-
 /// Represents a huge mushroom block with certain combinations of faces set to cap, pores or stem.
+#[repr(C)]
 pub struct Mushroom<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17104,15 +16746,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Mushroom<'mc> {
             .expect("Error converting Mushroom into crate::material::MaterialData")
     }
 }
-
-pub struct MushroomClass;
-impl blackboxmc_general::JNIProvidesClassName for MushroomClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Mushroom"
-    }
-}
-
 /// Represents a redstone torch
+#[repr(C)]
 pub struct RedstoneTorch<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17460,15 +17095,8 @@ impl<'mc> Into<crate::material::Torch<'mc>> for RedstoneTorch<'mc> {
             .expect("Error converting RedstoneTorch into crate::material::Torch")
     }
 }
-
-pub struct RedstoneTorchClass;
-impl blackboxmc_general::JNIProvidesClassName for RedstoneTorchClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/RedstoneTorch"
-    }
-}
-
 /// Represents the cocoa plant
+#[repr(C)]
 pub struct CocoaPlant<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17493,6 +17121,7 @@ impl<'mc> std::fmt::Display for CocoaPlantCocoaPlantSize<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct CocoaPlantCocoaPlantSize<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17595,13 +17224,6 @@ impl<'mc> CocoaPlantCocoaPlantSize<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct CocoaPlantCocoaPlantSizeClass;
-impl blackboxmc_general::JNIProvidesClassName for CocoaPlantCocoaPlantSizeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/CocoaPlant$CocoaPlantSize"
     }
 }
 
@@ -17986,15 +17608,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for CocoaPlant<'mc> {
             .expect("Error converting CocoaPlant into crate::material::MaterialData")
     }
 }
-
-pub struct CocoaPlantClass;
-impl blackboxmc_general::JNIProvidesClassName for CocoaPlantClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/CocoaPlant"
-    }
-}
-
 /// Represents a door. This class was previously deprecated, but has been retrofitted to work with modern doors. Some methods are undefined dependant on <code>isTopHalf()</code> due to Minecraft's internal representation of doors.
+#[repr(C)]
 pub struct Door<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18479,15 +18094,9 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Door<'mc> {
     }
 }
 
-pub struct DoorClass;
-impl blackboxmc_general::JNIProvidesClassName for DoorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Door"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Directional<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18577,15 +18186,8 @@ impl<'mc> Directional<'mc> {
             .unwrap()
     }
 }
-
-pub struct DirectionalClass;
-impl blackboxmc_general::JNIProvidesClassName for DirectionalClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Directional"
-    }
-}
-
 /// This is the superclass for the <a href="DetectorRail.html" title="class in org.bukkit.material"><code>DetectorRail</code></a> and <a href="PoweredRail.html" title="class in org.bukkit.material"><code>PoweredRail</code></a> classes
+#[repr(C)]
 pub struct ExtendedRails<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18913,15 +18515,8 @@ impl<'mc> Into<crate::material::Rails<'mc>> for ExtendedRails<'mc> {
             .expect("Error converting ExtendedRails into crate::material::Rails")
     }
 }
-
-pub struct ExtendedRailsClass;
-impl blackboxmc_general::JNIProvidesClassName for ExtendedRailsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/ExtendedRails"
-    }
-}
-
 /// Represents a cauldron
+#[repr(C)]
 pub struct Cauldron<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19202,15 +18797,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Cauldron<'mc> {
             .expect("Error converting Cauldron into crate::material::MaterialData")
     }
 }
-
-pub struct CauldronClass;
-impl blackboxmc_general::JNIProvidesClassName for CauldronClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Cauldron"
-    }
-}
-
 /// Represents Ladder data
+#[repr(C)]
 pub struct Ladder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19543,15 +19131,8 @@ impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for Ladder<'m
             .expect("Error converting Ladder into crate::material::SimpleAttachableMaterialData")
     }
 }
-
-pub struct LadderClass;
-impl blackboxmc_general::JNIProvidesClassName for LadderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Ladder"
-    }
-}
-
 /// Represents a command block
+#[repr(C)]
 pub struct Command<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19843,15 +19424,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Command<'mc> {
             .expect("Error converting Command into crate::material::MaterialData")
     }
 }
-
-pub struct CommandClass;
-impl blackboxmc_general::JNIProvidesClassName for CommandClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Command"
-    }
-}
-
 /// Represents a detector rail
+#[repr(C)]
 pub struct DetectorRail<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20209,15 +19783,8 @@ impl<'mc> Into<crate::material::ExtendedRails<'mc>> for DetectorRail<'mc> {
             .expect("Error converting DetectorRail into crate::material::ExtendedRails")
     }
 }
-
-pub struct DetectorRailClass;
-impl blackboxmc_general::JNIProvidesClassName for DetectorRailClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/DetectorRail"
-    }
-}
-
 /// Represents a hopper in an active or deactivated state and facing in a specific direction.
+#[repr(C)]
 pub struct Hopper<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20592,15 +20159,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Hopper<'mc> {
             .expect("Error converting Hopper into crate::material::MaterialData")
     }
 }
-
-pub struct HopperClass;
-impl blackboxmc_general::JNIProvidesClassName for HopperClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Hopper"
-    }
-}
-
 /// Represents a skull.
+#[repr(C)]
 pub struct Skull<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20931,15 +20491,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Skull<'mc> {
             .expect("Error converting Skull into crate::material::MaterialData")
     }
 }
-
-pub struct SkullClass;
-impl blackboxmc_general::JNIProvidesClassName for SkullClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Skull"
-    }
-}
-
 /// MaterialData for signs
+#[repr(C)]
 pub struct Sign<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -21285,15 +20838,8 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Sign<'mc> {
             .expect("Error converting Sign into crate::material::MaterialData")
     }
 }
-
-pub struct SignClass;
-impl blackboxmc_general::JNIProvidesClassName for SignClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Sign"
-    }
-}
-
 /// Represents a Wool/Cloth block
+#[repr(C)]
 pub struct Wool<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -21629,17 +21175,10 @@ impl<'mc> Into<crate::material::MaterialData<'mc>> for Wool<'mc> {
             .expect("Error converting Wool into crate::material::MaterialData")
     }
 }
-
-pub struct WoolClass;
-impl blackboxmc_general::JNIProvidesClassName for WoolClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Wool"
-    }
-}
-
 /// Indicates that a block can be attached to another block
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Attachable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -21761,12 +21300,4 @@ impl<'mc> Into<crate::material::Directional<'mc>> for Attachable<'mc> {
             .expect("Error converting Attachable into crate::material::Directional")
     }
 }
-
-pub struct AttachableClass;
-impl blackboxmc_general::JNIProvidesClassName for AttachableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/Attachable"
-    }
-}
-
 pub mod types;

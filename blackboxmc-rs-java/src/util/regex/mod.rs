@@ -760,6 +760,7 @@ use color_eyre::eyre::Result;
 /// <p>In Perl, embedded flags at the top level of an expression affect the whole expression. In this class, embedded flags always take effect at the point at which they appear, whether they are at the top level or within a group; in the latter case, flags are restored at the end of the group just as in Perl.</p></li>
 /// </ul>
 /// <p>For a more precise description of the behavior of regular expression constructs, please see <a href="http://www.oreilly.com/catalog/regex3/"> <i>Mastering Regular Expressions, 3nd Edition</i>, Jeffrey E. F. Friedl, O'Reilly and Associates, 2006.</a></p>
+#[repr(C)]
 pub struct JavaPattern<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -996,12 +997,5 @@ impl<'mc> std::string::ToString for JavaPattern<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling JavaPattern.toString: {}", err),
         }
-    }
-}
-
-pub struct JavaPatternClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaPatternClass {
-    fn class_name(&self) -> &str {
-        "java/util/regex/Pattern"
     }
 }

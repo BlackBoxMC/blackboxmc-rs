@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents a player related inventory event
+#[repr(C)]
 pub struct InventoryOpenEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -315,13 +316,7 @@ impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for InventoryOpenEv
     }
 }
 
-pub struct InventoryOpenEventClass;
-impl blackboxmc_general::JNIProvidesClassName for InventoryOpenEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/InventoryOpenEvent"
-    }
-}
-
+#[repr(C)]
 pub struct PrepareItemCraftEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -628,15 +623,8 @@ impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for PrepareItemCraf
         )
     }
 }
-
-pub struct PrepareItemCraftEventClass;
-impl blackboxmc_general::JNIProvidesClassName for PrepareItemCraftEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/PrepareItemCraftEvent"
-    }
-}
-
 /// Called when an item is put in a slot for repair by an anvil.
+#[repr(C)]
 pub struct PrepareAnvilEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -940,14 +928,6 @@ impl<'mc> Into<crate::event::inventory::PrepareInventoryResultEvent<'mc>>
         crate::event::inventory::PrepareInventoryResultEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting PrepareAnvilEvent into crate::event::inventory::PrepareInventoryResultEvent")
     }
 }
-
-pub struct PrepareAnvilEventClass;
-impl blackboxmc_general::JNIProvidesClassName for PrepareAnvilEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/PrepareAnvilEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum DragTypeEnum {
     Single,
@@ -966,6 +946,7 @@ impl<'mc> std::fmt::Display for DragType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct DragType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1064,15 +1045,8 @@ impl<'mc> DragType<'mc> {
             .unwrap()
     }
 }
-
-pub struct DragTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for DragTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/DragType"
-    }
-}
-
 /// Called when the brewing of the contents inside the Brewing Stand is complete.
+#[repr(C)]
 pub struct BrewEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1352,18 +1326,11 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BrewEvent<'mc> {
             .expect("Error converting BrewEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BrewEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BrewEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/BrewEvent"
-    }
-}
-
 /// Called when some entity or block (e.g. hopper) tries to move items directly from one inventory to another.
 /// <p>When this event is called, the initiator may already have removed the item from the source inventory and is ready to move it into the destination inventory.</p>
 /// <p>If this event is cancelled, the items will be returned to the source inventory, if needed.</p>
 /// <p>If this event is not cancelled, the initiator will try to put the ItemStack into the destination inventory. If this is not possible and the ItemStack has not been modified, the source inventory slot will be restored to its former state. Otherwise any additional items will be discarded.</p>
+#[repr(C)]
 pub struct InventoryMoveItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1697,15 +1664,8 @@ impl<'mc> Into<crate::event::Event<'mc>> for InventoryMoveItemEvent<'mc> {
             .expect("Error converting InventoryMoveItemEvent into crate::event::Event")
     }
 }
-
-pub struct InventoryMoveItemEventClass;
-impl blackboxmc_general::JNIProvidesClassName for InventoryMoveItemEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/InventoryMoveItemEvent"
-    }
-}
-
 /// Called when an ItemStack is successfully smelted in a furnace.
+#[repr(C)]
 pub struct FurnaceSmeltEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2012,15 +1972,8 @@ impl<'mc> Into<crate::event::block::BlockCookEvent<'mc>> for FurnaceSmeltEvent<'
             .expect("Error converting FurnaceSmeltEvent into crate::event::block::BlockCookEvent")
     }
 }
-
-pub struct FurnaceSmeltEventClass;
-impl blackboxmc_general::JNIProvidesClassName for FurnaceSmeltEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/FurnaceSmeltEvent"
-    }
-}
-
 /// Called when the recipe of an Item is completed inside a smithing table.
+#[repr(C)]
 pub struct SmithItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2617,14 +2570,6 @@ impl<'mc> Into<crate::event::inventory::InventoryClickEvent<'mc>> for SmithItemE
         )
     }
 }
-
-pub struct SmithItemEventClass;
-impl blackboxmc_general::JNIProvidesClassName for SmithItemEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/SmithItemEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum ClickTypeEnum {
     Left,
@@ -2667,6 +2612,7 @@ impl<'mc> std::fmt::Display for ClickType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct ClickType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2789,15 +2735,8 @@ impl<'mc> ClickType<'mc> {
             .unwrap()
     }
 }
-
-pub struct ClickTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for ClickTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/ClickType"
-    }
-}
-
 /// Called when an ItemStack is about to increase the fuel level of a brewing stand.
+#[repr(C)]
 pub struct BrewingStandFuelEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3132,15 +3071,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BrewingStandFuelEvent<'
             .expect("Error converting BrewingStandFuelEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct BrewingStandFuelEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BrewingStandFuelEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/BrewingStandFuelEvent"
-    }
-}
-
 /// Called when an item is put in a slot for repair or unenchanting in a grindstone.
+#[repr(C)]
 pub struct PrepareGrindstoneEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3446,15 +3378,8 @@ impl<'mc> Into<crate::event::inventory::PrepareInventoryResultEvent<'mc>>
         crate::event::inventory::PrepareInventoryResultEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting PrepareGrindstoneEvent into crate::event::inventory::PrepareInventoryResultEvent")
     }
 }
-
-pub struct PrepareGrindstoneEventClass;
-impl blackboxmc_general::JNIProvidesClassName for PrepareGrindstoneEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/PrepareGrindstoneEvent"
-    }
-}
-
 /// Event that gets called each time a Hopper attempts to find its source/attached containers.
+#[repr(C)]
 pub struct HopperInventorySearchEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3477,6 +3402,7 @@ impl<'mc> std::fmt::Display for HopperInventorySearchEventContainerType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct HopperInventorySearchEventContainerType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3584,13 +3510,6 @@ impl<'mc> HopperInventorySearchEventContainerType<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct HopperInventorySearchEventContainerTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for HopperInventorySearchEventContainerTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/HopperInventorySearchEvent$ContainerType"
     }
 }
 
@@ -3920,15 +3839,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for HopperInventorySearchEv
         )
     }
 }
-
-pub struct HopperInventorySearchEventClass;
-impl blackboxmc_general::JNIProvidesClassName for HopperInventorySearchEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/HopperInventorySearchEvent"
-    }
-}
-
 /// Called when the recipe of an Item is completed inside a crafting matrix.
+#[repr(C)]
 pub struct CraftItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4548,15 +4460,8 @@ impl<'mc> Into<crate::event::inventory::InventoryClickEvent<'mc>> for CraftItemE
         )
     }
 }
-
-pub struct CraftItemEventClass;
-impl blackboxmc_general::JNIProvidesClassName for CraftItemEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/CraftItemEvent"
-    }
-}
-
 /// Called when a Furnace starts smelting.
+#[repr(C)]
 pub struct FurnaceStartSmeltEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4855,15 +4760,8 @@ impl<'mc> Into<crate::event::block::InventoryBlockStartEvent<'mc>> for FurnaceSt
         crate::event::block::InventoryBlockStartEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting FurnaceStartSmeltEvent into crate::event::block::InventoryBlockStartEvent")
     }
 }
-
-pub struct FurnaceStartSmeltEventClass;
-impl blackboxmc_general::JNIProvidesClassName for FurnaceStartSmeltEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/FurnaceStartSmeltEvent"
-    }
-}
-
 /// Called when a hopper or hopper minecart picks up a dropped item.
+#[repr(C)]
 pub struct InventoryPickupItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5147,15 +5045,8 @@ impl<'mc> Into<crate::event::Event<'mc>> for InventoryPickupItemEvent<'mc> {
             .expect("Error converting InventoryPickupItemEvent into crate::event::Event")
     }
 }
-
-pub struct InventoryPickupItemEventClass;
-impl blackboxmc_general::JNIProvidesClassName for InventoryPickupItemEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/InventoryPickupItemEvent"
-    }
-}
-
 /// An abstract base class for events that describe an interaction between a HumanEntity and the contents of an Inventory.
+#[repr(C)]
 pub struct InventoryInteractEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5506,15 +5397,8 @@ impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for InventoryIntera
         )
     }
 }
-
-pub struct InventoryInteractEventClass;
-impl blackboxmc_general::JNIProvidesClassName for InventoryInteractEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/InventoryInteractEvent"
-    }
-}
-
 /// Represents a player related inventory event
+#[repr(C)]
 pub struct InventoryEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5777,15 +5661,8 @@ impl<'mc> Into<crate::event::Event<'mc>> for InventoryEvent<'mc> {
             .expect("Error converting InventoryEvent into crate::event::Event")
     }
 }
-
-pub struct InventoryEventClass;
-impl blackboxmc_general::JNIProvidesClassName for InventoryEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/InventoryEvent"
-    }
-}
-
 /// This event is called when a player in creative mode puts down or picks up an item in their inventory / hotbar and when they drop items from their Inventory while in creative mode.
+#[repr(C)]
 pub struct InventoryCreativeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6368,15 +6245,8 @@ impl<'mc> Into<crate::event::inventory::InventoryClickEvent<'mc>> for InventoryC
         crate::event::inventory::InventoryClickEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting InventoryCreativeEvent into crate::event::inventory::InventoryClickEvent")
     }
 }
-
-pub struct InventoryCreativeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for InventoryCreativeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/InventoryCreativeEvent"
-    }
-}
-
 /// This event is called when a player takes items out of the furnace
+#[repr(C)]
 pub struct FurnaceExtractEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6699,14 +6569,6 @@ impl<'mc> Into<crate::event::block::BlockExpEvent<'mc>> for FurnaceExtractEvent<
             .expect("Error converting FurnaceExtractEvent into crate::event::block::BlockExpEvent")
     }
 }
-
-pub struct FurnaceExtractEventClass;
-impl blackboxmc_general::JNIProvidesClassName for FurnaceExtractEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/FurnaceExtractEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum InventoryTypeEnum {
     Chest,
@@ -6780,6 +6642,7 @@ impl<'mc> std::fmt::Display for InventoryType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct InventoryType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6819,6 +6682,7 @@ impl<'mc> std::fmt::Display for InventoryTypeSlotType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct InventoryTypeSlotType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6929,13 +6793,6 @@ impl<'mc> InventoryTypeSlotType<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct InventoryTypeSlotTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for InventoryTypeSlotTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/InventoryType$SlotType"
     }
 }
 
@@ -7079,14 +6936,6 @@ impl<'mc> InventoryType<'mc> {
             .unwrap()
     }
 }
-
-pub struct InventoryTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for InventoryTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/InventoryType"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum ContainerTypeEnum {
     Source,
@@ -7105,6 +6954,7 @@ impl<'mc> std::fmt::Display for ContainerType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct ContainerType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7203,15 +7053,8 @@ impl<'mc> ContainerType<'mc> {
             .unwrap()
     }
 }
-
-pub struct ContainerTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for ContainerTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/ContainerType"
-    }
-}
-
 /// Called when an item is put in a slot for upgrade by a Smithing Table.
+#[repr(C)]
 pub struct PrepareSmithingEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7516,16 +7359,9 @@ impl<'mc> Into<crate::event::inventory::PrepareInventoryResultEvent<'mc>>
         crate::event::inventory::PrepareInventoryResultEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting PrepareSmithingEvent into crate::event::inventory::PrepareInventoryResultEvent")
     }
 }
-
-pub struct PrepareSmithingEventClass;
-impl blackboxmc_general::JNIProvidesClassName for PrepareSmithingEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/PrepareSmithingEvent"
-    }
-}
-
 /// This event is called whenever a player clicks a new trade on the trades sidebar.
 /// <p>This event allows the user to get the index of the trade, letting them get the MerchantRecipe via the Merchant.</p>
+#[repr(C)]
 pub struct TradeSelectEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7892,14 +7728,6 @@ impl<'mc> Into<crate::event::inventory::InventoryInteractEvent<'mc>> for TradeSe
         crate::event::inventory::InventoryInteractEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting TradeSelectEvent into crate::event::inventory::InventoryInteractEvent")
     }
 }
-
-pub struct TradeSelectEventClass;
-impl blackboxmc_general::JNIProvidesClassName for TradeSelectEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/TradeSelectEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum SlotTypeEnum {
     Result,
@@ -7928,6 +7756,7 @@ impl<'mc> std::fmt::Display for SlotType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct SlotType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8036,14 +7865,6 @@ impl<'mc> SlotType<'mc> {
             .unwrap()
     }
 }
-
-pub struct SlotTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for SlotTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/SlotType"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum InventoryActionEnum {
     Nothing,
@@ -8096,6 +7917,7 @@ impl<'mc> std::fmt::Display for InventoryAction<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct InventoryAction<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8232,14 +8054,6 @@ impl<'mc> InventoryAction<'mc> {
             .unwrap()
     }
 }
-
-pub struct InventoryActionClass;
-impl blackboxmc_general::JNIProvidesClassName for InventoryActionClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/InventoryAction"
-    }
-}
-
 /// This event is called when a player clicks in an inventory.
 /// <p>Because InventoryClickEvent occurs within a modification of the Inventory, not all Inventory related methods are safe to use.</p>
 /// <p>The following should never be invoked by an EventHandler for InventoryClickEvent using the HumanEntity or InventoryView associated with this event:</p>
@@ -8252,6 +8066,7 @@ impl blackboxmc_general::JNIProvidesClassName for InventoryActionClass {
 /// </ul> To invoke one of these methods, schedule a task using <a href="../../scheduler/BukkitScheduler.html#runTask(org.bukkit.plugin.Plugin,java.lang.Runnable)"><code>BukkitScheduler.runTask(Plugin, Runnable)</code></a>, which will run the task on the next tick. Also be aware that this is not an exhaustive list, and other methods could potentially create issues as well.
 /// <p>Assuming the EntityHuman associated with this event is an instance of a Player, manipulating the MaxStackSize or contents of an Inventory will require an Invocation of <a href="../../entity/Player.html#updateInventory()"><code>Player.updateInventory()</code></a>.</p>
 /// <p>Modifications to slots that are modified by the results of this InventoryClickEvent can be overwritten. To change these slots, this event should be cancelled and all desired changes to the inventory applied. Alternatively, scheduling a task using <a href="../../scheduler/BukkitScheduler.html#runTask(org.bukkit.plugin.Plugin,java.lang.Runnable)"><code>BukkitScheduler.runTask(Plugin, Runnable)</code></a>, which would execute the task on the next tick, would work as well.</p>
+#[repr(C)]
 pub struct InventoryClickEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8845,14 +8660,6 @@ impl<'mc> Into<crate::event::inventory::InventoryInteractEvent<'mc>> for Invento
         crate::event::inventory::InventoryInteractEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting InventoryClickEvent into crate::event::inventory::InventoryInteractEvent")
     }
 }
-
-pub struct InventoryClickEventClass;
-impl blackboxmc_general::JNIProvidesClassName for InventoryClickEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/InventoryClickEvent"
-    }
-}
-
 /// This event is called when the player drags an item in their cursor across the inventory. The ItemStack is distributed across the slots the HumanEntity dragged over. The method of distribution is described by the DragType returned by <a href="#getType()"><code>getType()</code></a>.
 /// <p>Canceling this event will result in none of the changes described in <a href="#getNewItems()"><code>getNewItems()</code></a> being applied to the Inventory.</p>
 /// <p>Because InventoryDragEvent occurs within a modification of the Inventory, not all Inventory related methods are safe to use.</p>
@@ -8866,6 +8673,7 @@ impl blackboxmc_general::JNIProvidesClassName for InventoryClickEventClass {
 /// </ul> To invoke one of these methods, schedule a task using <a href="../../scheduler/BukkitScheduler.html#runTask(org.bukkit.plugin.Plugin,java.lang.Runnable)"><code>BukkitScheduler.runTask(Plugin, Runnable)</code></a>, which will run the task on the next tick. Also be aware that this is not an exhaustive list, and other methods could potentially create issues as well.
 /// <p>Assuming the EntityHuman associated with this event is an instance of a Player, manipulating the MaxStackSize or contents of an Inventory will require an Invocation of <a href="../../entity/Player.html#updateInventory()"><code>Player.updateInventory()</code></a>.</p>
 /// <p>Any modifications to slots that are modified by the results of this InventoryDragEvent will be overwritten. To change these slots, this event should be cancelled and the changes applied. Alternatively, scheduling a task using <a href="../../scheduler/BukkitScheduler.html#runTask(org.bukkit.plugin.Plugin,java.lang.Runnable)"><code>BukkitScheduler.runTask(Plugin, Runnable)</code></a>, which would execute the task on the next tick, would work as well.</p>
+#[repr(C)]
 pub struct InventoryDragEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9341,15 +9149,8 @@ impl<'mc> Into<crate::event::inventory::InventoryInteractEvent<'mc>> for Invento
         crate::event::inventory::InventoryInteractEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting InventoryDragEvent into crate::event::inventory::InventoryInteractEvent")
     }
 }
-
-pub struct InventoryDragEventClass;
-impl blackboxmc_general::JNIProvidesClassName for InventoryDragEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/InventoryDragEvent"
-    }
-}
-
 /// Called when an ItemStack is successfully burned as fuel in a furnace.
+#[repr(C)]
 pub struct FurnaceBurnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9682,15 +9483,8 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for FurnaceBurnEvent<'mc> {
             .expect("Error converting FurnaceBurnEvent into crate::event::block::BlockEvent")
     }
 }
-
-pub struct FurnaceBurnEventClass;
-impl blackboxmc_general::JNIProvidesClassName for FurnaceBurnEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/FurnaceBurnEvent"
-    }
-}
-
 /// Represents a player related inventory event
+#[repr(C)]
 pub struct InventoryCloseEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9972,15 +9766,8 @@ impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for InventoryCloseE
         )
     }
 }
-
-pub struct InventoryCloseEventClass;
-impl blackboxmc_general::JNIProvidesClassName for InventoryCloseEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/InventoryCloseEvent"
-    }
-}
-
 /// Called when an item is put in a slot and the result is calculated.
+#[repr(C)]
 pub struct PrepareInventoryResultEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10285,12 +10072,5 @@ impl<'mc> std::string::ToString for PrepareInventoryResultEvent<'mc> {
 impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for PrepareInventoryResultEvent<'mc> {
     fn into(self) -> crate::event::inventory::InventoryEvent<'mc> {
         crate::event::inventory::InventoryEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting PrepareInventoryResultEvent into crate::event::inventory::InventoryEvent")
-    }
-}
-
-pub struct PrepareInventoryResultEventClass;
-impl blackboxmc_general::JNIProvidesClassName for PrepareInventoryResultEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/inventory/PrepareInventoryResultEvent"
     }
 }

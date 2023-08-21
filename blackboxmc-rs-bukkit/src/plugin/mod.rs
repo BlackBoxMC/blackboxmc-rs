@@ -20,6 +20,7 @@ impl<'mc> std::fmt::Display for PluginAwarenessFlags<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct PluginAwarenessFlags<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -118,14 +119,6 @@ impl<'mc> PluginAwarenessFlags<'mc> {
             .unwrap()
     }
 }
-
-pub struct PluginAwarenessFlagsClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginAwarenessFlagsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/PluginAwareness$Flags"
-    }
-}
-
 /// This type is the runtime-container for the information in the plugin.yml. All plugins must have a respective plugin.yml. For plugins written in java using the standard plugin loader, this file must be in the root of the jar file.
 /// <p>When Bukkit loads a plugin, it needs to know some basic information about it. It reads this information from a YAML file, 'plugin.yml'. This file consists of a set of attributes, each defined on a new line and with no indentation.</p>
 /// <p>Every (almost* every) method corresponds with a specific entry in the plugin.yml. These are the <b>required</b> entries for every plugin.yml:</p>
@@ -297,6 +290,7 @@ impl blackboxmc_general::JNIProvidesClassName for PluginAwarenessFlagsClass {
 /// inferno.burningdeaths: true
 /// </pre>
 /// </blockquote>
+#[repr(C)]
 pub struct PluginDescriptionFile<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -907,13 +901,6 @@ impl<'mc> std::string::ToString for PluginDescriptionFile<'mc> {
     }
 }
 
-pub struct PluginDescriptionFileClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginDescriptionFileClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/PluginDescriptionFile"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum PluginLoadOrderEnum {
     Startup,
@@ -932,6 +919,7 @@ impl<'mc> std::fmt::Display for PluginLoadOrder<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct PluginLoadOrder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1032,15 +1020,8 @@ impl<'mc> PluginLoadOrder<'mc> {
             .unwrap()
     }
 }
-
-pub struct PluginLoadOrderClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginLoadOrderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/PluginLoadOrder"
-    }
-}
-
 /// A registered service provider.
+#[repr(C)]
 pub struct RegisteredServiceProvider<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1286,13 +1267,6 @@ impl<'mc> std::string::ToString for RegisteredServiceProvider<'mc> {
     }
 }
 
-pub struct RegisteredServiceProviderClass;
-impl blackboxmc_general::JNIProvidesClassName for RegisteredServiceProviderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/RegisteredServiceProvider"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum FlagsEnum {
     #[deprecated]
@@ -1310,6 +1284,7 @@ impl<'mc> std::fmt::Display for Flags<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Flags<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1406,15 +1381,8 @@ impl<'mc> Flags<'mc> {
             .unwrap()
     }
 }
-
-pub struct FlagsClass;
-impl blackboxmc_general::JNIProvidesClassName for FlagsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/Flags"
-    }
-}
-
 /// Represents various priorities of a provider.
+#[repr(C)]
 pub struct ServicePriority<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1464,18 +1432,11 @@ impl<'mc> ServicePriority<'mc> {
             .unwrap()
     }
 }
-
-pub struct ServicePriorityClass;
-impl blackboxmc_general::JNIProvidesClassName for ServicePriorityClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/ServicePriority"
-    }
-}
-
 /// Represents a concept that a plugin is aware of.
 /// <p>The internal representation may be singleton, or be a parameterized instance, but must be immutable.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PluginAwareness<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1525,17 +1486,10 @@ impl<'mc> PluginAwareness<'mc> {
             .unwrap()
     }
 }
-
-pub struct PluginAwarenessClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginAwarenessClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/PluginAwareness"
-    }
-}
-
 /// Handles all plugin management from the Server
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PluginManager<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2049,16 +2003,9 @@ impl<'mc> PluginManager<'mc> {
             .unwrap()
     }
 }
-
-pub struct PluginManagerClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginManagerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/PluginManager"
-    }
-}
-
 /// Represents a base <a href="Plugin.html" title="interface in org.bukkit.plugin"><code>Plugin</code></a>
 /// <p>Extend this class if your plugin is not a <a href="java/JavaPlugin.html" title="class in org.bukkit.plugin.java"><code>JavaPlugin</code></a></p>
+#[repr(C)]
 pub struct PluginBase<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2581,17 +2528,10 @@ impl<'mc> Into<crate::plugin::Plugin<'mc>> for PluginBase<'mc> {
             .expect("Error converting PluginBase into crate::plugin::Plugin")
     }
 }
-
-pub struct PluginBaseClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginBaseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/PluginBase"
-    }
-}
-
 /// Interface which defines the class for event call backs to plugins
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct EventExecutor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2664,17 +2604,10 @@ impl<'mc> EventExecutor<'mc> {
             .unwrap()
     }
 }
-
-pub struct EventExecutorClass;
-impl blackboxmc_general::JNIProvidesClassName for EventExecutorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/EventExecutor"
-    }
-}
-
 /// Manages services and service providers. Services are an interface specifying a list of methods that a provider must implement. Providers are implementations of these services. A provider can be queried from the services manager in order to use a service (if one is available). If multiple plugins register a service, then the service with the highest priority takes precedence.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ServicesManager<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2895,14 +2828,6 @@ impl<'mc> ServicesManager<'mc> {
             .unwrap()
     }
 }
-
-pub struct ServicesManagerClass;
-impl blackboxmc_general::JNIProvidesClassName for ServicesManagerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/ServicesManager"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum FlagsFlagsEnum {
     #[deprecated]
@@ -2920,6 +2845,7 @@ impl<'mc> std::fmt::Display for FlagsFlags<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct FlagsFlags<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3016,15 +2942,8 @@ impl<'mc> FlagsFlags<'mc> {
             .unwrap()
     }
 }
-
-pub struct FlagsFlagsClass;
-impl blackboxmc_general::JNIProvidesClassName for FlagsFlagsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/Flags$Flags"
-    }
-}
-
 /// Extends RegisteredListener to include timing information
+#[repr(C)]
 pub struct TimedRegisteredListener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3350,17 +3269,10 @@ impl<'mc> Into<crate::plugin::RegisteredListener<'mc>> for TimedRegisteredListen
         )
     }
 }
-
-pub struct TimedRegisteredListenerClass;
-impl blackboxmc_general::JNIProvidesClassName for TimedRegisteredListenerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/TimedRegisteredListener"
-    }
-}
-
 /// Represents a plugin loader, which handles direct access to specific types of plugins
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PluginLoader<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3519,15 +3431,8 @@ impl<'mc> PluginLoader<'mc> {
             .unwrap()
     }
 }
-
-pub struct PluginLoaderClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginLoaderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/PluginLoader"
-    }
-}
-
 /// Stores relevant information for plugin listeners
+#[repr(C)]
 pub struct RegisteredListener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3793,17 +3698,11 @@ impl<'mc> std::string::ToString for RegisteredListener<'mc> {
     }
 }
 
-pub struct RegisteredListenerClass;
-impl blackboxmc_general::JNIProvidesClassName for RegisteredListenerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/RegisteredListener"
-    }
-}
-
 /// Represents a Plugin
 /// <p>The use of <a href="PluginBase.html" title="class in org.bukkit.plugin"><code>PluginBase</code></a> is recommended for actual Implementation</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Plugin<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4250,13 +4149,5 @@ impl<'mc> Into<crate::command::TabExecutor<'mc>> for Plugin<'mc> {
             .expect("Error converting Plugin into crate::command::TabExecutor")
     }
 }
-
-pub struct PluginClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/plugin/Plugin"
-    }
-}
-
 pub mod java;
 pub mod messaging;

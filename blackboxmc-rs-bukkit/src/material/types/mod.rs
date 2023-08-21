@@ -43,6 +43,7 @@ impl<'mc> std::fmt::Display for MushroomBlockTexture<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct MushroomBlockTexture<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -164,12 +165,5 @@ impl<'mc> MushroomBlockTexture<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct MushroomBlockTextureClass;
-impl blackboxmc_general::JNIProvidesClassName for MushroomBlockTextureClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/material/types/MushroomBlockTexture"
     }
 }

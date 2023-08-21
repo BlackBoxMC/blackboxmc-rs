@@ -15,6 +15,7 @@ use color_eyre::eyre::Result;
 /// <a href="../../java/lang/Integer.html#numberOfTrailingZeros-int-"><code>numberOfTrailingZeros</code></a>) are
 /// based on material from Henry S. Warren, Jr.'s <i>Hacker's
 /// Delight</i>, (Addison Wesley, 2002).</p>
+#[repr(C)]
 pub struct JavaInteger<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -777,14 +778,6 @@ impl<'mc> JavaInteger<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaIntegerClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaIntegerClass {
-    fn class_name(&self) -> &str {
-        "java/lang/Integer"
-    }
-}
-
 /// The <code>Float</code> class wraps a value of primitive type
 /// <code>float</code> in an object. An object of type
 /// <code>Float</code> contains a single field whose type is
@@ -794,6 +787,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaIntegerClass {
 /// <code>String</code> to a <code>float</code>, as well as other
 /// constants and methods useful when dealing with a
 /// <code>float</code>.</p>
+#[repr(C)]
 pub struct JavaFloat<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1308,14 +1302,6 @@ impl<'mc> JavaFloat<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaFloatClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaFloatClass {
-    fn class_name(&self) -> &str {
-        "java/lang/Float"
-    }
-}
-
 /// The <code>Character</code> class wraps a value of the primitive
 /// type <code>char</code> in an object. An object of class
 /// <code>Character</code> contains a single field whose type is
@@ -1407,6 +1393,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaFloatClass {
 /// <code>char</code> values that are code units of the <em>UTF-16</em>
 /// encoding. For more information on Unicode terminology, refer to the
 /// <a href="http://www.unicode.org/glossary/">Unicode Glossary</a>.</p>
+#[repr(C)]
 pub struct JavaCharacter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2520,20 +2507,13 @@ impl<'mc> JavaCharacter<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaCharacterClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaCharacterClass {
-    fn class_name(&self) -> &str {
-        "java/lang/Character"
-    }
-}
-
 /// The <code>Byte</code> class wraps a value of primitive type <code>byte</code>
 /// in an object.An object of type <code>Byte</code> contains a single
 /// field whose type is <code>byte</code>.
 /// <p>In addition, this class provides several methods for converting
 /// a <code>byte</code> to a <code>String</code> and a <code>String</code> to a <code>byte</code>, as well as other constants and methods useful when dealing
 /// with a <code>byte</code>.</p>
+#[repr(C)]
 pub struct JavaByte<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2916,14 +2896,6 @@ impl<'mc> JavaByte<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaByteClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaByteClass {
-    fn class_name(&self) -> &str {
-        "java/lang/Byte"
-    }
-}
-
 /// The <code>Long</code> class wraps a value of the primitive type <code>long</code> in an object. An object of type <code>Long</code> contains a
 /// single field whose type is <code>long</code>.
 /// <p> In addition, this class provides several methods for converting
@@ -2934,6 +2906,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaByteClass {
 /// <a href="../../java/lang/Long.html#numberOfTrailingZeros-long-"><code>numberOfTrailingZeros</code></a>) are
 /// based on material from Henry S. Warren, Jr.'s <i>Hacker's
 /// Delight</i>, (Addison Wesley, 2002).</p>
+#[repr(C)]
 pub struct JavaLong<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3683,14 +3656,6 @@ impl<'mc> JavaLong<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaLongClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaLongClass {
-    fn class_name(&self) -> &str {
-        "java/lang/Long"
-    }
-}
-
 /// The <code>String</code> class represents character strings. All
 /// string literals in Java programs, such as <code>"abc"</code>, are
 /// implemented as instances of this class.
@@ -3742,6 +3707,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaLongClass {
 /// </p><p>The <code>String</code> class provides methods for dealing with
 /// Unicode code points (i.e., characters), in addition to those for
 /// dealing with Unicode code units (i.e., <code>char</code> values).</p>
+#[repr(C)]
 pub struct JavaString<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4749,13 +4715,6 @@ impl<'mc> std::string::ToString for JavaString<'mc> {
     }
 }
 
-pub struct JavaStringClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaStringClass {
-    fn class_name(&self) -> &str {
-        "java/lang/String"
-    }
-}
-
 /// The Boolean class wraps a value of the primitive type
 /// <code>boolean</code> in an object. An object of type
 /// <code>Boolean</code> contains a single field whose type is
@@ -4766,6 +4725,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaStringClass {
 /// <code>String</code> to a <code>boolean</code>, as well as other
 /// constants and methods useful when dealing with a
 /// <code>boolean</code>.</p>
+#[repr(C)]
 pub struct JavaBoolean<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5108,14 +5068,6 @@ impl<'mc> JavaBoolean<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaBooleanClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaBooleanClass {
-    fn class_name(&self) -> &str {
-        "java/lang/Boolean"
-    }
-}
-
 /// The <code>Double</code> class wraps a value of the primitive type
 /// <code>double</code> in an object. An object of type
 /// <code>Double</code> contains a single field whose type is
@@ -5125,6 +5077,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaBooleanClass {
 /// <code>String</code> to a <code>double</code>, as well as other
 /// constants and methods useful when dealing with a
 /// <code>double</code>.</p>
+#[repr(C)]
 pub struct JavaDouble<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5623,20 +5576,13 @@ impl<'mc> JavaDouble<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaDoubleClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaDoubleClass {
-    fn class_name(&self) -> &str {
-        "java/lang/Double"
-    }
-}
-
 /// The <code>Short</code> class wraps a value of primitive type <code>short</code> in an object.An object of type <code>Short</code> contains a
 /// single field whose type is <code>short</code>.
 /// <p>In addition, this class provides several methods for converting
 /// a <code>short</code> to a <code>String</code> and a <code>String</code> to a
 /// <code>short</code>, as well as other constants and methods useful when
 /// dealing with a <code>short</code>.</p>
+#[repr(C)]
 pub struct JavaShort<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6035,12 +5981,5 @@ impl<'mc> JavaShort<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct JavaShortClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaShortClass {
-    fn class_name(&self) -> &str {
-        "java/lang/Short"
     }
 }

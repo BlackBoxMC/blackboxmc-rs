@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// A list of event handlers, stored per-event. Based on lahwran's fevents.
+#[repr(C)]
 pub struct HandlerList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -293,16 +294,10 @@ impl<'mc> std::string::ToString for HandlerList<'mc> {
     }
 }
 
-pub struct HandlerListClass;
-impl blackboxmc_general::JNIProvidesClassName for HandlerListClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/HandlerList"
-    }
-}
-
 /// Simple interface for tagging all EventListeners
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Listener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -350,17 +345,10 @@ impl<'mc> Listener<'mc> {
             .unwrap()
     }
 }
-
-pub struct ListenerClass;
-impl blackboxmc_general::JNIProvidesClassName for ListenerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/Listener"
-    }
-}
-
 /// A type characterizing events that may be cancelled by a plugin or the server.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Cancellable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -430,17 +418,10 @@ impl<'mc> Cancellable<'mc> {
             .unwrap()
     }
 }
-
-pub struct CancellableClass;
-impl blackboxmc_general::JNIProvidesClassName for CancellableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/Cancellable"
-    }
-}
-
 /// An annotation to mark methods as being event handler methods
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct EventHandler<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -579,14 +560,8 @@ impl<'mc> std::string::ToString for EventHandler<'mc> {
     }
 }
 
-pub struct EventHandlerClass;
-impl blackboxmc_general::JNIProvidesClassName for EventHandlerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/EventHandler"
-    }
-}
-
 /// Represents an event. All events require a static method named getHandlerList() which returns the same <a title="class in org.bukkit.event" href="HandlerList.html"><code>HandlerList</code></a> as <a href="#getHandlers()"><code>getHandlers()</code></a>.
+#[repr(C)]
 pub struct Event<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -611,6 +586,7 @@ impl<'mc> std::fmt::Display for EventResult<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct EventResult<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -709,13 +685,6 @@ impl<'mc> EventResult<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct EventResultClass;
-impl blackboxmc_general::JNIProvidesClassName for EventResultClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/Event$Result"
     }
 }
 
@@ -914,13 +883,6 @@ impl<'mc> std::string::ToString for Event<'mc> {
     }
 }
 
-pub struct EventClass;
-impl blackboxmc_general::JNIProvidesClassName for EventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/Event"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum EventPriorityEnum {
     Lowest,
@@ -947,6 +909,7 @@ impl<'mc> std::fmt::Display for EventPriority<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct EventPriority<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1053,14 +1016,6 @@ impl<'mc> EventPriority<'mc> {
             .unwrap()
     }
 }
-
-pub struct EventPriorityClass;
-impl blackboxmc_general::JNIProvidesClassName for EventPriorityClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/EventPriority"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum SpigotResultEnum {
     Deny,
@@ -1081,6 +1036,7 @@ impl<'mc> std::fmt::Display for SpigotResult<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct SpigotResult<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1181,14 +1137,6 @@ impl<'mc> SpigotResult<'mc> {
             .unwrap()
     }
 }
-
-pub struct SpigotResultClass;
-impl blackboxmc_general::JNIProvidesClassName for SpigotResultClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/SpigotResult"
-    }
-}
-
 pub mod block;
 pub mod enchantment;
 pub mod entity;

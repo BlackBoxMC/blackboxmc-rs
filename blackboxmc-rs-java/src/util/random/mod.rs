@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 
+#[repr(C)]
 pub struct JavaRandomGeneratorFactory<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -337,15 +338,9 @@ impl<'mc> std::string::ToString for JavaRandomGeneratorFactory<'mc> {
     }
 }
 
-pub struct JavaRandomGeneratorFactoryClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaRandomGeneratorFactoryClass {
-    fn class_name(&self) -> &str {
-        "java/util/random/RandomGeneratorFactory"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaRandomGeneratorSplittableGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -621,15 +616,9 @@ impl<'mc> Into<crate::util::random::JavaRandomGeneratorStreamableGenerator<'mc>>
     }
 }
 
-pub struct JavaRandomGeneratorSplittableGeneratorClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaRandomGeneratorSplittableGeneratorClass {
-    fn class_name(&self) -> &str {
-        "java/util/random/RandomGenerator$SplittableGenerator"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaRandomGeneratorStreamableGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -869,15 +858,9 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     }
 }
 
-pub struct JavaRandomGeneratorStreamableGeneratorClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaRandomGeneratorStreamableGeneratorClass {
-    fn class_name(&self) -> &str {
-        "java/util/random/RandomGenerator$StreamableGenerator"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaRandomGeneratorLeapableGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1209,15 +1192,9 @@ impl<'mc> Into<crate::util::random::JavaRandomGeneratorJumpableGenerator<'mc>>
     }
 }
 
-pub struct JavaRandomGeneratorLeapableGeneratorClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaRandomGeneratorLeapableGeneratorClass {
-    fn class_name(&self) -> &str {
-        "java/util/random/RandomGenerator$LeapableGenerator"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaRandomGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1462,15 +1439,9 @@ impl<'mc> JavaRandomGenerator<'mc> {
     }
 }
 
-pub struct JavaRandomGeneratorClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaRandomGeneratorClass {
-    fn class_name(&self) -> &str {
-        "java/util/random/RandomGenerator"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1838,17 +1809,9 @@ impl<'mc> Into<crate::util::random::JavaRandomGeneratorLeapableGenerator<'mc>>
     }
 }
 
-pub struct JavaRandomGeneratorArbitrarilyJumpableGeneratorClass;
-impl blackboxmc_general::JNIProvidesClassName
-    for JavaRandomGeneratorArbitrarilyJumpableGeneratorClass
-{
-    fn class_name(&self) -> &str {
-        "java/util/random/RandomGenerator$ArbitrarilyJumpableGenerator"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaRandomGeneratorJumpableGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2140,12 +2103,5 @@ impl<'mc> Into<crate::util::random::JavaRandomGeneratorStreamableGenerator<'mc>>
 {
     fn into(self) -> crate::util::random::JavaRandomGeneratorStreamableGenerator<'mc> {
         crate::util::random::JavaRandomGeneratorStreamableGenerator::from_raw(&self.jni_ref(), self.1).expect("Error converting JavaRandomGeneratorJumpableGenerator into crate::util::random::JavaRandomGeneratorStreamableGenerator")
-    }
-}
-
-pub struct JavaRandomGeneratorJumpableGeneratorClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaRandomGeneratorJumpableGeneratorClass {
-    fn class_name(&self) -> &str {
-        "java/util/random/RandomGenerator$JumpableGenerator"
     }
 }

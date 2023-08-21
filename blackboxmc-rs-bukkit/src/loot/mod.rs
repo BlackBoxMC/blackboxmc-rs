@@ -6,6 +6,7 @@ use color_eyre::eyre::Result;
 /// LootTables are technical files that represent what items should be in naturally generated containers, what items should be dropped when killing a mob, or what items can be fished. See the <a href="https://minecraft.gamepedia.com/Loot_table"> Minecraft Wiki</a> for more information.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct LootTable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -135,14 +136,6 @@ impl<'mc> Into<crate::Keyed<'mc>> for LootTable<'mc> {
             .expect("Error converting LootTable into crate::Keyed")
     }
 }
-
-pub struct LootTableClass;
-impl blackboxmc_general::JNIProvidesClassName for LootTableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/loot/LootTable"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum LootTablesLootTablesEnum {
     Empty,
@@ -493,6 +486,7 @@ impl<'mc> std::fmt::Display for LootTablesLootTables<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct LootTablesLootTables<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -960,14 +954,6 @@ impl<'mc> LootTablesLootTables<'mc> {
             .unwrap()
     }
 }
-
-pub struct LootTablesLootTablesClass;
-impl blackboxmc_general::JNIProvidesClassName for LootTablesLootTablesClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/loot/LootTables$LootTables"
-    }
-}
-
 /// Represents a <a title="interface in org.bukkit.block" href="../block/Container.html"><code>Container</code></a> or a <a href="../entity/Mob.html" title="interface in org.bukkit.entity"><code>Mob</code></a> that can have a loot table.
 ///
 /// Container loot will only generate upon opening, and only when the container is <i>first</i> opened.
@@ -975,6 +961,7 @@ impl blackboxmc_general::JNIProvidesClassName for LootTablesLootTablesClass {
 /// Entities will only generate loot upon death.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Lootable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1079,14 +1066,6 @@ impl<'mc> Lootable<'mc> {
             .unwrap()
     }
 }
-
-pub struct LootableClass;
-impl blackboxmc_general::JNIProvidesClassName for LootableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/loot/Lootable"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum LootTablesEnum {
     Empty,
@@ -1427,6 +1406,7 @@ impl<'mc> std::fmt::Display for LootTables<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct LootTables<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1847,19 +1827,13 @@ impl<'mc> LootTables<'mc> {
             .unwrap()
     }
 }
-
-pub struct LootTablesClass;
-impl blackboxmc_general::JNIProvidesClassName for LootTablesClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/loot/LootTables"
-    }
-}
-
 /// Represents additional information a <a title="interface in org.bukkit.loot" href="LootTable.html"><code>LootTable</code></a> can use to modify it's generated loot.
+#[repr(C)]
 pub struct LootContext<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
+#[repr(C)]
 pub struct LootContextBuilder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2105,13 +2079,6 @@ impl<'mc> std::string::ToString for LootContextBuilder<'mc> {
     }
 }
 
-pub struct LootContextBuilderClass;
-impl blackboxmc_general::JNIProvidesClassName for LootContextBuilderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/loot/LootContext$Builder"
-    }
-}
-
 impl<'mc> JNIRaw<'mc> for LootContext<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -2318,12 +2285,5 @@ impl<'mc> std::string::ToString for LootContext<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling LootContext.toString: {}", err),
         }
-    }
-}
-
-pub struct LootContextClass;
-impl blackboxmc_general::JNIProvidesClassName for LootContextClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/loot/LootContext"
     }
 }

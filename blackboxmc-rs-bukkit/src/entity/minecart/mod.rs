@@ -6,6 +6,7 @@ use color_eyre::eyre::Result;
 /// Represents a Minecart with TNT inside it that can explode when triggered.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ExplosiveMinecart<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1771,17 +1772,10 @@ impl<'mc> Into<crate::entity::Minecart<'mc>> for ExplosiveMinecart<'mc> {
             .expect("Error converting ExplosiveMinecart into crate::entity::Minecart")
     }
 }
-
-pub struct ExplosiveMinecartClass;
-impl blackboxmc_general::JNIProvidesClassName for ExplosiveMinecartClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/entity/minecart/ExplosiveMinecart"
-    }
-}
-
 /// Represents a Minecart with a Hopper inside it
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct HopperMinecart<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3590,17 +3584,10 @@ impl<'mc> Into<crate::loot::Lootable<'mc>> for HopperMinecart<'mc> {
             .expect("Error converting HopperMinecart into crate::loot::Lootable")
     }
 }
-
-pub struct HopperMinecartClass;
-impl blackboxmc_general::JNIProvidesClassName for HopperMinecartClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/entity/minecart/HopperMinecart"
-    }
-}
-
 /// Represents a minecart with a chest. These types of <a title="interface in org.bukkit.entity" href="../Minecart.html"><code>minecarts</code></a> have their own inventory that can be accessed using methods from the <a title="interface in org.bukkit.inventory" href="../../inventory/InventoryHolder.html"><code>InventoryHolder</code></a> interface.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct StorageMinecart<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5388,17 +5375,10 @@ impl<'mc> Into<crate::loot::Lootable<'mc>> for StorageMinecart<'mc> {
             .expect("Error converting StorageMinecart into crate::loot::Lootable")
     }
 }
-
-pub struct StorageMinecartClass;
-impl blackboxmc_general::JNIProvidesClassName for StorageMinecartClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/entity/minecart/StorageMinecart"
-    }
-}
-
 /// Represents a Minecart with an <a title="interface in org.bukkit.block" href="../../block/CreatureSpawner.html"><code>entity spawner</code></a> inside it.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct SpawnerMinecart<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7104,17 +7084,10 @@ impl<'mc> Into<crate::entity::Minecart<'mc>> for SpawnerMinecart<'mc> {
             .expect("Error converting SpawnerMinecart into crate::entity::Minecart")
     }
 }
-
-pub struct SpawnerMinecartClass;
-impl blackboxmc_general::JNIProvidesClassName for SpawnerMinecartClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/entity/minecart/SpawnerMinecart"
-    }
-}
-
 /// Represents a powered minecart. A powered minecart moves on its own when a player deposits <a href="../../Material.html#COAL"><code>fuel</code></a>.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PoweredMinecart<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8843,17 +8816,10 @@ impl<'mc> Into<crate::entity::Minecart<'mc>> for PoweredMinecart<'mc> {
             .expect("Error converting PoweredMinecart into crate::entity::Minecart")
     }
 }
-
-pub struct PoweredMinecartClass;
-impl blackboxmc_general::JNIProvidesClassName for PoweredMinecartClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/entity/minecart/PoweredMinecart"
-    }
-}
-
 /// Represents a minecart that can have certain <a title="interface in org.bukkit.entity" href="../Entity.html"><code>entities</code></a> as passengers. Normal passengers include all <a title="interface in org.bukkit.entity" href="../LivingEntity.html"><code>living entities</code></a> with the exception of <a title="interface in org.bukkit.entity" href="../IronGolem.html"><code>iron golems</code></a>. Non-player entities that meet normal passenger criteria automatically mount these minecarts when close enough.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct RideableMinecart<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10560,15 +10526,9 @@ impl<'mc> Into<crate::entity::Minecart<'mc>> for RideableMinecart<'mc> {
     }
 }
 
-pub struct RideableMinecartClass;
-impl blackboxmc_general::JNIProvidesClassName for RideableMinecartClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/entity/minecart/RideableMinecart"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct CommandMinecart<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12315,12 +12275,5 @@ impl<'mc> Into<crate::entity::Minecart<'mc>> for CommandMinecart<'mc> {
     fn into(self) -> crate::entity::Minecart<'mc> {
         crate::entity::Minecart::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting CommandMinecart into crate::entity::Minecart")
-    }
-}
-
-pub struct CommandMinecartClass;
-impl blackboxmc_general::JNIProvidesClassName for CommandMinecartClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/entity/minecart/CommandMinecart"
     }
 }

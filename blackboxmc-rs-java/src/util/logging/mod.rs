@@ -5,6 +5,7 @@ use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// ErrorManager objects can be attached to Handlers to process any error that occurs on a Handler during Logging.
 /// <p>When processing logging output, if a Handler encounters problems then rather than throwing an Exception back to the issuer of the logging call (who is unlikely to be interested) the Handler should call its associated ErrorManager.</p>
+#[repr(C)]
 pub struct JavaErrorManager<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -157,16 +158,10 @@ impl<'mc> std::string::ToString for JavaErrorManager<'mc> {
     }
 }
 
-pub struct JavaErrorManagerClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaErrorManagerClass {
-    fn class_name(&self) -> &str {
-        "java/util/logging/ErrorManager"
-    }
-}
-
 /// Format a LogRecord into a standard XML format.
 /// <p>The DTD specification is provided as Appendix A to the Java Logging APIs specification.</p>
 /// <p>The XMLFormatter can be used with arbitrary character encodings, but it is recommended that it normally be used with UTF-8. The character encoding can be set on the output Handler.</p>
+#[repr(C)]
 pub struct JavaXMLFormatter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -413,17 +408,10 @@ impl<'mc> Into<crate::util::logging::JavaFormatter<'mc>> for JavaXMLFormatter<'m
             .expect("Error converting JavaXMLFormatter into crate::util::logging::JavaFormatter")
     }
 }
-
-pub struct JavaXMLFormatterClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaXMLFormatterClass {
-    fn class_name(&self) -> &str {
-        "java/util/logging/XMLFormatter"
-    }
-}
-
 /// A Formatter provides support for formatting LogRecords.
 /// <p>Typically each logging Handler will have a Formatter associated with it. The Formatter takes a LogRecord and converts it to a string.</p>
 /// <p>Some formatters (such as the XMLFormatter) need to wrap head and tail strings around a set of formatted records. The getHeader and getTail methods can be used to obtain these strings.</p>
+#[repr(C)]
 pub struct JavaFormatter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -651,13 +639,6 @@ impl<'mc> std::string::ToString for JavaFormatter<'mc> {
     }
 }
 
-pub struct JavaFormatterClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaFormatterClass {
-    fn class_name(&self) -> &str {
-        "java/util/logging/Formatter"
-    }
-}
-
 /// Simple network logging <tt>Handler</tt>.
 /// <p><tt>LogRecords</tt> are published to a network stream connection. By default the <tt>XMLFormatter</tt> class is used for formatting.</p>
 /// <p><b>Configuration:</b> By default each <tt>SocketHandler</tt> is initialized using the following <tt>LogManager</tt> configuration properties where <tt>&lt;handler-name&gt;</tt> refers to the fully-qualified class name of the handler. If properties are not defined (or have invalid values) then the specified default values are used.</p>
@@ -680,6 +661,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaFormatterClass {
 /// <li>com.foo.MyHandler.formatter=java.util.logging.SimpleFormatter</li>
 /// </ul>
 /// <p>The output IO stream is buffered, but is flushed after each <tt>LogRecord</tt> is written.</p>
+#[repr(C)]
 pub struct JavaSocketHandler<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1061,16 +1043,9 @@ impl<'mc> Into<crate::util::logging::JavaStreamHandler<'mc>> for JavaSocketHandl
         )
     }
 }
-
-pub struct JavaSocketHandlerClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaSocketHandlerClass {
-    fn class_name(&self) -> &str {
-        "java/util/logging/SocketHandler"
-    }
-}
-
 /// Print a brief summary of the <code>LogRecord</code> in a human readable format. The summary will typically be 1 or 2 lines.
 /// <p><a name="formatting"> <b>Configuration:</b></a> The <code>SimpleFormatter</code> is initialized with the <a href="../Formatter.html#syntax">format string</a> specified in the <code>java.util.logging.SimpleFormatter.format</code> property to <a href="../../../java/util/logging/SimpleFormatter.html#format">format</a> the log messages. This property can be defined in the <a href="../../../java/util/logging/LogManager.html#getProperty-java.lang.String-">logging properties</a> configuration file or as a system property. If this property is set in both the logging properties and system properties, the format string specified in the system property will be used. If this property is not defined or the given format string is <a title="class in java.util" href="../../../java/util/IllegalFormatException.html">illegal</a>, the default format is implementation-specific.</p>
+#[repr(C)]
 pub struct JavaSimpleFormatter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1317,17 +1292,10 @@ impl<'mc> Into<crate::util::logging::JavaFormatter<'mc>> for JavaSimpleFormatter
             .expect("Error converting JavaSimpleFormatter into crate::util::logging::JavaFormatter")
     }
 }
-
-pub struct JavaSimpleFormatterClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaSimpleFormatterClass {
-    fn class_name(&self) -> &str {
-        "java/util/logging/SimpleFormatter"
-    }
-}
-
 /// A <tt>Handler</tt> object takes log messages from a <tt>Logger</tt> and exports them. It might for example, write them to a console or write them to a file, or send them to a network logging service, or forward them to an OS log, or whatever.
 /// <p>A <tt>Handler</tt> can be disabled by doing a <tt>setLevel(Level.OFF)</tt> and can be re-enabled by doing a <tt>setLevel</tt> with an appropriate level.</p>
 /// <p><tt>Handler</tt> classes typically use <tt>LogManager</tt> properties to set default values for the <tt>Handler</tt>'s <tt>Filter</tt>, <tt>Formatter</tt>, and <tt>Level</tt>. See the specific documentation for each concrete <tt>Handler</tt> class.</p>
+#[repr(C)]
 pub struct JavaHandler<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1673,13 +1641,6 @@ impl<'mc> std::string::ToString for JavaHandler<'mc> {
     }
 }
 
-pub struct JavaHandlerClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaHandlerClass {
-    fn class_name(&self) -> &str {
-        "java/util/logging/Handler"
-    }
-}
-
 /// <tt>Handler</tt> that buffers requests in a circular buffer in memory.
 /// <p>Normally this <tt>Handler</tt> simply stores incoming <tt>LogRecords</tt> into its memory buffer and discards earlier records. This buffering is very cheap and avoids formatting costs. On certain trigger conditions, the <tt>MemoryHandler</tt> will push out its current buffer contents to a target <tt>Handler</tt>, which will typically publish them to the outside world.</p>
 /// <p>There are three main models for triggering a push of the buffer:</p>
@@ -1707,6 +1668,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaHandlerClass {
 /// <li>com.foo.MyHandler.formatter=java.util.logging.SimpleFormatter</li>
 /// </ul>
 /// <p></p>
+#[repr(C)]
 pub struct JavaMemoryHandler<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2135,14 +2097,6 @@ impl<'mc> Into<crate::util::logging::JavaHandler<'mc>> for JavaMemoryHandler<'mc
             .expect("Error converting JavaMemoryHandler into crate::util::logging::JavaHandler")
     }
 }
-
-pub struct JavaMemoryHandlerClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaMemoryHandlerClass {
-    fn class_name(&self) -> &str {
-        "java/util/logging/MemoryHandler"
-    }
-}
-
 /// A Logger object is used to log messages for a specific system or application component. Loggers are normally named, using a hierarchical dot-separated namespace. Logger names can be arbitrary strings, but they should normally be based on the package name or class name of the logged component, such as java.net or javax.swing. In addition it is possible to create "anonymous" Loggers that are not stored in the Logger namespace.
 /// <p>Logger objects may be obtained by calls on one of the getLogger factory methods. These will either create a new Logger or return a suitable existing Logger. It is important to note that the Logger returned by one of the <code>getLogger</code> factory methods may be garbage collected at any time if a strong reference to the Logger is not kept.</p>
 /// <p>Logging messages will be forwarded to registered Handler objects, which can forward the messages to a variety of destinations, including consoles, files, OS logs, etc.</p>
@@ -2189,6 +2143,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaMemoryHandlerClass {
 /// <p>For the methods that do not take an explicit source name and method name, the Logging framework will make a "best effort" to determine which class and method called into the logging method. However, it is important to realize that this automatically inferred information may only be approximate (or may even be quite wrong!). Virtual machines are allowed to do extensive optimizations when JITing and may entirely remove stack frames, making it impossible to reliably locate the calling class and method.</p>
 /// <p>All methods on Logger are multi-thread safe.</p>
 /// <p><b>Subclassing Information:</b> Note that a LogManager class may provide its own implementation of named Loggers for any point in the namespace. Therefore, any subclasses of Logger (unless they are implemented in conjunction with a new LogManager class) should take care to obtain a Logger instance from the LogManager class and should delegate operations such as "isLoggable" and "log(LogRecord)" to that instance. Note that in order to intercept all logging output, subclasses need only override the log(LogRecord) method. All the other logging methods are implemented as calls on this log(LogRecord) method.</p>
+#[repr(C)]
 pub struct JavaLogger<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2804,13 +2759,6 @@ impl<'mc> std::string::ToString for JavaLogger<'mc> {
     }
 }
 
-pub struct JavaLoggerClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaLoggerClass {
-    fn class_name(&self) -> &str {
-        "java/util/logging/Logger"
-    }
-}
-
 /// This <tt>Handler</tt> publishes log records to <tt>System.err</tt>. By default the <tt>SimpleFormatter</tt> is used to generate brief summaries.
 /// <p><b>Configuration:</b> By default each <tt>ConsoleHandler</tt> is initialized using the following <tt>LogManager</tt> configuration properties where <code>&lt;handler-name&gt;</code> refers to the fully-qualified class name of the handler. If properties are not defined (or have invalid values) then the specified default values are used.</p>
 /// <ul>
@@ -2830,6 +2778,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaLoggerClass {
 /// <li>com.foo.MyHandler.formatter=java.util.logging.SimpleFormatter</li>
 /// </ul>
 /// <p></p>
+#[repr(C)]
 pub struct JavaConsoleHandler<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3195,17 +3144,10 @@ impl<'mc> Into<crate::util::logging::JavaStreamHandler<'mc>> for JavaConsoleHand
         )
     }
 }
-
-pub struct JavaConsoleHandlerClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaConsoleHandlerClass {
-    fn class_name(&self) -> &str {
-        "java/util/logging/ConsoleHandler"
-    }
-}
-
 /// The permission which the SecurityManager will check when code that is running with a SecurityManager calls one of the logging control methods (such as Logger.setLevel).
 /// <p>Currently there is only one named LoggingPermission. This is "control" and it grants the ability to control the logging configuration, for example by adding or removing Handlers, by adding or removing Filters, or by changing logging levels.</p>
 /// <p>Programmers do not normally create LoggingPermission objects directly. Instead they are created by the security policy code based on reading the security policy file.</p>
+#[repr(C)]
 pub struct JavaLoggingPermission<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3446,17 +3388,11 @@ impl<'mc> std::string::ToString for JavaLoggingPermission<'mc> {
     }
 }
 
-pub struct JavaLoggingPermissionClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaLoggingPermissionClass {
-    fn class_name(&self) -> &str {
-        "java/util/logging/LoggingPermission"
-    }
-}
-
 /// A Filter can be used to provide fine grain control over what is logged, beyond the control provided by log levels.
 /// <p>Each Logger and each Handler can have a filter associated with it. The Logger or Handler will call the isLoggable method to check if a given LogRecord should be published. If isLoggable returns false, the LogRecord will be discarded.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct JavaFilter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3522,14 +3458,6 @@ impl<'mc> JavaFilter<'mc> {
             .unwrap()
     }
 }
-
-pub struct JavaFilterClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaFilterClass {
-    fn class_name(&self) -> &str {
-        "java/util/logging/Filter"
-    }
-}
-
 /// LogRecord objects are used to pass logging requests between the logging framework and individual log Handlers.
 /// <p>When a LogRecord is passed into the logging framework it logically belongs to the framework and should no longer be used or updated by the client application.</p>
 /// <p>Note that if the client application has not specified an explicit source method name and source class name, then the LogRecord class will infer them automatically when they are first accessed (due to a call on getSourceMethodName or getSourceClassName) by analyzing the call stack. Therefore, if a logging Handler wants to pass off a LogRecord to another thread, or to transmit it over RMI, and if it wishes to subsequently obtain method name or class name information it should call one of getSourceClassName or getSourceMethodName to force the values to be filled in.</p>
@@ -3539,6 +3467,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaFilterClass {
 /// <li>Because objects in the parameters array may not be serializable, during serialization all objects in the parameters array are written as the corresponding Strings (using Object.toString).</li>
 /// <li>The ResourceBundle is not transmitted as part of the serialized form, but the resource bundle name is, and the recipient object's readObject method will attempt to locate a suitable resource bundle.</li>
 /// </ul>
+#[repr(C)]
 pub struct JavaLogRecord<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4029,13 +3958,6 @@ impl<'mc> std::string::ToString for JavaLogRecord<'mc> {
     }
 }
 
-pub struct JavaLogRecordClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaLogRecordClass {
-    fn class_name(&self) -> &str {
-        "java/util/logging/LogRecord"
-    }
-}
-
 /// Stream based logging <tt>Handler</tt>.
 /// <p>This is primarily intended as a base class or support class to be used in implementing other logging <tt>Handlers</tt>.</p>
 /// <p><tt>LogRecords</tt> are published to a given <tt>java.io.OutputStream</tt>.</p>
@@ -4057,6 +3979,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaLogRecordClass {
 /// <li>com.foo.MyHandler.formatter=java.util.logging.SimpleFormatter</li>
 /// </ul>
 /// <p></p>
+#[repr(C)]
 pub struct JavaStreamHandler<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4437,14 +4360,6 @@ impl<'mc> Into<crate::util::logging::JavaHandler<'mc>> for JavaStreamHandler<'mc
             .expect("Error converting JavaStreamHandler into crate::util::logging::JavaHandler")
     }
 }
-
-pub struct JavaStreamHandlerClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaStreamHandlerClass {
-    fn class_name(&self) -> &str {
-        "java/util/logging/StreamHandler"
-    }
-}
-
 /// The Level class defines a set of standard logging levels that can be used to control logging output. The logging Level objects are ordered and are specified by ordered integers. Enabling logging at a given level also enables logging at all higher levels.
 /// <p>Clients should normally use the predefined Level constants such as Level.SEVERE.</p>
 /// <p>The levels in descending order are:</p>
@@ -4458,6 +4373,7 @@ impl blackboxmc_general::JNIProvidesClassName for JavaStreamHandlerClass {
 /// <li>FINEST (lowest value)</li>
 /// </ul> In addition there is a level OFF that can be used to turn off logging, and a level ALL that can be used to enable logging of all messages.
 /// <p>It is possible for third parties to define additional logging levels by subclassing Level. In such cases subclasses should take care to chose unique integer level values and to ensure that they maintain the Object uniqueness property across serialization by defining a suitable readResolve method.</p>
+#[repr(C)]
 pub struct JavaLevel<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4669,12 +4585,5 @@ impl<'mc> std::string::ToString for JavaLevel<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling JavaLevel.toString: {}", err),
         }
-    }
-}
-
-pub struct JavaLevelClass;
-impl blackboxmc_general::JNIProvidesClassName for JavaLevelClass {
-    fn class_name(&self) -> &str {
-        "java/util/logging/Level"
     }
 }

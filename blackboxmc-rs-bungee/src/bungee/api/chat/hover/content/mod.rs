@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIInstantiatableEnum;
 use color_eyre::eyre::Result;
 
+#[repr(C)]
 pub struct Item<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 
     impl<'mc> JNIRaw<'mc> for Item<'mc> {
@@ -266,14 +267,7 @@ crate::bungee::api::chat::hover::content::Content::from_raw(&self.jni_ref(), sel
    }
 }
 
-        pub struct ItemClass;
-        impl blackboxmc_general::JNIProvidesClassName for ItemClass {
-            fn class_name(&self) -> &str {
-                "net/md_5/bungee/api/chat/hover/content/Item"
-            }
-        }
-    
-
+#[repr(C)]
 pub struct Entity<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 
     impl<'mc> JNIRaw<'mc> for Entity<'mc> {
@@ -536,14 +530,7 @@ crate::bungee::api::chat::hover::content::Content::from_raw(&self.jni_ref(), sel
    }
 }
 
-        pub struct EntityClass;
-        impl blackboxmc_general::JNIProvidesClassName for EntityClass {
-            fn class_name(&self) -> &str {
-                "net/md_5/bungee/api/chat/hover/content/Entity"
-            }
-        }
-    
-
+#[repr(C)]
 pub struct ItemSerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 
     impl<'mc> JNIRaw<'mc> for ItemSerializer<'mc> {
@@ -758,14 +745,7 @@ self.1
    }
 }
 
-        pub struct ItemSerializerClass;
-        impl blackboxmc_general::JNIProvidesClassName for ItemSerializerClass {
-            fn class_name(&self) -> &str {
-                "net/md_5/bungee/api/chat/hover/content/ItemSerializer"
-            }
-        }
-    
-
+#[repr(C)]
 pub struct TextSerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 
     impl<'mc> JNIRaw<'mc> for TextSerializer<'mc> {
@@ -980,14 +960,7 @@ self.1
    }
 }
 
-        pub struct TextSerializerClass;
-        impl blackboxmc_general::JNIProvidesClassName for TextSerializerClass {
-            fn class_name(&self) -> &str {
-                "net/md_5/bungee/api/chat/hover/content/TextSerializer"
-            }
-        }
-    
-
+#[repr(C)]
 pub struct Content<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 
     impl<'mc> JNIRaw<'mc> for Content<'mc> {
@@ -1174,14 +1147,7 @@ Ok(
         }
         
 
-        pub struct ContentClass;
-        impl blackboxmc_general::JNIProvidesClassName for ContentClass {
-            fn class_name(&self) -> &str {
-                "net/md_5/bungee/api/chat/hover/content/Content"
-            }
-        }
-    
-
+#[repr(C)]
 pub struct Text<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 
     impl<'mc> JNIRaw<'mc> for Text<'mc> {
@@ -1392,14 +1358,7 @@ crate::bungee::api::chat::hover::content::Content::from_raw(&self.jni_ref(), sel
    }
 }
 
-        pub struct TextClass;
-        impl blackboxmc_general::JNIProvidesClassName for TextClass {
-            fn class_name(&self) -> &str {
-                "net/md_5/bungee/api/chat/hover/content/Text"
-            }
-        }
-    
-
+#[repr(C)]
 pub struct EntitySerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 
     impl<'mc> JNIRaw<'mc> for EntitySerializer<'mc> {
@@ -1613,11 +1572,3 @@ fn into(self) -> jni::objects::JObject<'mc> {
 self.1
    }
 }
-
-        pub struct EntitySerializerClass;
-        impl blackboxmc_general::JNIProvidesClassName for EntitySerializerClass {
-            fn class_name(&self) -> &str {
-                "net/md_5/bungee/api/chat/hover/content/EntitySerializer"
-            }
-        }
-    

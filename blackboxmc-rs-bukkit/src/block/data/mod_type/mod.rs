@@ -6,6 +6,7 @@ use color_eyre::eyre::Result;
 /// 'short' denotes this piston head is shorter than the usual amount because it is currently retracting.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PistonHead<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -487,17 +488,10 @@ impl<'mc> Into<crate::block::data::mod_type::TechnicalPiston<'mc>> for PistonHea
         )
     }
 }
-
-pub struct PistonHeadClass;
-impl blackboxmc_general::JNIProvidesClassName for PistonHeadClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/PistonHead"
-    }
-}
-
 /// 'type' represents which part of a double chest this block is, or if it is a single chest.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Chest<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -984,15 +978,9 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Chest<'mc> {
     }
 }
 
-pub struct ChestClass;
-impl blackboxmc_general::JNIProvidesClassName for ChestClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Chest"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct GlassPane<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1447,15 +1435,9 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for GlassPane<'mc> {
     }
 }
 
-pub struct GlassPaneClass;
-impl blackboxmc_general::JNIProvidesClassName for GlassPaneClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/GlassPane"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct TripwireHook<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1926,15 +1908,9 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for TripwireHook<'mc> {
     }
 }
 
-pub struct TripwireHookClass;
-impl blackboxmc_general::JNIProvidesClassName for TripwireHookClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/TripwireHook"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PitcherCrop<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2376,17 +2352,10 @@ impl<'mc> Into<crate::block::data::Bisected<'mc>> for PitcherCrop<'mc> {
             .expect("Error converting PitcherCrop into crate::block::data::Bisected")
     }
 }
-
-pub struct PitcherCropClass;
-impl blackboxmc_general::JNIProvidesClassName for PitcherCropClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/PitcherCrop"
-    }
-}
-
 /// 'has_book' is a quick flag to check whether this lectern has a book inside it.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Lectern<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2837,17 +2806,10 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Lectern<'mc> {
             .expect("Error converting Lectern into crate::block::data::Powerable")
     }
 }
-
-pub struct LecternClass;
-impl blackboxmc_general::JNIProvidesClassName for LecternClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Lectern"
-    }
-}
-
 /// 'inverted' denotes whether this daylight detector is in the inverted mode, i.e. activates in the absence of light rather than presence."
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct DaylightDetector<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3264,17 +3226,10 @@ impl<'mc> Into<crate::block::data::AnaloguePowerable<'mc>> for DaylightDetector<
             .expect("Error converting DaylightDetector into crate::block::data::AnaloguePowerable")
     }
 }
-
-pub struct DaylightDetectorClass;
-impl blackboxmc_general::JNIProvidesClassName for DaylightDetectorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/DaylightDetector"
-    }
-}
-
 /// 'mode' represents the different modes in which this structure block may operate.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct StructureBlock<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3682,17 +3637,10 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for StructureBlock<'mc> {
             .expect("Error converting StructureBlock into crate::block::data::BlockData")
     }
 }
-
-pub struct StructureBlockClass;
-impl blackboxmc_general::JNIProvidesClassName for StructureBlockClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/StructureBlock"
-    }
-}
-
 /// 'flower_amount' represents the number of petals.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PinkPetals<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4140,17 +4088,10 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for PinkPetals<'mc> {
             .expect("Error converting PinkPetals into crate::block::data::Directional")
     }
 }
-
-pub struct PinkPetalsClass;
-impl blackboxmc_general::JNIProvidesClassName for PinkPetalsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/PinkPetals"
-    }
-}
-
 /// 'extended' denotes whether the piston head is currently extended or not.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Piston<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4586,17 +4527,10 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for Piston<'mc> {
             .expect("Error converting Piston into crate::block::data::Directional")
     }
 }
-
-pub struct PistonClass;
-impl blackboxmc_general::JNIProvidesClassName for PistonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Piston"
-    }
-}
-
 /// 'unstable' indicates whether this TNT will explode on punching.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct TNT<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4980,15 +4914,9 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for TNT<'mc> {
     }
 }
 
-pub struct TNTClass;
-impl blackboxmc_general::JNIProvidesClassName for TNTClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/TNT"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Fence<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5442,14 +5370,6 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Fence<'mc> {
             .expect("Error converting Fence into crate::block::data::Waterlogged")
     }
 }
-
-pub struct FenceClass;
-impl blackboxmc_general::JNIProvidesClassName for FenceClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Fence"
-    }
-}
-
 /// The tilt of a leaf.
 #[derive(PartialEq, Eq)]
 pub enum BigDripleafTiltEnum {
@@ -5473,6 +5393,7 @@ impl<'mc> std::fmt::Display for BigDripleafTilt<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct BigDripleafTilt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5578,14 +5499,6 @@ impl<'mc> BigDripleafTilt<'mc> {
             .unwrap()
     }
 }
-
-pub struct BigDripleafTiltClass;
-impl blackboxmc_general::JNIProvidesClassName for BigDripleafTiltClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/BigDripleaf$Tilt"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum HingeEnum {
     Left,
@@ -5604,6 +5517,7 @@ impl<'mc> std::fmt::Display for Hinge<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Hinge<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5702,14 +5616,6 @@ impl<'mc> Hinge<'mc> {
             .unwrap()
     }
 }
-
-pub struct HingeClass;
-impl blackboxmc_general::JNIProvidesClassName for HingeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Hinge"
-    }
-}
-
 /// The different heights a face of a wall may have.
 #[derive(PartialEq, Eq)]
 pub enum WallHeightEnum {
@@ -5731,6 +5637,7 @@ impl<'mc> std::fmt::Display for WallHeight<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct WallHeight<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5831,17 +5738,10 @@ impl<'mc> WallHeight<'mc> {
             .unwrap()
     }
 }
-
-pub struct WallHeightClass;
-impl blackboxmc_general::JNIProvidesClassName for WallHeightClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Wall$Height"
-    }
-}
-
 /// 'bloom' indicates whether the sculk catalyst is actively spreading the sculk or not.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct SculkCatalyst<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6224,14 +6124,6 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for SculkCatalyst<'mc> {
             .expect("Error converting SculkCatalyst into crate::block::data::BlockData")
     }
 }
-
-pub struct SculkCatalystClass;
-impl blackboxmc_general::JNIProvidesClassName for SculkCatalystClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/SculkCatalyst"
-    }
-}
-
 /// The directions the Jigsaw can be oriented.
 #[derive(PartialEq, Eq)]
 pub enum JigsawOrientationEnum {
@@ -6271,6 +6163,7 @@ impl<'mc> std::fmt::Display for JigsawOrientation<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct JigsawOrientation<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6392,14 +6285,6 @@ impl<'mc> JigsawOrientation<'mc> {
             .unwrap()
     }
 }
-
-pub struct JigsawOrientationClass;
-impl blackboxmc_general::JNIProvidesClassName for JigsawOrientationClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Jigsaw$Orientation"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum OrientationEnum {
     DownEast,
@@ -6438,6 +6323,7 @@ impl<'mc> std::fmt::Display for Orientation<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Orientation<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6557,15 +6443,9 @@ impl<'mc> Orientation<'mc> {
     }
 }
 
-pub struct OrientationClass;
-impl blackboxmc_general::JNIProvidesClassName for OrientationClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Orientation"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Furnace<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7007,19 +6887,12 @@ impl<'mc> Into<crate::block::data::Lightable<'mc>> for Furnace<'mc> {
             .expect("Error converting Furnace into crate::block::data::Lightable")
     }
 }
-
-pub struct FurnaceClass;
-impl blackboxmc_general::JNIProvidesClassName for FurnaceClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Furnace"
-    }
-}
-
 /// 'stage' represents the growth stage of a sapling.
 ///
 /// When the sapling reaches <a href="#getMaximumStage()"><code>getMaximumStage()</code></a> it will attempt to grow into a tree as the next stage.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Sapling<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7411,14 +7284,6 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Sapling<'mc> {
             .expect("Error converting Sapling into crate::block::data::BlockData")
     }
 }
-
-pub struct SaplingClass;
-impl blackboxmc_general::JNIProvidesClassName for SaplingClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Sapling"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum ThicknessEnum {
     TipMerge,
@@ -7443,6 +7308,7 @@ impl<'mc> std::fmt::Display for Thickness<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Thickness<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7547,14 +7413,6 @@ impl<'mc> Thickness<'mc> {
             .unwrap()
     }
 }
-
-pub struct ThicknessClass;
-impl blackboxmc_general::JNIProvidesClassName for ThicknessClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Thickness"
-    }
-}
-
 /// The Phase of the sensor.
 #[derive(PartialEq, Eq)]
 pub enum SculkSensorPhaseEnum {
@@ -7576,6 +7434,7 @@ impl<'mc> std::fmt::Display for SculkSensorPhase<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct SculkSensorPhase<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7680,15 +7539,9 @@ impl<'mc> SculkSensorPhase<'mc> {
     }
 }
 
-pub struct SculkSensorPhaseClass;
-impl blackboxmc_general::JNIProvidesClassName for SculkSensorPhaseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/SculkSensor$Phase"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct WallHangingSign<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8133,17 +7986,10 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for WallHangingSign<'mc> {
             .expect("Error converting WallHangingSign into crate::block::data::Waterlogged")
     }
 }
-
-pub struct WallHangingSignClass;
-impl blackboxmc_general::JNIProvidesClassName for WallHangingSignClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/WallHangingSign"
-    }
-}
-
 /// 'type' represents the type of piston which this (technical) block corresponds to.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct TechnicalPiston<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8606,15 +8452,9 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for TechnicalPiston<'mc> {
     }
 }
 
-pub struct TechnicalPistonClass;
-impl blackboxmc_general::JNIProvidesClassName for TechnicalPistonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/TechnicalPiston"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Switch<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9153,14 +8993,6 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Switch<'mc> {
             .expect("Error converting Switch into crate::block::data::Powerable")
     }
 }
-
-pub struct SwitchClass;
-impl blackboxmc_general::JNIProvidesClassName for SwitchClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Switch"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum PartEnum {
     Head,
@@ -9179,6 +9011,7 @@ impl<'mc> std::fmt::Display for Part<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Part<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9277,17 +9110,10 @@ impl<'mc> Part<'mc> {
             .unwrap()
     }
 }
-
-pub struct PartClass;
-impl blackboxmc_general::JNIProvidesClassName for PartClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Part"
-    }
-}
-
 /// 'drag' indicates whether a force will be applied on entities moving through this block.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct BubbleColumn<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9670,17 +9496,10 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for BubbleColumn<'mc> {
             .expect("Error converting BubbleColumn into crate::block::data::BlockData")
     }
 }
-
-pub struct BubbleColumnClass;
-impl blackboxmc_general::JNIProvidesClassName for BubbleColumnClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/BubbleColumn"
-    }
-}
-
 /// 'attachment' denotes how the bell is attached to its block.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Bell<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10166,17 +9985,10 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Bell<'mc> {
             .expect("Error converting Bell into crate::block::data::Powerable")
     }
 }
-
-pub struct BellClass;
-impl blackboxmc_general::JNIProvidesClassName for BellClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Bell"
-    }
-}
-
 /// 'leaves' represents the size of the leaves on this bamboo block.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Bamboo<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10649,17 +10461,10 @@ impl<'mc> Into<crate::block::data::mod_type::Sapling<'mc>> for Bamboo<'mc> {
             .expect("Error converting Bamboo into crate::block::data::mod_type::Sapling")
     }
 }
-
-pub struct BambooClass;
-impl blackboxmc_general::JNIProvidesClassName for BambooClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Bamboo"
-    }
-}
-
 /// 'orientation' is the direction the block is facing.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Jigsaw<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11066,15 +10871,9 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Jigsaw<'mc> {
     }
 }
 
-pub struct JigsawClass;
-impl blackboxmc_general::JNIProvidesClassName for JigsawClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Jigsaw"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Chain<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11517,15 +11316,9 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Chain<'mc> {
     }
 }
 
-pub struct ChainClass;
-impl blackboxmc_general::JNIProvidesClassName for ChainClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Chain"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Lantern<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11936,17 +11729,10 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Lantern<'mc> {
             .expect("Error converting Lantern into crate::block::data::Waterlogged")
     }
 }
-
-pub struct LanternClass;
-impl blackboxmc_general::JNIProvidesClassName for LanternClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Lantern"
-    }
-}
-
 /// Similar to <a href="../Powerable.html" title="interface in org.bukkit.block.data"><code>Powerable</code></a>, 'triggered' indicates whether or not the dispenser is currently activated.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Dispenser<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12382,14 +12168,6 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for Dispenser<'mc> {
             .expect("Error converting Dispenser into crate::block::data::Directional")
     }
 }
-
-pub struct DispenserClass;
-impl blackboxmc_general::JNIProvidesClassName for DispenserClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Dispenser"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum ShapeEnum {
     Straight,
@@ -12414,6 +12192,7 @@ impl<'mc> std::fmt::Display for Shape<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Shape<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12518,14 +12297,6 @@ impl<'mc> Shape<'mc> {
             .unwrap()
     }
 }
-
-pub struct ShapeClass;
-impl blackboxmc_general::JNIProvidesClassName for ShapeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Shape"
-    }
-}
-
 /// Operating mode of a structure block.
 #[derive(PartialEq, Eq)]
 pub enum StructureBlockModeEnum {
@@ -12549,6 +12320,7 @@ impl<'mc> std::fmt::Display for StructureBlockMode<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct StructureBlockMode<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12654,17 +12426,10 @@ impl<'mc> StructureBlockMode<'mc> {
             .unwrap()
     }
 }
-
-pub struct StructureBlockModeClass;
-impl blackboxmc_general::JNIProvidesClassName for StructureBlockModeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/StructureBlock$Mode"
-    }
-}
-
 /// 'charges' represents the amount of times the anchor may still be used.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct RespawnAnchor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13059,19 +12824,12 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for RespawnAnchor<'mc> {
             .expect("Error converting RespawnAnchor into crate::block::data::BlockData")
     }
 }
-
-pub struct RespawnAnchorClass;
-impl blackboxmc_general::JNIProvidesClassName for RespawnAnchorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/RespawnAnchor"
-    }
-}
-
 /// 'bites' represents the amount of bites which have been taken from this slice of cake.
 ///
 /// A value of 0 indicates that the cake has not been eaten, whilst a value of <a href="#getMaximumBites()"><code>getMaximumBites()</code></a> indicates that it is all gone :(
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Cake<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13463,17 +13221,10 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Cake<'mc> {
             .expect("Error converting Cake into crate::block::data::BlockData")
     }
 }
-
-pub struct CakeClass;
-impl blackboxmc_general::JNIProvidesClassName for CakeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Cake"
-    }
-}
-
 /// 'eye' denotes whether this end portal frame has been activated by having an eye of ender placed in it.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct EndPortalFrame<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13912,15 +13663,9 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for EndPortalFrame<'mc> {
     }
 }
 
-pub struct EndPortalFrameClass;
-impl blackboxmc_general::JNIProvidesClassName for EndPortalFrameClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/EndPortalFrame"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct DecoratedPot<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14363,15 +14108,9 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for DecoratedPot<'mc> {
     }
 }
 
-pub struct DecoratedPotClass;
-impl blackboxmc_general::JNIProvidesClassName for DecoratedPotClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/DecoratedPot"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct GlowLichen<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14825,14 +14564,6 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for GlowLichen<'mc> {
             .expect("Error converting GlowLichen into crate::block::data::Waterlogged")
     }
 }
-
-pub struct GlowLichenClass;
-impl blackboxmc_general::JNIProvidesClassName for GlowLichenClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/GlowLichen"
-    }
-}
-
 /// The mode in which a comparator will operate in.
 #[derive(PartialEq, Eq)]
 pub enum ComparatorModeEnum {
@@ -14852,6 +14583,7 @@ impl<'mc> std::fmt::Display for ComparatorMode<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct ComparatorMode<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14954,15 +14686,9 @@ impl<'mc> ComparatorMode<'mc> {
     }
 }
 
-pub struct ComparatorModeClass;
-impl blackboxmc_general::JNIProvidesClassName for ComparatorModeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Comparator$Mode"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Observer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15404,14 +15130,6 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Observer<'mc> {
             .expect("Error converting Observer into crate::block::data::Powerable")
     }
 }
-
-pub struct ObserverClass;
-impl blackboxmc_general::JNIProvidesClassName for ObserverClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Observer"
-    }
-}
-
 /// What the bell is attached to.
 #[derive(PartialEq, Eq)]
 pub enum BellAttachmentEnum {
@@ -15435,6 +15153,7 @@ impl<'mc> std::fmt::Display for BellAttachment<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct BellAttachment<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15540,17 +15259,10 @@ impl<'mc> BellAttachment<'mc> {
             .unwrap()
     }
 }
-
-pub struct BellAttachmentClass;
-impl blackboxmc_general::JNIProvidesClassName for BellAttachmentClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Bell$Attachment"
-    }
-}
-
 /// 'shape' represents the texture and bounding box shape of these stairs.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Stairs<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16086,14 +15798,6 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Stairs<'mc> {
             .expect("Error converting Stairs into crate::block::data::Waterlogged")
     }
 }
-
-pub struct StairsClass;
-impl blackboxmc_general::JNIProvidesClassName for StairsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Stairs"
-    }
-}
-
 /// The hinge of a door.
 #[derive(PartialEq, Eq)]
 pub enum DoorHingeEnum {
@@ -16113,6 +15817,7 @@ impl<'mc> std::fmt::Display for DoorHinge<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct DoorHinge<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16212,15 +15917,9 @@ impl<'mc> DoorHinge<'mc> {
     }
 }
 
-pub struct DoorHingeClass;
-impl blackboxmc_general::JNIProvidesClassName for DoorHingeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Door$Hinge"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct CalibratedSculkSensor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16743,14 +16442,6 @@ impl<'mc> Into<crate::block::data::mod_type::SculkSensor<'mc>> for CalibratedScu
         )
     }
 }
-
-pub struct CalibratedSculkSensorClass;
-impl blackboxmc_general::JNIProvidesClassName for CalibratedSculkSensorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/CalibratedSculkSensor"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum FaceEnum {
     Floor,
@@ -16771,6 +16462,7 @@ impl<'mc> std::fmt::Display for Face<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Face<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16872,15 +16564,9 @@ impl<'mc> Face<'mc> {
     }
 }
 
-pub struct FaceClass;
-impl blackboxmc_general::JNIProvidesClassName for FaceClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Face"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct EnderChest<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17322,19 +17008,12 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for EnderChest<'mc> {
             .expect("Error converting EnderChest into crate::block::data::Waterlogged")
     }
 }
-
-pub struct EnderChestClass;
-impl blackboxmc_general::JNIProvidesClassName for EnderChestClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/EnderChest"
-    }
-}
-
 /// Similar to <a href="../Bisected.html" title="interface in org.bukkit.block.data"><code>Bisected</code></a>, 'part' denotes which half of the bed this block corresponds to.
 ///
 /// 'occupied' property is a quick flag to check if a player is currently sleeping in this bed block.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Bed<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17801,14 +17480,6 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for Bed<'mc> {
             .expect("Error converting Bed into crate::block::data::Directional")
     }
 }
-
-pub struct BedClass;
-impl blackboxmc_general::JNIProvidesClassName for BedClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Bed"
-    }
-}
-
 /// Type of this chest block.
 ///
 /// NB: Left and right are relative to the chest itself, i.e opposite to what a player placing the appropriate block would see.
@@ -17832,6 +17503,7 @@ impl<'mc> std::fmt::Display for ChestType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct ChestType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17933,15 +17605,9 @@ impl<'mc> ChestType<'mc> {
     }
 }
 
-pub struct ChestTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for ChestTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Chest$Type"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct AmethystCluster<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18386,19 +18052,12 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for AmethystCluster<'mc> {
             .expect("Error converting AmethystCluster into crate::block::data::Waterlogged")
     }
 }
-
-pub struct AmethystClusterClass;
-impl blackboxmc_general::JNIProvidesClassName for AmethystClusterClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/AmethystCluster"
-    }
-}
-
 /// 'instrument' is the type of sound made when this note block is activated.
 ///
 /// 'note' is the specified tuned pitch that the instrument will be played in.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct NoteBlock<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18855,14 +18514,6 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for NoteBlock<'mc> {
             .expect("Error converting NoteBlock into crate::block::data::Powerable")
     }
 }
-
-pub struct NoteBlockClass;
-impl blackboxmc_general::JNIProvidesClassName for NoteBlockClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/NoteBlock"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum ConnectionEnum {
     Up,
@@ -18883,6 +18534,7 @@ impl<'mc> std::fmt::Display for Connection<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Connection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18984,15 +18636,9 @@ impl<'mc> Connection<'mc> {
     }
 }
 
-pub struct ConnectionClass;
-impl blackboxmc_general::JNIProvidesClassName for ConnectionClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Connection"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct MangrovePropagule<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19480,17 +19126,10 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for MangrovePropagule<'mc> 
             .expect("Error converting MangrovePropagule into crate::block::data::Waterlogged")
     }
 }
-
-pub struct MangrovePropaguleClass;
-impl blackboxmc_general::JNIProvidesClassName for MangrovePropaguleClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/MangrovePropagule"
-    }
-}
-
 /// 'sculk_sensor_phase' indicates the current operational phase of the sensor.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct SculkSensor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19955,17 +19594,10 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for SculkSensor<'mc> {
             .expect("Error converting SculkSensor into crate::block::data::Waterlogged")
     }
 }
-
-pub struct SculkSensorClass;
-impl blackboxmc_general::JNIProvidesClassName for SculkSensorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/SculkSensor"
-    }
-}
-
 /// 'tilt' indicates how far the leaf is tilted.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct BigDripleaf<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20447,15 +20079,9 @@ impl<'mc> Into<crate::block::data::mod_type::Dripleaf<'mc>> for BigDripleaf<'mc>
     }
 }
 
-pub struct BigDripleafClass;
-impl blackboxmc_general::JNIProvidesClassName for BigDripleafClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/BigDripleaf"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Ladder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20897,14 +20523,6 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Ladder<'mc> {
             .expect("Error converting Ladder into crate::block::data::Waterlogged")
     }
 }
-
-pub struct LadderClass;
-impl blackboxmc_general::JNIProvidesClassName for LadderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Ladder"
-    }
-}
-
 /// 'bottom' indicates whether the scaffolding is floating or not.
 ///
 /// 'distance' indicates the distance from a scaffolding block placed above a 'bottom' scaffold.
@@ -20912,6 +20530,7 @@ impl blackboxmc_general::JNIProvidesClassName for LadderClass {
 /// When 'distance' reaches <a href="#getMaximumDistance()"><code>getMaximumDistance()</code></a> the block will drop.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Scaffolding<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -21350,19 +20969,12 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Scaffolding<'mc> {
             .expect("Error converting Scaffolding into crate::block::data::Waterlogged")
     }
 }
-
-pub struct ScaffoldingClass;
-impl blackboxmc_general::JNIProvidesClassName for ScaffoldingClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Scaffolding"
-    }
-}
-
 /// Interface to the 'has_bottle_0', 'has_bottle_1', 'has_bottle_2' flags on a brewing stand which indicate which bottles are rendered on the outside.
 ///
 /// Stand may have 0, 1... <a href="#getMaximumBottles()"><code>getMaximumBottles()</code></a>-1 bottles.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct BrewingStand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -21779,17 +21391,10 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for BrewingStand<'mc> {
             .expect("Error converting BrewingStand into crate::block::data::BlockData")
     }
 }
-
-pub struct BrewingStandClass;
-impl blackboxmc_general::JNIProvidesClassName for BrewingStandClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/BrewingStand"
-    }
-}
-
 /// md_5's mixtape.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Fire<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -22252,19 +21857,12 @@ impl<'mc> Into<crate::block::data::MultipleFacing<'mc>> for Fire<'mc> {
             .expect("Error converting Fire into crate::block::data::MultipleFacing")
     }
 }
-
-pub struct FireClass;
-impl blackboxmc_general::JNIProvidesClassName for FireClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Fire"
-    }
-}
-
 /// Similar to <a href="../Powerable.html" title="interface in org.bukkit.block.data"><code>Powerable</code></a>, 'enabled' indicates whether or not the hopper is currently activated.
 ///
 /// Unlike most other blocks, a hopper is only enabled when it is <b>not</b> receiving any power.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Hopper<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -22700,14 +22298,6 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for Hopper<'mc> {
             .expect("Error converting Hopper into crate::block::data::Directional")
     }
 }
-
-pub struct HopperClass;
-impl blackboxmc_general::JNIProvidesClassName for HopperClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Hopper"
-    }
-}
-
 /// 'delay' is the propagation delay of a repeater, i.e. how many ticks before it will be activated from a current change and propagate it to the next block.
 ///
 /// Delay may not be lower than <a href="#getMinimumDelay()"><code>getMinimumDelay()</code></a> or higher than <a href="#getMaximumDelay()"><code>getMaximumDelay()</code></a>.
@@ -22717,6 +22307,7 @@ impl blackboxmc_general::JNIProvidesClassName for HopperClass {
 /// A locked repeater will not change its output until it is unlocked. In game, a locked repeater is created by having a constant current perpendicularly entering the block.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Repeater<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -23220,17 +22811,10 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Repeater<'mc> {
             .expect("Error converting Repeater into crate::block::data::Powerable")
     }
 }
-
-pub struct RepeaterClass;
-impl blackboxmc_general::JNIProvidesClassName for RepeaterClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Repeater"
-    }
-}
-
 /// 'type' represents what state the slab is in - either top, bottom, or a double slab occupying the full block.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Slab<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -23657,19 +23241,12 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Slab<'mc> {
             .expect("Error converting Slab into crate::block::data::Waterlogged")
     }
 }
-
-pub struct SlabClass;
-impl blackboxmc_general::JNIProvidesClassName for SlabClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Slab"
-    }
-}
-
 /// 'layers' represents the amount of layers of snow which are present in this block.
 ///
 /// May not be lower than <a href="#getMinimumLayers()"><code>getMinimumLayers()</code></a> or higher than <a href="#getMaximumLayers()"><code>getMaximumLayers()</code></a>.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Snow<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24076,14 +23653,6 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Snow<'mc> {
             .expect("Error converting Snow into crate::block::data::BlockData")
     }
 }
-
-pub struct SnowClass;
-impl blackboxmc_general::JNIProvidesClassName for SnowClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Snow"
-    }
-}
-
 /// The way in which a redstone wire can connect to an adjacent block face.
 #[derive(PartialEq, Eq)]
 pub enum RedstoneWireConnectionEnum {
@@ -24105,6 +23674,7 @@ impl<'mc> std::fmt::Display for RedstoneWireConnection<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct RedstoneWireConnection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24209,14 +23779,6 @@ impl<'mc> RedstoneWireConnection<'mc> {
             .unwrap()
     }
 }
-
-pub struct RedstoneWireConnectionClass;
-impl blackboxmc_general::JNIProvidesClassName for RedstoneWireConnectionClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/RedstoneWire$Connection"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum AttachmentEnum {
     Floor,
@@ -24239,6 +23801,7 @@ impl<'mc> std::fmt::Display for Attachment<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Attachment<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24342,15 +23905,9 @@ impl<'mc> Attachment<'mc> {
     }
 }
 
-pub struct AttachmentClass;
-impl blackboxmc_general::JNIProvidesClassName for AttachmentClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Attachment"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Cocoa<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24801,17 +24358,10 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for Cocoa<'mc> {
             .expect("Error converting Cocoa into crate::block::data::Directional")
     }
 }
-
-pub struct CocoaClass;
-impl blackboxmc_general::JNIProvidesClassName for CocoaClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Cocoa"
-    }
-}
-
 /// 'mode' indicates what mode this comparator will operate in.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Comparator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -25297,17 +24847,10 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Comparator<'mc> {
             .expect("Error converting Comparator into crate::block::data::Powerable")
     }
 }
-
-pub struct ComparatorClass;
-impl blackboxmc_general::JNIProvidesClassName for ComparatorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Comparator"
-    }
-}
-
 /// A type of minecart rail which interacts with redstone in one way or another.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct RedstoneRail<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -25773,17 +25316,10 @@ impl<'mc> Into<crate::block::data::Rail<'mc>> for RedstoneRail<'mc> {
             .expect("Error converting RedstoneRail into crate::block::data::Rail")
     }
 }
-
-pub struct RedstoneRailClass;
-impl blackboxmc_general::JNIProvidesClassName for RedstoneRailClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/RedstoneRail"
-    }
-}
-
 /// 'berries' indicates whether the block has berries.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct CaveVinesPlant<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -26169,15 +25705,9 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for CaveVinesPlant<'mc> {
     }
 }
 
-pub struct CaveVinesPlantClass;
-impl blackboxmc_general::JNIProvidesClassName for CaveVinesPlantClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/CaveVinesPlant"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Light<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -26598,15 +26128,9 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Light<'mc> {
     }
 }
 
-pub struct LightClass;
-impl blackboxmc_general::JNIProvidesClassName for LightClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Light"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct SmallDripleaf<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -27093,15 +26617,9 @@ impl<'mc> Into<crate::block::data::Bisected<'mc>> for SmallDripleaf<'mc> {
     }
 }
 
-pub struct SmallDripleafClass;
-impl blackboxmc_general::JNIProvidesClassName for SmallDripleafClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/SmallDripleaf"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct TrapDoor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -27650,15 +27168,9 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for TrapDoor<'mc> {
     }
 }
 
-pub struct TrapDoorClass;
-impl blackboxmc_general::JNIProvidesClassName for TrapDoorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/TrapDoor"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Grindstone<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -28123,14 +27635,6 @@ impl<'mc> Into<crate::block::data::FaceAttachable<'mc>> for Grindstone<'mc> {
             .expect("Error converting Grindstone into crate::block::data::FaceAttachable")
     }
 }
-
-pub struct GrindstoneClass;
-impl blackboxmc_general::JNIProvidesClassName for GrindstoneClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Grindstone"
-    }
-}
-
 /// Represents the thickness of the dripstone, corresponding to its position within a multi-block dripstone formation.
 #[derive(PartialEq, Eq)]
 pub enum PointedDripstoneThicknessEnum {
@@ -28156,6 +27660,7 @@ impl<'mc> std::fmt::Display for PointedDripstoneThickness<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct PointedDripstoneThickness<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -28266,17 +27771,10 @@ impl<'mc> PointedDripstoneThickness<'mc> {
             .unwrap()
     }
 }
-
-pub struct PointedDripstoneThicknessClass;
-impl blackboxmc_general::JNIProvidesClassName for PointedDripstoneThicknessClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/PointedDripstone$Thickness"
-    }
-}
-
 /// 'honey_level' represents the amount of honey stored in the hive.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Beehive<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -28725,15 +28223,9 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for Beehive<'mc> {
     }
 }
 
-pub struct BeehiveClass;
-impl blackboxmc_general::JNIProvidesClassName for BeehiveClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Beehive"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct CoralWallFan<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -29176,15 +28668,9 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for CoralWallFan<'mc> {
     }
 }
 
-pub struct CoralWallFanClass;
-impl blackboxmc_general::JNIProvidesClassName for CoralWallFanClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/CoralWallFan"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct SculkVein<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -29638,14 +29124,6 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for SculkVein<'mc> {
             .expect("Error converting SculkVein into crate::block::data::Waterlogged")
     }
 }
-
-pub struct SculkVeinClass;
-impl blackboxmc_general::JNIProvidesClassName for SculkVeinClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/SculkVein"
-    }
-}
-
 /// The type of the slab.
 #[derive(PartialEq, Eq)]
 pub enum SlabTypeEnum {
@@ -29667,6 +29145,7 @@ impl<'mc> std::fmt::Display for SlabType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct SlabType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -29767,17 +29246,10 @@ impl<'mc> SlabType<'mc> {
             .unwrap()
     }
 }
-
-pub struct SlabTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for SlabTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Slab$Type"
-    }
-}
-
 /// 'disarmed' denotes that the tripwire was broken with shears and will not subsequently produce a current when destroyed.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Tripwire<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -30281,17 +29753,10 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Tripwire<'mc> {
             .expect("Error converting Tripwire into crate::block::data::Powerable")
     }
 }
-
-pub struct TripwireClass;
-impl blackboxmc_general::JNIProvidesClassName for TripwireClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Tripwire"
-    }
-}
-
 /// This class encompasses the 'north', 'east', 'south', 'west', height flags which are used to set the height of a wall. 'up' denotes whether the well has a center post.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Wall<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -30756,14 +30221,6 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Wall<'mc> {
             .expect("Error converting Wall into crate::block::data::Waterlogged")
     }
 }
-
-pub struct WallClass;
-impl blackboxmc_general::JNIProvidesClassName for WallClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Wall"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum PhaseEnum {
     Inactive,
@@ -30784,6 +30241,7 @@ impl<'mc> std::fmt::Display for Phase<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Phase<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -30884,14 +30342,6 @@ impl<'mc> Phase<'mc> {
             .unwrap()
     }
 }
-
-pub struct PhaseClass;
-impl blackboxmc_general::JNIProvidesClassName for PhaseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Phase"
-    }
-}
-
 /// The shape of a stair block - used for constructing corners.
 #[derive(PartialEq, Eq)]
 pub enum StairsShapeEnum {
@@ -30917,6 +30367,7 @@ impl<'mc> std::fmt::Display for StairsShape<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct StairsShape<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -31021,19 +30472,12 @@ impl<'mc> StairsShape<'mc> {
             .unwrap()
     }
 }
-
-pub struct StairsShapeClass;
-impl blackboxmc_general::JNIProvidesClassName for StairsShapeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Stairs$Shape"
-    }
-}
-
 /// The 'moisture' level of farmland indicates how close it is to a water source (if any).
 ///
 /// A higher moisture level leads, to faster growth of crops on this block, but cannot be higher than <a href="#getMaximumMoisture()"><code>getMaximumMoisture()</code></a>.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Farmland<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -31428,17 +30872,10 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Farmland<'mc> {
             .expect("Error converting Farmland into crate::block::data::BlockData")
     }
 }
-
-pub struct FarmlandClass;
-impl blackboxmc_general::JNIProvidesClassName for FarmlandClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Farmland"
-    }
-}
-
 /// 'in_wall" indicates if the fence gate is attached to a wall, and if true the texture is lowered by a small amount to blend in better.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Gate<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -31930,14 +31367,6 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Gate<'mc> {
             .expect("Error converting Gate into crate::block::data::Powerable")
     }
 }
-
-pub struct GateClass;
-impl blackboxmc_general::JNIProvidesClassName for GateClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Gate"
-    }
-}
-
 /// The face to which a switch type block is stuck.
 #[derive(PartialEq, Eq)]
 pub enum SwitchFaceEnum {
@@ -31959,6 +31388,7 @@ impl<'mc> std::fmt::Display for SwitchFace<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct SwitchFace<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -32059,18 +31489,11 @@ impl<'mc> SwitchFace<'mc> {
             .unwrap()
     }
 }
-
-pub struct SwitchFaceClass;
-impl blackboxmc_general::JNIProvidesClassName for SwitchFaceClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Switch$Face"
-    }
-}
-
 /// 'can_summon' indicates whether the sculk shrieker can summon the warden.
 /// <p>'shrieking' indicated whether the sculk shrieker is shrieking or not.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct SculkShrieker<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -32497,14 +31920,6 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for SculkShrieker<'mc> {
             .expect("Error converting SculkShrieker into crate::block::data::Waterlogged")
     }
 }
-
-pub struct SculkShriekerClass;
-impl blackboxmc_general::JNIProvidesClassName for SculkShriekerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/SculkShrieker"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum LeavesEnum {
     None,
@@ -32525,6 +31940,7 @@ impl<'mc> std::fmt::Display for Leaves<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Leaves<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -32625,17 +32041,10 @@ impl<'mc> Leaves<'mc> {
             .unwrap()
     }
 }
-
-pub struct LeavesClass;
-impl blackboxmc_general::JNIProvidesClassName for LeavesClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Leaves"
-    }
-}
-
 /// 'signal_fire' denotes whether the fire is extra smokey due to having a hay bale placed beneath it.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Campfire<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -33128,15 +32537,9 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Campfire<'mc> {
     }
 }
 
-pub struct CampfireClass;
-impl blackboxmc_general::JNIProvidesClassName for CampfireClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Campfire"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Dripleaf<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -33578,17 +32981,10 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Dripleaf<'mc> {
             .expect("Error converting Dripleaf into crate::block::data::Waterlogged")
     }
 }
-
-pub struct DripleafClass;
-impl blackboxmc_general::JNIProvidesClassName for DripleafClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Dripleaf"
-    }
-}
-
 /// 'pickles' indicates the number of pickles in this block.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct SeaPickle<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -34018,15 +33414,9 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for SeaPickle<'mc> {
     }
 }
 
-pub struct SeaPickleClass;
-impl blackboxmc_general::JNIProvidesClassName for SeaPickleClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/SeaPickle"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct RedstoneWallTorch<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -34471,14 +33861,6 @@ impl<'mc> Into<crate::block::data::Lightable<'mc>> for RedstoneWallTorch<'mc> {
             .expect("Error converting RedstoneWallTorch into crate::block::data::Lightable")
     }
 }
-
-pub struct RedstoneWallTorchClass;
-impl blackboxmc_general::JNIProvidesClassName for RedstoneWallTorchClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/RedstoneWallTorch"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum HeightEnum {
     None,
@@ -34499,6 +33881,7 @@ impl<'mc> std::fmt::Display for Height<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Height<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -34599,14 +33982,6 @@ impl<'mc> Height<'mc> {
             .unwrap()
     }
 }
-
-pub struct HeightClass;
-impl blackboxmc_general::JNIProvidesClassName for HeightClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Height"
-    }
-}
-
 /// Horizontal half of a bed.
 #[derive(PartialEq, Eq)]
 pub enum BedPartEnum {
@@ -34626,6 +34001,7 @@ impl<'mc> std::fmt::Display for BedPart<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct BedPart<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -34725,15 +34101,9 @@ impl<'mc> BedPart<'mc> {
     }
 }
 
-pub struct BedPartClass;
-impl blackboxmc_general::JNIProvidesClassName for BedPartClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Bed$Part"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct WallSign<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -35175,17 +34545,10 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for WallSign<'mc> {
             .expect("Error converting WallSign into crate::block::data::Waterlogged")
     }
 }
-
-pub struct WallSignClass;
-impl blackboxmc_general::JNIProvidesClassName for WallSignClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/WallSign"
-    }
-}
-
 /// 'north', 'east', 'south', 'west' represent the types of connections this redstone wire has to adjacent blocks.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct RedstoneWire<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -35653,17 +35016,10 @@ impl<'mc> Into<crate::block::data::AnaloguePowerable<'mc>> for RedstoneWire<'mc>
             .expect("Error converting RedstoneWire into crate::block::data::AnaloguePowerable")
     }
 }
-
-pub struct RedstoneWireClass;
-impl blackboxmc_general::JNIProvidesClassName for RedstoneWireClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/RedstoneWire"
-    }
-}
-
 /// 'has_record' is a quick flag to check whether this jukebox has a record inside it.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Jukebox<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -36033,14 +35389,6 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Jukebox<'mc> {
             .expect("Error converting Jukebox into crate::block::data::BlockData")
     }
 }
-
-pub struct JukeboxClass;
-impl blackboxmc_general::JNIProvidesClassName for JukeboxClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Jukebox"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum ModeEnum {
     Compare,
@@ -36059,6 +35407,7 @@ impl<'mc> std::fmt::Display for Mode<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Mode<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -36158,15 +35507,9 @@ impl<'mc> Mode<'mc> {
     }
 }
 
-pub struct ModeClass;
-impl blackboxmc_general::JNIProvidesClassName for ModeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Mode"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Barrel<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -36608,17 +35951,10 @@ impl<'mc> Into<crate::block::data::Openable<'mc>> for Barrel<'mc> {
             .expect("Error converting Barrel into crate::block::data::Openable")
     }
 }
-
-pub struct BarrelClass;
-impl blackboxmc_general::JNIProvidesClassName for BarrelClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Barrel"
-    }
-}
-
 /// 'conditional' denotes whether this command block is conditional or not, i.e. will only execute if the preceeding command block also executed successfully.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct CommandBlock<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -37054,17 +36390,10 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for CommandBlock<'mc> {
             .expect("Error converting CommandBlock into crate::block::data::Directional")
     }
 }
-
-pub struct CommandBlockClass;
-impl blackboxmc_general::JNIProvidesClassName for CommandBlockClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/CommandBlock"
-    }
-}
-
 /// 'hinge' indicates which hinge this door is attached to and will rotate around when opened.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Door<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -37628,19 +36957,12 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Door<'mc> {
             .expect("Error converting Door into crate::block::data::Powerable")
     }
 }
-
-pub struct DoorClass;
-impl blackboxmc_general::JNIProvidesClassName for DoorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Door"
-    }
-}
-
 /// Interface to the 'slot_0_occupied', 'slow_1_occupied' ... 'slot_5_occupied' flags on a bookshelf which indicate which slots are occupied rendered on the outside.
 ///
 /// Block may have 0, 1... <a href="#getMaximumOccupiedSlots()"><code>getMaximumOccupiedSlots()</code></a>-1 occupied slots.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ChiseledBookshelf<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -38121,15 +37443,9 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for ChiseledBookshelf<'mc> 
     }
 }
 
-pub struct ChiseledBookshelfClass;
-impl blackboxmc_general::JNIProvidesClassName for ChiseledBookshelfClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/ChiseledBookshelf"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct HangingSign<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -38588,17 +37904,10 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for HangingSign<'mc> {
             .expect("Error converting HangingSign into crate::block::data::Waterlogged")
     }
 }
-
-pub struct HangingSignClass;
-impl blackboxmc_general::JNIProvidesClassName for HangingSignClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/HangingSign"
-    }
-}
-
 /// 'candles' represents the number of candles which are present.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Candle<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -39043,14 +38352,6 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Candle<'mc> {
             .expect("Error converting Candle into crate::block::data::Waterlogged")
     }
 }
-
-pub struct CandleClass;
-impl blackboxmc_general::JNIProvidesClassName for CandleClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Candle"
-    }
-}
-
 /// 'thickness' represents the dripstone thickness.
 ///
 /// 'vertical_direction' represents the dripstone orientation.
@@ -39058,6 +38359,7 @@ impl blackboxmc_general::JNIProvidesClassName for CandleClass {
 /// Some blocks may not be able to face in all directions, use <a href="#getVerticalDirections()"><code>getVerticalDirections()</code></a> to get all possible directions for this block.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PointedDripstone<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -39554,15 +38856,9 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for PointedDripstone<'mc> {
     }
 }
 
-pub struct PointedDripstoneClass;
-impl blackboxmc_general::JNIProvidesClassName for PointedDripstoneClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/PointedDripstone"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct LightningRod<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -40032,14 +39328,6 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for LightningRod<'mc> {
             .expect("Error converting LightningRod into crate::block::data::Waterlogged")
     }
 }
-
-pub struct LightningRodClass;
-impl blackboxmc_general::JNIProvidesClassName for LightningRodClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/LightningRod"
-    }
-}
-
 /// Different piston variants.
 #[derive(PartialEq, Eq)]
 pub enum TechnicalPistonTypeEnum {
@@ -40059,6 +39347,7 @@ impl<'mc> std::fmt::Display for TechnicalPistonType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct TechnicalPistonType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -40161,15 +39450,9 @@ impl<'mc> TechnicalPistonType<'mc> {
     }
 }
 
-pub struct TechnicalPistonTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for TechnicalPistonTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/TechnicalPiston$Type"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Sign<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -40600,14 +39883,6 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Sign<'mc> {
             .expect("Error converting Sign into crate::block::data::Waterlogged")
     }
 }
-
-pub struct SignClass;
-impl blackboxmc_general::JNIProvidesClassName for SignClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Sign"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum TiltEnum {
     None,
@@ -40630,6 +39905,7 @@ impl<'mc> std::fmt::Display for Tilt<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Tilt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -40732,14 +40008,6 @@ impl<'mc> Tilt<'mc> {
             .unwrap()
     }
 }
-
-pub struct TiltClass;
-impl blackboxmc_general::JNIProvidesClassName for TiltClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Tilt"
-    }
-}
-
 /// Bamboo leaf size.
 #[derive(PartialEq, Eq)]
 pub enum BambooLeavesEnum {
@@ -40761,6 +40029,7 @@ impl<'mc> std::fmt::Display for BambooLeaves<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct BambooLeaves<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -40862,15 +40131,9 @@ impl<'mc> BambooLeaves<'mc> {
     }
 }
 
-pub struct BambooLeavesClass;
-impl blackboxmc_general::JNIProvidesClassName for BambooLeavesClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/Bamboo$Leaves"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct CaveVines<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -41290,17 +40553,10 @@ impl<'mc> Into<crate::block::data::mod_type::CaveVinesPlant<'mc>> for CaveVines<
             .expect("Error converting CaveVines into crate::block::data::mod_type::CaveVinesPlant")
     }
 }
-
-pub struct CaveVinesClass;
-impl blackboxmc_general::JNIProvidesClassName for CaveVinesClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/CaveVines"
-    }
-}
-
 /// 'eggs' is the number of eggs which appear in this block.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct TurtleEgg<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -41730,12 +40986,5 @@ impl<'mc> Into<crate::block::data::Hatchable<'mc>> for TurtleEgg<'mc> {
     fn into(self) -> crate::block::data::Hatchable<'mc> {
         crate::block::data::Hatchable::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting TurtleEgg into crate::block::data::Hatchable")
-    }
-}
-
-pub struct TurtleEggClass;
-impl blackboxmc_general::JNIProvidesClassName for TurtleEggClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/block/data/type/TurtleEgg"
     }
 }

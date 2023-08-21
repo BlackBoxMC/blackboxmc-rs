@@ -27,6 +27,7 @@ impl<'mc> std::fmt::Display for BarStyle<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct BarStyle<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -131,14 +132,6 @@ impl<'mc> BarStyle<'mc> {
             .unwrap()
     }
 }
-
-pub struct BarStyleClass;
-impl blackboxmc_general::JNIProvidesClassName for BarStyleClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/boss/BarStyle"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum BarColorEnum {
     Pink,
@@ -167,6 +160,7 @@ impl<'mc> std::fmt::Display for BarColor<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct BarColor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -275,14 +269,6 @@ impl<'mc> BarColor<'mc> {
             .unwrap()
     }
 }
-
-pub struct BarColorClass;
-impl blackboxmc_general::JNIProvidesClassName for BarColorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/boss/BarColor"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum BarFlagEnum {
     DarkenSky,
@@ -303,6 +289,7 @@ impl<'mc> std::fmt::Display for BarFlag<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct BarFlag<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -403,14 +390,6 @@ impl<'mc> BarFlag<'mc> {
             .unwrap()
     }
 }
-
-pub struct BarFlagClass;
-impl blackboxmc_general::JNIProvidesClassName for BarFlagClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/boss/BarFlag"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum RespawnPhaseEnum {
     Start,
@@ -439,6 +418,7 @@ impl<'mc> std::fmt::Display for RespawnPhase<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct RespawnPhase<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -546,17 +526,10 @@ impl<'mc> RespawnPhase<'mc> {
             .unwrap()
     }
 }
-
-pub struct RespawnPhaseClass;
-impl blackboxmc_general::JNIProvidesClassName for RespawnPhaseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/boss/RespawnPhase"
-    }
-}
-
 /// Represents a custom <a title="interface in org.bukkit.boss" href="BossBar.html"><code>BossBar</code></a> that has a <a href="../NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct KeyedBossBar<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -923,15 +896,9 @@ impl<'mc> Into<crate::Keyed<'mc>> for KeyedBossBar<'mc> {
     }
 }
 
-pub struct KeyedBossBarClass;
-impl blackboxmc_general::JNIProvidesClassName for KeyedBossBarClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/boss/KeyedBossBar"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct BossBar<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1274,17 +1241,10 @@ impl<'mc> BossBar<'mc> {
             .unwrap()
     }
 }
-
-pub struct BossBarClass;
-impl blackboxmc_general::JNIProvidesClassName for BossBarClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/boss/BossBar"
-    }
-}
-
 /// Represents a dragon battle state for a world with an end environment.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct DragonBattle<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1463,14 +1423,6 @@ impl<'mc> DragonBattle<'mc> {
             .unwrap()
     }
 }
-
-pub struct DragonBattleClass;
-impl blackboxmc_general::JNIProvidesClassName for DragonBattleClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/boss/DragonBattle"
-    }
-}
-
 /// Represents a phase in the dragon respawn process.
 #[derive(PartialEq, Eq)]
 pub enum DragonBattleRespawnPhaseEnum {
@@ -1500,6 +1452,7 @@ impl<'mc> std::fmt::Display for DragonBattleRespawnPhase<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct DragonBattleRespawnPhase<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1612,12 +1565,5 @@ impl<'mc> DragonBattleRespawnPhase<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct DragonBattleRespawnPhaseClass;
-impl blackboxmc_general::JNIProvidesClassName for DragonBattleRespawnPhaseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/boss/DragonBattle$RespawnPhase"
     }
 }

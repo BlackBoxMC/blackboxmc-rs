@@ -6,6 +6,7 @@ use color_eyre::eyre::Result;
 /// Data for a Chunk.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ChunkGeneratorChunkData<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -306,15 +307,8 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
             .unwrap()
     }
 }
-
-pub struct ChunkGeneratorChunkDataClass;
-impl blackboxmc_general::JNIProvidesClassName for ChunkGeneratorChunkDataClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/generator/ChunkGenerator$ChunkData"
-    }
-}
-
 /// Class for providing biomes.
+#[repr(C)]
 pub struct BiomeProvider<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -577,17 +571,11 @@ impl<'mc> std::string::ToString for BiomeProvider<'mc> {
     }
 }
 
-pub struct BiomeProviderClass;
-impl blackboxmc_general::JNIProvidesClassName for BiomeProviderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/generator/BiomeProvider"
-    }
-}
-
 /// Interface to biome section for chunk to be generated: initialized with default values for world type and seed.
 /// <p>Custom generator is free to access and tailor values during generateBlockSections() or generateExtBlockSections().</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ChunkGeneratorBiomeGrid<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -716,17 +704,10 @@ impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
             .unwrap()
     }
 }
-
-pub struct ChunkGeneratorBiomeGridClass;
-impl blackboxmc_general::JNIProvidesClassName for ChunkGeneratorBiomeGridClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/generator/ChunkGenerator$BiomeGrid"
-    }
-}
-
 /// Represents the biome noise parameters which may be passed to a world generator.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct BiomeParameterPoint<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -953,18 +934,11 @@ impl<'mc> BiomeParameterPoint<'mc> {
             .unwrap()
     }
 }
-
-pub struct BiomeParameterPointClass;
-impl blackboxmc_general::JNIProvidesClassName for BiomeParameterPointClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/generator/BiomeParameterPoint"
-    }
-}
-
 /// A block populator is responsible for generating a small area of blocks.
 /// <p>For example, generating glowstone inside the nether or generating dungeons full of treasure</p>
 /// <p>A BlockPopulator can be used in combination with a custom <a href="ChunkGenerator.html" title="class in org.bukkit.generator"><code>ChunkGenerator</code></a> by returning it in the method <a href="ChunkGenerator.html#getDefaultPopulators(org.bukkit.World)"><code>ChunkGenerator.getDefaultPopulators(World)</code></a> or by adding it manually to the worlds populator list returned by <a href="../World.html#getPopulators()"><code>World.getPopulators()</code></a>.</p>
 /// <p>When adding a BlockPopulator manually to a world it is recommended to do so during the <a href="../event/world/WorldInitEvent.html" title="class in org.bukkit.event.world"><code>WorldInitEvent</code></a>.</p>
+#[repr(C)]
 pub struct BlockPopulator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1179,16 +1153,10 @@ impl<'mc> std::string::ToString for BlockPopulator<'mc> {
     }
 }
 
-pub struct BlockPopulatorClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockPopulatorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/generator/BlockPopulator"
-    }
-}
-
 /// A limited region is used in world generation for features which are going over a chunk. For example, trees or ores. Use <a href="#getBuffer()"><code>getBuffer()</code></a> to know how much you can go beyond the central chunk. The buffer zone may or may not be already populated. The coordinates are <b>absolute</b> from the world origin.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct LimitedRegion<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1780,17 +1748,10 @@ impl<'mc> Into<crate::RegionAccessor<'mc>> for LimitedRegion<'mc> {
             .expect("Error converting LimitedRegion into crate::RegionAccessor")
     }
 }
-
-pub struct LimitedRegionClass;
-impl blackboxmc_general::JNIProvidesClassName for LimitedRegionClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/generator/LimitedRegion"
-    }
-}
-
 /// Holds various information of a World
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct WorldInfo<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1913,14 +1874,6 @@ impl<'mc> WorldInfo<'mc> {
             .unwrap()
     }
 }
-
-pub struct WorldInfoClass;
-impl blackboxmc_general::JNIProvidesClassName for WorldInfoClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/generator/WorldInfo"
-    }
-}
-
 /// A chunk generator is responsible for the initial shaping of an entire chunk. For example, the nether chunk generator should shape netherrack and soulsand. A chunk is generated in multiple steps, those steps are always in the same order. Between those steps however an unlimited time may pass. This means, a chunk may generated until the surface step and continue with the bedrock step after one or multiple server restarts or even after multiple Minecraft versions. The order of generation is as follows
 /// <ol>
 /// <li><a href="#generateNoise(org.bukkit.generator.WorldInfo,java.util.Random,int,int,org.bukkit.generator.ChunkGenerator.ChunkData)"><code>generateNoise(WorldInfo, Random, int, int, ChunkData)</code></a></li>
@@ -1936,6 +1889,7 @@ impl blackboxmc_general::JNIProvidesClassName for WorldInfoClass {
 /// <li><a href="#shouldGenerateMobs()"><code>shouldGenerateMobs()</code></a> or <a href="#shouldGenerateMobs(org.bukkit.generator.WorldInfo,java.util.Random,int,int)"><code>shouldGenerateMobs(WorldInfo, Random, int, int)</code></a></li>
 /// <li><a href="#shouldGenerateStructures()"><code>shouldGenerateStructures()</code></a> or <a href="#shouldGenerateStructures(org.bukkit.generator.WorldInfo,java.util.Random,int,int)"><code>shouldGenerateStructures(WorldInfo, Random, int, int)</code></a></li>
 /// </ul>
+#[repr(C)]
 pub struct ChunkGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2713,13 +2667,6 @@ impl<'mc> std::string::ToString for ChunkGenerator<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ChunkGenerator.toString: {}", err),
         }
-    }
-}
-
-pub struct ChunkGeneratorClass;
-impl blackboxmc_general::JNIProvidesClassName for ChunkGeneratorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/generator/ChunkGenerator"
     }
 }
 

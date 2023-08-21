@@ -23,6 +23,7 @@ impl<'mc> std::fmt::Display for WarningState<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct WarningState<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -123,17 +124,10 @@ impl<'mc> WarningState<'mc> {
             .unwrap()
     }
 }
-
-pub struct WarningStateClass;
-impl blackboxmc_general::JNIProvidesClassName for WarningStateClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/WarningState"
-    }
-}
-
 /// Represents a server implementation.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Server<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2411,13 +2405,7 @@ impl<'mc> Into<crate::plugin::messaging::PluginMessageRecipient<'mc>> for Server
     }
 }
 
-pub struct ServerClass;
-impl blackboxmc_general::JNIProvidesClassName for ServerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Server"
-    }
-}
-
+#[repr(C)]
 pub struct ServerSpigot<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2619,13 +2607,6 @@ impl<'mc> std::string::ToString for ServerSpigot<'mc> {
     }
 }
 
-pub struct ServerSpigotClass;
-impl blackboxmc_general::JNIProvidesClassName for ServerSpigotClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Server$Spigot"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum DifficultyEnum {
     Peaceful,
@@ -2648,6 +2629,7 @@ impl<'mc> std::fmt::Display for Difficulty<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Difficulty<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2750,17 +2732,10 @@ impl<'mc> Difficulty<'mc> {
             .unwrap()
     }
 }
-
-pub struct DifficultyClass;
-impl blackboxmc_general::JNIProvidesClassName for DifficultyClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Difficulty"
-    }
-}
-
 /// This represents a Feature Flag for a World.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct FeatureFlag<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2825,14 +2800,6 @@ impl<'mc> Into<crate::Keyed<'mc>> for FeatureFlag<'mc> {
             .expect("Error converting FeatureFlag into crate::Keyed")
     }
 }
-
-pub struct FeatureFlagClass;
-impl blackboxmc_general::JNIProvidesClassName for FeatureFlagClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/FeatureFlag"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum TreeSpeciesEnum {
     Generic,
@@ -2859,6 +2826,7 @@ impl<'mc> std::fmt::Display for TreeSpecies<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct TreeSpecies<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2965,17 +2933,10 @@ impl<'mc> TreeSpecies<'mc> {
             .unwrap()
     }
 }
-
-pub struct TreeSpeciesClass;
-impl blackboxmc_general::JNIProvidesClassName for TreeSpeciesClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/TreeSpecies"
-    }
-}
-
 /// Represents a raid event.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Raid<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3168,18 +3129,11 @@ impl<'mc> Raid<'mc> {
             .unwrap()
     }
 }
-
-pub struct RaidClass;
-impl blackboxmc_general::JNIProvidesClassName for RaidClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Raid"
-    }
-}
-
 /// This interface provides value conversions that may be specific to a runtime, or have arbitrary meaning (read: magic values).
 /// <p>Their existence and behavior is not guaranteed across future versions. They may be poorly named, throw exceptions, have misleading parameters, or any other bad programming practice.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct UnsafeValues<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3613,17 +3567,10 @@ impl<'mc> UnsafeValues<'mc> {
             .unwrap()
     }
 }
-
-pub struct UnsafeValuesClass;
-impl blackboxmc_general::JNIProvidesClassName for UnsafeValuesClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/UnsafeValues"
-    }
-}
-
 /// Represents a world, which may contain entities, chunks and blocks
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct World<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7005,14 +6952,6 @@ impl<'mc> Into<crate::Keyed<'mc>> for World<'mc> {
             .expect("Error converting World into crate::Keyed")
     }
 }
-
-pub struct WorldClass;
-impl blackboxmc_general::JNIProvidesClassName for WorldClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/World"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum FluidCollisionModeEnum {
     Never,
@@ -7033,6 +6972,7 @@ impl<'mc> std::fmt::Display for FluidCollisionMode<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct FluidCollisionMode<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7135,17 +7075,10 @@ impl<'mc> FluidCollisionMode<'mc> {
             .unwrap()
     }
 }
-
-pub struct FluidCollisionModeClass;
-impl blackboxmc_general::JNIProvidesClassName for FluidCollisionModeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/FluidCollisionMode"
-    }
-}
-
 /// Represents a block, entity, or other object that may receive a custom name.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Nameable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7228,14 +7161,6 @@ impl<'mc> Nameable<'mc> {
             .unwrap()
     }
 }
-
-pub struct NameableClass;
-impl blackboxmc_general::JNIProvidesClassName for NameableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Nameable"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum ParticleEnum {
     ExplosionNormal,
@@ -7452,6 +7377,7 @@ impl<'mc> std::fmt::Display for Particle<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Particle<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7463,6 +7389,7 @@ impl<'mc> std::ops::Deref for Particle<'mc> {
         return &self.2;
     }
 }
+#[repr(C)]
 pub struct ParticleDustOptions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7651,13 +7578,7 @@ impl<'mc> std::string::ToString for ParticleDustOptions<'mc> {
     }
 }
 
-pub struct ParticleDustOptionsClass;
-impl blackboxmc_general::JNIProvidesClassName for ParticleDustOptionsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Particle$DustOptions"
-    }
-}
-
+#[repr(C)]
 pub struct ParticleDustTransition<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7866,13 +7787,6 @@ impl<'mc> Into<crate::ParticleDustOptions<'mc>> for ParticleDustTransition<'mc> 
     fn into(self) -> crate::ParticleDustOptions<'mc> {
         crate::ParticleDustOptions::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting ParticleDustTransition into crate::ParticleDustOptions")
-    }
-}
-
-pub struct ParticleDustTransitionClass;
-impl blackboxmc_general::JNIProvidesClassName for ParticleDustTransitionClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Particle$DustTransition"
     }
 }
 
@@ -8160,14 +8074,6 @@ impl<'mc> Particle<'mc> {
             .unwrap()
     }
 }
-
-pub struct ParticleClass;
-impl blackboxmc_general::JNIProvidesClassName for ParticleClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Particle"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum EntityEffectEnum {
     ArrowParticles,
@@ -8269,6 +8175,7 @@ impl<'mc> std::fmt::Display for EntityEffect<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct EntityEffect<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8449,14 +8356,6 @@ impl<'mc> EntityEffect<'mc> {
             .unwrap()
     }
 }
-
-pub struct EntityEffectClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityEffectClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/EntityEffect"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum GrassSpeciesEnum {
     Dead,
@@ -8477,6 +8376,7 @@ impl<'mc> std::fmt::Display for GrassSpecies<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct GrassSpecies<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8577,18 +8477,11 @@ impl<'mc> GrassSpecies<'mc> {
             .unwrap()
     }
 }
-
-pub struct GrassSpeciesClass;
-impl blackboxmc_general::JNIProvidesClassName for GrassSpeciesClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/GrassSpecies"
-    }
-}
-
 /// This annotation indicates a method (and sometimes constructor) will chain its internal operations.
 /// <p>This is solely meant for identifying methods that don't need to be overridden / handled manually.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Utility<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8694,13 +8587,6 @@ impl<'mc> std::string::ToString for Utility<'mc> {
     }
 }
 
-pub struct UtilityClass;
-impl blackboxmc_general::JNIProvidesClassName for UtilityClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Utility"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum ArtArtEnum {
     Kebab,
@@ -8775,6 +8661,7 @@ impl<'mc> std::fmt::Display for ArtArt<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct ArtArt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8929,14 +8816,6 @@ impl<'mc> ArtArt<'mc> {
             .unwrap()
     }
 }
-
-pub struct ArtArtClass;
-impl blackboxmc_general::JNIProvidesClassName for ArtArtClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Art$Art"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum WorldTypeEnum {
     Normal,
@@ -8959,6 +8838,7 @@ impl<'mc> std::fmt::Display for WorldType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct WorldType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9061,15 +8941,8 @@ impl<'mc> WorldType<'mc> {
             .unwrap()
     }
 }
-
-pub struct WorldTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for WorldTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/WorldType"
-    }
-}
-
 /// Represents a generic Mojang game event.
+#[repr(C)]
 pub struct GameEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9274,17 +9147,10 @@ impl<'mc> Into<crate::Keyed<'mc>> for GameEvent<'mc> {
             .expect("Error converting GameEvent into crate::Keyed")
     }
 }
-
-pub struct GameEventClass;
-impl blackboxmc_general::JNIProvidesClassName for GameEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/GameEvent"
-    }
-}
-
 /// Represents a reference to a player identity and the data belonging to a player that is stored on the disk and can, thus, be retrieved without the player needing to be online.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct OfflinePlayer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9710,13 +9576,7 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
     }
 }
 
-pub struct OfflinePlayerClass;
-impl blackboxmc_general::JNIProvidesClassName for OfflinePlayerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/OfflinePlayer"
-    }
-}
-
+#[repr(C)]
 pub struct WorldSpigot<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9926,13 +9786,6 @@ impl<'mc> std::string::ToString for WorldSpigot<'mc> {
     }
 }
 
-pub struct WorldSpigotClass;
-impl blackboxmc_general::JNIProvidesClassName for WorldSpigotClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/World$Spigot"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum FluidFluidEnum {
     Water,
@@ -9955,6 +9808,7 @@ impl<'mc> std::fmt::Display for FluidFluid<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct FluidFluid<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10057,14 +9911,6 @@ impl<'mc> FluidFluid<'mc> {
             .unwrap()
     }
 }
-
-pub struct FluidFluidClass;
-impl blackboxmc_general::JNIProvidesClassName for FluidFluidClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Fluid$Fluid"
-    }
-}
-
 /// This represents the states that server verbose for warnings may be.
 #[derive(PartialEq, Eq)]
 pub enum WarningWarningStateEnum {
@@ -10086,6 +9932,7 @@ impl<'mc> std::fmt::Display for WarningWarningState<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct WarningWarningState<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10239,14 +10086,6 @@ impl<'mc> WarningWarningState<'mc> {
             .unwrap()
     }
 }
-
-pub struct WarningWarningStateClass;
-impl blackboxmc_general::JNIProvidesClassName for WarningWarningStateClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Warning$WarningState"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum SoundCategoryEnum {
     Master,
@@ -10281,6 +10120,7 @@ impl<'mc> std::fmt::Display for SoundCategory<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct SoundCategory<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10395,14 +10235,6 @@ impl<'mc> SoundCategory<'mc> {
             .unwrap()
     }
 }
-
-pub struct SoundCategoryClass;
-impl blackboxmc_general::JNIProvidesClassName for SoundCategoryClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/SoundCategory"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum HeightMapEnum {
     MotionBlocking,
@@ -10429,6 +10261,7 @@ impl<'mc> std::fmt::Display for HeightMap<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct HeightMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10535,15 +10368,8 @@ impl<'mc> HeightMap<'mc> {
             .unwrap()
     }
 }
-
-pub struct HeightMapClass;
-impl blackboxmc_general::JNIProvidesClassName for HeightMapClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/HeightMap"
-    }
-}
-
 /// A container for a color palette. This class is immutable; the set methods return a new color. The color names listed as fields are HTML4 standards, but subject to change.
+#[repr(C)]
 pub struct Color<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10978,14 +10804,6 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting Color into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
-
-pub struct ColorClass;
-impl blackboxmc_general::JNIProvidesClassName for ColorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Color"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum FluidEnum {
     Water,
@@ -11008,6 +10826,7 @@ impl<'mc> std::fmt::Display for Fluid<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Fluid<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11110,14 +10929,6 @@ impl<'mc> Fluid<'mc> {
             .unwrap()
     }
 }
-
-pub struct FluidClass;
-impl blackboxmc_general::JNIProvidesClassName for FluidClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Fluid"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum CropStateEnum {
     Seeded,
@@ -11148,6 +10959,7 @@ impl<'mc> std::fmt::Display for CropState<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct CropState<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11258,14 +11070,6 @@ impl<'mc> CropState<'mc> {
             .unwrap()
     }
 }
-
-pub struct CropStateClass;
-impl blackboxmc_general::JNIProvidesClassName for CropStateClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/CropState"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum NetherWartsStateEnum {
     Seeded,
@@ -11288,6 +11092,7 @@ impl<'mc> std::fmt::Display for NetherWartsState<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct NetherWartsState<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11392,14 +11197,6 @@ impl<'mc> NetherWartsState<'mc> {
             .unwrap()
     }
 }
-
-pub struct NetherWartsStateClass;
-impl blackboxmc_general::JNIProvidesClassName for NetherWartsStateClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/NetherWartsState"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum SoundEnum {
     AmbientBasaltDeltasAdditions,
@@ -14640,6 +14437,7 @@ impl<'mc> std::fmt::Display for Sound<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Sound<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17880,17 +17678,10 @@ impl<'mc> Sound<'mc> {
             .unwrap()
     }
 }
-
-pub struct SoundClass;
-impl blackboxmc_general::JNIProvidesClassName for SoundClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Sound"
-    }
-}
-
 /// Represents a chunk of blocks. If the chunk is not yet fully generated and data is requested from the chunk, then the chunk will only be generated as far as it needs to provide the requested data.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Chunk<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18254,14 +18045,6 @@ impl<'mc> Into<crate::persistence::PersistentDataHolder<'mc>> for Chunk<'mc> {
             .expect("Error converting Chunk into crate::persistence::PersistentDataHolder")
     }
 }
-
-pub struct ChunkClass;
-impl blackboxmc_general::JNIProvidesClassName for ChunkClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Chunk"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum DyeColorEnum {
     White,
@@ -18308,6 +18091,7 @@ impl<'mc> std::fmt::Display for DyeColor<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct DyeColor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18434,14 +18218,6 @@ impl<'mc> DyeColor<'mc> {
             .unwrap()
     }
 }
-
-pub struct DyeColorClass;
-impl blackboxmc_general::JNIProvidesClassName for DyeColorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/DyeColor"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum LoadLevelEnum {
     Inaccessible,
@@ -18466,6 +18242,7 @@ impl<'mc> std::fmt::Display for LoadLevel<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct LoadLevel<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18571,13 +18348,7 @@ impl<'mc> LoadLevel<'mc> {
     }
 }
 
-pub struct LoadLevelClass;
-impl blackboxmc_general::JNIProvidesClassName for LoadLevelClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/LoadLevel"
-    }
-}
-
+#[repr(C)]
 pub struct VibrationDestinationBlockDestination<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18774,13 +18545,6 @@ impl<'mc> std::string::ToString for VibrationDestinationBlockDestination<'mc> {
     }
 }
 
-pub struct VibrationDestinationBlockDestinationClass;
-impl blackboxmc_general::JNIProvidesClassName for VibrationDestinationBlockDestinationClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Vibration$Destination$BlockDestination"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum GameModeEnum {
     Creative,
@@ -18803,6 +18567,7 @@ impl<'mc> std::fmt::Display for GameMode<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct GameMode<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18905,14 +18670,6 @@ impl<'mc> GameMode<'mc> {
             .unwrap()
     }
 }
-
-pub struct GameModeClass;
-impl blackboxmc_general::JNIProvidesClassName for GameModeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/GameMode"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum ToneEnum {
     G,
@@ -18941,6 +18698,7 @@ impl<'mc> std::fmt::Display for Tone<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Tone<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19050,15 +18808,9 @@ impl<'mc> Tone<'mc> {
     }
 }
 
-pub struct ToneClass;
-impl blackboxmc_general::JNIProvidesClassName for ToneClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Tone"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct VibrationDestination<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19108,15 +18860,8 @@ impl<'mc> VibrationDestination<'mc> {
             .unwrap()
     }
 }
-
-pub struct VibrationDestinationClass;
-impl blackboxmc_general::JNIProvidesClassName for VibrationDestinationClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Vibration$Destination"
-    }
-}
-
 /// A note class to store a specific note.
+#[repr(C)]
 pub struct Note<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19149,6 +18894,7 @@ impl<'mc> std::fmt::Display for NoteTone<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct NoteTone<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19321,13 +19067,6 @@ impl<'mc> NoteTone<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct NoteToneClass;
-impl blackboxmc_general::JNIProvidesClassName for NoteToneClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Note$Tone"
     }
 }
 
@@ -19656,13 +19395,6 @@ impl<'mc> std::string::ToString for Note<'mc> {
     }
 }
 
-pub struct NoteClass;
-impl blackboxmc_general::JNIProvidesClassName for NoteClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Note"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum EnvironmentEnum {
     Normal,
@@ -19685,6 +19417,7 @@ impl<'mc> std::fmt::Display for Environment<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Environment<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19787,14 +19520,6 @@ impl<'mc> Environment<'mc> {
             .unwrap()
     }
 }
-
-pub struct EnvironmentClass;
-impl blackboxmc_general::JNIProvidesClassName for EnvironmentClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Environment"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum EffectEnum {
     Click2,
@@ -19959,6 +19684,7 @@ impl<'mc> std::fmt::Display for Effect<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Effect<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19988,6 +19714,7 @@ impl<'mc> std::fmt::Display for EffectType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct EffectType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20084,13 +19811,6 @@ impl<'mc> EffectType<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct EffectTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for EffectTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Effect$Type"
     }
 }
 
@@ -20318,14 +20038,6 @@ impl<'mc> Effect<'mc> {
             .unwrap()
     }
 }
-
-pub struct EffectClass;
-impl blackboxmc_general::JNIProvidesClassName for EffectClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Effect"
-    }
-}
-
 /// A single entry from a ban list. This may represent either a player ban or an IP ban.
 /// <p>Ban entries include the following properties:</p>
 /// <table border="1">
@@ -20363,6 +20075,7 @@ impl blackboxmc_general::JNIProvidesClassName for EffectClass {
 /// <p>Likewise, changes to the associated <a title="interface in org.bukkit" href="BanList.html"><code>BanList</code></a> or other entries may or may not be reflected in this entry.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct BanEntry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20580,15 +20293,8 @@ impl<'mc> BanEntry<'mc> {
             .unwrap()
     }
 }
-
-pub struct BanEntryClass;
-impl blackboxmc_general::JNIProvidesClassName for BanEntryClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/BanEntry"
-    }
-}
-
 /// Represents the Bukkit core, for version and Server singleton handling
+#[repr(C)]
 pub struct Bukkit<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -22986,14 +22692,8 @@ impl<'mc> std::string::ToString for Bukkit<'mc> {
     }
 }
 
-pub struct BukkitClass;
-impl blackboxmc_general::JNIProvidesClassName for BukkitClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Bukkit"
-    }
-}
-
 /// All supported color values for chat
+#[repr(C)]
 pub struct ChatColor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -23200,16 +22900,10 @@ impl<'mc> std::string::ToString for ChatColor<'mc> {
     }
 }
 
-pub struct ChatColorClass;
-impl blackboxmc_general::JNIProvidesClassName for ChatColorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/ChatColor"
-    }
-}
-
 /// A ban list, containing bans of some <a title="enum in org.bukkit" href="BanList.Type.html"><code>BanList.Type</code></a>.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct BanList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -23413,14 +23107,6 @@ impl<'mc> BanList<'mc> {
             .unwrap()
     }
 }
-
-pub struct BanListClass;
-impl blackboxmc_general::JNIProvidesClassName for BanListClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/BanList"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum PortalTypeEnum {
     Nether,
@@ -23441,6 +23127,7 @@ impl<'mc> std::fmt::Display for PortalType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct PortalType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -23541,14 +23228,6 @@ impl<'mc> PortalType<'mc> {
             .unwrap()
     }
 }
-
-pub struct PortalTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for PortalTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/PortalType"
-    }
-}
-
 /// Represents a ban-type that a <a title="interface in org.bukkit" href="BanList.html"><code>BanList</code></a> may track.
 #[derive(PartialEq, Eq)]
 pub enum BanListTypeEnum {
@@ -23570,6 +23249,7 @@ impl<'mc> std::fmt::Display for BanListType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct BanListType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -23670,18 +23350,11 @@ impl<'mc> BanListType<'mc> {
             .unwrap()
     }
 }
-
-pub struct BanListTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for BanListTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/BanList$Type"
-    }
-}
-
 /// This designates the warning state for a specific item.
 /// <p>When the server settings dictate 'default' warnings, warnings are printed if the <a href="#value()"><code>value()</code></a> is true.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Warning<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -23809,14 +23482,8 @@ impl<'mc> std::string::ToString for Warning<'mc> {
     }
 }
 
-pub struct WarningClass;
-impl blackboxmc_general::JNIProvidesClassName for WarningClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Warning"
-    }
-}
-
 /// Represents various types of options that may be used to create a world.
+#[repr(C)]
 pub struct WorldCreator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24327,13 +23994,6 @@ impl<'mc> std::string::ToString for WorldCreator<'mc> {
     }
 }
 
-pub struct WorldCreatorClass;
-impl blackboxmc_general::JNIProvidesClassName for WorldCreatorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/WorldCreator"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum ArtEnum {
     Kebab,
@@ -24408,6 +24068,7 @@ impl<'mc> std::fmt::Display for Art<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Art<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24562,17 +24223,10 @@ impl<'mc> Art<'mc> {
             .unwrap()
     }
 }
-
-pub struct ArtClass;
-impl blackboxmc_general::JNIProvidesClassName for ArtClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Art"
-    }
-}
-
 /// Represents a group of sounds for blocks that are played when various actions happen (ie stepping, breaking, hitting, etc).
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct SoundGroup<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24758,17 +24412,10 @@ impl<'mc> SoundGroup<'mc> {
             .unwrap()
     }
 }
-
-pub struct SoundGroupClass;
-impl blackboxmc_general::JNIProvidesClassName for SoundGroupClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/SoundGroup"
-    }
-}
-
 /// GameRules dictate certain behavior within Minecraft itself
 ///
 /// For more information please visit the <a href="https://minecraft.gamepedia.com/Commands/gamerule">Minecraft Wiki</a>
+#[repr(C)]
 pub struct GameRule<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24960,17 +24607,11 @@ impl<'mc> std::string::ToString for GameRule<'mc> {
     }
 }
 
-pub struct GameRuleClass;
-impl blackboxmc_general::JNIProvidesClassName for GameRuleClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/GameRule"
-    }
-}
-
 /// Represents a static, thread-safe snapshot of chunk of blocks.
 /// <p>Purpose is to allow clean, efficient copy of a chunk data to be made, and then handed off for processing in another thread (e.g. map rendering)</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ChunkSnapshot<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -25326,13 +24967,7 @@ impl<'mc> ChunkSnapshot<'mc> {
     }
 }
 
-pub struct ChunkSnapshotClass;
-impl blackboxmc_general::JNIProvidesClassName for ChunkSnapshotClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/ChunkSnapshot"
-    }
-}
-
+#[repr(C)]
 pub struct MusicInstrument<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -25539,17 +25174,10 @@ impl<'mc> Into<crate::Keyed<'mc>> for MusicInstrument<'mc> {
             .expect("Error converting MusicInstrument into crate::Keyed")
     }
 }
-
-pub struct MusicInstrumentClass;
-impl blackboxmc_general::JNIProvidesClassName for MusicInstrumentClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/MusicInstrument"
-    }
-}
-
 /// Represents an object with a text representation that can be translated by the Minecraft client.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Translatable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -25613,19 +25241,13 @@ impl<'mc> Translatable<'mc> {
             .unwrap()
     }
 }
-
-pub struct TranslatableClass;
-impl blackboxmc_general::JNIProvidesClassName for TranslatableClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Translatable"
-    }
-}
-
 /// Represents a single firework effect.
+#[repr(C)]
 pub struct FireworkEffect<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
+#[repr(C)]
 pub struct FireworkEffectBuilder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -25889,13 +25511,6 @@ impl<'mc> std::string::ToString for FireworkEffectBuilder<'mc> {
     }
 }
 
-pub struct FireworkEffectBuilderClass;
-impl blackboxmc_general::JNIProvidesClassName for FireworkEffectBuilderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/FireworkEffect$Builder"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum FireworkEffectTypeEnum {
     Ball,
@@ -25920,6 +25535,7 @@ impl<'mc> std::fmt::Display for FireworkEffectType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct FireworkEffectType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -26024,13 +25640,6 @@ impl<'mc> FireworkEffectType<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct FireworkEffectTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for FireworkEffectTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/FireworkEffect$Type"
     }
 }
 
@@ -26312,14 +25921,6 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting FireworkEffect into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
-
-pub struct FireworkEffectClass;
-impl blackboxmc_general::JNIProvidesClassName for FireworkEffectClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/FireworkEffect"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum RaidStatusEnum {
     Ongoing,
@@ -26342,6 +25943,7 @@ impl<'mc> std::fmt::Display for RaidStatus<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct RaidStatus<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -26444,18 +26046,11 @@ impl<'mc> RaidStatus<'mc> {
             .unwrap()
     }
 }
-
-pub struct RaidStatusClass;
-impl blackboxmc_general::JNIProvidesClassName for RaidStatusClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/RaidStatus"
-    }
-}
-
 /// Indicates that the annotated element (class, method, field, etc.) is part of a <a href="https://minecraft.fandom.com/wiki/Experimental_Gameplay">minecraft experimental feature</a> and is subject to changes by Mojang.
 /// <p><b>Note:</b> Elements marked with this annotation require the use of a datapack or otherwise non-standard feature to be enabled on the server.</p>
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct MinecraftExperimental<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -26564,16 +26159,10 @@ impl<'mc> std::string::ToString for MinecraftExperimental<'mc> {
     }
 }
 
-pub struct MinecraftExperimentalClass;
-impl blackboxmc_general::JNIProvidesClassName for MinecraftExperimentalClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/MinecraftExperimental"
-    }
-}
-
 /// Represents an object which has a <a title="class in org.bukkit" href="NamespacedKey.html"><code>NamespacedKey</code></a> attached to it.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Keyed<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -26632,14 +26221,6 @@ impl<'mc> Keyed<'mc> {
             .unwrap()
     }
 }
-
-pub struct KeyedClass;
-impl blackboxmc_general::JNIProvidesClassName for KeyedClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Keyed"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum SoundSoundEnum {
     AmbientBasaltDeltasAdditions,
@@ -30140,6 +29721,7 @@ impl<'mc> std::fmt::Display for SoundSound<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct SoundSound<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -33753,14 +33335,6 @@ impl<'mc> SoundSound<'mc> {
             .unwrap()
     }
 }
-
-pub struct SoundSoundClass;
-impl blackboxmc_general::JNIProvidesClassName for SoundSoundClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Sound$Sound"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum StatisticEnum {
     DamageDealt,
@@ -33943,6 +33517,7 @@ impl<'mc> std::fmt::Display for Statistic<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Statistic<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -33976,6 +33551,7 @@ impl<'mc> std::fmt::Display for StatisticType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct StatisticType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -34076,13 +33652,6 @@ impl<'mc> StatisticType<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct StatisticTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for StatisticTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Statistic$Type"
     }
 }
 
@@ -34336,16 +33905,9 @@ impl<'mc> Statistic<'mc> {
             .unwrap()
     }
 }
-
-pub struct StatisticClass;
-impl blackboxmc_general::JNIProvidesClassName for StatisticClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Statistic"
-    }
-}
-
 /// Represents a String based key which consists of two components - a namespace and a key. Namespaces may only contain lowercase alphanumeric characters, periods, underscores, and hyphens.
 /// <p>Keys may only contain lowercase alphanumeric characters, periods, underscores, hyphens, and forward slashes.</p>
+#[repr(C)]
 pub struct NamespacedKey<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -34609,16 +34171,10 @@ impl<'mc> std::string::ToString for NamespacedKey<'mc> {
     }
 }
 
-pub struct NamespacedKeyClass;
-impl blackboxmc_general::JNIProvidesClassName for NamespacedKeyClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/NamespacedKey"
-    }
-}
-
 /// A RegionAccessor gives access to getting, modifying and spawning <a title="enum in org.bukkit.block" href="block/Biome.html"><code>Biome</code></a>, <a title="interface in org.bukkit.block" href="block/BlockState.html"><code>BlockState</code></a> and <a title="interface in org.bukkit.entity" href="entity/Entity.html"><code>Entity</code></a>, as well as generating some basic structures.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct RegionAccessor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -35151,14 +34707,6 @@ impl<'mc> RegionAccessor<'mc> {
             .unwrap()
     }
 }
-
-pub struct RegionAccessorClass;
-impl blackboxmc_general::JNIProvidesClassName for RegionAccessorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/RegionAccessor"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum WeatherTypeEnum {
     Downfall,
@@ -35177,6 +34725,7 @@ impl<'mc> std::fmt::Display for WeatherType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct WeatherType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -35276,15 +34825,9 @@ impl<'mc> WeatherType<'mc> {
     }
 }
 
-pub struct WeatherTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for WeatherTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/WeatherType"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct WorldBorder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -35525,14 +35068,6 @@ impl<'mc> WorldBorder<'mc> {
             .unwrap()
     }
 }
-
-pub struct WorldBorderClass;
-impl blackboxmc_general::JNIProvidesClassName for WorldBorderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/WorldBorder"
-    }
-}
-
 /// An enum to specify the load level of a chunk.
 #[derive(PartialEq, Eq)]
 pub enum ChunkLoadLevelEnum {
@@ -35558,6 +35093,7 @@ impl<'mc> std::fmt::Display for ChunkLoadLevel<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct ChunkLoadLevel<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -35664,14 +35200,6 @@ impl<'mc> ChunkLoadLevel<'mc> {
             .unwrap()
     }
 }
-
-pub struct ChunkLoadLevelClass;
-impl blackboxmc_general::JNIProvidesClassName for ChunkLoadLevelClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Chunk$LoadLevel"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum SandstoneTypeEnum {
     Cracked,
@@ -35692,6 +35220,7 @@ impl<'mc> std::fmt::Display for SandstoneType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct SandstoneType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -35792,14 +35321,6 @@ impl<'mc> SandstoneType<'mc> {
             .unwrap()
     }
 }
-
-pub struct SandstoneTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for SandstoneTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/SandstoneType"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum AxisEnum {
     X,
@@ -35820,6 +35341,7 @@ impl<'mc> std::fmt::Display for Axis<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Axis<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -35920,14 +35442,6 @@ impl<'mc> Axis<'mc> {
             .unwrap()
     }
 }
-
-pub struct AxisClass;
-impl blackboxmc_general::JNIProvidesClassName for AxisClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Axis"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum TreeTypeEnum {
     Tree,
@@ -35988,6 +35502,7 @@ impl<'mc> std::fmt::Display for TreeType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct TreeType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -36128,15 +35643,8 @@ impl<'mc> TreeType<'mc> {
             .unwrap()
     }
 }
-
-pub struct TreeTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for TreeTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/TreeType"
-    }
-}
-
 /// Represents a vibration from a Skulk sensor.
+#[repr(C)]
 pub struct Vibration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -36347,13 +35855,7 @@ impl<'mc> std::string::ToString for Vibration<'mc> {
     }
 }
 
-pub struct VibrationClass;
-impl blackboxmc_general::JNIProvidesClassName for VibrationClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Vibration"
-    }
-}
-
+#[repr(C)]
 pub struct RegistrySimpleRegistry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -36574,13 +36076,6 @@ impl<'mc> std::string::ToString for RegistrySimpleRegistry<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling RegistrySimpleRegistry.toString: {}", err),
         }
-    }
-}
-
-pub struct RegistrySimpleRegistryClass;
-impl blackboxmc_general::JNIProvidesClassName for RegistrySimpleRegistryClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Registry$SimpleRegistry"
     }
 }
 
@@ -40889,6 +40384,7 @@ impl<'mc> std::fmt::Display for Material<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Material<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -44800,17 +44296,10 @@ impl<'mc> Material<'mc> {
             .unwrap()
     }
 }
-
-pub struct MaterialClass;
-impl blackboxmc_general::JNIProvidesClassName for MaterialClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Material"
-    }
-}
-
 /// Represents a registry of Bukkit objects that may be retrieved by <a href="NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Registry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -44929,14 +44418,6 @@ impl<'mc> Registry<'mc> {
             .unwrap()
     }
 }
-
-pub struct RegistryClass;
-impl blackboxmc_general::JNIProvidesClassName for RegistryClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Registry"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum RotationEnum {
     None,
@@ -44967,6 +44448,7 @@ impl<'mc> std::fmt::Display for Rotation<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Rotation<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -45078,13 +44560,7 @@ impl<'mc> Rotation<'mc> {
     }
 }
 
-pub struct RotationClass;
-impl blackboxmc_general::JNIProvidesClassName for RotationClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Rotation"
-    }
-}
-
+#[repr(C)]
 pub struct VibrationDestinationEntityDestination<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -45267,13 +44743,6 @@ impl<'mc> std::string::ToString for VibrationDestinationEntityDestination<'mc> {
                 err
             ),
         }
-    }
-}
-
-pub struct VibrationDestinationEntityDestinationClass;
-impl blackboxmc_general::JNIProvidesClassName for VibrationDestinationEntityDestinationClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Vibration$Destination$EntityDestination"
     }
 }
 
@@ -45473,6 +44942,7 @@ impl<'mc> std::fmt::Display for StatisticStatistic<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct StatisticStatistic<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -45760,17 +45230,10 @@ impl<'mc> StatisticStatistic<'mc> {
             .unwrap()
     }
 }
-
-pub struct StatisticStatisticClass;
-impl blackboxmc_general::JNIProvidesClassName for StatisticStatisticClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Statistic$Statistic"
-    }
-}
-
 /// Annotation for types, whose nullability is not well defined, so <a class="external-link" href="https://javadoc.io/doc/org.jetbrains/annotations-java5/24.0.1/org/jetbrains/annotations/NotNull.html" title="class or interface in org.jetbrains.annotations"><code>NotNull</code></a> nor <a class="external-link" href="https://javadoc.io/doc/org.jetbrains/annotations-java5/24.0.1/org/jetbrains/annotations/Nullable.html" title="class or interface in org.jetbrains.annotations"><code>Nullable</code></a> is applicable. For example when interface defines a method, whose nullability depends on the implementation.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct UndefinedNullability<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -45891,13 +45354,6 @@ impl<'mc> std::string::ToString for UndefinedNullability<'mc> {
     }
 }
 
-pub struct UndefinedNullabilityClass;
-impl blackboxmc_general::JNIProvidesClassName for UndefinedNullabilityClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/UndefinedNullability"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum CoalTypeEnum {
     Coal,
@@ -45916,6 +45372,7 @@ impl<'mc> std::fmt::Display for CoalType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct CoalType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -46014,14 +45471,6 @@ impl<'mc> CoalType<'mc> {
             .unwrap()
     }
 }
-
-pub struct CoalTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for CoalTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/CoalType"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum MaterialMaterialEnum {
     Air,
@@ -50463,6 +49912,7 @@ impl<'mc> std::fmt::Display for MaterialMaterial<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct MaterialMaterial<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -54764,14 +54214,6 @@ impl<'mc> MaterialMaterial<'mc> {
             .unwrap()
     }
 }
-
-pub struct MaterialMaterialClass;
-impl blackboxmc_general::JNIProvidesClassName for MaterialMaterialClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Material$Material"
-    }
-}
-
 /// Represents various map environment types that a world may be
 #[derive(PartialEq, Eq)]
 pub enum WorldEnvironmentEnum {
@@ -54795,6 +54237,7 @@ impl<'mc> std::fmt::Display for WorldEnvironment<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct WorldEnvironment<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -54943,17 +54386,10 @@ impl<'mc> WorldEnvironment<'mc> {
             .unwrap()
     }
 }
-
-pub struct WorldEnvironmentClass;
-impl blackboxmc_general::JNIProvidesClassName for WorldEnvironmentClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/World$Environment"
-    }
-}
-
 /// A delegate for handling block changes. This serves as a direct interface between generation algorithms in the server implementation and utilizing code.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct BlockChangeDelegate<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -55092,17 +54528,10 @@ impl<'mc> BlockChangeDelegate<'mc> {
             .unwrap()
     }
 }
-
-pub struct BlockChangeDelegateClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockChangeDelegateClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/BlockChangeDelegate"
-    }
-}
-
 /// This class handles the creation and storage of all structure types for Bukkit. Structure Types are the different kinds of structures that can be generated during world/chunk generation. These include Villages, Mineshafts, Mansions, etc.
 ///
 /// The registration of new <a title="class in org.bukkit" href="StructureType.html"><code>StructureType</code></a>s is case-sensitive.
+#[repr(C)]
 pub struct StructureType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -55322,14 +54751,6 @@ impl<'mc> Into<crate::Keyed<'mc>> for StructureType<'mc> {
             .expect("Error converting StructureType into crate::Keyed")
     }
 }
-
-pub struct StructureTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for StructureTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/StructureType"
-    }
-}
-
 /// Represents the status of a <a href="Raid.html" title="interface in org.bukkit"><code>Raid</code></a>.
 #[derive(PartialEq, Eq)]
 pub enum RaidRaidStatusEnum {
@@ -55353,6 +54774,7 @@ impl<'mc> std::fmt::Display for RaidRaidStatus<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct RaidRaidStatus<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -55457,14 +54879,6 @@ impl<'mc> RaidRaidStatus<'mc> {
             .unwrap()
     }
 }
-
-pub struct RaidRaidStatusClass;
-impl blackboxmc_general::JNIProvidesClassName for RaidRaidStatusClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Raid$RaidStatus"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum InstrumentEnum {
     Piano,
@@ -55525,6 +54939,7 @@ impl<'mc> std::fmt::Display for Instrument<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Instrument<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -55665,17 +55080,10 @@ impl<'mc> Instrument<'mc> {
             .unwrap()
     }
 }
-
-pub struct InstrumentClass;
-impl blackboxmc_general::JNIProvidesClassName for InstrumentClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Instrument"
-    }
-}
-
 /// Represents a tag that may be defined by the server or a resource pack to group like things together. Note that whilst all tags defined within this interface must be present in implementations, their existence is not guaranteed across future versions.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Tag<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -55771,14 +55179,6 @@ impl<'mc> Into<crate::Keyed<'mc>> for Tag<'mc> {
             .expect("Error converting Tag into crate::Keyed")
     }
 }
-
-pub struct TagClass;
-impl blackboxmc_general::JNIProvidesClassName for TagClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Tag"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum SkullTypeEnum {
     Skeleton,
@@ -55807,6 +55207,7 @@ impl<'mc> std::fmt::Display for SkullType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct SkullType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -55915,17 +55316,10 @@ impl<'mc> SkullType<'mc> {
             .unwrap()
     }
 }
-
-pub struct SkullTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for SkullTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/SkullType"
-    }
-}
-
 /// Represents a 3-dimensional position in a world.
 ///
 /// No constraints are placed on any angular values other than that they be specified in degrees. This means that negative angles or angles of greater magnitude than 360 are valid, but may be normalized to any other equivalent representation by the implementation.
+#[repr(C)]
 pub struct Location<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -56668,14 +56062,6 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting Location into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
-
-pub struct LocationClass;
-impl blackboxmc_general::JNIProvidesClassName for LocationClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/Location"
-    }
-}
-
 pub mod advancement;
 pub mod attribute;
 pub mod ban;

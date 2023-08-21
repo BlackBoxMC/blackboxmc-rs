@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 
+#[repr(C)]
 pub struct CommandSenderSpigot<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -213,15 +214,9 @@ impl<'mc> std::string::ToString for CommandSenderSpigot<'mc> {
     }
 }
 
-pub struct CommandSenderSpigotClass;
-impl blackboxmc_general::JNIProvidesClassName for CommandSenderSpigotClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/CommandSender$Spigot"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct RemoteConsoleCommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -506,13 +501,7 @@ impl<'mc> Into<crate::command::CommandSender<'mc>> for RemoteConsoleCommandSende
     }
 }
 
-pub struct RemoteConsoleCommandSenderClass;
-impl blackboxmc_general::JNIProvidesClassName for RemoteConsoleCommandSenderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/RemoteConsoleCommandSender"
-    }
-}
-
+#[repr(C)]
 pub struct SimpleCommandMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -863,13 +852,7 @@ impl<'mc> Into<crate::command::CommandMap<'mc>> for SimpleCommandMap<'mc> {
     }
 }
 
-pub struct SimpleCommandMapClass;
-impl blackboxmc_general::JNIProvidesClassName for SimpleCommandMapClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/SimpleCommandMap"
-    }
-}
-
+#[repr(C)]
 pub struct FormattedCommandAlias<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1451,17 +1434,10 @@ impl<'mc> Into<crate::command::Command<'mc>> for FormattedCommandAlias<'mc> {
             .expect("Error converting FormattedCommandAlias into crate::command::Command")
     }
 }
-
-pub struct FormattedCommandAliasClass;
-impl blackboxmc_general::JNIProvidesClassName for FormattedCommandAliasClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/FormattedCommandAlias"
-    }
-}
-
 /// Represents a class which can suggest tab completions for commands.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct TabCompleter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1563,17 +1539,10 @@ impl<'mc> TabCompleter<'mc> {
             .unwrap()
     }
 }
-
-pub struct TabCompleterClass;
-impl blackboxmc_general::JNIProvidesClassName for TabCompleterClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/TabCompleter"
-    }
-}
-
 /// Represents a class which contains a single method for executing commands
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct CommandExecutor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1666,15 +1635,9 @@ impl<'mc> CommandExecutor<'mc> {
     }
 }
 
-pub struct CommandExecutorClass;
-impl blackboxmc_general::JNIProvidesClassName for CommandExecutorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/CommandExecutor"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ConsoleCommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2063,17 +2026,10 @@ impl<'mc> Into<crate::conversations::Conversable<'mc>> for ConsoleCommandSender<
             .expect("Error converting ConsoleCommandSender into crate::conversations::Conversable")
     }
 }
-
-pub struct ConsoleCommandSenderClass;
-impl blackboxmc_general::JNIProvidesClassName for ConsoleCommandSenderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/ConsoleCommandSender"
-    }
-}
-
 /// This interface is used by the help system to group commands into sub-indexes based on the <a href="../plugin/Plugin.html" title="interface in org.bukkit.plugin"><code>Plugin</code></a> they are a part of. Custom command implementations will need to implement this interface to have a sub-index automatically generated on the plugin's behalf.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PluginIdentifiableCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2136,15 +2092,8 @@ impl<'mc> PluginIdentifiableCommand<'mc> {
             .unwrap()
     }
 }
-
-pub struct PluginIdentifiableCommandClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginIdentifiableCommandClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/PluginIdentifiableCommand"
-    }
-}
-
 /// Represents a Command, which executes various tasks upon user input
+#[repr(C)]
 pub struct Command<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2697,14 +2646,8 @@ impl<'mc> std::string::ToString for Command<'mc> {
     }
 }
 
-pub struct CommandClass;
-impl blackboxmc_general::JNIProvidesClassName for CommandClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/Command"
-    }
-}
-
 /// Represents a command that delegates to one or more other commands
+#[repr(C)]
 pub struct MultipleCommandAlias<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3286,13 +3229,7 @@ impl<'mc> Into<crate::command::Command<'mc>> for MultipleCommandAlias<'mc> {
     }
 }
 
-pub struct MultipleCommandAliasClass;
-impl blackboxmc_general::JNIProvidesClassName for MultipleCommandAliasClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/MultipleCommandAlias"
-    }
-}
-
+#[repr(C)]
 pub struct PluginCommandYamlParser<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3483,15 +3420,9 @@ impl<'mc> std::string::ToString for PluginCommandYamlParser<'mc> {
     }
 }
 
-pub struct PluginCommandYamlParserClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginCommandYamlParserClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/PluginCommandYamlParser"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct ProxiedCommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3794,17 +3725,10 @@ impl<'mc> Into<crate::command::CommandSender<'mc>> for ProxiedCommandSender<'mc>
             .expect("Error converting ProxiedCommandSender into crate::command::CommandSender")
     }
 }
-
-pub struct ProxiedCommandSenderClass;
-impl blackboxmc_general::JNIProvidesClassName for ProxiedCommandSenderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/ProxiedCommandSender"
-    }
-}
-
 /// This class is provided as a convenience to implement both TabCompleter and CommandExecutor.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct TabExecutor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3950,15 +3874,9 @@ impl<'mc> Into<crate::command::CommandExecutor<'mc>> for TabExecutor<'mc> {
     }
 }
 
-pub struct TabExecutorClass;
-impl blackboxmc_general::JNIProvidesClassName for TabExecutorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/TabExecutor"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct CommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4238,15 +4156,9 @@ impl<'mc> Into<crate::permissions::Permissible<'mc>> for CommandSender<'mc> {
     }
 }
 
-pub struct CommandSenderClass;
-impl blackboxmc_general::JNIProvidesClassName for CommandSenderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/CommandSender"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct CommandMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4426,15 +4338,8 @@ impl<'mc> CommandMap<'mc> {
             .unwrap()
     }
 }
-
-pub struct CommandMapClass;
-impl blackboxmc_general::JNIProvidesClassName for CommandMapClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/CommandMap"
-    }
-}
-
 /// Represents a <a title="class in org.bukkit.command" href="Command.html"><code>Command</code></a> belonging to a plugin
+#[repr(C)]
 pub struct PluginCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5077,15 +4982,9 @@ impl<'mc> Into<crate::command::Command<'mc>> for PluginCommand<'mc> {
     }
 }
 
-pub struct PluginCommandClass;
-impl blackboxmc_general::JNIProvidesClassName for PluginCommandClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/PluginCommand"
-    }
-}
-
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct BlockCommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5377,12 +5276,4 @@ impl<'mc> Into<crate::command::CommandSender<'mc>> for BlockCommandSender<'mc> {
             .expect("Error converting BlockCommandSender into crate::command::CommandSender")
     }
 }
-
-pub struct BlockCommandSenderClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockCommandSenderClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/command/BlockCommandSender"
-    }
-}
-
 pub mod defaults;

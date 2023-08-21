@@ -23,6 +23,7 @@ impl<'mc> std::fmt::Display for PowerCause<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct PowerCause<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -123,15 +124,8 @@ impl<'mc> PowerCause<'mc> {
             .unwrap()
     }
 }
-
-pub struct PowerCauseClass;
-impl blackboxmc_general::JNIProvidesClassName for PowerCauseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/PowerCause"
-    }
-}
-
 /// Called when an entity explodes
+#[repr(C)]
 pub struct EntityExplodeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -449,16 +443,9 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityExplodeEvent<'m
             .expect("Error converting EntityExplodeEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityExplodeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityExplodeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityExplodeEvent"
-    }
-}
-
 /// Called when a non-player entity is about to teleport because it is in contact with a portal.
 /// <p>For players see <a href="../player/PlayerPortalEvent.html" title="class in org.bukkit.event.player"><code>PlayerPortalEvent</code></a></p>
+#[repr(C)]
 pub struct EntityPortalEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -840,15 +827,8 @@ impl<'mc> Into<crate::event::entity::EntityTeleportEvent<'mc>> for EntityPortalE
         )
     }
 }
-
-pub struct EntityPortalEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityPortalEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityPortalEvent"
-    }
-}
-
 /// Called when a <a title="interface in org.bukkit.entity" href="../../entity/Strider.html"><code>Strider</code></a>'s temperature has changed as a result of entering or exiting blocks it considers warm.
+#[repr(C)]
 pub struct StriderTemperatureChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1160,15 +1140,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for StriderTemperatureCha
         )
     }
 }
-
-pub struct StriderTemperatureChangeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for StriderTemperatureChangeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/StriderTemperatureChangeEvent"
-    }
-}
-
 /// Called when an entity is damaged by a block
+#[repr(C)]
 pub struct EntityDamageByBlockEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1606,14 +1579,6 @@ impl<'mc> Into<crate::event::entity::EntityDamageEvent<'mc>> for EntityDamageByB
         crate::event::entity::EntityDamageEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting EntityDamageByBlockEvent into crate::event::entity::EntityDamageEvent")
     }
 }
-
-pub struct EntityDamageByBlockEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityDamageByBlockEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityDamageByBlockEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum SpawnReasonEnum {
     Natural,
@@ -1707,6 +1672,7 @@ impl<'mc> std::fmt::Display for SpawnReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct SpawnReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1879,15 +1845,8 @@ impl<'mc> SpawnReason<'mc> {
             .unwrap()
     }
 }
-
-pub struct SpawnReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for SpawnReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/SpawnReason"
-    }
-}
-
 /// Called when a sheep regrows its wool
+#[repr(C)]
 pub struct SheepRegrowWoolEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2177,18 +2136,11 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for SheepRegrowWoolEvent<
             .expect("Error converting SheepRegrowWoolEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct SheepRegrowWoolEventClass;
-impl blackboxmc_general::JNIProvidesClassName for SheepRegrowWoolEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/SheepRegrowWoolEvent"
-    }
-}
-
 /// Called when an <a href="../../entity/Entity.html" title="interface in org.bukkit.entity"><code>Entity</code></a> enters a block and is stored in that block.
 /// <p>This event is called for bees entering a bee hive.
 ///
 /// It is not called when a silverfish "enters" a stone block. For that listen to the <a href="EntityChangeBlockEvent.html" title="class in org.bukkit.event.entity"><code>EntityChangeBlockEvent</code></a>.</p>
+#[repr(C)]
 pub struct EntityEnterBlockEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2495,15 +2447,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityEnterBlockEvent
             .expect("Error converting EntityEnterBlockEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityEnterBlockEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityEnterBlockEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityEnterBlockEvent"
-    }
-}
-
 /// Thrown when a entity picks an item up from the ground
+#[repr(C)]
 pub struct EntityPickupItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2824,15 +2769,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityPickupItemEvent
             .expect("Error converting EntityPickupItemEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityPickupItemEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityPickupItemEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityPickupItemEvent"
-    }
-}
-
 /// Called when a horse jumps.
+#[repr(C)]
 pub struct HorseJumpEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3155,15 +3093,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for HorseJumpEvent<'mc> {
             .expect("Error converting HorseJumpEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct HorseJumpEventClass;
-impl blackboxmc_general::JNIProvidesClassName for HorseJumpEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/HorseJumpEvent"
-    }
-}
-
 /// Called when an entity has made a decision to explode.
+#[repr(C)]
 pub struct ExplosionPrimeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3507,16 +3438,9 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for ExplosionPrimeEvent<'
             .expect("Error converting ExplosionPrimeEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct ExplosionPrimeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for ExplosionPrimeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/ExplosionPrimeEvent"
-    }
-}
-
 /// Called when a creature is spawned into a world.
 /// <p>If a Creature Spawn event is cancelled, the creature will not spawn.</p>
+#[repr(C)]
 pub struct CreatureSpawnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3613,6 +3537,7 @@ impl<'mc> std::fmt::Display for CreatureSpawnEventSpawnReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct CreatureSpawnEventSpawnReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3818,13 +3743,6 @@ impl<'mc> CreatureSpawnEventSpawnReason<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct CreatureSpawnEventSpawnReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for CreatureSpawnEventSpawnReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/CreatureSpawnEvent$SpawnReason"
     }
 }
 
@@ -4151,15 +4069,8 @@ impl<'mc> Into<crate::event::entity::EntitySpawnEvent<'mc>> for CreatureSpawnEve
         )
     }
 }
-
-pub struct CreatureSpawnEventClass;
-impl blackboxmc_general::JNIProvidesClassName for CreatureSpawnEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/CreatureSpawnEvent"
-    }
-}
-
 /// Called when an item is spawned into a world
+#[repr(C)]
 pub struct ItemSpawnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4462,14 +4373,6 @@ impl<'mc> Into<crate::event::entity::EntitySpawnEvent<'mc>> for ItemSpawnEvent<'
             .expect("Error converting ItemSpawnEvent into crate::event::entity::EntitySpawnEvent")
     }
 }
-
-pub struct ItemSpawnEventClass;
-impl blackboxmc_general::JNIProvidesClassName for ItemSpawnEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/ItemSpawnEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum DamageModifierEnum {
     Base,
@@ -4498,6 +4401,7 @@ impl<'mc> std::fmt::Display for DamageModifier<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct DamageModifier<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4608,15 +4512,8 @@ impl<'mc> DamageModifier<'mc> {
             .unwrap()
     }
 }
-
-pub struct DamageModifierClass;
-impl blackboxmc_general::JNIProvidesClassName for DamageModifierClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/DamageModifier"
-    }
-}
-
 /// Thrown when an entity creates an item drop.
+#[repr(C)]
 pub struct EntityDropItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4922,14 +4819,6 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityDropItemEvent<'
             .expect("Error converting EntityDropItemEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityDropItemEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityDropItemEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityDropItemEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum CauseEnum {
     AreaEffectCloud,
@@ -4994,6 +4883,7 @@ impl<'mc> std::fmt::Display for Cause<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct Cause<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5138,15 +5028,8 @@ impl<'mc> Cause<'mc> {
             .unwrap()
     }
 }
-
-pub struct CauseClass;
-impl blackboxmc_general::JNIProvidesClassName for CauseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/Cause"
-    }
-}
-
 /// Called when a Slime splits into smaller Slimes upon death
+#[repr(C)]
 pub struct SlimeSplitEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5462,15 +5345,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for SlimeSplitEvent<'mc> 
             .expect("Error converting SlimeSplitEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct SlimeSplitEventClass;
-impl blackboxmc_general::JNIProvidesClassName for SlimeSplitEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/SlimeSplitEvent"
-    }
-}
-
 /// Called when a human entity's food level changes
+#[repr(C)]
 pub struct FoodLevelChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5805,15 +5681,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for FoodLevelChangeEvent<
             .expect("Error converting FoodLevelChangeEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct FoodLevelChangeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for FoodLevelChangeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/FoodLevelChangeEvent"
-    }
-}
-
 /// Called when an Entity targets a <a href="../../entity/LivingEntity.html" title="interface in org.bukkit.entity"><code>LivingEntity</code></a> and can only target LivingEntity's.
+#[repr(C)]
 pub struct EntityTargetLivingEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6185,15 +6054,8 @@ impl<'mc> Into<crate::event::entity::EntityTargetEvent<'mc>>
         crate::event::entity::EntityTargetEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting EntityTargetLivingEntityEvent into crate::event::entity::EntityTargetEvent")
     }
 }
-
-pub struct EntityTargetLivingEntityEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityTargetLivingEntityEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityTargetLivingEntityEvent"
-    }
-}
-
 /// Called when a LivingEntity shoots a bow firing an arrow
+#[repr(C)]
 pub struct EntityShootBowEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6633,15 +6495,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityShootBowEvent<'
             .expect("Error converting EntityShootBowEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityShootBowEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityShootBowEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityShootBowEvent"
-    }
-}
-
 /// Called when an entity dies and may have the opportunity to be resurrected. Will be called in a cancelled state if the entity does not have a totem equipped.
+#[repr(C)]
 pub struct EntityResurrectEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6963,15 +6818,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityResurrectEvent<
             .expect("Error converting EntityResurrectEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityResurrectEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityResurrectEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityResurrectEvent"
-    }
-}
-
 /// Stores all data related to the bartering interaction with a piglin. This event can be triggered by a piglin picking up an item that's on its bartering list.
+#[repr(C)]
 pub struct PiglinBarterEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7270,16 +7118,9 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for PiglinBarterEvent<'mc
             .expect("Error converting PiglinBarterEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct PiglinBarterEventClass;
-impl blackboxmc_general::JNIProvidesClassName for PiglinBarterEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/PiglinBarterEvent"
-    }
-}
-
 /// Called when a Pig Zombie is angered by another entity.
 /// <p>If the event is cancelled, the pig zombie will not be angered.</p>
+#[repr(C)]
 pub struct PigZombieAngerEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7616,15 +7457,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for PigZombieAngerEvent<'
             .expect("Error converting PigZombieAngerEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct PigZombieAngerEventClass;
-impl blackboxmc_general::JNIProvidesClassName for PigZombieAngerEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/PigZombieAngerEvent"
-    }
-}
-
 /// Thrown when a Living Entity creates a portal in a world.
+#[repr(C)]
 pub struct EntityCreatePortalEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7938,15 +7772,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityCreatePortalEve
         )
     }
 }
-
-pub struct EntityCreatePortalEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityCreatePortalEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityCreatePortalEvent"
-    }
-}
-
 /// Sent when an entity's swimming status is toggled.
+#[repr(C)]
 pub struct EntityToggleSwimEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8249,17 +8076,10 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityToggleSwimEvent
             .expect("Error converting EntityToggleSwimEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityToggleSwimEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityToggleSwimEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityToggleSwimEvent"
-    }
-}
-
 /// Thrown when a non-player entity is teleported from one location to another.
 ///
 /// This may be as a result of natural causes (Enderman, Shulker), pathfinding (Wolf), or commands (/teleport).
+#[repr(C)]
 pub struct EntityTeleportEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8621,17 +8441,10 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityTeleportEvent<'
             .expect("Error converting EntityTeleportEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityTeleportEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityTeleportEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityTeleportEvent"
-    }
-}
-
 /// Called when an entity enters love mode.
 ///
 /// This can be cancelled but the item will still be consumed that was used to make the entity enter into love mode.
+#[repr(C)]
 pub struct EntityEnterLoveModeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8973,15 +8786,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityEnterLoveModeEv
         )
     }
 }
-
-pub struct EntityEnterLoveModeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityEnterLoveModeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityEnterLoveModeEvent"
-    }
-}
-
 /// Called when a sheep's wool is dyed
+#[repr(C)]
 pub struct SheepDyeWoolEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9344,15 +9150,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for SheepDyeWoolEvent<'mc
             .expect("Error converting SheepDyeWoolEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct SheepDyeWoolEventClass;
-impl blackboxmc_general::JNIProvidesClassName for SheepDyeWoolEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/SheepDyeWoolEvent"
-    }
-}
-
 /// Called when an entity changes its pose.
+#[repr(C)]
 pub struct EntityPoseChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9643,15 +9442,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityPoseChangeEvent
             .expect("Error converting EntityPoseChangeEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityPoseChangeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityPoseChangeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityPoseChangeEvent"
-    }
-}
-
 /// Called when an entity is damaged by an entity
+#[repr(C)]
 pub struct EntityDamageByEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10092,13 +9884,7 @@ impl<'mc> Into<crate::event::entity::EntityDamageEvent<'mc>> for EntityDamageByE
     }
 }
 
-pub struct EntityDamageByEntityEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityDamageByEntityEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityDamageByEntityEvent"
-    }
-}
-
+#[repr(C)]
 pub struct VillagerCareerChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10121,6 +9907,7 @@ impl<'mc> std::fmt::Display for VillagerCareerChangeEventChangeReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct VillagerCareerChangeEventChangeReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10227,13 +10014,6 @@ impl<'mc> VillagerCareerChangeEventChangeReason<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct VillagerCareerChangeEventChangeReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for VillagerCareerChangeEventChangeReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/VillagerCareerChangeEvent$ChangeReason"
     }
 }
 
@@ -10617,15 +10397,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for VillagerCareerChangeE
         )
     }
 }
-
-pub struct VillagerCareerChangeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for VillagerCareerChangeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/VillagerCareerChangeEvent"
-    }
-}
-
 /// Represents an Entity-related event
+#[repr(C)]
 pub struct EntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10869,16 +10642,9 @@ impl<'mc> Into<crate::event::Event<'mc>> for EntityEvent<'mc> {
             .expect("Error converting EntityEvent into crate::event::Event")
     }
 }
-
-pub struct EntityEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityEvent"
-    }
-}
-
 /// Called when a potion effect is modified on an entity.
 /// <p>If the event is cancelled, no change will be made on the entity.</p>
+#[repr(C)]
 pub struct EntityPotionEffectEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10905,6 +10671,7 @@ impl<'mc> std::fmt::Display for EntityPotionEffectEventAction<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct EntityPotionEffectEventAction<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11016,14 +10783,6 @@ impl<'mc> EntityPotionEffectEventAction<'mc> {
             .unwrap()
     }
 }
-
-pub struct EntityPotionEffectEventActionClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityPotionEffectEventActionClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityPotionEffectEvent$Action"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum EntityPotionEffectEventCauseEnum {
     AreaEffectCloud,
@@ -11088,6 +10847,7 @@ impl<'mc> std::fmt::Display for EntityPotionEffectEventCause<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct EntityPotionEffectEventCause<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11247,13 +11007,6 @@ impl<'mc> EntityPotionEffectEventCause<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct EntityPotionEffectEventCauseClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityPotionEffectEventCauseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityPotionEffectEvent$Cause"
     }
 }
 
@@ -11690,14 +11443,6 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityPotionEffectEve
         )
     }
 }
-
-pub struct EntityPotionEffectEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityPotionEffectEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityPotionEffectEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum RegainReasonEnum {
     Regen,
@@ -11730,6 +11475,7 @@ impl<'mc> std::fmt::Display for RegainReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct RegainReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11843,13 +11589,7 @@ impl<'mc> RegainReason<'mc> {
     }
 }
 
-pub struct RegainReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for RegainReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/RegainReason"
-    }
-}
-
+#[repr(C)]
 pub struct ItemMergeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12160,15 +11900,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for ItemMergeEvent<'mc> {
             .expect("Error converting ItemMergeEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct ItemMergeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for ItemMergeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/ItemMergeEvent"
-    }
-}
-
 /// Called whenever a villager acquires a new trade.
+#[repr(C)]
 pub struct VillagerAcquireTradeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12505,15 +12238,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for VillagerAcquireTradeE
         )
     }
 }
-
-pub struct VillagerAcquireTradeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for VillagerAcquireTradeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/VillagerAcquireTradeEvent"
-    }
-}
-
 /// Called when a splash potion hits an area
+#[repr(C)]
 pub struct LingeringPotionSplashEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12895,14 +12621,6 @@ impl<'mc> Into<crate::event::entity::ProjectileHitEvent<'mc>> for LingeringPotio
         crate::event::entity::ProjectileHitEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting LingeringPotionSplashEvent into crate::event::entity::ProjectileHitEvent")
     }
 }
-
-pub struct LingeringPotionSplashEventClass;
-impl blackboxmc_general::JNIProvidesClassName for LingeringPotionSplashEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/LingeringPotionSplashEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum UnleashReasonEnum {
     HolderGone,
@@ -12925,6 +12643,7 @@ impl<'mc> std::fmt::Display for UnleashReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct UnleashReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13027,15 +12746,8 @@ impl<'mc> UnleashReason<'mc> {
             .unwrap()
     }
 }
-
-pub struct UnleashReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for UnleashReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/UnleashReason"
-    }
-}
-
 /// Thrown when a LivingEntity is tamed
+#[repr(C)]
 pub struct EntityTameEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13349,16 +13061,9 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityTameEvent<'mc> 
             .expect("Error converting EntityTameEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityTameEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityTameEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityTameEvent"
-    }
-}
-
 /// Called when an <a title="interface in org.bukkit.entity" href="../../entity/Entity.html"><code>Entity</code></a> breaks a door
 /// <p>Cancelling the event will cause the event to be delayed</p>
+#[repr(C)]
 pub struct EntityBreakDoorEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13698,15 +13403,8 @@ impl<'mc> Into<crate::event::entity::EntityChangeBlockEvent<'mc>> for EntityBrea
         crate::event::entity::EntityChangeBlockEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting EntityBreakDoorEvent into crate::event::entity::EntityChangeBlockEvent")
     }
 }
-
-pub struct EntityBreakDoorEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityBreakDoorEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityBreakDoorEvent"
-    }
-}
-
 /// Called when one Entity breeds with another Entity.
+#[repr(C)]
 pub struct EntityBreedEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14098,17 +13796,10 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityBreedEvent<'mc>
             .expect("Error converting EntityBreedEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityBreedEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityBreedEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityBreedEvent"
-    }
-}
-
 /// Triggered when a entity is created in the world by a player "placing" an item on a block.
 ///
 /// Note that this event is currently only fired for four specific placements: armor stands, boats, minecarts, and end crystals.
+#[repr(C)]
 pub struct EntityPlaceEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14495,15 +14186,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityPlaceEvent<'mc>
             .expect("Error converting EntityPlaceEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityPlaceEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityPlaceEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityPlaceEvent"
-    }
-}
-
 /// Called when a block causes an entity to combust.
+#[repr(C)]
 pub struct EntityCombustByBlockEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14834,16 +14518,9 @@ impl<'mc> Into<crate::event::entity::EntityCombustEvent<'mc>> for EntityCombustB
         crate::event::entity::EntityCombustEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting EntityCombustByBlockEvent into crate::event::entity::EntityCombustEvent")
     }
 }
-
-pub struct EntityCombustByBlockEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityCombustByBlockEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityCombustByBlockEvent"
-    }
-}
-
 /// This event is called when a <a href="../../entity/Item.html" title="interface in org.bukkit.entity"><code>Item</code></a> is removed from the world because it has existed for 5 minutes.
 /// <p>Cancelling the event results in the item being allowed to exist for 5 more minutes. This behavior is not guaranteed and may change in future versions.</p>
+#[repr(C)]
 pub struct ItemDespawnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15150,15 +14827,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for ItemDespawnEvent<'mc>
             .expect("Error converting ItemDespawnEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct ItemDespawnEventClass;
-impl blackboxmc_general::JNIProvidesClassName for ItemDespawnEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/ItemDespawnEvent"
-    }
-}
-
 /// Stores data for health-regain events
+#[repr(C)]
 pub struct EntityRegainHealthEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15195,6 +14865,7 @@ impl<'mc> std::fmt::Display for EntityRegainHealthEventRegainReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct EntityRegainHealthEventRegainReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15322,13 +14993,6 @@ impl<'mc> EntityRegainHealthEventRegainReason<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct EntityRegainHealthEventRegainReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityRegainHealthEventRegainReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityRegainHealthEvent$RegainReason"
     }
 }
 
@@ -15678,16 +15342,9 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityRegainHealthEve
         )
     }
 }
-
-pub struct EntityRegainHealthEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityRegainHealthEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityRegainHealthEvent"
-    }
-}
-
 /// Called when a bat attempts to sleep or wake up from its slumber.
 /// <p>If a Bat Toggle Sleep event is cancelled, the Bat will not toggle its sleep state.</p>
+#[repr(C)]
 pub struct BatToggleSleepEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15989,15 +15646,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for BatToggleSleepEvent<'
             .expect("Error converting BatToggleSleepEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct BatToggleSleepEventClass;
-impl blackboxmc_general::JNIProvidesClassName for BatToggleSleepEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/BatToggleSleepEvent"
-    }
-}
-
 /// Called when a projectile is launched.
+#[repr(C)]
 pub struct ProjectileLaunchEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16300,14 +15950,6 @@ impl<'mc> Into<crate::event::entity::EntitySpawnEvent<'mc>> for ProjectileLaunch
         )
     }
 }
-
-pub struct ProjectileLaunchEventClass;
-impl blackboxmc_general::JNIProvidesClassName for ProjectileLaunchEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/ProjectileLaunchEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum ExhaustionReasonEnum {
     BlockMined,
@@ -16350,6 +15992,7 @@ impl<'mc> std::fmt::Display for ExhaustionReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct ExhaustionReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16474,15 +16117,8 @@ impl<'mc> ExhaustionReason<'mc> {
             .unwrap()
     }
 }
-
-pub struct ExhaustionReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for ExhaustionReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/ExhaustionReason"
-    }
-}
-
 /// Thrown whenever a <a href="../../entity/Player.html" title="interface in org.bukkit.entity"><code>Player</code></a> dies
+#[repr(C)]
 pub struct PlayerDeathEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16917,15 +16553,8 @@ impl<'mc> Into<crate::event::entity::EntityDeathEvent<'mc>> for PlayerDeathEvent
             .expect("Error converting PlayerDeathEvent into crate::event::entity::EntityDeathEvent")
     }
 }
-
-pub struct PlayerDeathEventClass;
-impl blackboxmc_general::JNIProvidesClassName for PlayerDeathEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/PlayerDeathEvent"
-    }
-}
-
 /// Called when a lingering potion applies it's effects. Happens once every 5 ticks
+#[repr(C)]
 pub struct AreaEffectCloudApplyEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17221,15 +16850,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for AreaEffectCloudApplyE
         )
     }
 }
-
-pub struct AreaEffectCloudApplyEventClass;
-impl blackboxmc_general::JNIProvidesClassName for AreaEffectCloudApplyEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/AreaEffectCloudApplyEvent"
-    }
-}
-
 /// Called when any Entity changes a block and a more specific event is not available.
+#[repr(C)]
 pub struct EntityChangeBlockEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17582,15 +17204,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityChangeBlockEven
         )
     }
 }
-
-pub struct EntityChangeBlockEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityChangeBlockEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityChangeBlockEvent"
-    }
-}
-
 /// Called when an entity causes another entity to combust.
+#[repr(C)]
 pub struct EntityCombustByEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17921,14 +17536,6 @@ impl<'mc> Into<crate::event::entity::EntityCombustEvent<'mc>> for EntityCombustB
         crate::event::entity::EntityCombustEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting EntityCombustByEntityEvent into crate::event::entity::EntityCombustEvent")
     }
 }
-
-pub struct EntityCombustByEntityEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityCombustByEntityEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityCombustByEntityEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum TransformReasonEnum {
     Cured,
@@ -17963,6 +17570,7 @@ impl<'mc> std::fmt::Display for TransformReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct TransformReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18079,15 +17687,8 @@ impl<'mc> TransformReason<'mc> {
             .unwrap()
     }
 }
-
-pub struct TransformReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for TransformReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/TransformReason"
-    }
-}
-
 /// Called when a human entity experiences exhaustion. An exhaustion level greater than 4.0 causes a decrease in saturation by 1.
+#[repr(C)]
 pub struct EntityExhaustionEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18136,6 +17737,7 @@ impl<'mc> std::fmt::Display for EntityExhaustionEventExhaustionReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct EntityExhaustionEventExhaustionReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18278,13 +17880,6 @@ impl<'mc> EntityExhaustionEventExhaustionReason<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct EntityExhaustionEventExhaustionReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityExhaustionEventExhaustionReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityExhaustionEvent$ExhaustionReason"
     }
 }
 
@@ -18638,15 +18233,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityExhaustionEvent
             .expect("Error converting EntityExhaustionEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityExhaustionEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityExhaustionEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityExhaustionEvent"
-    }
-}
-
 /// Called immediately prior to a creature being leashed by a player.
+#[repr(C)]
 pub struct PlayerLeashEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18979,14 +18567,6 @@ impl<'mc> Into<crate::event::Event<'mc>> for PlayerLeashEntityEvent<'mc> {
             .expect("Error converting PlayerLeashEntityEvent into crate::event::Event")
     }
 }
-
-pub struct PlayerLeashEntityEventClass;
-impl blackboxmc_general::JNIProvidesClassName for PlayerLeashEntityEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/PlayerLeashEntityEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum TargetReasonEnum {
     TargetDied,
@@ -19038,6 +18618,7 @@ impl<'mc> std::fmt::Display for TargetReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct TargetReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19167,15 +18748,8 @@ impl<'mc> TargetReason<'mc> {
             .unwrap()
     }
 }
-
-pub struct TargetReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for TargetReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/TargetReason"
-    }
-}
-
 /// Stores data for pigs being zapped
+#[repr(C)]
 pub struct PigZapEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19568,15 +19142,8 @@ impl<'mc> Into<crate::event::entity::EntityTransformEvent<'mc>> for PigZapEvent<
             .expect("Error converting PigZapEvent into crate::event::entity::EntityTransformEvent")
     }
 }
-
-pub struct PigZapEventClass;
-impl blackboxmc_general::JNIProvidesClassName for PigZapEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/PigZapEvent"
-    }
-}
-
 /// Called when a firework explodes.
+#[repr(C)]
 pub struct FireworkExplodeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19865,15 +19432,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for FireworkExplodeEvent<
             .expect("Error converting FireworkExplodeEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct FireworkExplodeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for FireworkExplodeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/FireworkExplodeEvent"
-    }
-}
-
 /// Called when an arrow enters or exists an entity's body.
+#[repr(C)]
 pub struct ArrowBodyCountChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20217,16 +19777,9 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for ArrowBodyCountChangeE
         )
     }
 }
-
-pub struct ArrowBodyCountChangeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for ArrowBodyCountChangeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/ArrowBodyCountChangeEvent"
-    }
-}
-
 /// Called before an entity exits a portal.
 /// <p>This event allows you to modify the velocity of the entity after they have successfully exited the portal.</p>
+#[repr(C)]
 pub struct EntityPortalExitEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20632,15 +20185,8 @@ impl<'mc> Into<crate::event::entity::EntityTeleportEvent<'mc>> for EntityPortalE
         )
     }
 }
-
-pub struct EntityPortalExitEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityPortalExitEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityPortalExitEvent"
-    }
-}
-
 /// Stores data for damage events
+#[repr(C)]
 pub struct EntityDamageEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20725,6 +20271,7 @@ impl<'mc> std::fmt::Display for EntityDamageEventDamageCause<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct EntityDamageEventDamageCause<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20906,14 +20453,6 @@ impl<'mc> EntityDamageEventDamageCause<'mc> {
             .unwrap()
     }
 }
-
-pub struct EntityDamageEventDamageCauseClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityDamageEventDamageCauseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityDamageEvent$DamageCause"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum EntityDamageEventDamageModifierEnum {
     Base,
@@ -20942,6 +20481,7 @@ impl<'mc> std::fmt::Display for EntityDamageEventDamageModifier<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct EntityDamageEventDamageModifier<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -21060,13 +20600,6 @@ impl<'mc> EntityDamageEventDamageModifier<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct EntityDamageEventDamageModifierClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityDamageEventDamageModifierClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityDamageEvent$DamageModifier"
     }
 }
 
@@ -21486,15 +21019,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityDamageEvent<'mc
             .expect("Error converting EntityDamageEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityDamageEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityDamageEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityDamageEvent"
-    }
-}
-
 /// Thrown whenever a LivingEntity dies
+#[repr(C)]
 pub struct EntityDeathEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -21776,19 +21302,12 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityDeathEvent<'mc>
             .expect("Error converting EntityDeathEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityDeathEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityDeathEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityDeathEvent"
-    }
-}
-
 /// Sent when an entity's gliding status is toggled with an Elytra. Examples of when this event would be called:
 /// <ul>
 /// <li>Player presses the jump key while in midair and using an Elytra</li>
 /// <li>Player lands on ground while they are gliding (with an Elytra)</li>
 /// </ul> This can be visually estimated by the animation in which a player turns horizontal.
+#[repr(C)]
 pub struct EntityToggleGlideEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -22092,15 +21611,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityToggleGlideEven
         )
     }
 }
-
-pub struct EntityToggleGlideEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityToggleGlideEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityToggleGlideEvent"
-    }
-}
-
 /// Called when a creature targets or untargets another entity
+#[repr(C)]
 pub struct EntityTargetEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -22163,6 +21675,7 @@ impl<'mc> std::fmt::Display for EntityTargetEventTargetReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct EntityTargetEventTargetReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -22314,13 +21827,6 @@ impl<'mc> EntityTargetEventTargetReason<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct EntityTargetEventTargetReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityTargetEventTargetReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityTargetEvent$TargetReason"
     }
 }
 
@@ -22684,16 +22190,9 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityTargetEvent<'mc
             .expect("Error converting EntityTargetEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityTargetEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityTargetEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityTargetEvent"
-    }
-}
-
 /// Called when a Creeper is struck by lightning.
 /// <p>If a Creeper Power event is cancelled, the Creeper will not be powered.</p>
+#[repr(C)]
 pub struct CreeperPowerEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -22718,6 +22217,7 @@ impl<'mc> std::fmt::Display for CreeperPowerEventPowerCause<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct CreeperPowerEventPowerCause<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -22821,13 +22321,6 @@ impl<'mc> CreeperPowerEventPowerCause<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct CreeperPowerEventPowerCauseClass;
-impl blackboxmc_general::JNIProvidesClassName for CreeperPowerEventPowerCauseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/CreeperPowerEvent$PowerCause"
     }
 }
 
@@ -23170,16 +22663,9 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for CreeperPowerEvent<'mc
             .expect("Error converting CreeperPowerEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct CreeperPowerEventClass;
-impl blackboxmc_general::JNIProvidesClassName for CreeperPowerEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/CreeperPowerEvent"
-    }
-}
-
 /// Called when an entity is spawned into a world by a spawner.
 /// <p>If a Spawner Spawn event is cancelled, the entity will not spawn.</p>
+#[repr(C)]
 pub struct SpawnerSpawnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -23491,15 +22977,8 @@ impl<'mc> Into<crate::event::entity::EntitySpawnEvent<'mc>> for SpawnerSpawnEven
         )
     }
 }
-
-pub struct SpawnerSpawnEventClass;
-impl blackboxmc_general::JNIProvidesClassName for SpawnerSpawnEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/SpawnerSpawnEvent"
-    }
-}
-
 /// Called when an EnderDragon switches controller phase.
+#[repr(C)]
 pub struct EnderDragonChangePhaseEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -23880,15 +23359,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EnderDragonChangePhas
         )
     }
 }
-
-pub struct EnderDragonChangePhaseEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EnderDragonChangePhaseEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EnderDragonChangePhaseEvent"
-    }
-}
-
 /// Called when a projectile hits an object
+#[repr(C)]
 pub struct ProjectileHitEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24268,15 +23740,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for ProjectileHitEvent<'m
             .expect("Error converting ProjectileHitEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct ProjectileHitEventClass;
-impl blackboxmc_general::JNIProvidesClassName for ProjectileHitEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/ProjectileHitEvent"
-    }
-}
-
 /// Called when an entity comes into contact with a portal
+#[repr(C)]
 pub struct EntityPortalEnterEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24555,15 +24020,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityPortalEnterEven
         )
     }
 }
-
-pub struct EntityPortalEnterEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityPortalEnterEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityPortalEnterEvent"
-    }
-}
-
 /// Called when the amount of air an entity has remaining changes.
+#[repr(C)]
 pub struct EntityAirChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24878,15 +24336,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityAirChangeEvent<
             .expect("Error converting EntityAirChangeEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityAirChangeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityAirChangeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityAirChangeEvent"
-    }
-}
-
 /// Called immediately prior to an entity being unleashed.
+#[repr(C)]
 pub struct EntityUnleashEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24913,6 +24364,7 @@ impl<'mc> std::fmt::Display for EntityUnleashEventUnleashReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct EntityUnleashEventUnleashReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -25023,13 +24475,6 @@ impl<'mc> EntityUnleashEventUnleashReason<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct EntityUnleashEventUnleashReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityUnleashEventUnleashReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityUnleashEvent$UnleashReason"
     }
 }
 
@@ -25327,15 +24772,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityUnleashEvent<'m
             .expect("Error converting EntityUnleashEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityUnleashEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityUnleashEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityUnleashEvent"
-    }
-}
-
 /// Called when a ThrownExpBottle hits and releases experience.
+#[repr(C)]
 pub struct ExpBottleEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -25733,16 +25171,9 @@ impl<'mc> Into<crate::event::entity::ProjectileHitEvent<'mc>> for ExpBottleEvent
             .expect("Error converting ExpBottleEvent into crate::event::entity::ProjectileHitEvent")
     }
 }
-
-pub struct ExpBottleEventClass;
-impl blackboxmc_general::JNIProvidesClassName for ExpBottleEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/ExpBottleEvent"
-    }
-}
-
 /// Called when an entity combusts.
 /// <p>If an Entity Combust event is cancelled, the entity will not combust.</p>
+#[repr(C)]
 pub struct EntityCombustEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -26058,15 +25489,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityCombustEvent<'m
             .expect("Error converting EntityCombustEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityCombustEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityCombustEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityCombustEvent"
-    }
-}
-
 /// Called when a <a href="../../entity/Spellcaster.html" title="interface in org.bukkit.entity"><code>Spellcaster</code></a> casts a spell.
+#[repr(C)]
 pub struct EntitySpellCastEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -26390,15 +25814,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntitySpellCastEvent<
             .expect("Error converting EntitySpellCastEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntitySpellCastEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntitySpellCastEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntitySpellCastEvent"
-    }
-}
-
 /// Called when an entity is about to be replaced by another entity.
+#[repr(C)]
 pub struct EntityTransformEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -26439,6 +25856,7 @@ impl<'mc> std::fmt::Display for EntityTransformEventTransformReason<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct EntityTransformEventTransformReason<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -26569,13 +25987,6 @@ impl<'mc> EntityTransformEventTransformReason<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct EntityTransformEventTransformReasonClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityTransformEventTransformReasonClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityTransformEvent$TransformReason"
     }
 }
 
@@ -26911,14 +26322,6 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityTransformEvent<
             .expect("Error converting EntityTransformEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityTransformEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityTransformEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityTransformEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum DamageCauseEnum {
     Kill,
@@ -26997,6 +26400,7 @@ impl<'mc> std::fmt::Display for DamageCause<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct DamageCause<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -27155,15 +26559,8 @@ impl<'mc> DamageCause<'mc> {
             .unwrap()
     }
 }
-
-pub struct DamageCauseClass;
-impl blackboxmc_general::JNIProvidesClassName for DamageCauseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/DamageCause"
-    }
-}
-
 /// Called when a splash potion hits an area
+#[repr(C)]
 pub struct PotionSplashEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -27600,15 +26997,8 @@ impl<'mc> Into<crate::event::entity::ProjectileHitEvent<'mc>> for PotionSplashEv
         )
     }
 }
-
-pub struct PotionSplashEventClass;
-impl blackboxmc_general::JNIProvidesClassName for PotionSplashEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/PotionSplashEvent"
-    }
-}
-
 /// Called when an entity interacts with an object
+#[repr(C)]
 pub struct EntityInteractEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -27914,16 +27304,9 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityInteractEvent<'
             .expect("Error converting EntityInteractEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntityInteractEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntityInteractEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntityInteractEvent"
-    }
-}
-
 /// Called when an entity is spawned into a world.
 /// <p>If an Entity Spawn event is cancelled, the entity will not spawn.</p>
+#[repr(C)]
 pub struct EntitySpawnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -28221,16 +27604,9 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntitySpawnEvent<'mc>
             .expect("Error converting EntitySpawnEvent into crate::event::entity::EntityEvent")
     }
 }
-
-pub struct EntitySpawnEventClass;
-impl blackboxmc_general::JNIProvidesClassName for EntitySpawnEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/EntitySpawnEvent"
-    }
-}
-
 /// Called when a <a title="interface in org.bukkit.entity" href="../../entity/Villager.html"><code>Villager</code></a> is about to restock one of its trades.
 /// <p>If this event passes, the villager will reset the <a href="../../inventory/MerchantRecipe.html#getUses()"><code>uses</code></a> of the affected <a href="#getRecipe()"><code>MerchantRecipe</code></a> to <code>0</code>.</p>
+#[repr(C)]
 pub struct VillagerReplenishTradeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -28594,12 +27970,5 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for VillagerReplenishTrad
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).expect(
             "Error converting VillagerReplenishTradeEvent into crate::event::entity::EntityEvent",
         )
-    }
-}
-
-pub struct VillagerReplenishTradeEventClass;
-impl blackboxmc_general::JNIProvidesClassName for VillagerReplenishTradeEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/entity/VillagerReplenishTradeEvent"
     }
 }

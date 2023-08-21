@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Utils for casting number types to other number types
+#[repr(C)]
 pub struct NumberConversions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -374,14 +375,8 @@ impl<'mc> std::string::ToString for NumberConversions<'mc> {
     }
 }
 
-pub struct NumberConversionsClass;
-impl blackboxmc_general::JNIProvidesClassName for NumberConversionsClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/NumberConversions"
-    }
-}
-
 /// This class performs ray tracing and iterates along blocks on a line
+#[repr(C)]
 pub struct BlockIterator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -684,15 +679,8 @@ impl<'mc> Into<blackboxmc_java::util::JavaIterator<'mc>> for BlockIterator<'mc> 
             .expect("Error converting BlockIterator into blackboxmc_java::util::JavaIterator")
     }
 }
-
-pub struct BlockIteratorClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockIteratorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/BlockIterator"
-    }
-}
-
 /// Represents an arbitrary affine transformation.
+#[repr(C)]
 pub struct Transformation<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -911,15 +899,9 @@ impl<'mc> std::string::ToString for Transformation<'mc> {
     }
 }
 
-pub struct TransformationClass;
-impl blackboxmc_general::JNIProvidesClassName for TransformationClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/Transformation"
-    }
-}
-
 /// The hit result of a ray trace.
 /// <p>Only the hit position is guaranteed to always be available. The availability of the other attributes depends on what got hit and on the context in which the ray trace was performed.</p>
+#[repr(C)]
 pub struct RayTraceResult<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1179,16 +1161,10 @@ impl<'mc> std::string::ToString for RayTraceResult<'mc> {
     }
 }
 
-pub struct RayTraceResultClass;
-impl blackboxmc_general::JNIProvidesClassName for RayTraceResultClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/RayTraceResult"
-    }
-}
-
 /// This is a cached version of a server-icon. It's internal representation and implementation is undefined.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct CachedServerIcon<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1239,13 +1215,7 @@ impl<'mc> CachedServerIcon<'mc> {
     }
 }
 
-pub struct CachedServerIconClass;
-impl blackboxmc_general::JNIProvidesClassName for CachedServerIconClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/CachedServerIcon"
-    }
-}
-
+#[repr(C)]
 pub struct ChatPaginatorChatPage<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1438,16 +1408,10 @@ impl<'mc> std::string::ToString for ChatPaginatorChatPage<'mc> {
     }
 }
 
-pub struct ChatPaginatorChatPageClass;
-impl blackboxmc_general::JNIProvidesClassName for ChatPaginatorChatPageClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/ChatPaginator$ChatPage"
-    }
-}
-
 /// A shape made out of voxels. For example, used to represent the detailed collision shape of blocks.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct VoxelShape<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1534,17 +1498,10 @@ impl<'mc> VoxelShape<'mc> {
             .unwrap()
     }
 }
-
-pub struct VoxelShapeClass;
-impl blackboxmc_general::JNIProvidesClassName for VoxelShapeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/VoxelShape"
-    }
-}
-
 /// Represents an operation that accepts a single input argument and returns no result.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Consumer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1619,17 +1576,10 @@ impl<'mc> Consumer<'mc> {
             .unwrap()
     }
 }
-
-pub struct ConsumerClass;
-impl blackboxmc_general::JNIProvidesClassName for ConsumerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/Consumer"
-    }
-}
-
 /// Holds the result of searching for a structure.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct StructureSearchResult<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1704,18 +1654,11 @@ impl<'mc> StructureSearchResult<'mc> {
             .unwrap()
     }
 }
-
-pub struct StructureSearchResultClass;
-impl blackboxmc_general::JNIProvidesClassName for StructureSearchResultClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/StructureSearchResult"
-    }
-}
-
 /// A mutable axis aligned bounding box (AABB).
 /// <p>This basically represents a rectangular box (specified by minimum and maximum corners) that can for example be used to describe the position and extents of an object (such as an entity, block, or rectangular region) in 3D space. Its edges and faces are parallel to the axes of the cartesian coordinate system.</p>
 /// <p>The bounding box may be degenerate (one or more sides having the length 0).</p>
 /// <p>Because bounding boxes are mutable, storing them long term may be dangerous if they get modified later. If you want to keep around a bounding box, it may be wise to call <a href="#clone()"><code>clone()</code></a> in order to get a copy.</p>
+#[repr(C)]
 pub struct BoundingBox<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2692,15 +2635,8 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting BoundingBox into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
-
-pub struct BoundingBoxClass;
-impl blackboxmc_general::JNIProvidesClassName for BoundingBoxClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/BoundingBox"
-    }
-}
-
 /// A vector with a hash function that floors the X, Y, Z components, a la BlockVector in WorldEdit. BlockVectors can be used in hash sets and hash maps. Be aware that BlockVectors are mutable, but it is important that BlockVectors are never changed once put into a hash set or hash map.
+#[repr(C)]
 pub struct BlockVector<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3870,15 +3806,8 @@ impl<'mc> Into<crate::util::Vector<'mc>> for BlockVector<'mc> {
             .expect("Error converting BlockVector into crate::util::Vector")
     }
 }
-
-pub struct BlockVectorClass;
-impl blackboxmc_general::JNIProvidesClassName for BlockVectorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/BlockVector"
-    }
-}
-
 /// EulerAngle is used to represent 3 angles, one for each axis (x, y, z). The angles are in radians
+#[repr(C)]
 pub struct EulerAngle<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4185,13 +4114,7 @@ impl<'mc> std::string::ToString for EulerAngle<'mc> {
     }
 }
 
-pub struct EulerAngleClass;
-impl blackboxmc_general::JNIProvidesClassName for EulerAngleClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/EulerAngle"
-    }
-}
-
+#[repr(C)]
 pub struct StringUtil<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4378,14 +4301,8 @@ impl<'mc> std::string::ToString for StringUtil<'mc> {
     }
 }
 
-pub struct StringUtilClass;
-impl blackboxmc_general::JNIProvidesClassName for StringUtilClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/StringUtil"
-    }
-}
-
 /// The ChatPaginator takes a raw string of arbitrary length and breaks it down into an array of strings appropriate for displaying on the Minecraft player console.
+#[repr(C)]
 pub struct ChatPaginator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4581,14 +4498,8 @@ impl<'mc> std::string::ToString for ChatPaginator<'mc> {
     }
 }
 
-pub struct ChatPaginatorClass;
-impl blackboxmc_general::JNIProvidesClassName for ChatPaginatorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/ChatPaginator"
-    }
-}
-
 /// Represents a mutable vector. Because the components of Vectors are mutable, storing Vectors long term may be dangerous if passing code modifies the Vector later. If you want to keep around a Vector, it may be wise to call <code>clone()</code> in order to get a copy.
+#[repr(C)]
 pub struct Vector<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5733,15 +5644,8 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting Vector into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
-
-pub struct VectorClass;
-impl blackboxmc_general::JNIProvidesClassName for VectorClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/Vector"
-    }
-}
-
 /// Class containing file utilities
+#[repr(C)]
 pub struct FileUtil<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5921,13 +5825,6 @@ impl<'mc> std::string::ToString for FileUtil<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling FileUtil.toString: {}", err),
         }
-    }
-}
-
-pub struct FileUtilClass;
-impl blackboxmc_general::JNIProvidesClassName for FileUtilClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/util/FileUtil"
     }
 }
 

@@ -6,6 +6,7 @@ use color_eyre::eyre::Result;
 /// The individual status of an advancement for a player. This class is not reference safe as the underlying advancement may be reloaded.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct AdvancementProgress<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -182,14 +183,6 @@ impl<'mc> AdvancementProgress<'mc> {
             .unwrap()
     }
 }
-
-pub struct AdvancementProgressClass;
-impl blackboxmc_general::JNIProvidesClassName for AdvancementProgressClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/advancement/AdvancementProgress"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum AdvancementDisplayTypeEnum {
     Task,
@@ -210,6 +203,7 @@ impl<'mc> std::fmt::Display for AdvancementDisplayType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct AdvancementDisplayType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -314,17 +308,10 @@ impl<'mc> AdvancementDisplayType<'mc> {
             .unwrap()
     }
 }
-
-pub struct AdvancementDisplayTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for AdvancementDisplayTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/advancement/AdvancementDisplayType"
-    }
-}
-
 /// Holds information about how the advancement is displayed by the game.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct AdvancementDisplay<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -485,17 +472,10 @@ impl<'mc> AdvancementDisplay<'mc> {
             .unwrap()
     }
 }
-
-pub struct AdvancementDisplayClass;
-impl blackboxmc_general::JNIProvidesClassName for AdvancementDisplayClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/advancement/AdvancementDisplay"
-    }
-}
-
 /// Represents an advancement that may be awarded to a player. This class is not reference safe as the underlying advancement may be reloaded.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct Advancement<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -597,12 +577,5 @@ impl<'mc> Into<crate::Keyed<'mc>> for Advancement<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Advancement into crate::Keyed")
-    }
-}
-
-pub struct AdvancementClass;
-impl blackboxmc_general::JNIProvidesClassName for AdvancementClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/advancement/Advancement"
     }
 }

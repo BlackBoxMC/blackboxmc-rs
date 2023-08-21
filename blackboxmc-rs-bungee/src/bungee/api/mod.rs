@@ -23,6 +23,7 @@ impl<'mc> std::fmt::Display for ChatMessageType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct ChatMessageType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -126,13 +127,7 @@ impl<'mc> ChatMessageType<'mc> {
     }
 }
 
-pub struct ChatMessageTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for ChatMessageTypeClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/ChatMessageType"
-    }
-}
-
+#[repr(C)]
 pub struct ChatColor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -422,13 +417,6 @@ impl<'mc> std::string::ToString for ChatColor<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling ChatColor.toString: {}", err),
         }
-    }
-}
-
-pub struct ChatColorClass;
-impl blackboxmc_general::JNIProvidesClassName for ChatColorClass {
-    fn class_name(&self) -> &str {
-        "net/md_5/bungee/api/ChatColor"
     }
 }
 

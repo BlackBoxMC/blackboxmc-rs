@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 
+#[repr(C)]
 pub struct PotionEffectTypeWrapper<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -363,13 +364,7 @@ impl<'mc> Into<crate::potion::PotionEffectType<'mc>> for PotionEffectTypeWrapper
     }
 }
 
-pub struct PotionEffectTypeWrapperClass;
-impl blackboxmc_general::JNIProvidesClassName for PotionEffectTypeWrapperClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/potion/PotionEffectTypeWrapper"
-    }
-}
-
+#[repr(C)]
 pub struct PotionData<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -591,14 +586,8 @@ impl<'mc> std::string::ToString for PotionData<'mc> {
     }
 }
 
-pub struct PotionDataClass;
-impl blackboxmc_general::JNIProvidesClassName for PotionDataClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/potion/PotionData"
-    }
-}
-
 /// Potion Adapter for pre-1.9 data values see @PotionMeta for 1.9+
+#[repr(C)]
 pub struct Potion<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1071,14 +1060,8 @@ impl<'mc> std::string::ToString for Potion<'mc> {
     }
 }
 
-pub struct PotionClass;
-impl blackboxmc_general::JNIProvidesClassName for PotionClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/potion/Potion"
-    }
-}
-
 /// Represents a potion effect, that can be added to a <a title="interface in org.bukkit.entity" href="../entity/LivingEntity.html"><code>LivingEntity</code></a>. A potion effect has a duration that it will last for, an amplifier that will enhance its effects, and a <a href="PotionEffectType.html" title="class in org.bukkit.potion"><code>PotionEffectType</code></a>, that represents its effect on an entity.
+#[repr(C)]
 pub struct PotionEffect<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1413,15 +1396,8 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting PotionEffect into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
-
-pub struct PotionEffectClass;
-impl blackboxmc_general::JNIProvidesClassName for PotionEffectClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/potion/PotionEffect"
-    }
-}
-
 /// Represents a type of potion and its effect on an entity.
+#[repr(C)]
 pub struct PotionEffectType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1766,17 +1742,10 @@ impl<'mc> Into<crate::Keyed<'mc>> for PotionEffectType<'mc> {
             .expect("Error converting PotionEffectType into crate::Keyed")
     }
 }
-
-pub struct PotionEffectTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for PotionEffectTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/potion/PotionEffectType"
-    }
-}
-
 /// Represents a brewer that can create <a title="class in org.bukkit.potion" href="PotionEffect.html"><code>PotionEffect</code></a>s.
 ///
 /// This is a representation of an abstract class.
+#[repr(C)]
 pub struct PotionBrewer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1911,14 +1880,6 @@ impl<'mc> PotionBrewer<'mc> {
             .unwrap()
     }
 }
-
-pub struct PotionBrewerClass;
-impl blackboxmc_general::JNIProvidesClassName for PotionBrewerClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/potion/PotionBrewer"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum PotionTypeEnum {
     Uncraftable,
@@ -1975,6 +1936,7 @@ impl<'mc> std::fmt::Display for PotionType<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct PotionType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2109,12 +2071,5 @@ impl<'mc> PotionType<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct PotionTypeClass;
-impl blackboxmc_general::JNIProvidesClassName for PotionTypeClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/potion/PotionType"
     }
 }

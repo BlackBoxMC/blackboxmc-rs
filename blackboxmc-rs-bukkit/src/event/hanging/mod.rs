@@ -4,6 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Triggered when a hanging entity is removed
+#[repr(C)]
 pub struct HangingBreakEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -32,6 +33,7 @@ impl<'mc> std::fmt::Display for HangingBreakEventRemoveCause<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct HangingBreakEventRemoveCause<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -142,13 +144,6 @@ impl<'mc> HangingBreakEventRemoveCause<'mc> {
         self.jni_ref()
             .is_instance_of(&self.jni_object(), cls)
             .unwrap()
-    }
-}
-
-pub struct HangingBreakEventRemoveCauseClass;
-impl blackboxmc_general::JNIProvidesClassName for HangingBreakEventRemoveCauseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/hanging/HangingBreakEvent$RemoveCause"
     }
 }
 
@@ -442,15 +437,8 @@ impl<'mc> Into<crate::event::hanging::HangingEvent<'mc>> for HangingBreakEvent<'
             .expect("Error converting HangingBreakEvent into crate::event::hanging::HangingEvent")
     }
 }
-
-pub struct HangingBreakEventClass;
-impl blackboxmc_general::JNIProvidesClassName for HangingBreakEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/hanging/HangingBreakEvent"
-    }
-}
-
 /// Triggered when a hanging entity is removed by an entity
+#[repr(C)]
 pub struct HangingBreakByEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -766,14 +754,6 @@ impl<'mc> Into<crate::event::hanging::HangingBreakEvent<'mc>> for HangingBreakBy
         crate::event::hanging::HangingBreakEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting HangingBreakByEntityEvent into crate::event::hanging::HangingBreakEvent")
     }
 }
-
-pub struct HangingBreakByEntityEventClass;
-impl blackboxmc_general::JNIProvidesClassName for HangingBreakByEntityEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/hanging/HangingBreakByEntityEvent"
-    }
-}
-
 #[derive(PartialEq, Eq)]
 pub enum RemoveCauseEnum {
     Entity,
@@ -798,6 +778,7 @@ impl<'mc> std::fmt::Display for RemoveCause<'mc> {
         self.2.fmt(f)
     }
 }
+#[repr(C)]
 pub struct RemoveCause<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -902,15 +883,8 @@ impl<'mc> RemoveCause<'mc> {
             .unwrap()
     }
 }
-
-pub struct RemoveCauseClass;
-impl blackboxmc_general::JNIProvidesClassName for RemoveCauseClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/hanging/RemoveCause"
-    }
-}
-
 /// Triggered when a hanging entity is created in the world
+#[repr(C)]
 pub struct HangingPlaceEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1291,15 +1265,8 @@ impl<'mc> Into<crate::event::hanging::HangingEvent<'mc>> for HangingPlaceEvent<'
             .expect("Error converting HangingPlaceEvent into crate::event::hanging::HangingEvent")
     }
 }
-
-pub struct HangingPlaceEventClass;
-impl blackboxmc_general::JNIProvidesClassName for HangingPlaceEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/hanging/HangingPlaceEvent"
-    }
-}
-
 /// Represents a hanging entity-related event.
+#[repr(C)]
 pub struct HangingEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1496,12 +1463,5 @@ impl<'mc> Into<crate::event::Event<'mc>> for HangingEvent<'mc> {
     fn into(self) -> crate::event::Event<'mc> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting HangingEvent into crate::event::Event")
-    }
-}
-
-pub struct HangingEventClass;
-impl blackboxmc_general::JNIProvidesClassName for HangingEventClass {
-    fn class_name(&self) -> &str {
-        "org/bukkit/event/hanging/HangingEvent"
     }
 }
