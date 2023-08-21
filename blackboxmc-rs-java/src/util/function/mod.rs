@@ -59,7 +59,7 @@ impl<'mc> JavaIntSupplier<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts a double-valued argument and produces a long-valued result. This is the <code>double</code>-to-<code>long</code> primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
+/// Represents a function that accepts a double-valued argument and produces a long-valued result. This is the <code>double</code>-to-<code>long</code> primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleToLongFunction.html#applyAsLong-double-"><code>applyAsLong(double)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -104,7 +104,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDoubleToLongFunction<'mc> {
 impl<'mc> JavaDoubleToLongFunction<'mc> {
     pub fn apply_as_long(&self, arg0: f64) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(D)J");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "applyAsLong",
@@ -120,7 +120,7 @@ impl<'mc> JavaDoubleToLongFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents an operation on a single <code>int</code>-valued operand that produces an <code>int</code>-valued result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/UnaryOperator.html"><code>UnaryOperator</code></a> for <code>int</code>.
+/// Represents an operation on a single <code>int</code>-valued operand that produces an <code>int</code>-valued result. This is the primitive type specialization of <a href="../../../java/util/function/UnaryOperator.html" title="interface in java.util.function"><code>UnaryOperator</code></a> for <code>int</code>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntUnaryOperator.html#applyAsInt-int-"><code>applyAsInt(int)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -184,31 +184,6 @@ impl<'mc> JavaIntUnaryOperator<'mc> {
         })
     }
 
-    pub fn identity(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::util::function::JavaIntUnaryOperator<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/function/IntUnaryOperator;");
-        let cls = jni.find_class("java/util/function/IntUnaryOperator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "identity", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::util::function::JavaIntUnaryOperator::from_raw(&jni, obj)
-    }
-
-    pub fn apply_as_int(&self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("(I)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "applyAsInt",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-
     pub fn compose(
         &self,
         arg0: impl Into<crate::util::function::JavaIntUnaryOperator<'mc>>,
@@ -231,12 +206,37 @@ impl<'mc> JavaIntUnaryOperator<'mc> {
         })
     }
 
+    pub fn identity(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::util::function::JavaIntUnaryOperator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/function/IntUnaryOperator;");
+        let cls = jni.find_class("java/util/function/IntUnaryOperator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "identity", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::util::function::JavaIntUnaryOperator::from_raw(&jni, obj)
+    }
+
+    pub fn apply_as_int(&self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("(I)I");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "applyAsInt",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts an int-valued argument and produces a double-valued result. This is the <code>int</code>-to-<code>double</code> primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
+/// Represents a function that accepts an int-valued argument and produces a double-valued result. This is the <code>int</code>-to-<code>double</code> primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntToDoubleFunction.html#applyAsDouble-int-"><code>applyAsDouble(int)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -281,7 +281,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaIntToDoubleFunction<'mc> {
 impl<'mc> JavaIntToDoubleFunction<'mc> {
     pub fn apply_as_double(&self, arg0: i32) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(I)D");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "applyAsDouble",
@@ -347,7 +347,7 @@ impl<'mc> JavaObjDoubleConsumer<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;D)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
+        let val_2 = jni::objects::JValueGen::Double(arg1);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "accept",
@@ -406,6 +406,26 @@ impl<'mc> JNIInstantiatable<'mc> for JavaPredicate<'mc> {
 }
 
 impl<'mc> JavaPredicate<'mc> {
+    pub fn or(
+        &self,
+        arg0: impl Into<crate::util::function::JavaPredicate<'mc>>,
+    ) -> Result<crate::util::function::JavaPredicate<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/function/Predicate;)Ljava/util/function/Predicate;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "or",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::function::JavaPredicate::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
     pub fn is_equal(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -477,26 +497,6 @@ impl<'mc> JavaPredicate<'mc> {
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::util::function::JavaPredicate::from_raw(&jni, obj)
-    }
-
-    pub fn or(
-        &self,
-        arg0: impl Into<crate::util::function::JavaPredicate<'mc>>,
-    ) -> Result<crate::util::function::JavaPredicate<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/function/Predicate;)Ljava/util/function/Predicate;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "or",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::function::JavaPredicate::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
 
     pub fn test(
@@ -580,6 +580,26 @@ impl<'mc> JavaFunction<'mc> {
         })
     }
 
+    pub fn compose(
+        &self,
+        arg0: impl Into<crate::util::function::JavaFunction<'mc>>,
+    ) -> Result<crate::util::function::JavaFunction<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/function/Function;)Ljava/util/function/Function;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compose",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::function::JavaFunction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
     pub fn apply(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -606,26 +626,6 @@ impl<'mc> JavaFunction<'mc> {
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::util::function::JavaFunction::from_raw(&jni, obj)
-    }
-
-    pub fn compose(
-        &self,
-        arg0: impl Into<crate::util::function::JavaFunction<'mc>>,
-    ) -> Result<crate::util::function::JavaFunction<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/function/Function;)Ljava/util/function/Function;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "compose",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::function::JavaFunction::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -845,7 +845,7 @@ impl<'mc> JavaToIntBiFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents an operation that accepts an object-valued and a <code>long</code>-valued argument, and returns no result. This is the <code>(reference, long)</code> specialization of <a title="interface in java.util.function" href="../../../java/util/function/BiConsumer.html"><code>BiConsumer</code></a>. Unlike most other functional interfaces, <code>ObjLongConsumer</code> is expected to operate via side-effects.
+/// Represents an operation that accepts an object-valued and a <code>long</code>-valued argument, and returns no result. This is the <code>(reference, long)</code> specialization of <a href="../../../java/util/function/BiConsumer.html" title="interface in java.util.function"><code>BiConsumer</code></a>. Unlike most other functional interfaces, <code>ObjLongConsumer</code> is expected to operate via side-effects.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ObjLongConsumer.html#accept-T-long-"><code>accept(Object, long)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -894,7 +894,7 @@ impl<'mc> JavaObjLongConsumer<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;J)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
-        let val_2 = jni::objects::JValueGen::Long(arg1.into());
+        let val_2 = jni::objects::JValueGen::Long(arg1);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "accept",
@@ -913,7 +913,7 @@ impl<'mc> JavaObjLongConsumer<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts a long-valued argument and produces an int-valued result. This is the <code>long</code>-to-<code>int</code> primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
+/// Represents a function that accepts a long-valued argument and produces an int-valued result. This is the <code>long</code>-to-<code>int</code> primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/LongToIntFunction.html#applyAsInt-long-"><code>applyAsInt(long)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -958,7 +958,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLongToIntFunction<'mc> {
 impl<'mc> JavaLongToIntFunction<'mc> {
     pub fn apply_as_int(&self, arg0: i64) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(J)I");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "applyAsInt",
@@ -1083,62 +1083,6 @@ impl<'mc> JavaUnaryOperator<'mc> {
         crate::util::function::JavaUnaryOperator::from_raw(&jni, obj)
     }
 
-    pub fn and_then(
-        &self,
-        arg0: impl Into<crate::util::function::JavaFunction<'mc>>,
-    ) -> Result<crate::util::function::JavaFunction<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/function/Function;)Ljava/util/function/Function;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "andThen",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::function::JavaFunction::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn apply(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "apply",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-
-    pub fn compose(
-        &self,
-        arg0: impl Into<crate::util::function::JavaFunction<'mc>>,
-    ) -> Result<crate::util::function::JavaFunction<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/function/Function;)Ljava/util/function/Function;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "compose",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::function::JavaFunction::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -1150,7 +1094,7 @@ impl<'mc> Into<crate::util::function::JavaFunction<'mc>> for JavaUnaryOperator<'
             .expect("Error converting JavaUnaryOperator into crate::util::function::JavaFunction")
     }
 }
-/// Represents an operation that accepts an object-valued and a <code>int</code>-valued argument, and returns no result. This is the <code>(reference, int)</code> specialization of <a href="../../../java/util/function/BiConsumer.html" title="interface in java.util.function"><code>BiConsumer</code></a>. Unlike most other functional interfaces, <code>ObjIntConsumer</code> is expected to operate via side-effects.
+/// Represents an operation that accepts an object-valued and a <code>int</code>-valued argument, and returns no result. This is the <code>(reference, int)</code> specialization of <a title="interface in java.util.function" href="../../../java/util/function/BiConsumer.html"><code>BiConsumer</code></a>. Unlike most other functional interfaces, <code>ObjIntConsumer</code> is expected to operate via side-effects.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ObjIntConsumer.html#accept-T-int-"><code>accept(Object, int)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -1199,7 +1143,7 @@ impl<'mc> JavaObjIntConsumer<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;I)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "accept",
@@ -1218,7 +1162,7 @@ impl<'mc> JavaObjIntConsumer<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents an operation upon two operands of the same type, producing a result of the same type as the operands. This is a specialization of <a title="interface in java.util.function" href="../../../java/util/function/BiFunction.html"><code>BiFunction</code></a> for the case where the operands and the result are all of the same type.
+/// Represents an operation upon two operands of the same type, producing a result of the same type as the operands. This is a specialization of <a href="../../../java/util/function/BiFunction.html" title="interface in java.util.function"><code>BiFunction</code></a> for the case where the operands and the result are all of the same type.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/BiFunction.html#apply-T-U-"><code>BiFunction.apply(Object, Object)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -1300,47 +1244,6 @@ impl<'mc> JavaBinaryOperator<'mc> {
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::util::function::JavaBinaryOperator::from_raw(&jni, obj)
-    }
-
-    pub fn and_then(
-        &self,
-        arg0: impl Into<crate::util::function::JavaFunction<'mc>>,
-    ) -> Result<crate::util::function::JavaBiFunction<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/function/Function;)Ljava/util/function/BiFunction;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "andThen",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::function::JavaBiFunction::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn apply(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-        arg1: jni::objects::JObject<'mc>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        let val_2 = jni::objects::JValueGen::Object(arg1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "apply",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1475,7 +1378,7 @@ impl<'mc> JavaToDoubleFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents an operation on a single <code>double</code>-valued operand that produces a <code>double</code>-valued result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/UnaryOperator.html"><code>UnaryOperator</code></a> for <code>double</code>.
+/// Represents an operation on a single <code>double</code>-valued operand that produces a <code>double</code>-valued result. This is the primitive type specialization of <a href="../../../java/util/function/UnaryOperator.html" title="interface in java.util.function"><code>UnaryOperator</code></a> for <code>double</code>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleUnaryOperator.html#applyAsDouble-double-"><code>applyAsDouble(double)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -1541,32 +1444,6 @@ impl<'mc> JavaDoubleUnaryOperator<'mc> {
         })
     }
 
-    pub fn identity(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::util::function::JavaDoubleUnaryOperator<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Ljava/util/function/DoubleUnaryOperator;");
-        let cls = jni.find_class("java/util/function/DoubleUnaryOperator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "identity", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::util::function::JavaDoubleUnaryOperator::from_raw(&jni, obj)
-    }
-
-    pub fn apply_as_double(&self, arg0: f64) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("(D)D");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "applyAsDouble",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-
     pub fn compose(
         &self,
         arg0: impl Into<crate::util::function::JavaDoubleUnaryOperator<'mc>>,
@@ -1588,6 +1465,32 @@ impl<'mc> JavaDoubleUnaryOperator<'mc> {
         crate::util::function::JavaDoubleUnaryOperator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+
+    pub fn identity(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::util::function::JavaDoubleUnaryOperator<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Ljava/util/function/DoubleUnaryOperator;");
+        let cls = jni.find_class("java/util/function/DoubleUnaryOperator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "identity", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::util::function::JavaDoubleUnaryOperator::from_raw(&jni, obj)
+    }
+
+    pub fn apply_as_double(&self, arg0: f64) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("(D)D");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "applyAsDouble",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1640,8 +1543,8 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLongBinaryOperator<'mc> {
 impl<'mc> JavaLongBinaryOperator<'mc> {
     pub fn apply_as_long(&self, arg0: i64, arg1: i64) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(JJ)J");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
+        let val_2 = jni::objects::JValueGen::Long(arg1);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "applyAsLong",
@@ -1660,7 +1563,7 @@ impl<'mc> JavaLongBinaryOperator<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a predicate (boolean-valued function) of one <code>int</code>-valued argument. This is the <code>int</code>-consuming primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/Predicate.html"><code>Predicate</code></a>.
+/// Represents a predicate (boolean-valued function) of one <code>int</code>-valued argument. This is the <code>int</code>-consuming primitive type specialization of <a href="../../../java/util/function/Predicate.html" title="interface in java.util.function"><code>Predicate</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntPredicate.html#test-int-"><code>test(int)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -1702,6 +1605,27 @@ impl<'mc> JNIInstantiatable<'mc> for JavaIntPredicate<'mc> {
 }
 
 impl<'mc> JavaIntPredicate<'mc> {
+    pub fn or(
+        &self,
+        arg0: impl Into<crate::util::function::JavaIntPredicate<'mc>>,
+    ) -> Result<crate::util::function::JavaIntPredicate<'mc>, Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Ljava/util/function/IntPredicate;)Ljava/util/function/IntPredicate;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "or",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::function::JavaIntPredicate::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
     pub fn negate(
         &self,
     ) -> Result<crate::util::function::JavaIntPredicate<'mc>, Box<dyn std::error::Error>> {
@@ -1736,30 +1660,9 @@ impl<'mc> JavaIntPredicate<'mc> {
         })
     }
 
-    pub fn or(
-        &self,
-        arg0: impl Into<crate::util::function::JavaIntPredicate<'mc>>,
-    ) -> Result<crate::util::function::JavaIntPredicate<'mc>, Box<dyn std::error::Error>> {
-        let sig =
-            String::from("(Ljava/util/function/IntPredicate;)Ljava/util/function/IntPredicate;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "or",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::function::JavaIntPredicate::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
     pub fn test(&self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Z");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "test",
@@ -1775,7 +1678,7 @@ impl<'mc> JavaIntPredicate<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a predicate (boolean-valued function) of one <code>double</code>-valued argument. This is the <code>double</code>-consuming primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/Predicate.html"><code>Predicate</code></a>.
+/// Represents a predicate (boolean-valued function) of one <code>double</code>-valued argument. This is the <code>double</code>-consuming primitive type specialization of <a href="../../../java/util/function/Predicate.html" title="interface in java.util.function"><code>Predicate</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoublePredicate.html#test-double-"><code>test(double)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -1817,6 +1720,28 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDoublePredicate<'mc> {
 }
 
 impl<'mc> JavaDoublePredicate<'mc> {
+    pub fn or(
+        &self,
+        arg0: impl Into<crate::util::function::JavaDoublePredicate<'mc>>,
+    ) -> Result<crate::util::function::JavaDoublePredicate<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Ljava/util/function/DoublePredicate;)Ljava/util/function/DoublePredicate;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "or",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::function::JavaDoublePredicate::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
     pub fn negate(
         &self,
     ) -> Result<crate::util::function::JavaDoublePredicate<'mc>, Box<dyn std::error::Error>> {
@@ -1852,31 +1777,9 @@ impl<'mc> JavaDoublePredicate<'mc> {
         })
     }
 
-    pub fn or(
-        &self,
-        arg0: impl Into<crate::util::function::JavaDoublePredicate<'mc>>,
-    ) -> Result<crate::util::function::JavaDoublePredicate<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Ljava/util/function/DoublePredicate;)Ljava/util/function/DoublePredicate;",
-        );
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "or",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::function::JavaDoublePredicate::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
     pub fn test(&self, arg0: f64) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Z");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "test",
@@ -1892,7 +1795,7 @@ impl<'mc> JavaDoublePredicate<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts two arguments and produces a double-valued result. This is the <code>double</code>-producing primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/BiFunction.html"><code>BiFunction</code></a>.
+/// Represents a function that accepts two arguments and produces a double-valued result. This is the <code>double</code>-producing primitive specialization for <a href="../../../java/util/function/BiFunction.html" title="interface in java.util.function"><code>BiFunction</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ToDoubleBiFunction.html#applyAsDouble-T-U-"><code>applyAsDouble(Object, Object)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -1961,7 +1864,7 @@ impl<'mc> JavaToDoubleBiFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a predicate (boolean-valued function) of one <code>long</code>-valued argument. This is the <code>long</code>-consuming primitive type specialization of <a href="../../../java/util/function/Predicate.html" title="interface in java.util.function"><code>Predicate</code></a>.
+/// Represents a predicate (boolean-valued function) of one <code>long</code>-valued argument. This is the <code>long</code>-consuming primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/Predicate.html"><code>Predicate</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/LongPredicate.html#test-long-"><code>test(long)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2003,6 +1906,27 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLongPredicate<'mc> {
 }
 
 impl<'mc> JavaLongPredicate<'mc> {
+    pub fn or(
+        &self,
+        arg0: impl Into<crate::util::function::JavaLongPredicate<'mc>>,
+    ) -> Result<crate::util::function::JavaLongPredicate<'mc>, Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Ljava/util/function/LongPredicate;)Ljava/util/function/LongPredicate;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "or",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::function::JavaLongPredicate::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
     pub fn negate(
         &self,
     ) -> Result<crate::util::function::JavaLongPredicate<'mc>, Box<dyn std::error::Error>> {
@@ -2037,30 +1961,9 @@ impl<'mc> JavaLongPredicate<'mc> {
         })
     }
 
-    pub fn or(
-        &self,
-        arg0: impl Into<crate::util::function::JavaLongPredicate<'mc>>,
-    ) -> Result<crate::util::function::JavaLongPredicate<'mc>, Box<dyn std::error::Error>> {
-        let sig =
-            String::from("(Ljava/util/function/LongPredicate;)Ljava/util/function/LongPredicate;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "or",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::function::JavaLongPredicate::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
     pub fn test(&self, arg0: i64) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(J)Z");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "test",
@@ -2076,7 +1979,7 @@ impl<'mc> JavaLongPredicate<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents an operation that accepts a single <code>int</code>-valued argument and returns no result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/Consumer.html"><code>Consumer</code></a> for <code>int</code>. Unlike most other functional interfaces, <code>IntConsumer</code> is expected to operate via side-effects.
+/// Represents an operation that accepts a single <code>int</code>-valued argument and returns no result. This is the primitive type specialization of <a href="../../../java/util/function/Consumer.html" title="interface in java.util.function"><code>Consumer</code></a> for <code>int</code>. Unlike most other functional interfaces, <code>IntConsumer</code> is expected to operate via side-effects.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntConsumer.html#accept-int-"><code>accept(int)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2141,7 +2044,7 @@ impl<'mc> JavaIntConsumer<'mc> {
 
     pub fn accept(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "accept",
@@ -2157,7 +2060,7 @@ impl<'mc> JavaIntConsumer<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts a long-valued argument and produces a double-valued result. This is the <code>long</code>-to-<code>double</code> primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
+/// Represents a function that accepts a long-valued argument and produces a double-valued result. This is the <code>long</code>-to-<code>double</code> primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/LongToDoubleFunction.html#applyAsDouble-long-"><code>applyAsDouble(long)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2202,7 +2105,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLongToDoubleFunction<'mc> {
 impl<'mc> JavaLongToDoubleFunction<'mc> {
     pub fn apply_as_double(&self, arg0: i64) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(J)D");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "applyAsDouble",
@@ -2218,7 +2121,7 @@ impl<'mc> JavaLongToDoubleFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts a double-valued argument and produces a result. This is the <code>double</code>-consuming primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
+/// Represents a function that accepts a double-valued argument and produces a result. This is the <code>double</code>-consuming primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleFunction.html#apply-double-"><code>apply(double)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2265,7 +2168,7 @@ impl<'mc> JavaDoubleFunction<'mc> {
         arg0: f64,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "apply",
@@ -2281,7 +2184,7 @@ impl<'mc> JavaDoubleFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents an operation that accepts a single <code>long</code>-valued argument and returns no result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/Consumer.html"><code>Consumer</code></a> for <code>long</code>. Unlike most other functional interfaces, <code>LongConsumer</code> is expected to operate via side-effects.
+/// Represents an operation that accepts a single <code>long</code>-valued argument and returns no result. This is the primitive type specialization of <a href="../../../java/util/function/Consumer.html" title="interface in java.util.function"><code>Consumer</code></a> for <code>long</code>. Unlike most other functional interfaces, <code>LongConsumer</code> is expected to operate via side-effects.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/LongConsumer.html#accept-long-"><code>accept(long)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2346,7 +2249,7 @@ impl<'mc> JavaLongConsumer<'mc> {
 
     pub fn accept(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "accept",
@@ -2362,7 +2265,7 @@ impl<'mc> JavaLongConsumer<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents an operation that accepts a single <code>double</code>-valued argument and returns no result. This is the primitive type specialization of <a href="../../../java/util/function/Consumer.html" title="interface in java.util.function"><code>Consumer</code></a> for <code>double</code>. Unlike most other functional interfaces, <code>DoubleConsumer</code> is expected to operate via side-effects.
+/// Represents an operation that accepts a single <code>double</code>-valued argument and returns no result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/Consumer.html"><code>Consumer</code></a> for <code>double</code>. Unlike most other functional interfaces, <code>DoubleConsumer</code> is expected to operate via side-effects.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleConsumer.html#accept-double-"><code>accept(double)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2428,7 +2331,7 @@ impl<'mc> JavaDoubleConsumer<'mc> {
 
     pub fn accept(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "accept",
@@ -2444,7 +2347,7 @@ impl<'mc> JavaDoubleConsumer<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents an operation upon two <code>double</code>-valued operands and producing a <code>double</code>-valued result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/BinaryOperator.html"><code>BinaryOperator</code></a> for <code>double</code>.
+/// Represents an operation upon two <code>double</code>-valued operands and producing a <code>double</code>-valued result. This is the primitive type specialization of <a href="../../../java/util/function/BinaryOperator.html" title="interface in java.util.function"><code>BinaryOperator</code></a> for <code>double</code>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleBinaryOperator.html#applyAsDouble-double-double-"><code>applyAsDouble(double, double)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2489,8 +2392,8 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDoubleBinaryOperator<'mc> {
 impl<'mc> JavaDoubleBinaryOperator<'mc> {
     pub fn apply_as_double(&self, arg0: f64, arg1: f64) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(DD)D");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "applyAsDouble",
@@ -2509,7 +2412,7 @@ impl<'mc> JavaDoubleBinaryOperator<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts a long-valued argument and produces a result. This is the <code>long</code>-consuming primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
+/// Represents a function that accepts a long-valued argument and produces a result. This is the <code>long</code>-consuming primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/LongFunction.html#apply-long-"><code>apply(long)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2556,7 +2459,7 @@ impl<'mc> JavaLongFunction<'mc> {
         arg0: i64,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(J)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "apply",
@@ -2764,7 +2667,7 @@ impl<'mc> JavaIntFunction<'mc> {
         arg0: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "apply",
@@ -2780,7 +2683,7 @@ impl<'mc> JavaIntFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents an operation upon two <code>int</code>-valued operands and producing an <code>int</code>-valued result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/BinaryOperator.html"><code>BinaryOperator</code></a> for <code>int</code>.
+/// Represents an operation upon two <code>int</code>-valued operands and producing an <code>int</code>-valued result. This is the primitive type specialization of <a href="../../../java/util/function/BinaryOperator.html" title="interface in java.util.function"><code>BinaryOperator</code></a> for <code>int</code>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntBinaryOperator.html#applyAsInt-int-int-"><code>applyAsInt(int, int)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2825,8 +2728,8 @@ impl<'mc> JNIInstantiatable<'mc> for JavaIntBinaryOperator<'mc> {
 impl<'mc> JavaIntBinaryOperator<'mc> {
     pub fn apply_as_int(&self, arg0: i32, arg1: i32) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(II)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "applyAsInt",
@@ -2845,7 +2748,7 @@ impl<'mc> JavaIntBinaryOperator<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents an operation on a single <code>long</code>-valued operand that produces a <code>long</code>-valued result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/UnaryOperator.html"><code>UnaryOperator</code></a> for <code>long</code>.
+/// Represents an operation on a single <code>long</code>-valued operand that produces a <code>long</code>-valued result. This is the primitive type specialization of <a href="../../../java/util/function/UnaryOperator.html" title="interface in java.util.function"><code>UnaryOperator</code></a> for <code>long</code>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/LongUnaryOperator.html#applyAsLong-long-"><code>applyAsLong(long)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2910,31 +2813,6 @@ impl<'mc> JavaLongUnaryOperator<'mc> {
         })
     }
 
-    pub fn identity(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::util::function::JavaLongUnaryOperator<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/function/LongUnaryOperator;");
-        let cls = jni.find_class("java/util/function/LongUnaryOperator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "identity", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::util::function::JavaLongUnaryOperator::from_raw(&jni, obj)
-    }
-
-    pub fn apply_as_long(&self, arg0: i64) -> Result<i64, Box<dyn std::error::Error>> {
-        let sig = String::from("(J)J");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "applyAsLong",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j()?)
-    }
-
     pub fn compose(
         &self,
         arg0: impl Into<crate::util::function::JavaLongUnaryOperator<'mc>>,
@@ -2957,12 +2835,37 @@ impl<'mc> JavaLongUnaryOperator<'mc> {
         })
     }
 
+    pub fn identity(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::util::function::JavaLongUnaryOperator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/function/LongUnaryOperator;");
+        let cls = jni.find_class("java/util/function/LongUnaryOperator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "identity", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::util::function::JavaLongUnaryOperator::from_raw(&jni, obj)
+    }
+
+    pub fn apply_as_long(&self, arg0: i64) -> Result<i64, Box<dyn std::error::Error>> {
+        let sig = String::from("(J)J");
+        let val_1 = jni::objects::JValueGen::Long(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "applyAsLong",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.j()?)
+    }
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts an int-valued argument and produces a long-valued result. This is the <code>int</code>-to-<code>long</code> primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
+/// Represents a function that accepts an int-valued argument and produces a long-valued result. This is the <code>int</code>-to-<code>long</code> primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntToLongFunction.html#applyAsLong-int-"><code>applyAsLong(int)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -3007,7 +2910,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaIntToLongFunction<'mc> {
 impl<'mc> JavaIntToLongFunction<'mc> {
     pub fn apply_as_long(&self, arg0: i32) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(I)J");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "applyAsLong",
@@ -3023,7 +2926,7 @@ impl<'mc> JavaIntToLongFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that produces an int-valued result. This is the <code>int</code>-producing primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
+/// Represents a function that produces an int-valued result. This is the <code>int</code>-producing primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ToIntFunction.html#applyAsInt-T-"><code>applyAsInt(Object)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -3086,7 +2989,7 @@ impl<'mc> JavaToIntFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a supplier of <code>long</code>-valued results. This is the <code>long</code>-producing primitive specialization of <a href="../../../java/util/function/Supplier.html" title="interface in java.util.function"><code>Supplier</code></a>.
+/// Represents a supplier of <code>long</code>-valued results. This is the <code>long</code>-producing primitive specialization of <a title="interface in java.util.function" href="../../../java/util/function/Supplier.html"><code>Supplier</code></a>.
 /// <p>There is no requirement that a distinct result be returned each time the supplier is invoked.</p>
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/LongSupplier.html#getAsLong--"><code>getAsLong()</code></a>.</p>
 ///
@@ -3211,7 +3114,7 @@ impl<'mc> JavaToLongBiFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents an operation that accepts two input arguments and returns no result. This is the two-arity specialization of <a href="../../../java/util/function/Consumer.html" title="interface in java.util.function"><code>Consumer</code></a>. Unlike most other functional interfaces, <code>BiConsumer</code> is expected to operate via side-effects.
+/// Represents an operation that accepts two input arguments and returns no result. This is the two-arity specialization of <a title="interface in java.util.function" href="../../../java/util/function/Consumer.html"><code>Consumer</code></a>. Unlike most other functional interfaces, <code>BiConsumer</code> is expected to operate via side-effects.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/BiConsumer.html#accept-T-U-"><code>accept(Object, Object)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -3335,7 +3238,7 @@ impl<'mc> JavaBiConsumer<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a predicate (boolean-valued function) of two arguments. This is the two-arity specialization of <a title="interface in java.util.function" href="../../../java/util/function/Predicate.html"><code>Predicate</code></a>.
+/// Represents a predicate (boolean-valued function) of two arguments. This is the two-arity specialization of <a href="../../../java/util/function/Predicate.html" title="interface in java.util.function"><code>Predicate</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/BiPredicate.html#test-T-U-"><code>test(Object, Object)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -3377,6 +3280,27 @@ impl<'mc> JNIInstantiatable<'mc> for JavaBiPredicate<'mc> {
 }
 
 impl<'mc> JavaBiPredicate<'mc> {
+    pub fn or(
+        &self,
+        arg0: impl Into<crate::util::function::JavaBiPredicate<'mc>>,
+    ) -> Result<crate::util::function::JavaBiPredicate<'mc>, Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Ljava/util/function/BiPredicate;)Ljava/util/function/BiPredicate;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "or",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::function::JavaBiPredicate::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
     pub fn negate(
         &self,
     ) -> Result<crate::util::function::JavaBiPredicate<'mc>, Box<dyn std::error::Error>> {
@@ -3402,27 +3326,6 @@ impl<'mc> JavaBiPredicate<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "and",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::function::JavaBiPredicate::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn or(
-        &self,
-        arg0: impl Into<crate::util::function::JavaBiPredicate<'mc>>,
-    ) -> Result<crate::util::function::JavaBiPredicate<'mc>, Box<dyn std::error::Error>> {
-        let sig =
-            String::from("(Ljava/util/function/BiPredicate;)Ljava/util/function/BiPredicate;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "or",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -3458,7 +3361,7 @@ impl<'mc> JavaBiPredicate<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts a double-valued argument and produces an int-valued result. This is the <code>double</code>-to-<code>int</code> primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
+/// Represents a function that accepts a double-valued argument and produces an int-valued result. This is the <code>double</code>-to-<code>int</code> primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleToIntFunction.html#applyAsInt-double-"><code>applyAsInt(double)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -3503,7 +3406,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDoubleToIntFunction<'mc> {
 impl<'mc> JavaDoubleToIntFunction<'mc> {
     pub fn apply_as_int(&self, arg0: f64) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(D)I");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "applyAsInt",

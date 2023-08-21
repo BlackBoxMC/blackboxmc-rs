@@ -201,13 +201,22 @@ impl<'mc> PluginMessageListener<'mc> {
         arg1: impl Into<crate::entity::Player<'mc>>,
         arg2: Vec<i8>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Lorg/bukkit/entity/Player;B)V");
+        let sig = String::from("(Ljava/lang/String;Lorg/bukkit/entity/Player;[B)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
         ));
         let val_2 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
         });
+        let arr = self.jni_ref().new_byte_array(arg2.len() as i32);
+        let mut vec = Vec::new();
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = *arg2.get(i).unwrap();
+            vec.push(val_3)
+        }
+        self.jni_ref().set_byte_array_region(&arr, 0, &vec)?;
+        let val_3 = jni::objects::JValueGen::Object(arr);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "onPluginMessageReceived",
@@ -215,6 +224,7 @@ impl<'mc> PluginMessageListener<'mc> {
             vec![
                 jni::objects::JValueGen::from(val_1),
                 jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
             ],
         );
         self.jni_ref().translate_error(res)?;
@@ -226,7 +236,7 @@ impl<'mc> PluginMessageListener<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Contains information about a <a title="interface in org.bukkit.plugin" href="../Plugin.html"><code>Plugin</code></a>s registration to a plugin channel.
+/// Contains information about a <a href="../Plugin.html" title="interface in org.bukkit.plugin"><code>Plugin</code></a>s registration to a plugin channel.
 #[repr(C)]
 pub struct PluginMessageListenerRegistration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -317,31 +327,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn equals(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Z");
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-
     pub fn channel(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -380,70 +365,29 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn equals(
         &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    #[doc(hidden)]
-    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Object;)Z");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        Ok(res.z()?)
     }
 
-    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
+            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
+        Ok(res.i()?)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -451,19 +395,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-
-impl<'mc> std::string::ToString for PluginMessageListenerRegistration<'mc> {
-    fn to_string(&self) -> String {
-        match &self.internal_to_string() {
-            Ok(a) => a.clone(),
-            Err(err) => format!(
-                "Error calling PluginMessageListenerRegistration.toString: {}",
-                err
-            ),
-        }
-    }
-}
-
 /// A class responsible for managing the registrations of plugin channels and their listeners. Channel names must contain a colon separator and consist of only [a-z0-9/._-] - i.e. they MUST be valid <a title="class in org.bukkit" href="../../NamespacedKey.html"><code>NamespacedKey</code></a>. The "BungeeCord" channel is an exception and may only take this form.
 ///
 /// This is a representation of an abstract class.
@@ -789,13 +720,22 @@ impl<'mc> Messenger<'mc> {
         arg1: impl Into<String>,
         arg2: Vec<i8>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/entity/Player;Ljava/lang/String;B)V");
+        let sig = String::from("(Lorg/bukkit/entity/Player;Ljava/lang/String;[B)V");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg1.into())?,
         ));
+        let arr = self.jni_ref().new_byte_array(arg2.len() as i32);
+        let mut vec = Vec::new();
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = *arg2.get(i).unwrap();
+            vec.push(val_3)
+        }
+        self.jni_ref().set_byte_array_region(&arr, 0, &vec)?;
+        let val_3 = jni::objects::JValueGen::Object(arr);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "dispatchIncomingMessage",
@@ -803,6 +743,7 @@ impl<'mc> Messenger<'mc> {
             vec![
                 jni::objects::JValueGen::from(val_1),
                 jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
             ],
         );
         self.jni_ref().translate_error(res)?;
@@ -1055,39 +996,19 @@ impl<'mc> StandardMessenger<'mc> {
         })
     }
 
-    pub fn incoming_channels(
+    pub fn get_incoming_channels(
         &self,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Set;");
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)Ljava/util/Set;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getIncomingChannels",
             sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn get_incoming_channel_registrations_with_string(
-        &self,
-        arg0: impl Into<String>,
-    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/lang/String;";
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        args.push(val_1);
-        sig += ")Ljava/util/Set;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getIncomingChannelRegistrations",
-            sig.as_str(),
-            args,
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
@@ -1202,13 +1123,22 @@ impl<'mc> StandardMessenger<'mc> {
         arg1: impl Into<String>,
         arg2: Vec<i8>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/entity/Player;Ljava/lang/String;B)V");
+        let sig = String::from("(Lorg/bukkit/entity/Player;Ljava/lang/String;[B)V");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg1.into())?,
         ));
+        let arr = self.jni_ref().new_byte_array(arg2.len() as i32);
+        let mut vec = Vec::new();
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = *arg2.get(i).unwrap();
+            vec.push(val_3)
+        }
+        self.jni_ref().set_byte_array_region(&arr, 0, &vec)?;
+        let val_3 = jni::objects::JValueGen::Object(arr);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "dispatchIncomingMessage",
@@ -1216,6 +1146,7 @@ impl<'mc> StandardMessenger<'mc> {
             vec![
                 jni::objects::JValueGen::from(val_1),
                 jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
             ],
         );
         self.jni_ref().translate_error(res)?;
@@ -1249,7 +1180,7 @@ impl<'mc> StandardMessenger<'mc> {
         arg2: impl Into<String>,
         arg3: Vec<i8>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/plugin/messaging/Messenger;Lorg/bukkit/plugin/Plugin;Ljava/lang/String;B)V");
+        let sig = String::from("(Lorg/bukkit/plugin/messaging/Messenger;Lorg/bukkit/plugin/Plugin;Ljava/lang/String;[B)V");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
@@ -1259,6 +1190,15 @@ impl<'mc> StandardMessenger<'mc> {
         let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             jni.new_string(arg2.into())?,
         ));
+        let arr = jni.new_byte_array(arg3.len() as i32);
+        let mut vec = Vec::new();
+        let arr = jni.translate_error_no_gen(arr)?;
+        for i in 0..arg3.len() {
+            let val_4 = *arg3.get(i).unwrap();
+            vec.push(val_4)
+        }
+        jni.set_byte_array_region(&arr, 0, &vec)?;
+        let val_4 = jni::objects::JValueGen::Object(arr);
         let cls = jni.find_class("void");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1269,100 +1209,10 @@ impl<'mc> StandardMessenger<'mc> {
                 jni::objects::JValueGen::from(val_1),
                 jni::objects::JValueGen::from(val_2),
                 jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4.l()?),
             ],
         );
         jni.translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn equals(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Z");
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    #[doc(hidden)]
-    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-
-    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 
@@ -1371,16 +1221,6 @@ impl<'mc> StandardMessenger<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-
-impl<'mc> std::string::ToString for StandardMessenger<'mc> {
-    fn to_string(&self) -> String {
-        match &self.internal_to_string() {
-            Ok(a) => a.clone(),
-            Err(err) => format!("Error calling StandardMessenger.toString: {}", err),
-        }
-    }
-}
-
 impl<'mc> Into<crate::plugin::messaging::Messenger<'mc>> for StandardMessenger<'mc> {
     fn into(self) -> crate::plugin::messaging::Messenger<'mc> {
         crate::plugin::messaging::Messenger::from_raw(&self.jni_ref(), self.1)
@@ -1436,13 +1276,22 @@ impl<'mc> PluginMessageRecipient<'mc> {
         arg1: impl Into<String>,
         arg2: Vec<i8>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;B)V");
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;[B)V");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg1.into())?,
         ));
+        let arr = self.jni_ref().new_byte_array(arg2.len() as i32);
+        let mut vec = Vec::new();
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = *arg2.get(i).unwrap();
+            vec.push(val_3)
+        }
+        self.jni_ref().set_byte_array_region(&arr, 0, &vec)?;
+        let val_3 = jni::objects::JValueGen::Object(arr);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "sendPluginMessage",
@@ -1450,6 +1299,7 @@ impl<'mc> PluginMessageRecipient<'mc> {
             vec![
                 jni::objects::JValueGen::from(val_1),
                 jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
             ],
         );
         self.jni_ref().translate_error(res)?;

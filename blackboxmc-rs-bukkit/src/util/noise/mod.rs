@@ -44,13 +44,29 @@ impl<'mc> JNIInstantiatable<'mc> for SimplexNoiseGenerator<'mc> {
 }
 
 impl<'mc> SimplexNoiseGenerator<'mc> {
-    pub fn new_with_world(
+    pub fn new_with_long(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::World<'mc>>,
+        arg0: i64,
     ) -> Result<crate::util::noise::SimplexNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/World;";
+        sig += "J";
+        let val_1 = jni::objects::JValueGen::Long(arg0);
+        args.push(val_1);
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/util/noise/SimplexNoiseGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::noise::SimplexNoiseGenerator::from_raw(&jni, res)
+    }
+    pub fn new_with_random(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
+    ) -> Result<crate::util::noise::SimplexNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/Random;";
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
@@ -62,81 +78,31 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::noise::SimplexNoiseGenerator::from_raw(&jni, res)
     }
-    pub fn new_with_long(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: i64,
-    ) -> Result<crate::util::noise::SimplexNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        args.push(val_1);
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/util/noise/SimplexNoiseGenerator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::util::noise::SimplexNoiseGenerator::from_raw(&jni, res)
-    }
-
-    pub fn instance(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::util::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/util/noise/PerlinNoiseGenerator;";
-        let cls = jni.find_class("org/bukkit/util/noise/PerlinNoiseGenerator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getInstance", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::util::noise::PerlinNoiseGenerator::from_raw(&jni, obj)
-    }
-
+    /// Computes and returns the 4D simplex noise for the given coordinates in 4D space
     pub fn noise_with_double(
         &self,
         arg0: f64,
-        arg1: std::option::Option<f64>,
+        arg1: f64,
         arg2: std::option::Option<f64>,
-        arg3: std::option::Option<i32>,
-        arg4: std::option::Option<f64>,
-        arg5: std::option::Option<f64>,
-        arg6: std::option::Option<bool>,
+        arg3: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "D";
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_2);
-        }
+        sig += "D";
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "D";
-            let val_3 = jni::objects::JValueGen::Double(a.into());
+            let val_3 = jni::objects::JValueGen::Double(a);
             args.push(val_3);
         }
         if let Some(a) = arg3 {
-            sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a.into());
+            sig += "D";
+            let val_4 = jni::objects::JValueGen::Double(a);
             args.push(val_4);
-        }
-        if let Some(a) = arg4 {
-            sig += "D";
-            let val_5 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_5);
-        }
-        if let Some(a) = arg5 {
-            sig += "D";
-            let val_6 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_6);
-        }
-        if let Some(a) = arg6 {
-            sig += "Z";
-            let val_7 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_7);
         }
         sig += ")D";
         let res = self
@@ -145,45 +111,33 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-
+    /// Computes and returns the 4D simplex noise for the given coordinates in 4D space
     pub fn get_noise_with_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
         arg1: std::option::Option<f64>,
         arg2: std::option::Option<f64>,
-        arg3: std::option::Option<i32>,
-        arg4: std::option::Option<f64>,
-        arg5: std::option::Option<f64>,
+        arg3: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "D";
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "D";
-            let val_2 = jni::objects::JValueGen::Double(a.into());
+            let val_2 = jni::objects::JValueGen::Double(a);
             args.push(val_2);
         }
         if let Some(a) = arg2 {
             sig += "D";
-            let val_3 = jni::objects::JValueGen::Double(a.into());
+            let val_3 = jni::objects::JValueGen::Double(a);
             args.push(val_3);
         }
         if let Some(a) = arg3 {
-            sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a.into());
+            sig += "D";
+            let val_4 = jni::objects::JValueGen::Double(a);
             args.push(val_4);
-        }
-        if let Some(a) = arg4 {
-            sig += "D";
-            let val_5 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_5);
-        }
-        if let Some(a) = arg5 {
-            sig += "D";
-            let val_6 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_6);
         }
         sig += ")D";
         let cls = jni.find_class("double");
@@ -193,113 +147,16 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn floor(
+    pub fn instance(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: f64,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("(D)I");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let cls = jni.find_class("int");
+    ) -> Result<crate::util::noise::SimplexNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/util/noise/SimplexNoiseGenerator;");
+        let cls = jni.find_class("org/bukkit/util/noise/SimplexNoiseGenerator");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "floor",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
+        let res = jni.call_static_method(cls, "getInstance", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
-        Ok(res.i()?)
-    }
-
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn equals(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Z");
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    #[doc(hidden)]
-    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-
-    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
+        let obj = res.l()?;
+        crate::util::noise::SimplexNoiseGenerator::from_raw(&jni, obj)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -307,16 +164,6 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-
-impl<'mc> std::string::ToString for SimplexNoiseGenerator<'mc> {
-    fn to_string(&self) -> String {
-        match &self.internal_to_string() {
-            Ok(a) => a.clone(),
-            Err(err) => format!("Error calling SimplexNoiseGenerator.toString: {}", err),
-        }
-    }
-}
-
 impl<'mc> Into<crate::util::noise::PerlinNoiseGenerator<'mc>> for SimplexNoiseGenerator<'mc> {
     fn into(self) -> crate::util::noise::PerlinNoiseGenerator<'mc> {
         crate::util::noise::PerlinNoiseGenerator::from_raw(&self.jni_ref(), self.1).expect(
@@ -364,13 +211,13 @@ impl<'mc> JNIInstantiatable<'mc> for PerlinNoiseGenerator<'mc> {
 }
 
 impl<'mc> PerlinNoiseGenerator<'mc> {
-    pub fn new_with_world(
+    pub fn new_with_random(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::World<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
     ) -> Result<crate::util::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/World;";
+        sig += "Ljava/util/Random;";
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
@@ -389,7 +236,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "J";
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         args.push(val_1);
         sig += ")V";
         let cls = jni.find_class("org/bukkit/util/noise/PerlinNoiseGenerator");
@@ -398,68 +245,28 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::noise::PerlinNoiseGenerator::from_raw(&jni, res)
     }
-
-    pub fn instance(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::util::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/util/noise/PerlinNoiseGenerator;");
-        let cls = jni.find_class("org/bukkit/util/noise/PerlinNoiseGenerator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getInstance", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::util::noise::PerlinNoiseGenerator::from_raw(&jni, obj)
-    }
-
-    pub fn noise_with_double(
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="NoiseGenerator.html#noise(double,double,double)">NoiseGenerator</a></code></span>
+    /// Computes and returns the 3D noise for the given coordinates in 3D space
+    pub fn noise(
         &self,
         arg0: f64,
-        arg1: std::option::Option<f64>,
-        arg2: std::option::Option<f64>,
-        arg3: std::option::Option<i32>,
-        arg4: std::option::Option<f64>,
-        arg5: std::option::Option<f64>,
-        arg6: std::option::Option<bool>,
+        arg1: f64,
+        arg2: f64,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "D";
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "D";
-            let val_3 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_3);
-        }
-        if let Some(a) = arg3 {
-            sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_4);
-        }
-        if let Some(a) = arg4 {
-            sig += "D";
-            let val_5 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_5);
-        }
-        if let Some(a) = arg5 {
-            sig += "D";
-            let val_6 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_6);
-        }
-        if let Some(a) = arg6 {
-            sig += "Z";
-            let val_7 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_7);
-        }
-        sig += ")D";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "noise", sig.as_str(), args);
+        let sig = String::from("(DDD)D");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "noise",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
@@ -476,31 +283,31 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "D";
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "D";
-            let val_2 = jni::objects::JValueGen::Double(a.into());
+            let val_2 = jni::objects::JValueGen::Double(a);
             args.push(val_2);
         }
         if let Some(a) = arg2 {
             sig += "D";
-            let val_3 = jni::objects::JValueGen::Double(a.into());
+            let val_3 = jni::objects::JValueGen::Double(a);
             args.push(val_3);
         }
         if let Some(a) = arg3 {
             sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a.into());
+            let val_4 = jni::objects::JValueGen::Int(a);
             args.push(val_4);
         }
         if let Some(a) = arg4 {
             sig += "D";
-            let val_5 = jni::objects::JValueGen::Double(a.into());
+            let val_5 = jni::objects::JValueGen::Double(a);
             args.push(val_5);
         }
         if let Some(a) = arg5 {
             sig += "D";
-            let val_6 = jni::objects::JValueGen::Double(a.into());
+            let val_6 = jni::objects::JValueGen::Double(a);
             args.push(val_6);
         }
         sig += ")D";
@@ -511,113 +318,16 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn floor(
+    pub fn instance(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: f64,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("(D)I");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let cls = jni.find_class("int");
+    ) -> Result<crate::util::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/util/noise/PerlinNoiseGenerator;");
+        let cls = jni.find_class("org/bukkit/util/noise/PerlinNoiseGenerator");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "floor",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
+        let res = jni.call_static_method(cls, "getInstance", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
-        Ok(res.i()?)
-    }
-
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn equals(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Z");
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    #[doc(hidden)]
-    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-
-    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
+        let obj = res.l()?;
+        crate::util::noise::PerlinNoiseGenerator::from_raw(&jni, obj)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -625,16 +335,6 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-
-impl<'mc> std::string::ToString for PerlinNoiseGenerator<'mc> {
-    fn to_string(&self) -> String {
-        match &self.internal_to_string() {
-            Ok(a) => a.clone(),
-            Err(err) => format!("Error calling PerlinNoiseGenerator.toString: {}", err),
-        }
-    }
-}
-
 impl<'mc> Into<crate::util::noise::NoiseGenerator<'mc>> for PerlinNoiseGenerator<'mc> {
     fn into(self) -> crate::util::noise::NoiseGenerator<'mc> {
         crate::util::noise::NoiseGenerator::from_raw(&self.jni_ref(), self.1)
@@ -682,6 +382,26 @@ impl<'mc> JNIInstantiatable<'mc> for SimplexOctaveGenerator<'mc> {
 }
 
 impl<'mc> SimplexOctaveGenerator<'mc> {
+    pub fn new_with_long(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i64,
+        arg1: i32,
+    ) -> Result<crate::util::noise::SimplexOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "J";
+        let val_1 = jni::objects::JValueGen::Long(arg0);
+        args.push(val_1);
+        sig += "I";
+        let val_2 = jni::objects::JValueGen::Int(arg1);
+        args.push(val_2);
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/util/noise/SimplexOctaveGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::noise::SimplexOctaveGenerator::from_raw(&jni, res)
+    }
     pub fn new_with_random(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
@@ -695,27 +415,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         });
         args.push(val_1);
         sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        args.push(val_2);
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/util/noise/SimplexOctaveGenerator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::util::noise::SimplexOctaveGenerator::from_raw(&jni, res)
-    }
-    pub fn new_with_long(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: i64,
-        arg1: i32,
-    ) -> Result<crate::util::noise::SimplexOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         args.push(val_2);
         sig += ")V";
         let cls = jni.find_class("org/bukkit/util/noise/SimplexOctaveGenerator");
@@ -729,7 +429,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
     /// <p>This is the equivalent to setting each coordinate to the specified value.</p>
     pub fn set_scale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setScale",
@@ -745,37 +445,31 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         arg0: f64,
         arg1: f64,
         arg2: f64,
-        arg3: std::option::Option<f64>,
-        arg4: std::option::Option<f64>,
-        arg5: std::option::Option<f64>,
+        arg3: f64,
+        arg4: f64,
+        arg5: f64,
         arg6: std::option::Option<bool>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "D";
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         args.push(val_1);
         sig += "D";
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
+        let val_2 = jni::objects::JValueGen::Double(arg1);
         args.push(val_2);
         sig += "D";
-        let val_3 = jni::objects::JValueGen::Double(arg2.into());
+        let val_3 = jni::objects::JValueGen::Double(arg2);
         args.push(val_3);
-        if let Some(a) = arg3 {
-            sig += "D";
-            let val_4 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_4);
-        }
-        if let Some(a) = arg4 {
-            sig += "D";
-            let val_5 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_5);
-        }
-        if let Some(a) = arg5 {
-            sig += "D";
-            let val_6 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_6);
-        }
+        sig += "D";
+        let val_4 = jni::objects::JValueGen::Double(arg3);
+        args.push(val_4);
+        sig += "D";
+        let val_5 = jni::objects::JValueGen::Double(arg4);
+        args.push(val_5);
+        sig += "D";
+        let val_6 = jni::objects::JValueGen::Double(arg5);
+        args.push(val_6);
         if let Some(a) = arg6 {
             sig += "Z";
             let val_7 = jni::objects::JValueGen::Bool(a.into());
@@ -791,7 +485,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
     /// Sets the scale used for each W-coordinates passed
     pub fn set_wscale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setWScale",
@@ -811,178 +505,11 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn set_xscale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(D)V");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setXScale",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn set_yscale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(D)V");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setYScale",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn set_zscale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(D)V");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setZScale",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn xscale(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getXScale", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-
-    pub fn yscale(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getYScale", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-
-    pub fn zscale(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getZScale", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn equals(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Z");
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    #[doc(hidden)]
-    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-
-    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-
-impl<'mc> std::string::ToString for SimplexOctaveGenerator<'mc> {
-    fn to_string(&self) -> String {
-        match &self.internal_to_string() {
-            Ok(a) => a.clone(),
-            Err(err) => format!("Error calling SimplexOctaveGenerator.toString: {}", err),
-        }
-    }
-}
-
 impl<'mc> Into<crate::util::noise::OctaveGenerator<'mc>> for SimplexOctaveGenerator<'mc> {
     fn into(self) -> crate::util::noise::OctaveGenerator<'mc> {
         crate::util::noise::OctaveGenerator::from_raw(&self.jni_ref(), self.1).expect(
@@ -1033,7 +560,7 @@ impl<'mc> OctaveGenerator<'mc> {
     /// <p>This is the equivalent to setting each coordinate to the specified value.</p>
     pub fn set_scale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setScale",
@@ -1046,7 +573,7 @@ impl<'mc> OctaveGenerator<'mc> {
     /// Sets the scale used for each X-coordinates passed
     pub fn set_xscale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setXScale",
@@ -1059,7 +586,7 @@ impl<'mc> OctaveGenerator<'mc> {
     /// Sets the scale used for each Y-coordinates passed
     pub fn set_yscale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setYScale",
@@ -1072,7 +599,7 @@ impl<'mc> OctaveGenerator<'mc> {
     /// Sets the scale used for each Z-coordinates passed
     pub fn set_zscale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setZScale",
@@ -1122,22 +649,22 @@ impl<'mc> OctaveGenerator<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "D";
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         args.push(val_1);
         sig += "D";
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
+        let val_2 = jni::objects::JValueGen::Double(arg1);
         args.push(val_2);
         sig += "D";
-        let val_3 = jni::objects::JValueGen::Double(arg2.into());
+        let val_3 = jni::objects::JValueGen::Double(arg2);
         args.push(val_3);
         if let Some(a) = arg3 {
             sig += "D";
-            let val_4 = jni::objects::JValueGen::Double(a.into());
+            let val_4 = jni::objects::JValueGen::Double(a);
             args.push(val_4);
         }
         if let Some(a) = arg4 {
             sig += "D";
-            let val_5 = jni::objects::JValueGen::Double(a.into());
+            let val_5 = jni::objects::JValueGen::Double(a);
             args.push(val_5);
         }
         if let Some(a) = arg5 {
@@ -1153,112 +680,11 @@ impl<'mc> OctaveGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn equals(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Z");
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    #[doc(hidden)]
-    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-
-    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-
-impl<'mc> std::string::ToString for OctaveGenerator<'mc> {
-    fn to_string(&self) -> String {
-        match &self.internal_to_string() {
-            Ok(a) => a.clone(),
-            Err(err) => format!("Error calling OctaveGenerator.toString: {}", err),
-        }
-    }
-}
-
 /// Creates perlin noise through unbiased octaves
 #[repr(C)]
 pub struct PerlinOctaveGenerator<'mc>(
@@ -1300,6 +726,28 @@ impl<'mc> JNIInstantiatable<'mc> for PerlinOctaveGenerator<'mc> {
 }
 
 impl<'mc> PerlinOctaveGenerator<'mc> {
+    pub fn new_with_random(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
+        arg1: i32,
+    ) -> Result<crate::util::noise::PerlinOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/Random;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "I";
+        let val_2 = jni::objects::JValueGen::Int(arg1);
+        args.push(val_2);
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/util/noise/PerlinOctaveGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::noise::PerlinOctaveGenerator::from_raw(&jni, res)
+    }
     pub fn new_with_long(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i64,
@@ -1308,10 +756,10 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "J";
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         args.push(val_1);
         sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         args.push(val_2);
         sig += ")V";
         let cls = jni.find_class("org/bukkit/util/noise/PerlinOctaveGenerator");
@@ -1319,241 +767,6 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         let res = jni.new_object(cls, sig.as_str(), args);
         let res = jni.translate_error_no_gen(res)?;
         crate::util::noise::PerlinOctaveGenerator::from_raw(&jni, res)
-    }
-    pub fn new_with_world(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::World<'mc>>,
-        arg1: i32,
-    ) -> Result<crate::util::noise::PerlinOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/World;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        args.push(val_2);
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/util/noise/PerlinOctaveGenerator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::util::noise::PerlinOctaveGenerator::from_raw(&jni, res)
-    }
-
-    pub fn set_scale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(D)V");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setScale",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn set_xscale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(D)V");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setXScale",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn set_yscale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(D)V");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setYScale",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn set_zscale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(D)V");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setZScale",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn xscale(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getXScale", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-
-    pub fn yscale(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getYScale", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-
-    pub fn zscale(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getZScale", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-
-    pub fn noise_with_double(
-        &self,
-        arg0: f64,
-        arg1: f64,
-        arg2: f64,
-        arg3: std::option::Option<f64>,
-        arg4: std::option::Option<f64>,
-        arg5: std::option::Option<bool>,
-    ) -> Result<f64, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "D";
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        args.push(val_1);
-        sig += "D";
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
-        args.push(val_2);
-        sig += "D";
-        let val_3 = jni::objects::JValueGen::Double(arg2.into());
-        args.push(val_3);
-        if let Some(a) = arg3 {
-            sig += "D";
-            let val_4 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_4);
-        }
-        if let Some(a) = arg4 {
-            sig += "D";
-            let val_5 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_5);
-        }
-        if let Some(a) = arg5 {
-            sig += "Z";
-            let val_6 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_6);
-        }
-        sig += ")D";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "noise", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn equals(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Z");
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    #[doc(hidden)]
-    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-
-    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1561,16 +774,6 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-
-impl<'mc> std::string::ToString for PerlinOctaveGenerator<'mc> {
-    fn to_string(&self) -> String {
-        match &self.internal_to_string() {
-            Ok(a) => a.clone(),
-            Err(err) => format!("Error calling PerlinOctaveGenerator.toString: {}", err),
-        }
-    }
-}
-
 impl<'mc> Into<crate::util::noise::OctaveGenerator<'mc>> for PerlinOctaveGenerator<'mc> {
     fn into(self) -> crate::util::noise::OctaveGenerator<'mc> {
         crate::util::noise::OctaveGenerator::from_raw(&self.jni_ref(), self.1).expect(
@@ -1637,24 +840,6 @@ impl<'mc> NoiseGenerator<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::noise::NoiseGenerator::from_raw(&jni, res)
     }
-    /// Speedy floor, faster than (int)Math.floor(x)
-    pub fn floor(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: f64,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("(D)I");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let cls = jni.find_class("int");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "floor",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        Ok(res.i()?)
-    }
     /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
     pub fn noise_with_double(
         &self,
@@ -1669,31 +854,31 @@ impl<'mc> NoiseGenerator<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "D";
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "D";
-            let val_2 = jni::objects::JValueGen::Double(a.into());
+            let val_2 = jni::objects::JValueGen::Double(a);
             args.push(val_2);
         }
         if let Some(a) = arg2 {
             sig += "D";
-            let val_3 = jni::objects::JValueGen::Double(a.into());
+            let val_3 = jni::objects::JValueGen::Double(a);
             args.push(val_3);
         }
         if let Some(a) = arg3 {
             sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a.into());
+            let val_4 = jni::objects::JValueGen::Int(a);
             args.push(val_4);
         }
         if let Some(a) = arg4 {
             sig += "D";
-            let val_5 = jni::objects::JValueGen::Double(a.into());
+            let val_5 = jni::objects::JValueGen::Double(a);
             args.push(val_5);
         }
         if let Some(a) = arg5 {
             sig += "D";
-            let val_6 = jni::objects::JValueGen::Double(a.into());
+            let val_6 = jni::objects::JValueGen::Double(a);
             args.push(val_6);
         }
         if let Some(a) = arg6 {
@@ -1708,109 +893,27 @@ impl<'mc> NoiseGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn equals(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Z");
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
+    /// Speedy floor, faster than (int)Math.floor(x)
+    pub fn floor(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: f64,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("(D)I");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let cls = jni.find_class("int");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "floor",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    #[doc(hidden)]
-    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
+        let res = jni.translate_error(res)?;
         Ok(res.i()?)
-    }
-
-    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-
-impl<'mc> std::string::ToString for NoiseGenerator<'mc> {
-    fn to_string(&self) -> String {
-        match &self.internal_to_string() {
-            Ok(a) => a.clone(),
-            Err(err) => format!("Error calling NoiseGenerator.toString: {}", err),
-        }
     }
 }

@@ -166,13 +166,9 @@ def func_signature_format(ty, increment, returning, options_start_at=-1):
 
         if ty["is_array"]:
             thing += "Vec<"
-            if (internal_do_into or is_string) and not returning:
-                thing += "impl Into<"
             thing += ty["type_name_resolved"]
             if(internal and "'mc" not in ty["type_name_resolved"]):
                 thing += "<'mc>"
-            if (internal_do_into or is_string) and not returning:
-                thing += ">"
             thing += ">"
         else:
             if (internal_do_into or is_string) and not returning:
@@ -224,7 +220,7 @@ def argument_name_format(objects):
     name = parts[len(parts) - 1].replace("[]", "s").replace("$", "")
     return re.sub(r"([a-z])([A-Z])", r"\1_\2", name).lower()
 
-def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", options_start_at=-1, no_sig=False):
+def code_format(type, prefix, n, var_prefix="val", arg="", is_array=False, options_start_at=-1, no_sig=False):
     if arg == "":
         if "type_name_lhand" in type:
             arg = type["type_name_lhand"]
@@ -237,8 +233,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
 
     do_option = n >= options_start_at and options_start_at != -1
 
-
-    let = java_letter_from_rust(type["type_name_original"])
+    let = java_letter_from_rust(type["type_name_original"],is_array)
     if do_option:
         res.append("if let Some(a) = "+arg+" {")
         if not no_sig:
@@ -249,12 +244,36 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
         if options_start_at != -1:
             res.append("sig += \""+let+"\";")
 
+    
+    class_name = type["type_name_original"].replace(".","/").replace("Java","")
+
+    if is_array:
+        res.append("let arr = ")
+        new_new_arg = new_arg
+        match(type["type_name_alone"].replace("Java","")):
+            case "bool" | "i8" | "char" | "f64" | "f32" | "i32" | "i64" | "i16" | "u16":
+                res.append(prefix+".new_"+type["type_name_original"]+"_array("+new_arg+".len() as i32);")
+                res.append("let mut vec = Vec::new();")
+                new_new_arg = "*"+new_arg+".get(i).unwrap()"
+            case _:
+                res.append(prefix+".new_object_array("+new_arg+".len() as i32, \""+class_name+"\", jni::objects::JObject::null());")
+                new_new_arg = new_arg+".get(i).unwrap()"
+                if type["type_name_alone"].endswith("String") or type["type_name_alone"].endswith("Class"):
+                    new_new_arg = new_new_arg+".clone()"
+        res.append("let arr = "+prefix+".translate_error_no_gen(arr)?;")
+        res.append("for i in 0.."+new_arg+".len() {")
+        new_arg = new_new_arg
+        
+
     if(ty.startswith("crate") or ty.startswith("blackbox")): # for internal types...
         if "JavaEnum" in ty:
             return None
 
         # get the original object.
-        fcall = ".into().jni_object().clone()"
+        fcall = ""
+        if not is_array:
+            fcall += ".into()"
+        fcall += ".jni_object().clone()"
         if type["type_name_resolved"].startswith("&dyn"):
             fcall = ".jni_object().clone()"
 
@@ -262,31 +281,41 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
     else:
         match(type["type_name_alone"].replace("Java","")):
             case "bool" | "i8" | "char" | "f64" | "f32" | "i32" | "i64" | "i16" | "u16":
-                v = java_type_from_rust(type)
-                match(type["type_name_original"]):
-                    case "boolean":
-                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+new_arg+".into());")
-                    case "byte":
-                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Byte("+new_arg+".into());")
-                    case "char":
-                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Char("+new_arg+".into());")
-                    case "double":
-                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Double("+new_arg+".into());")
-                    case "float":
-                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Float("+new_arg+".into());")
-                    case "int":
-                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Int("+new_arg+".into());")
-                    case "long":
-                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Long("+new_arg+".into());")
-                    case "short":
-                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Short("+new_arg+".into());")
-                    case _:
-                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object("+prefix+".new_object(\""+type["type_name_original"].replace(".","/").replace("Java","")+"\", \""+v["function_signature"]+"\", vec!["+new_arg+".into()])?);")
+                if is_array and "." not in type["type_name_original"]:
+                    if "boolean" in type["type_name_original"]:
+                        res.append("let "+var_prefix+"_"+str(n)+" = "+new_arg+" as u8;")
+                    else:
+                        res.append("let "+var_prefix+"_"+str(n)+" = "+new_arg+";")
+                else:
+                    v = java_type_from_rust(type)
+                    match(type["type_name_original"]):
+                        case "boolean":
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+new_arg+".into());")
+                        case "byte":
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Byte("+new_arg+");")
+                        case "char":
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Char("+new_arg+");")
+                        case "double":
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Double("+new_arg+");")
+                        case "float":
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Float("+new_arg+");")
+                        case "int":
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Int("+new_arg+");")
+                        case "long":
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Long("+new_arg+");")
+                        case "short":
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Short("+new_arg+");")
+                        case _:
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object("+prefix+".new_object(\""+class_name+"\", \""+v["function_signature"]+"\", vec!["+new_arg+".into()])?);")
             case "String":
+                if is_array: 
+                    return None
                 res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object(jni::objects::JObject::from("+prefix+".new_string("+new_arg+".into())?));")
             case "jni::objects::JObject":
                 res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object("+new_arg+");")
             case "jni::objects::JClass":
+                if is_array: 
+                    return None
                 res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object("+new_arg+".into());")
             case "Vec":
                 match type["type_name_original"]:
@@ -313,7 +342,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
                             "package_name": type["package_name"],
                             "options_start_at": options_start_at,
                             "usage_unsafe": False,
-                        }, prefix, 0, "map_val", "v", options_start_at, no_sig=True)
+                        }, prefix, 0, "map_val", is_array, options_start_at, no_sig=True)
                         if co is None:
                             return None
                         c.append("\n\t\t".join(co))
@@ -340,9 +369,22 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
                 print("Untranslated argument:\t\t"+type["type_name_alone"],"\t\t",type["type_name_original"])
                 return None
 
+    if is_array:
+        match(type["type_name_alone"].replace("Java","")):
+            case "bool" | "i8" | "char" | "f64" | "f32" | "i32" | "i64" | "i16" | "u16":
+                res.append("vec.push("+var_prefix+"_"+str(n)+")")
+                res.append("}")
+                res.append(prefix+".set_"+type["type_name_original"]+"_array_region(&arr, 0, &vec)?;")
+            case _:
+                res.append(prefix+".set_object_array_element(&arr, i as i32, "+var_prefix+"_"+str(n)+".l()?)?;")
+                res.append("}")
+        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object(arr);")
     if options_start_at != -1:
         if not no_sig:
-            res.append("args.push("+var_prefix+"_"+str(n)+");")
+            if is_array:
+                res.append("args.push("+var_prefix+"_"+str(n)+".l()?.into());")
+            else:
+                res.append("args.push("+var_prefix+"_"+str(n)+");")
     if do_option:
         res.append("}")
 
@@ -578,11 +620,11 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
 def java_call_signature_format(types, return_type, is_constructor=False):
     results = []
     for ty in types:
-        results.append(java_letter_from_rust(ty["type_name_original"]))
+        results.append(java_letter_from_rust(ty["type_name_original"],ty["is_array"]))
     if is_constructor:
         return "("+"".join(results)+")V"
     else:
-        return "("+"".join(results)+")"+java_letter_from_rust(return_type)
+        return "("+"".join(results)+")"+java_letter_from_rust(return_type,False)
 
 def correct_question_mark(argname, ty, method, i, returning, library, is_constructor):
     gen = re.search("^(.*?)<(.*?)>$", ty)
@@ -817,30 +859,35 @@ def java_type_from_rust(type):
         "function_signature": function_signature
     }
 
-def java_letter_from_rust(type):
+def java_letter_from_rust(type,is_array):
+    res = ""
     match(type.replace("Java","")):
         case "boolean":
-            return "Z"
+            res = "Z"
         case "byte":
-            return "B"
+            res = "B"
         case "char":
-            return "C"
+            res = "C"
         case "short":
-            return "S"
+            res = "S"
         case "int":
-            return "I"
+            res = "I"
         case "long":
-            return "J"
+            res = "J"
         case "float":
-            return "F"
+            res = "F"
         case "double":
-            return "D"
+            res = "D"
         case "void":
-            return "V"
+            res = "V"
         case "":
-            return ""
+            res = ""
         case _:
-            return "L"+type.replace(".","/").replace("Java","")+";"
+            res = "L"+type.replace(".","/").replace("Java","")+";"
+    if is_array:
+        return "["+res
+    else:
+        return res
 
 def gen_to_string_func(name, static):
     if static:
@@ -1171,22 +1218,25 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         else:
             code.append("let sig = String::from(\""+java_call_signature_format(func_signature, return_group["type_name_original"],is_constructor)+"\");")
         for type in func_signature:
-            if(type["type_name_lhand"] == "") or (type["is_array"]) or in_excluded_classes(type["type_name_original"]):
+            if(type["type_name_lhand"] == "") or in_excluded_classes(type["type_name_original"]):
                 n += 1
                 continue
             else:
-                ty = code_format(type, prefix, n, class_name=og_name, options_start_at=options_start_at, no_sig=False)
+                ty = code_format(type, prefix, n, is_array=type["is_array"], options_start_at=options_start_at, no_sig=False)
                 if ty is None:
                     should_continue = False
                     break
                 for t in ty:
                     code.append(t)
-            types.append("jni::objects::JValueGen::from(val_"+str(n)+")")
+            if type["is_array"]:
+                types.append("jni::objects::JValueGen::from(val_"+str(n)+".l()?)")
+            else:
+                types.append("jni::objects::JValueGen::from(val_"+str(n)+")")
             n += 1
 
         if options_start_at != -1:
             if not is_constructor:
-                code.append("sig += \")"+java_letter_from_rust(return_group["type_name_original"])+"\";")
+                code.append("sig += \")"+java_letter_from_rust(return_group["type_name_original"],return_group["is_array"])+"\";")
             else:
                 code.append("sig += \")V\";")
         if(not should_continue):

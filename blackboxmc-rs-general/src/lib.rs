@@ -923,21 +923,24 @@ impl<'mc> SharedJNIEnv<'mc> {
         res: Result<jni::objects::JClass<'mc>, jni::errors::Error>,
     ) -> Result<jni::objects::JClass, Box<dyn std::error::Error>> {
         match res {
-            Ok(res) => match self.translate_error_no_gen(Ok(res.into())) {
+            Ok(res) => match self.translate_error_no_gen(Ok(res)) {
                 Ok(res) => Ok(res.into()),
                 Err(err) => Err(err),
             },
-            Err(err) => match self.translate_error_no_gen(Err(err)) {
+            Err(err) => match self.translate_error_no_gen::<jni::objects::JClass>(Err(err)) {
                 Ok(res) => Ok(res.into()),
                 Err(err) => Err(err),
             },
         }
     }
 
-    pub fn translate_error_no_gen(
+    pub fn translate_error_no_gen<T>(
         &self,
-        res: Result<jni::objects::JObject<'mc>, jni::errors::Error>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        res: Result<T, jni::errors::Error>,
+    ) -> Result<T, Box<dyn std::error::Error>>
+    where
+        T: Into<jni::objects::JObject<'mc>>,
+    {
         let mut jni = self.jni.borrow_mut();
         match res {
             Ok(res) => Ok(res),
@@ -1022,25 +1025,10 @@ pub trait JNIRaw<'mc> {
 }
 
 /// Trait for any object that can be instantiated from a JNI reference or JNI object.
-/// Enums do not implement this trait because not all of their from_raw functions can have the
-/// same function signature; see JNIInstantiatableEnum
 pub trait JNIInstantiatable<'mc> {
     fn from_raw(
         env: &SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>>
-    where
-        Self: Sized;
-}
-
-/// Trait for any enum that can be instantiated from a JNI reference or JNI object.
-pub trait JNIInstantiatableEnum<'mc> {
-    type Enum;
-
-    fn from_raw(
-        env: &SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>>
     where
         Self: Sized;

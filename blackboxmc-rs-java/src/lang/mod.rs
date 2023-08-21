@@ -59,7 +59,7 @@ impl<'mc> JavaInteger<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         args.push(val_1);
         sig += ")V";
         let cls = jni.find_class("java/lang/Integer");
@@ -74,7 +74,7 @@ impl<'mc> JavaInteger<'mc> {
         arg0: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -92,7 +92,7 @@ impl<'mc> JavaInteger<'mc> {
         arg0: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -110,7 +110,7 @@ impl<'mc> JavaInteger<'mc> {
         arg0: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -148,12 +148,12 @@ impl<'mc> JavaInteger<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Int(a);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         sig += ")Ljava/lang/String;";
@@ -175,7 +175,7 @@ impl<'mc> JavaInteger<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Int(a);
             args.push(val_1);
         }
         sig += ")I";
@@ -192,8 +192,8 @@ impl<'mc> JavaInteger<'mc> {
         arg1: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(II)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -215,8 +215,8 @@ impl<'mc> JavaInteger<'mc> {
         arg1: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(II)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -237,7 +237,7 @@ impl<'mc> JavaInteger<'mc> {
         arg0: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -255,7 +255,7 @@ impl<'mc> JavaInteger<'mc> {
         arg0: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -291,8 +291,8 @@ impl<'mc> JavaInteger<'mc> {
         arg1: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(II)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -367,7 +367,7 @@ impl<'mc> JavaInteger<'mc> {
         arg0: i32,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("java/lang/String");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -424,7 +424,7 @@ impl<'mc> JavaInteger<'mc> {
         arg0: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -442,7 +442,7 @@ impl<'mc> JavaInteger<'mc> {
         arg0: i32,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(I)J");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -461,8 +461,8 @@ impl<'mc> JavaInteger<'mc> {
         arg1: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(II)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -484,8 +484,8 @@ impl<'mc> JavaInteger<'mc> {
         arg1: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(II)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -509,11 +509,11 @@ impl<'mc> JavaInteger<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         sig += ")Ljava/lang/String;";
@@ -541,7 +541,7 @@ impl<'mc> JavaInteger<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         sig += ")Ljava/lang/Integer;";
@@ -557,7 +557,7 @@ impl<'mc> JavaInteger<'mc> {
         arg0: i32,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("java/lang/String");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -578,7 +578,7 @@ impl<'mc> JavaInteger<'mc> {
         arg0: i32,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("java/lang/String");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -600,8 +600,8 @@ impl<'mc> JavaInteger<'mc> {
         arg1: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(II)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -623,8 +623,8 @@ impl<'mc> JavaInteger<'mc> {
         arg1: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(II)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -645,7 +645,7 @@ impl<'mc> JavaInteger<'mc> {
         arg0: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -663,7 +663,7 @@ impl<'mc> JavaInteger<'mc> {
         arg0: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -682,8 +682,8 @@ impl<'mc> JavaInteger<'mc> {
         arg1: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(II)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -705,8 +705,8 @@ impl<'mc> JavaInteger<'mc> {
         arg1: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(II)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -720,49 +720,6 @@ impl<'mc> JavaInteger<'mc> {
         );
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
-    }
-
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -824,7 +781,7 @@ impl<'mc> JavaFloat<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "D";
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         args.push(val_1);
         sig += ")V";
         let cls = jni.find_class("java/lang/Float");
@@ -842,7 +799,7 @@ impl<'mc> JavaFloat<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "F";
-        let val_1 = jni::objects::JValueGen::Float(arg0.into());
+        let val_1 = jni::objects::JValueGen::Float(arg0);
         args.push(val_1);
         sig += ")V";
         let cls = jni.find_class("java/lang/Float");
@@ -876,7 +833,7 @@ impl<'mc> JavaFloat<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "F";
-            let val_1 = jni::objects::JValueGen::Float(a.into());
+            let val_1 = jni::objects::JValueGen::Float(a);
             args.push(val_1);
         }
         sig += ")Ljava/lang/String;";
@@ -898,7 +855,7 @@ impl<'mc> JavaFloat<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "F";
-            let val_1 = jni::objects::JValueGen::Float(a.into());
+            let val_1 = jni::objects::JValueGen::Float(a);
             args.push(val_1);
         }
         sig += ")I";
@@ -915,8 +872,8 @@ impl<'mc> JavaFloat<'mc> {
         arg1: f32,
     ) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("(FF)F");
-        let val_1 = jni::objects::JValueGen::Float(arg0.into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.into());
+        let val_1 = jni::objects::JValueGen::Float(arg0);
+        let val_2 = jni::objects::JValueGen::Float(arg1);
         let cls = jni.find_class("float");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -938,8 +895,8 @@ impl<'mc> JavaFloat<'mc> {
         arg1: f32,
     ) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("(FF)F");
-        let val_1 = jni::objects::JValueGen::Float(arg0.into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.into());
+        let val_1 = jni::objects::JValueGen::Float(arg0);
+        let val_2 = jni::objects::JValueGen::Float(arg1);
         let cls = jni.find_class("float");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -960,7 +917,7 @@ impl<'mc> JavaFloat<'mc> {
         arg0: f32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(F)I");
-        let val_1 = jni::objects::JValueGen::Float(arg0.into());
+        let val_1 = jni::objects::JValueGen::Float(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -978,7 +935,7 @@ impl<'mc> JavaFloat<'mc> {
         arg0: f32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(F)I");
-        let val_1 = jni::objects::JValueGen::Float(arg0.into());
+        let val_1 = jni::objects::JValueGen::Float(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -996,7 +953,7 @@ impl<'mc> JavaFloat<'mc> {
         arg0: i32,
     ) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)F");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("float");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1032,8 +989,8 @@ impl<'mc> JavaFloat<'mc> {
         arg1: f32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(FF)I");
-        let val_1 = jni::objects::JValueGen::Float(arg0.into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.into());
+        let val_1 = jni::objects::JValueGen::Float(arg0);
+        let val_2 = jni::objects::JValueGen::Float(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1108,7 +1065,7 @@ impl<'mc> JavaFloat<'mc> {
         arg0: f32,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(F)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Float(arg0.into());
+        let val_1 = jni::objects::JValueGen::Float(arg0);
         let cls = jni.find_class("java/lang/String");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1148,7 +1105,7 @@ impl<'mc> JavaFloat<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "F";
-            let val_1 = jni::objects::JValueGen::Float(a.into());
+            let val_1 = jni::objects::JValueGen::Float(a);
             args.push(val_1);
         }
         sig += ")Z";
@@ -1165,8 +1122,8 @@ impl<'mc> JavaFloat<'mc> {
         arg1: f32,
     ) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("(FF)F");
-        let val_1 = jni::objects::JValueGen::Float(arg0.into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.into());
+        let val_1 = jni::objects::JValueGen::Float(arg0);
+        let val_2 = jni::objects::JValueGen::Float(arg1);
         let cls = jni.find_class("float");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1210,7 +1167,7 @@ impl<'mc> JavaFloat<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "F";
-            let val_1 = jni::objects::JValueGen::Float(a.into());
+            let val_1 = jni::objects::JValueGen::Float(a);
             args.push(val_1);
         }
         sig += ")Z";
@@ -1226,7 +1183,7 @@ impl<'mc> JavaFloat<'mc> {
         arg0: f32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(F)Z");
-        let val_1 = jni::objects::JValueGen::Float(arg0.into());
+        let val_1 = jni::objects::JValueGen::Float(arg0);
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1237,49 +1194,6 @@ impl<'mc> JavaFloat<'mc> {
         );
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
-    }
-
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1421,7 +1335,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: u16,
     ) -> Result<crate::lang::JavaCharacter<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(C)V");
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         let cls = jni.find_class("java/lang/Character");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
@@ -1438,7 +1352,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: i32,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("java/lang/String");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1461,7 +1375,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -1478,7 +1392,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -1512,7 +1426,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "C";
-            let val_1 = jni::objects::JValueGen::Char(a.into());
+            let val_1 = jni::objects::JValueGen::Char(a);
             args.push(val_1);
         }
         sig += ")Ljava/lang/String;";
@@ -1534,7 +1448,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "C";
-            let val_1 = jni::objects::JValueGen::Char(a.into());
+            let val_1 = jni::objects::JValueGen::Char(a);
             args.push(val_1);
         }
         sig += ")I";
@@ -1550,7 +1464,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: u16,
     ) -> Result<u16, Box<dyn std::error::Error>> {
         let sig = String::from("(C)C");
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         let cls = jni.find_class("char");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1588,7 +1502,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "C";
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -1605,7 +1519,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "C";
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -1622,7 +1536,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -1639,7 +1553,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "C";
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -1655,8 +1569,8 @@ impl<'mc> JavaCharacter<'mc> {
         arg1: u16,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(CC)I");
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
-        let val_2 = jni::objects::JValueGen::Char(arg1.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
+        let val_2 = jni::objects::JValueGen::Char(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1690,11 +1604,24 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "[C";
+            let arr = jni.new_char_array(a.len() as i32);
+            let mut vec = Vec::new();
+            let arr = jni.translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_2 = *a.get(i).unwrap();
+                vec.push(val_2)
+            }
+            jni.set_char_array_region(&arr, 0, &vec)?;
+            let val_2 = jni::objects::JValueGen::Object(arr);
+            args.push(val_2.l()?.into());
+        }
         if let Some(a) = arg2 {
             sig += "I";
-            let val_3 = jni::objects::JValueGen::Int(a.into());
+            let val_3 = jni::objects::JValueGen::Int(a);
             args.push(val_3);
         }
         sig += ")I";
@@ -1710,7 +1637,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(C)Z");
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1728,7 +1655,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(C)Z");
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1746,7 +1673,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(C)Z");
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1764,7 +1691,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Z");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1782,7 +1709,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: i32,
     ) -> Result<u16, Box<dyn std::error::Error>> {
         let sig = String::from("(I)C");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("char");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1800,7 +1727,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: i32,
     ) -> Result<u16, Box<dyn std::error::Error>> {
         let sig = String::from("(I)C");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("char");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1819,8 +1746,8 @@ impl<'mc> JavaCharacter<'mc> {
         arg1: u16,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(CC)I");
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
-        let val_2 = jni::objects::JValueGen::Char(arg1.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
+        let val_2 = jni::objects::JValueGen::Char(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1844,12 +1771,23 @@ impl<'mc> JavaCharacter<'mc> {
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
+        sig += "[C";
+        let arr = jni.new_char_array(arg0.len() as i32);
+        let mut vec = Vec::new();
+        let arr = jni.translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = *arg0.get(i).unwrap();
+            vec.push(val_1)
+        }
+        jni.set_char_array_region(&arr, 0, &vec)?;
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        args.push(val_1.l()?.into());
         sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "I";
-            let val_3 = jni::objects::JValueGen::Int(a.into());
+            let val_3 = jni::objects::JValueGen::Int(a);
             args.push(val_3);
         }
         sig += ")I";
@@ -1868,12 +1806,23 @@ impl<'mc> JavaCharacter<'mc> {
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
+        sig += "[C";
+        let arr = jni.new_char_array(arg0.len() as i32);
+        let mut vec = Vec::new();
+        let arr = jni.translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = *arg0.get(i).unwrap();
+            vec.push(val_1)
+        }
+        jni.set_char_array_region(&arr, 0, &vec)?;
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        args.push(val_1.l()?.into());
         sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "I";
-            let val_3 = jni::objects::JValueGen::Int(a.into());
+            let val_3 = jni::objects::JValueGen::Int(a);
             args.push(val_3);
         }
         sig += ")I";
@@ -1894,20 +1843,31 @@ impl<'mc> JavaCharacter<'mc> {
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
+        sig += "[C";
+        let arr = jni.new_char_array(arg0.len() as i32);
+        let mut vec = Vec::new();
+        let arr = jni.translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = *arg0.get(i).unwrap();
+            vec.push(val_1)
+        }
+        jni.set_char_array_region(&arr, 0, &vec)?;
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        args.push(val_1.l()?.into());
         sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         args.push(val_2);
         sig += "I";
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
+        let val_3 = jni::objects::JValueGen::Int(arg2);
         args.push(val_3);
         if let Some(a) = arg3 {
             sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a.into());
+            let val_4 = jni::objects::JValueGen::Int(a);
             args.push(val_4);
         }
         if let Some(a) = arg4 {
             sig += "I";
-            let val_5 = jni::objects::JValueGen::Int(a.into());
+            let val_5 = jni::objects::JValueGen::Int(a);
             args.push(val_5);
         }
         sig += ")I";
@@ -1925,7 +1885,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "C";
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         args.push(val_1);
         sig += ")C";
         let cls = jni.find_class("char");
@@ -1942,7 +1902,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         args.push(val_1);
         sig += ")I";
         let cls = jni.find_class("int");
@@ -1957,7 +1917,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Z");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -1993,7 +1953,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         args.push(val_1);
         sig += ")I";
         let cls = jni.find_class("int");
@@ -2010,7 +1970,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -2027,7 +1987,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "C";
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -2042,7 +2002,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Z");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2062,7 +2022,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "C";
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -2079,7 +2039,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "C";
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -2094,7 +2054,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Z");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2114,7 +2074,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "C";
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -2131,7 +2091,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "C";
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -2148,7 +2108,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "C";
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -2165,7 +2125,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "C";
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         args.push(val_1);
         sig += ")C";
         let cls = jni.find_class("char");
@@ -2183,10 +2143,10 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "C";
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         args.push(val_1);
         sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         args.push(val_2);
         sig += ")I";
         let cls = jni.find_class("int");
@@ -2203,7 +2163,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "C";
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         args.push(val_1);
         sig += ")I";
         let cls = jni.find_class("int");
@@ -2220,7 +2180,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "C";
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -2237,7 +2197,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -2254,7 +2214,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "C";
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         args.push(val_1);
         sig += ")B";
         let cls = jni.find_class("byte");
@@ -2271,7 +2231,7 @@ impl<'mc> JavaCharacter<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         args.push(val_1);
         sig += ")Z";
         let cls = jni.find_class("boolean");
@@ -2287,8 +2247,8 @@ impl<'mc> JavaCharacter<'mc> {
         arg1: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(CC)Z");
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
-        let val_2 = jni::objects::JValueGen::Char(arg1.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
+        let val_2 = jni::objects::JValueGen::Char(arg1);
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2309,7 +2269,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2327,7 +2287,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(C)Z");
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2345,7 +2305,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(C)Z");
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2363,7 +2323,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Z");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2381,7 +2341,7 @@ impl<'mc> JavaCharacter<'mc> {
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(C)Z");
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JValueGen::Char(arg0);
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2400,8 +2360,8 @@ impl<'mc> JavaCharacter<'mc> {
         arg1: i32,
     ) -> Result<u16, Box<dyn std::error::Error>> {
         let sig = String::from("(II)C");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let cls = jni.find_class("char");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2435,49 +2395,6 @@ impl<'mc> JavaCharacter<'mc> {
         );
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
-    }
-
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2572,7 +2489,7 @@ impl<'mc> JavaByte<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "B";
-            let val_1 = jni::objects::JValueGen::Byte(a.into());
+            let val_1 = jni::objects::JValueGen::Byte(a);
             args.push(val_1);
         }
         sig += ")Ljava/lang/String;";
@@ -2594,7 +2511,7 @@ impl<'mc> JavaByte<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "B";
-            let val_1 = jni::objects::JValueGen::Byte(a.into());
+            let val_1 = jni::objects::JValueGen::Byte(a);
             args.push(val_1);
         }
         sig += ")I";
@@ -2628,8 +2545,8 @@ impl<'mc> JavaByte<'mc> {
         arg1: i8,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(BB)I");
-        let val_1 = jni::objects::JValueGen::Byte(arg0.into());
-        let val_2 = jni::objects::JValueGen::Byte(arg1.into());
+        let val_1 = jni::objects::JValueGen::Byte(arg0);
+        let val_2 = jni::objects::JValueGen::Byte(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2740,7 +2657,7 @@ impl<'mc> JavaByte<'mc> {
         arg0: i8,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(B)J");
-        let val_1 = jni::objects::JValueGen::Byte(arg0.into());
+        let val_1 = jni::objects::JValueGen::Byte(arg0);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2758,7 +2675,7 @@ impl<'mc> JavaByte<'mc> {
         arg0: i8,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(B)I");
-        let val_1 = jni::objects::JValueGen::Byte(arg0.into());
+        let val_1 = jni::objects::JValueGen::Byte(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2785,7 +2702,7 @@ impl<'mc> JavaByte<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         sig += ")B";
@@ -2802,8 +2719,8 @@ impl<'mc> JavaByte<'mc> {
         arg1: i8,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(BB)I");
-        let val_1 = jni::objects::JValueGen::Byte(arg0.into());
-        let val_2 = jni::objects::JValueGen::Byte(arg1.into());
+        let val_1 = jni::objects::JValueGen::Byte(arg0);
+        let val_2 = jni::objects::JValueGen::Byte(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2817,49 +2734,6 @@ impl<'mc> JavaByte<'mc> {
         );
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
-    }
-
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2922,7 +2796,7 @@ impl<'mc> JavaLong<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "J";
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         args.push(val_1);
         sig += ")V";
         let cls = jni.find_class("java/lang/Long");
@@ -2937,7 +2811,7 @@ impl<'mc> JavaLong<'mc> {
         arg0: i64,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(J)I");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2955,7 +2829,7 @@ impl<'mc> JavaLong<'mc> {
         arg0: i64,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(J)I");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2973,7 +2847,7 @@ impl<'mc> JavaLong<'mc> {
         arg0: i64,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(J)I");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3011,12 +2885,12 @@ impl<'mc> JavaLong<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Long(a);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         sig += ")Ljava/lang/String;";
@@ -3038,7 +2912,7 @@ impl<'mc> JavaLong<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Long(a);
             args.push(val_1);
         }
         sig += ")I";
@@ -3055,8 +2929,8 @@ impl<'mc> JavaLong<'mc> {
         arg1: i64,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(JJ)J");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
+        let val_2 = jni::objects::JValueGen::Long(arg1);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3078,8 +2952,8 @@ impl<'mc> JavaLong<'mc> {
         arg1: i64,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(JJ)J");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
+        let val_2 = jni::objects::JValueGen::Long(arg1);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3100,7 +2974,7 @@ impl<'mc> JavaLong<'mc> {
         arg0: i64,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(J)I");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3118,7 +2992,7 @@ impl<'mc> JavaLong<'mc> {
         arg0: i64,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(J)J");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3184,8 +3058,8 @@ impl<'mc> JavaLong<'mc> {
         arg1: i64,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(JJ)I");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
+        let val_2 = jni::objects::JValueGen::Long(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3260,7 +3134,7 @@ impl<'mc> JavaLong<'mc> {
         arg0: i64,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(J)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let cls = jni.find_class("java/lang/String");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3317,7 +3191,7 @@ impl<'mc> JavaLong<'mc> {
         arg0: i64,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(J)J");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3336,8 +3210,8 @@ impl<'mc> JavaLong<'mc> {
         arg1: i64,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(JJ)J");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
+        let val_2 = jni::objects::JValueGen::Long(arg1);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3359,8 +3233,8 @@ impl<'mc> JavaLong<'mc> {
         arg1: i64,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(JJ)I");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
+        let val_2 = jni::objects::JValueGen::Long(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3384,11 +3258,11 @@ impl<'mc> JavaLong<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "J";
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         sig += ")Ljava/lang/String;";
@@ -3407,7 +3281,7 @@ impl<'mc> JavaLong<'mc> {
         arg0: i64,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(J)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let cls = jni.find_class("java/lang/String");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3428,7 +3302,7 @@ impl<'mc> JavaLong<'mc> {
         arg0: i64,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(J)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let cls = jni.find_class("java/lang/String");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3450,8 +3324,8 @@ impl<'mc> JavaLong<'mc> {
         arg1: i64,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(JJ)J");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
+        let val_2 = jni::objects::JValueGen::Long(arg1);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3473,8 +3347,8 @@ impl<'mc> JavaLong<'mc> {
         arg1: i64,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(JJ)J");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
+        let val_2 = jni::objects::JValueGen::Long(arg1);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3495,7 +3369,7 @@ impl<'mc> JavaLong<'mc> {
         arg0: i64,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(J)J");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3513,7 +3387,7 @@ impl<'mc> JavaLong<'mc> {
         arg0: i64,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(J)J");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3532,8 +3406,8 @@ impl<'mc> JavaLong<'mc> {
         arg1: i32,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(JI)J");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3555,8 +3429,8 @@ impl<'mc> JavaLong<'mc> {
         arg1: i32,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(JI)J");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -3570,49 +3444,6 @@ impl<'mc> JavaLong<'mc> {
         );
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
-    }
-
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -3659,7 +3490,7 @@ impl<'mc> JavaLong<'mc> {
 /// string concatenation and conversion, see Gosling, Joy, and Steele,
 /// <i>The Java Language Specification</i>.
 /// </p><p> Unless otherwise noted, passing a <tt>null</tt> argument to a constructor
-/// or method in this class will cause a <a href="../../java/lang/NullPointerException.html" title="class in java.lang"><code>NullPointerException</code></a> to be
+/// or method in this class will cause a <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a> to be
 /// thrown.
 /// </p><p>A <code>String</code> represents a string in the UTF-16 format
 /// in which <em>supplementary characters</em> are represented by <em>surrogate
@@ -3718,19 +3549,32 @@ impl<'mc> JavaString<'mc> {
     ) -> Result<crate::lang::JavaString<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[B";
+            let arr = jni.new_byte_array(a.len() as i32);
+            let mut vec = Vec::new();
+            let arr = jni.translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = *a.get(i).unwrap();
+                vec.push(val_1)
+            }
+            jni.set_byte_array_region(&arr, 0, &vec)?;
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         if let Some(a) = arg2 {
             sig += "I";
-            let val_3 = jni::objects::JValueGen::Int(a.into());
+            let val_3 = jni::objects::JValueGen::Int(a);
             args.push(val_3);
         }
         if let Some(a) = arg3 {
             sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a.into());
+            let val_4 = jni::objects::JValueGen::Int(a);
             args.push(val_4);
         }
         sig += ")V";
@@ -3748,14 +3592,27 @@ impl<'mc> JavaString<'mc> {
     ) -> Result<crate::lang::JavaString<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[C";
+            let arr = jni.new_char_array(a.len() as i32);
+            let mut vec = Vec::new();
+            let arr = jni.translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = *a.get(i).unwrap();
+                vec.push(val_1)
+            }
+            jni.set_char_array_region(&arr, 0, &vec)?;
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         if let Some(a) = arg2 {
             sig += "I";
-            let val_3 = jni::objects::JValueGen::Int(a.into());
+            let val_3 = jni::objects::JValueGen::Int(a);
             args.push(val_3);
         }
         sig += ")V";
@@ -3793,14 +3650,27 @@ impl<'mc> JavaString<'mc> {
     ) -> Result<crate::lang::JavaString<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[I";
+            let arr = jni.new_int_array(a.len() as i32);
+            let mut vec = Vec::new();
+            let arr = jni.translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = *a.get(i).unwrap();
+                vec.push(val_1)
+            }
+            jni.set_int_array_region(&arr, 0, &vec)?;
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         if let Some(a) = arg2 {
             sig += "I";
-            let val_3 = jni::objects::JValueGen::Int(a.into());
+            let val_3 = jni::objects::JValueGen::Int(a);
             args.push(val_3);
         }
         sig += ")V";
@@ -3866,10 +3736,19 @@ impl<'mc> JavaString<'mc> {
         arg2: Vec<u16>,
         arg3: i32,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(IICI)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        let sig = String::from("(II[CI)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
+        let arr = self.jni_ref().new_char_array(arg2.len() as i32);
+        let mut vec = Vec::new();
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = *arg2.get(i).unwrap();
+            vec.push(val_3)
+        }
+        self.jni_ref().set_char_array_region(&arr, 0, &vec)?;
+        let val_3 = jni::objects::JValueGen::Object(arr);
+        let val_4 = jni::objects::JValueGen::Int(arg3);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getChars",
@@ -3877,6 +3756,7 @@ impl<'mc> JavaString<'mc> {
             vec![
                 jni::objects::JValueGen::from(val_1),
                 jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
                 jni::objects::JValueGen::from(val_4),
             ],
         );
@@ -3915,7 +3795,7 @@ impl<'mc> JavaString<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         sig += ")I";
@@ -3934,11 +3814,11 @@ impl<'mc> JavaString<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         sig += ")I";
@@ -3951,7 +3831,7 @@ impl<'mc> JavaString<'mc> {
 
     pub fn char_at(&self, arg0: i32) -> Result<u16, Box<dyn std::error::Error>> {
         let sig = String::from("(I)C");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "charAt",
@@ -3964,7 +3844,7 @@ impl<'mc> JavaString<'mc> {
 
     pub fn code_point_at(&self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "codePointAt",
@@ -3977,7 +3857,7 @@ impl<'mc> JavaString<'mc> {
 
     pub fn code_point_before(&self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "codePointBefore",
@@ -3994,8 +3874,8 @@ impl<'mc> JavaString<'mc> {
         arg1: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(II)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "codePointCount",
@@ -4015,8 +3895,8 @@ impl<'mc> JavaString<'mc> {
         arg1: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(II)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "offsetByCodePoints",
@@ -4044,7 +3924,7 @@ impl<'mc> JavaString<'mc> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         args.push(val_1);
         sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1);
         args.push(val_2);
         sig += "Ljava/lang/String;";
         let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -4052,11 +3932,11 @@ impl<'mc> JavaString<'mc> {
         ));
         args.push(val_3);
         sig += "I";
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        let val_4 = jni::objects::JValueGen::Int(arg3);
         args.push(val_4);
         if let Some(a) = arg4 {
             sig += "I";
-            let val_5 = jni::objects::JValueGen::Int(a.into());
+            let val_5 = jni::objects::JValueGen::Int(a);
             args.push(val_5);
         }
         sig += ")Z";
@@ -4081,7 +3961,7 @@ impl<'mc> JavaString<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         sig += ")Z";
@@ -4100,11 +3980,11 @@ impl<'mc> JavaString<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         sig += ")I";
@@ -4129,7 +4009,7 @@ impl<'mc> JavaString<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         sig += ")I";
@@ -4148,11 +4028,11 @@ impl<'mc> JavaString<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         sig += ")Ljava/lang/String;";
@@ -4353,7 +4233,7 @@ impl<'mc> JavaString<'mc> {
 
     pub fn repeat(&self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "repeat",
@@ -4395,6 +4275,21 @@ impl<'mc> JavaString<'mc> {
             jni.new_string(arg1.into())?,
         ));
         args.push(val_2);
+        if let Some(a) = arg2 {
+            sig += "[Ljava/lang/Object;";
+            let arr = jni.new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = jni.translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_3 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                jni.set_object_array_element(&arr, i as i32, val_3.l()?)?;
+            }
+            let val_3 = jni::objects::JValueGen::Object(arr);
+            args.push(val_3.l()?.into());
+        }
         sig += ")Ljava/lang/String;";
         let cls = jni.find_class("java/lang/String");
         let cls = jni.translate_error_with_class(cls)?;
@@ -4478,7 +4373,7 @@ impl<'mc> JavaString<'mc> {
 
     pub fn indent(&self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "indent",
@@ -4544,10 +4439,25 @@ impl<'mc> JavaString<'mc> {
         &self,
         arg0: Vec<jni::objects::JObject<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "formatted", sig.as_str(), vec![]);
+        let sig = String::from("([Ljava/lang/Object;)Ljava/lang/String;");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "java/lang/Object",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(arg0.get(i).unwrap());
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "formatted",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -4564,14 +4474,25 @@ impl<'mc> JavaString<'mc> {
     ) -> Result<String, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
+        sig += "[C";
+        let arr = jni.new_char_array(arg0.len() as i32);
+        let mut vec = Vec::new();
+        let arr = jni.translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = *arg0.get(i).unwrap();
+            vec.push(val_1)
+        }
+        jni.set_char_array_region(&arr, 0, &vec)?;
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        args.push(val_1.l()?.into());
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         if let Some(a) = arg2 {
             sig += "I";
-            let val_3 = jni::objects::JValueGen::Int(a.into());
+            let val_3 = jni::objects::JValueGen::Int(a);
             args.push(val_3);
         }
         sig += ")Ljava/lang/String;";
@@ -4612,49 +4533,6 @@ impl<'mc> JavaString<'mc> {
         crate::util::JavaOptional::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -4970,49 +4848,6 @@ impl<'mc> JavaBoolean<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -5108,7 +4943,7 @@ impl<'mc> JavaDouble<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "D";
-            let val_1 = jni::objects::JValueGen::Double(a.into());
+            let val_1 = jni::objects::JValueGen::Double(a);
             args.push(val_1);
         }
         sig += ")Ljava/lang/String;";
@@ -5130,7 +4965,7 @@ impl<'mc> JavaDouble<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "D";
-            let val_1 = jni::objects::JValueGen::Double(a.into());
+            let val_1 = jni::objects::JValueGen::Double(a);
             args.push(val_1);
         }
         sig += ")I";
@@ -5147,8 +4982,8 @@ impl<'mc> JavaDouble<'mc> {
         arg1: f64,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(DD)D");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
         let cls = jni.find_class("double");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -5170,8 +5005,8 @@ impl<'mc> JavaDouble<'mc> {
         arg1: f64,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(DD)D");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
         let cls = jni.find_class("double");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -5192,7 +5027,7 @@ impl<'mc> JavaDouble<'mc> {
         arg0: f64,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(D)J");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -5210,7 +5045,7 @@ impl<'mc> JavaDouble<'mc> {
         arg0: f64,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(D)J");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -5228,7 +5063,7 @@ impl<'mc> JavaDouble<'mc> {
         arg0: i64,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(J)D");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Long(arg0);
         let cls = jni.find_class("double");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -5264,8 +5099,8 @@ impl<'mc> JavaDouble<'mc> {
         arg1: f64,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(DD)I");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -5340,7 +5175,7 @@ impl<'mc> JavaDouble<'mc> {
         arg0: f64,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         let cls = jni.find_class("java/lang/String");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -5380,7 +5215,7 @@ impl<'mc> JavaDouble<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "D";
-            let val_1 = jni::objects::JValueGen::Double(a.into());
+            let val_1 = jni::objects::JValueGen::Double(a);
             args.push(val_1);
         }
         sig += ")Z";
@@ -5397,8 +5232,8 @@ impl<'mc> JavaDouble<'mc> {
         arg1: f64,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(DD)D");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
         let cls = jni.find_class("double");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -5422,7 +5257,7 @@ impl<'mc> JavaDouble<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "D";
-            let val_1 = jni::objects::JValueGen::Double(a.into());
+            let val_1 = jni::objects::JValueGen::Double(a);
             args.push(val_1);
         }
         sig += ")Z";
@@ -5438,7 +5273,7 @@ impl<'mc> JavaDouble<'mc> {
         arg0: f64,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Z");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg0);
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -5469,49 +5304,6 @@ impl<'mc> JavaDouble<'mc> {
         );
         let res = jni.translate_error(res)?;
         Ok(res.d()?)
-    }
-
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -5606,7 +5398,7 @@ impl<'mc> JavaShort<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "S";
-            let val_1 = jni::objects::JValueGen::Short(a.into());
+            let val_1 = jni::objects::JValueGen::Short(a);
             args.push(val_1);
         }
         sig += ")Ljava/lang/String;";
@@ -5628,7 +5420,7 @@ impl<'mc> JavaShort<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "S";
-            let val_1 = jni::objects::JValueGen::Short(a.into());
+            let val_1 = jni::objects::JValueGen::Short(a);
             args.push(val_1);
         }
         sig += ")I";
@@ -5644,7 +5436,7 @@ impl<'mc> JavaShort<'mc> {
         arg0: i16,
     ) -> Result<i16, Box<dyn std::error::Error>> {
         let sig = String::from("(S)S");
-        let val_1 = jni::objects::JValueGen::Short(arg0.into());
+        let val_1 = jni::objects::JValueGen::Short(arg0);
         let cls = jni.find_class("short");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -5680,8 +5472,8 @@ impl<'mc> JavaShort<'mc> {
         arg1: i16,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(SS)I");
-        let val_1 = jni::objects::JValueGen::Short(arg0.into());
-        let val_2 = jni::objects::JValueGen::Short(arg1.into());
+        let val_1 = jni::objects::JValueGen::Short(arg0);
+        let val_2 = jni::objects::JValueGen::Short(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -5792,7 +5584,7 @@ impl<'mc> JavaShort<'mc> {
         arg0: i16,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(S)J");
-        let val_1 = jni::objects::JValueGen::Short(arg0.into());
+        let val_1 = jni::objects::JValueGen::Short(arg0);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -5810,7 +5602,7 @@ impl<'mc> JavaShort<'mc> {
         arg0: i16,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(S)I");
-        let val_1 = jni::objects::JValueGen::Short(arg0.into());
+        let val_1 = jni::objects::JValueGen::Short(arg0);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -5829,8 +5621,8 @@ impl<'mc> JavaShort<'mc> {
         arg1: i16,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(SS)I");
-        let val_1 = jni::objects::JValueGen::Short(arg0.into());
-        let val_2 = jni::objects::JValueGen::Short(arg1.into());
+        let val_1 = jni::objects::JValueGen::Short(arg0);
+        let val_2 = jni::objects::JValueGen::Short(arg1);
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -5860,7 +5652,7 @@ impl<'mc> JavaShort<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Int(a);
             args.push(val_2);
         }
         sig += ")S";
@@ -5869,49 +5661,6 @@ impl<'mc> JavaShort<'mc> {
         let res = jni.call_static_method(cls, "parseShort", sig.as_str(), args);
         let res = jni.translate_error(res)?;
         Ok(res.s()?)
-    }
-
-    pub fn wait_with_long(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

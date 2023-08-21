@@ -112,27 +112,6 @@ impl<'mc> JNIInstantiatable<'mc> for StructureManager<'mc> {
 }
 
 impl<'mc> StructureManager<'mc> {
-    pub fn copy(
-        &self,
-        arg0: impl Into<crate::structure::Structure<'mc>>,
-    ) -> Result<crate::structure::Structure<'mc>, Box<dyn std::error::Error>> {
-        let sig =
-            String::from("(Lorg/bukkit/structure/Structure;)Lorg/bukkit/structure/Structure;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copy",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::structure::Structure::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
     pub fn get_structure(
         &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
@@ -193,13 +172,33 @@ impl<'mc> StructureManager<'mc> {
         })
     }
 
-    pub fn load_structure_with_input_stream(
+    pub fn unregister_structure(
+        &self,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+    ) -> Result<crate::structure::Structure<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/structure/Structure;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "unregisterStructure",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::structure::Structure::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn load_structure_with_file(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::structure::Structure<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/io/InputStream;";
+        sig += "Ljava/io/File;";
         let val_1 = jni::objects::JValueGen::Object(arg0);
         args.push(val_1);
         sig += ")Lorg/bukkit/structure/Structure;";
@@ -239,14 +238,14 @@ impl<'mc> StructureManager<'mc> {
         })
     }
 
-    pub fn save_structure_with_output_stream(
+    pub fn save_structure_with_file(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<impl Into<crate::structure::Structure<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/io/OutputStream;";
+        sig += "Ljava/io/File;";
         let val_1 = jni::objects::JValueGen::Object(arg0);
         args.push(val_1);
         if let Some(a) = arg1 {
@@ -264,14 +263,14 @@ impl<'mc> StructureManager<'mc> {
         Ok(())
     }
 
-    pub fn save_structure_with_file(
+    pub fn save_structure_with_output_stream(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<impl Into<crate::structure::Structure<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/io/File;";
+        sig += "Ljava/io/OutputStream;";
         let val_1 = jni::objects::JValueGen::Object(arg0);
         args.push(val_1);
         if let Some(a) = arg1 {
@@ -372,17 +371,18 @@ impl<'mc> StructureManager<'mc> {
         })
     }
 
-    pub fn unregister_structure(
+    pub fn copy(
         &self,
-        arg0: impl Into<crate::NamespacedKey<'mc>>,
+        arg0: impl Into<crate::structure::Structure<'mc>>,
     ) -> Result<crate::structure::Structure<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/structure/Structure;");
+        let sig =
+            String::from("(Lorg/bukkit/structure/Structure;)Lorg/bukkit/structure/Structure;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "unregisterStructure",
+            "copy",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -438,46 +438,6 @@ impl<'mc> JNIInstantiatable<'mc> for Structure<'mc> {
 }
 
 impl<'mc> Structure<'mc> {
-    pub fn fill_with_location(
-        &self,
-        arg0: impl Into<crate::Location<'mc>>,
-        arg1: impl Into<crate::Location<'mc>>,
-        arg2: bool,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Location;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Lorg/bukkit/Location;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        args.push(val_2);
-        sig += "Z";
-        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
-        args.push(val_3);
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "fill", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn size(&self) -> Result<crate::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/util/BlockVector;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getSize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::BlockVector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
     pub fn entities(&self) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -567,10 +527,10 @@ impl<'mc> Structure<'mc> {
         });
         args.push(val_5);
         sig += "I";
-        let val_6 = jni::objects::JValueGen::Int(arg5.into());
+        let val_6 = jni::objects::JValueGen::Int(arg5);
         args.push(val_6);
         sig += "F";
-        let val_7 = jni::objects::JValueGen::Float(arg6.into());
+        let val_7 = jni::objects::JValueGen::Float(arg6);
         args.push(val_7);
         if let Some(a) = arg7 {
             sig += "Ljava/util/Random;";
@@ -587,18 +547,42 @@ impl<'mc> Structure<'mc> {
         Ok(())
     }
 
-    pub fn persistent_data_container(
+    pub fn fill_with_location(
         &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            vec![],
-        );
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: impl Into<crate::util::BlockVector<'mc>>,
+        arg2: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/util/BlockVector;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += "Z";
+        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
+        args.push(val_3);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "fill", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn size(&self) -> Result<crate::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/util/BlockVector;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getSize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
+        crate::util::BlockVector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }

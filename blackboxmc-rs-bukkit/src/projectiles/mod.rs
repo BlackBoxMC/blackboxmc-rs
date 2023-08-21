@@ -129,33 +129,6 @@ impl<'mc> BlockProjectileSource<'mc> {
         })
     }
 
-    pub fn launch_projectile_with_class(
-        &self,
-        arg0: jni::objects::JClass<'mc>,
-        arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
-    ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/lang/Class;";
-        let val_1 = jni::objects::JValueGen::Object(arg0.into());
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/util/Vector;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        sig += ")Lorg/bukkit/entity/Projectile;";
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "launchProjectile", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Projectile::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
