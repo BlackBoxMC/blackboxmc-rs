@@ -83,6 +83,35 @@ impl<'mc> VehicleUpdateEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //VehicleEvent
+    //crate::event::vehicle::VehicleEvent
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
+        real.vehicle()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -217,6 +246,35 @@ impl<'mc> VehicleEnterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //VehicleEvent
+    //crate::event::vehicle::VehicleEvent
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
+        real.vehicle()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -409,6 +467,37 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //VehicleCollisionEvent
+    //crate::event::vehicle::VehicleCollisionEvent
+    //VehicleEvent
+    //crate::event::vehicle::VehicleEvent
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
+        real.vehicle()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -549,6 +638,35 @@ impl<'mc> VehicleExitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //VehicleEvent
+    //crate::event::vehicle::VehicleEvent
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
+        real.vehicle()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -740,6 +858,37 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //VehicleCollisionEvent
+    //crate::event::vehicle::VehicleCollisionEvent
+    //VehicleEvent
+    //crate::event::vehicle::VehicleEvent
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
+        real.vehicle()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -857,6 +1006,35 @@ impl<'mc> VehicleCreateEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //VehicleEvent
+    //crate::event::vehicle::VehicleEvent
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
+        real.vehicle()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -994,6 +1172,35 @@ impl<'mc> VehicleMoveEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
+    //VehicleEvent
+    //crate::event::vehicle::VehicleEvent
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
+        real.vehicle()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1134,6 +1341,35 @@ impl<'mc> VehicleDestroyEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+    //VehicleEvent
+    //crate::event::vehicle::VehicleEvent
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
+        real.vehicle()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1305,6 +1541,35 @@ impl<'mc> VehicleDamageEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+    //VehicleEvent
+    //crate::event::vehicle::VehicleEvent
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
+        real.vehicle()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1395,6 +1660,34 @@ impl<'mc> VehicleEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+    //Event
+    //crate::event::Event
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

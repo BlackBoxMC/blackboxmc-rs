@@ -161,6 +161,390 @@ impl<'mc> TextComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //BaseComponent
+    //crate::bungee::api::chat::BaseComponent
+    pub fn copy_formatting_with_base_component(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        >,
+        arg2: std::option::Option<bool>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        sig += ")V";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "copyFormatting", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn retain(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.retain(arg0)
+    }
+    pub fn to_legacy_text_with_base_components(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<Vec<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Lnet/md_5/bungee/api/chat/BaseComponent;";
+            let arr = jni.new_object_array(
+                a.len() as i32,
+                "net/md_5/bungee/api/chat/BaseComponent",
+                jni::objects::JObject::null(),
+            );
+            let arr = jni.translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(unsafe {
+                    jni::objects::JObject::from_raw(a.get(i).unwrap().jni_object().clone())
+                });
+                jni.set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")Ljava/lang/String;";
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "toLegacyText", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn to_plain_text_with_base_components(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<Vec<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Lnet/md_5/bungee/api/chat/BaseComponent;";
+            let arr = jni.new_object_array(
+                a.len() as i32,
+                "net/md_5/bungee/api/chat/BaseComponent",
+                jni::objects::JObject::null(),
+            );
+            let arr = jni.translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(unsafe {
+                    jni::objects::JObject::from_raw(a.get(i).unwrap().jni_object().clone())
+                });
+                jni.set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")Ljava/lang/String;";
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "toPlainText", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn color_raw(
+        &self,
+    ) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.color_raw()
+    }
+    pub fn insertion(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.insertion()
+    }
+    pub fn click_event(
+        &self,
+    ) -> Result<crate::bungee::api::chat::ClickEvent<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.click_event()
+    }
+    pub fn hover_event(
+        &self,
+    ) -> Result<crate::bungee::api::chat::HoverEvent<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.hover_event()
+    }
+    pub fn is_obfuscated(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_obfuscated()
+    }
+    pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_obfuscated_raw()
+    }
+    pub fn add_extra_with_base_component(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "addExtra", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn has_formatting(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.has_formatting()
+    }
+    pub fn set_font(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_font(arg0)
+    }
+    pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_bold(arg0)
+    }
+    pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_italic(arg0)
+    }
+    pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_underlined(arg0)
+    }
+    pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_strikethrough(arg0)
+    }
+    pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_obfuscated(arg0)
+    }
+    pub fn set_insertion(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_insertion(arg0)
+    }
+    pub fn set_click_event(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::ClickEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_click_event(arg0)
+    }
+    pub fn set_hover_event(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::HoverEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_hover_event(arg0)
+    }
+    pub fn set_reset(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_reset(arg0)
+    }
+    pub fn font(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.font()
+    }
+    pub fn font_raw(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.font_raw()
+    }
+    pub fn is_bold(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_bold()
+    }
+    pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_bold_raw()
+    }
+    pub fn is_italic(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_italic()
+    }
+    pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_italic_raw()
+    }
+    pub fn is_underlined(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_underlined()
+    }
+    pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_underlined_raw()
+    }
+    pub fn is_strikethrough(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_strikethrough()
+    }
+    pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_strikethrough_raw()
+    }
+    pub fn duplicate_without_formatting(
+        &self,
+    ) -> Result<crate::bungee::api::chat::BaseComponent<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.duplicate_without_formatting()
+    }
+    pub fn set_extra(
+        &self,
+        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_extra(arg0)
+    }
+    pub fn extra(
+        &self,
+    ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.extra()
+    }
+    pub fn set_color(
+        &self,
+        arg0: impl Into<crate::bungee::api::ChatColor<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_color(arg0)
+    }
+    pub fn color(&self) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.color()
+    }
+    pub fn is_reset(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_reset()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -518,6 +902,8 @@ impl<'mc> JNIInstantiatable<'mc> for HoverEventActionStruct<'mc> {
 }
 
 impl<'mc> HoverEventActionStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -728,6 +1114,7 @@ impl<'mc> HoverEvent<'mc> {
         let res = jni.translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1432,6 +1819,7 @@ impl<'mc> BaseComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1587,6 +1975,390 @@ impl<'mc> SelectorComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //BaseComponent
+    //crate::bungee::api::chat::BaseComponent
+    pub fn copy_formatting_with_base_component(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        >,
+        arg2: std::option::Option<bool>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        sig += ")V";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "copyFormatting", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn retain(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.retain(arg0)
+    }
+    pub fn to_legacy_text_with_base_components(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<Vec<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Lnet/md_5/bungee/api/chat/BaseComponent;";
+            let arr = jni.new_object_array(
+                a.len() as i32,
+                "net/md_5/bungee/api/chat/BaseComponent",
+                jni::objects::JObject::null(),
+            );
+            let arr = jni.translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(unsafe {
+                    jni::objects::JObject::from_raw(a.get(i).unwrap().jni_object().clone())
+                });
+                jni.set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")Ljava/lang/String;";
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "toLegacyText", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn to_plain_text_with_base_components(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<Vec<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Lnet/md_5/bungee/api/chat/BaseComponent;";
+            let arr = jni.new_object_array(
+                a.len() as i32,
+                "net/md_5/bungee/api/chat/BaseComponent",
+                jni::objects::JObject::null(),
+            );
+            let arr = jni.translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(unsafe {
+                    jni::objects::JObject::from_raw(a.get(i).unwrap().jni_object().clone())
+                });
+                jni.set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")Ljava/lang/String;";
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "toPlainText", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn color_raw(
+        &self,
+    ) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.color_raw()
+    }
+    pub fn insertion(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.insertion()
+    }
+    pub fn click_event(
+        &self,
+    ) -> Result<crate::bungee::api::chat::ClickEvent<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.click_event()
+    }
+    pub fn hover_event(
+        &self,
+    ) -> Result<crate::bungee::api::chat::HoverEvent<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.hover_event()
+    }
+    pub fn is_obfuscated(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_obfuscated()
+    }
+    pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_obfuscated_raw()
+    }
+    pub fn add_extra_with_base_component(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "addExtra", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn has_formatting(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.has_formatting()
+    }
+    pub fn set_font(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_font(arg0)
+    }
+    pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_bold(arg0)
+    }
+    pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_italic(arg0)
+    }
+    pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_underlined(arg0)
+    }
+    pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_strikethrough(arg0)
+    }
+    pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_obfuscated(arg0)
+    }
+    pub fn set_insertion(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_insertion(arg0)
+    }
+    pub fn set_click_event(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::ClickEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_click_event(arg0)
+    }
+    pub fn set_hover_event(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::HoverEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_hover_event(arg0)
+    }
+    pub fn set_reset(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_reset(arg0)
+    }
+    pub fn font(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.font()
+    }
+    pub fn font_raw(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.font_raw()
+    }
+    pub fn is_bold(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_bold()
+    }
+    pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_bold_raw()
+    }
+    pub fn is_italic(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_italic()
+    }
+    pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_italic_raw()
+    }
+    pub fn is_underlined(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_underlined()
+    }
+    pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_underlined_raw()
+    }
+    pub fn is_strikethrough(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_strikethrough()
+    }
+    pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_strikethrough_raw()
+    }
+    pub fn duplicate_without_formatting(
+        &self,
+    ) -> Result<crate::bungee::api::chat::BaseComponent<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.duplicate_without_formatting()
+    }
+    pub fn set_extra(
+        &self,
+        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_extra(arg0)
+    }
+    pub fn extra(
+        &self,
+    ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.extra()
+    }
+    pub fn set_color(
+        &self,
+        arg0: impl Into<crate::bungee::api::ChatColor<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_color(arg0)
+    }
+    pub fn color(&self) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.color()
+    }
+    pub fn is_reset(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_reset()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1821,6 +2593,390 @@ impl<'mc> ScoreComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //BaseComponent
+    //crate::bungee::api::chat::BaseComponent
+    pub fn copy_formatting_with_base_component(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        >,
+        arg2: std::option::Option<bool>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        sig += ")V";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "copyFormatting", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn retain(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.retain(arg0)
+    }
+    pub fn to_legacy_text_with_base_components(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<Vec<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Lnet/md_5/bungee/api/chat/BaseComponent;";
+            let arr = jni.new_object_array(
+                a.len() as i32,
+                "net/md_5/bungee/api/chat/BaseComponent",
+                jni::objects::JObject::null(),
+            );
+            let arr = jni.translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(unsafe {
+                    jni::objects::JObject::from_raw(a.get(i).unwrap().jni_object().clone())
+                });
+                jni.set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")Ljava/lang/String;";
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "toLegacyText", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn to_plain_text_with_base_components(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<Vec<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Lnet/md_5/bungee/api/chat/BaseComponent;";
+            let arr = jni.new_object_array(
+                a.len() as i32,
+                "net/md_5/bungee/api/chat/BaseComponent",
+                jni::objects::JObject::null(),
+            );
+            let arr = jni.translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(unsafe {
+                    jni::objects::JObject::from_raw(a.get(i).unwrap().jni_object().clone())
+                });
+                jni.set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")Ljava/lang/String;";
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "toPlainText", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn color_raw(
+        &self,
+    ) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.color_raw()
+    }
+    pub fn insertion(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.insertion()
+    }
+    pub fn click_event(
+        &self,
+    ) -> Result<crate::bungee::api::chat::ClickEvent<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.click_event()
+    }
+    pub fn hover_event(
+        &self,
+    ) -> Result<crate::bungee::api::chat::HoverEvent<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.hover_event()
+    }
+    pub fn is_obfuscated(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_obfuscated()
+    }
+    pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_obfuscated_raw()
+    }
+    pub fn add_extra_with_base_component(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "addExtra", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn has_formatting(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.has_formatting()
+    }
+    pub fn set_font(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_font(arg0)
+    }
+    pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_bold(arg0)
+    }
+    pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_italic(arg0)
+    }
+    pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_underlined(arg0)
+    }
+    pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_strikethrough(arg0)
+    }
+    pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_obfuscated(arg0)
+    }
+    pub fn set_insertion(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_insertion(arg0)
+    }
+    pub fn set_click_event(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::ClickEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_click_event(arg0)
+    }
+    pub fn set_hover_event(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::HoverEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_hover_event(arg0)
+    }
+    pub fn set_reset(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_reset(arg0)
+    }
+    pub fn font(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.font()
+    }
+    pub fn font_raw(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.font_raw()
+    }
+    pub fn is_bold(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_bold()
+    }
+    pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_bold_raw()
+    }
+    pub fn is_italic(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_italic()
+    }
+    pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_italic_raw()
+    }
+    pub fn is_underlined(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_underlined()
+    }
+    pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_underlined_raw()
+    }
+    pub fn is_strikethrough(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_strikethrough()
+    }
+    pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_strikethrough_raw()
+    }
+    pub fn duplicate_without_formatting(
+        &self,
+    ) -> Result<crate::bungee::api::chat::BaseComponent<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.duplicate_without_formatting()
+    }
+    pub fn set_extra(
+        &self,
+        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_extra(arg0)
+    }
+    pub fn extra(
+        &self,
+    ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.extra()
+    }
+    pub fn set_color(
+        &self,
+        arg0: impl Into<crate::bungee::api::ChatColor<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_color(arg0)
+    }
+    pub fn color(&self) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.color()
+    }
+    pub fn is_reset(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_reset()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2037,6 +3193,8 @@ impl<'mc> JNIInstantiatable<'mc> for ClickEventActionStruct<'mc> {
 }
 
 impl<'mc> ClickEventActionStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -2163,6 +3321,7 @@ impl<'mc> ClickEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2324,6 +3483,7 @@ impl<'mc> ItemTagSerializer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2606,6 +3766,390 @@ impl<'mc> TranslatableComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //BaseComponent
+    //crate::bungee::api::chat::BaseComponent
+    pub fn copy_formatting_with_base_component(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        >,
+        arg2: std::option::Option<bool>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        sig += ")V";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "copyFormatting", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn retain(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.retain(arg0)
+    }
+    pub fn to_legacy_text_with_base_components(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<Vec<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Lnet/md_5/bungee/api/chat/BaseComponent;";
+            let arr = jni.new_object_array(
+                a.len() as i32,
+                "net/md_5/bungee/api/chat/BaseComponent",
+                jni::objects::JObject::null(),
+            );
+            let arr = jni.translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(unsafe {
+                    jni::objects::JObject::from_raw(a.get(i).unwrap().jni_object().clone())
+                });
+                jni.set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")Ljava/lang/String;";
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "toLegacyText", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn to_plain_text_with_base_components(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<Vec<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Lnet/md_5/bungee/api/chat/BaseComponent;";
+            let arr = jni.new_object_array(
+                a.len() as i32,
+                "net/md_5/bungee/api/chat/BaseComponent",
+                jni::objects::JObject::null(),
+            );
+            let arr = jni.translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(unsafe {
+                    jni::objects::JObject::from_raw(a.get(i).unwrap().jni_object().clone())
+                });
+                jni.set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")Ljava/lang/String;";
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "toPlainText", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn color_raw(
+        &self,
+    ) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.color_raw()
+    }
+    pub fn insertion(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.insertion()
+    }
+    pub fn click_event(
+        &self,
+    ) -> Result<crate::bungee::api::chat::ClickEvent<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.click_event()
+    }
+    pub fn hover_event(
+        &self,
+    ) -> Result<crate::bungee::api::chat::HoverEvent<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.hover_event()
+    }
+    pub fn is_obfuscated(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_obfuscated()
+    }
+    pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_obfuscated_raw()
+    }
+    pub fn add_extra_with_base_component(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "addExtra", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn has_formatting(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.has_formatting()
+    }
+    pub fn set_font(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_font(arg0)
+    }
+    pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_bold(arg0)
+    }
+    pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_italic(arg0)
+    }
+    pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_underlined(arg0)
+    }
+    pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_strikethrough(arg0)
+    }
+    pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_obfuscated(arg0)
+    }
+    pub fn set_insertion(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_insertion(arg0)
+    }
+    pub fn set_click_event(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::ClickEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_click_event(arg0)
+    }
+    pub fn set_hover_event(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::HoverEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_hover_event(arg0)
+    }
+    pub fn set_reset(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_reset(arg0)
+    }
+    pub fn font(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.font()
+    }
+    pub fn font_raw(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.font_raw()
+    }
+    pub fn is_bold(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_bold()
+    }
+    pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_bold_raw()
+    }
+    pub fn is_italic(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_italic()
+    }
+    pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_italic_raw()
+    }
+    pub fn is_underlined(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_underlined()
+    }
+    pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_underlined_raw()
+    }
+    pub fn is_strikethrough(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_strikethrough()
+    }
+    pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_strikethrough_raw()
+    }
+    pub fn duplicate_without_formatting(
+        &self,
+    ) -> Result<crate::bungee::api::chat::BaseComponent<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.duplicate_without_formatting()
+    }
+    pub fn set_extra(
+        &self,
+        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_extra(arg0)
+    }
+    pub fn extra(
+        &self,
+    ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.extra()
+    }
+    pub fn set_color(
+        &self,
+        arg0: impl Into<crate::bungee::api::ChatColor<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_color(arg0)
+    }
+    pub fn color(&self) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.color()
+    }
+    pub fn is_reset(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_reset()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2813,6 +4357,7 @@ impl<'mc> ItemTag<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2969,6 +4514,390 @@ impl<'mc> KeybindComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //BaseComponent
+    //crate::bungee::api::chat::BaseComponent
+    pub fn copy_formatting_with_base_component(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        >,
+        arg2: std::option::Option<bool>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        sig += ")V";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "copyFormatting", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn retain(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.retain(arg0)
+    }
+    pub fn to_legacy_text_with_base_components(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<Vec<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Lnet/md_5/bungee/api/chat/BaseComponent;";
+            let arr = jni.new_object_array(
+                a.len() as i32,
+                "net/md_5/bungee/api/chat/BaseComponent",
+                jni::objects::JObject::null(),
+            );
+            let arr = jni.translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(unsafe {
+                    jni::objects::JObject::from_raw(a.get(i).unwrap().jni_object().clone())
+                });
+                jni.set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")Ljava/lang/String;";
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "toLegacyText", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn to_plain_text_with_base_components(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<Vec<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Lnet/md_5/bungee/api/chat/BaseComponent;";
+            let arr = jni.new_object_array(
+                a.len() as i32,
+                "net/md_5/bungee/api/chat/BaseComponent",
+                jni::objects::JObject::null(),
+            );
+            let arr = jni.translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(unsafe {
+                    jni::objects::JObject::from_raw(a.get(i).unwrap().jni_object().clone())
+                });
+                jni.set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")Ljava/lang/String;";
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "toPlainText", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn color_raw(
+        &self,
+    ) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.color_raw()
+    }
+    pub fn insertion(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.insertion()
+    }
+    pub fn click_event(
+        &self,
+    ) -> Result<crate::bungee::api::chat::ClickEvent<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.click_event()
+    }
+    pub fn hover_event(
+        &self,
+    ) -> Result<crate::bungee::api::chat::HoverEvent<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.hover_event()
+    }
+    pub fn is_obfuscated(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_obfuscated()
+    }
+    pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_obfuscated_raw()
+    }
+    pub fn add_extra_with_base_component(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "addExtra", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn has_formatting(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.has_formatting()
+    }
+    pub fn set_font(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_font(arg0)
+    }
+    pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_bold(arg0)
+    }
+    pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_italic(arg0)
+    }
+    pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_underlined(arg0)
+    }
+    pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_strikethrough(arg0)
+    }
+    pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_obfuscated(arg0)
+    }
+    pub fn set_insertion(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_insertion(arg0)
+    }
+    pub fn set_click_event(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::ClickEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_click_event(arg0)
+    }
+    pub fn set_hover_event(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::HoverEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_hover_event(arg0)
+    }
+    pub fn set_reset(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_reset(arg0)
+    }
+    pub fn font(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.font()
+    }
+    pub fn font_raw(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.font_raw()
+    }
+    pub fn is_bold(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_bold()
+    }
+    pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_bold_raw()
+    }
+    pub fn is_italic(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_italic()
+    }
+    pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_italic_raw()
+    }
+    pub fn is_underlined(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_underlined()
+    }
+    pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_underlined_raw()
+    }
+    pub fn is_strikethrough(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_strikethrough()
+    }
+    pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_strikethrough_raw()
+    }
+    pub fn duplicate_without_formatting(
+        &self,
+    ) -> Result<crate::bungee::api::chat::BaseComponent<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.duplicate_without_formatting()
+    }
+    pub fn set_extra(
+        &self,
+        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_extra(arg0)
+    }
+    pub fn extra(
+        &self,
+    ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.extra()
+    }
+    pub fn set_color(
+        &self,
+        arg0: impl Into<crate::bungee::api::ChatColor<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.set_color(arg0)
+    }
+    pub fn color(&self) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.color()
+    }
+    pub fn is_reset(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::bungee::api::chat::BaseComponent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
+        real.is_reset()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3173,6 +5102,8 @@ impl<'mc> JNIInstantiatable<'mc> for ComponentBuilderFormatRetentionStruct<'mc> 
 }
 
 impl<'mc> ComponentBuilderFormatRetentionStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -3719,6 +5650,7 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

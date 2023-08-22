@@ -294,6 +294,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -502,20 +503,101 @@ impl<'mc> FurnaceRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //CookingRecipe
+    //crate::inventory::CookingRecipe
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = FurnaceRecipe::from_raw(&self.0, unsafe {
+        let temp_clone = crate::inventory::CookingRecipe::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::inventory::Recipe = temp_clone.into();
         real.result()
     }
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = FurnaceRecipe::from_raw(&self.0, unsafe {
+        let temp_clone = crate::inventory::CookingRecipe::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::Keyed = temp_clone.into();
         real.key()
     }
+    pub fn input(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::CookingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CookingRecipe = temp_clone.into();
+        real.input()
+    }
+    pub fn category(
+        &self,
+    ) -> Result<crate::inventory::recipe::CookingBookCategory<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = crate::inventory::CookingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CookingRecipe = temp_clone.into();
+        real.category()
+    }
+    pub fn input_choice(
+        &self,
+    ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::CookingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CookingRecipe = temp_clone.into();
+        real.input_choice()
+    }
+    pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::CookingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CookingRecipe = temp_clone.into();
+        real.group()
+    }
+    pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::CookingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CookingRecipe = temp_clone.into();
+        real.set_group(arg0)
+    }
+    pub fn set_category(
+        &self,
+        arg0: impl Into<crate::inventory::recipe::CookingBookCategory<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::CookingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CookingRecipe = temp_clone.into();
+        real.set_category(arg0)
+    }
+    pub fn experience(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::CookingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CookingRecipe = temp_clone.into();
+        real.experience()
+    }
+    pub fn set_experience(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::CookingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CookingRecipe = temp_clone.into();
+        real.set_experience(arg0)
+    }
+    pub fn set_cooking_time(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::CookingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CookingRecipe = temp_clone.into();
+        real.set_cooking_time(arg0)
+    }
+    pub fn cooking_time(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::CookingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CookingRecipe = temp_clone.into();
+        real.cooking_time()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1721,6 +1803,7 @@ impl<'mc> SmithingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1859,6 +1942,7 @@ impl<'mc> CraftingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2313,6 +2397,7 @@ impl<'mc> InventoryViewPropertyStruct<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2640,6 +2725,7 @@ impl<'mc> InventoryView<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3259,6 +3345,7 @@ impl<'mc> ItemStack<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3495,6 +3582,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4565,6 +4653,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5636,20 +5725,57 @@ impl<'mc> ShapedRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //CraftingRecipe
+    //crate::inventory::CraftingRecipe
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = ShapedRecipe::from_raw(&self.0, unsafe {
+        let temp_clone = crate::inventory::CraftingRecipe::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::inventory::Recipe = temp_clone.into();
         real.result()
     }
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = ShapedRecipe::from_raw(&self.0, unsafe {
+        let temp_clone = crate::inventory::CraftingRecipe::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::Keyed = temp_clone.into();
         real.key()
     }
+    pub fn category(
+        &self,
+    ) -> Result<crate::inventory::recipe::CraftingBookCategory<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = crate::inventory::CraftingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CraftingRecipe = temp_clone.into();
+        real.category()
+    }
+    pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::CraftingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CraftingRecipe = temp_clone.into();
+        real.group()
+    }
+    pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::CraftingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CraftingRecipe = temp_clone.into();
+        real.set_group(arg0)
+    }
+    pub fn set_category(
+        &self,
+        arg0: impl Into<crate::inventory::recipe::CraftingBookCategory<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::CraftingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CraftingRecipe = temp_clone.into();
+        real.set_category(arg0)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5756,20 +5882,39 @@ impl<'mc> SmithingTransformRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //SmithingRecipe
+    //crate::inventory::SmithingRecipe
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = SmithingTransformRecipe::from_raw(&self.0, unsafe {
+        let temp_clone = crate::inventory::SmithingRecipe::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::inventory::Recipe = temp_clone.into();
         real.result()
     }
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = SmithingTransformRecipe::from_raw(&self.0, unsafe {
+        let temp_clone = crate::inventory::SmithingRecipe::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::Keyed = temp_clone.into();
         real.key()
     }
+    pub fn base(&self) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::SmithingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::SmithingRecipe = temp_clone.into();
+        real.base()
+    }
+    pub fn addition(
+        &self,
+    ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::SmithingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::SmithingRecipe = temp_clone.into();
+        real.addition()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7643,20 +7788,57 @@ impl<'mc> ShapelessRecipe<'mc> {
         }
         Ok(new_vec)
     }
+    //CraftingRecipe
+    //crate::inventory::CraftingRecipe
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = ShapelessRecipe::from_raw(&self.0, unsafe {
+        let temp_clone = crate::inventory::CraftingRecipe::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::inventory::Recipe = temp_clone.into();
         real.result()
     }
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = ShapelessRecipe::from_raw(&self.0, unsafe {
+        let temp_clone = crate::inventory::CraftingRecipe::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::Keyed = temp_clone.into();
         real.key()
     }
+    pub fn category(
+        &self,
+    ) -> Result<crate::inventory::recipe::CraftingBookCategory<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = crate::inventory::CraftingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CraftingRecipe = temp_clone.into();
+        real.category()
+    }
+    pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::CraftingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CraftingRecipe = temp_clone.into();
+        real.group()
+    }
+    pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::CraftingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CraftingRecipe = temp_clone.into();
+        real.set_group(arg0)
+    }
+    pub fn set_category(
+        &self,
+        arg0: impl Into<crate::inventory::recipe::CraftingBookCategory<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::CraftingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::CraftingRecipe = temp_clone.into();
+        real.set_category(arg0)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10147,6 +10329,7 @@ impl<'mc> MerchantRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -11008,6 +11191,7 @@ impl<'mc> CookingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -13815,20 +13999,39 @@ impl<'mc> SmithingTrimRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //SmithingRecipe
+    //crate::inventory::SmithingRecipe
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = SmithingTrimRecipe::from_raw(&self.0, unsafe {
+        let temp_clone = crate::inventory::SmithingRecipe::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::inventory::Recipe = temp_clone.into();
         real.result()
     }
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = SmithingTrimRecipe::from_raw(&self.0, unsafe {
+        let temp_clone = crate::inventory::SmithingRecipe::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::Keyed = temp_clone.into();
         real.key()
     }
+    pub fn base(&self) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::SmithingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::SmithingRecipe = temp_clone.into();
+        real.base()
+    }
+    pub fn addition(
+        &self,
+    ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::SmithingRecipe::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::SmithingRecipe = temp_clone.into();
+        real.addition()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

@@ -119,6 +119,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -448,6 +449,7 @@ impl<'mc> SimpleCommandMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -578,6 +580,302 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //Command
+    //crate::command::Command
+    pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.permission()
+    }
+    pub fn set_permission(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_permission(arg0)
+    }
+    pub fn unregister(
+        &self,
+        arg0: impl Into<crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.unregister(arg0)
+    }
+    pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.description()
+    }
+    pub fn tab_complete_with_command_sender(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: Vec<String>,
+        arg3: std::option::Option<impl Into<crate::Location<'mc>>>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/command/CommandSender;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "[Ljava/lang/String;";
+        let arr = self.jni_ref().new_object_array(
+            arg2.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg2.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_3.l()?)?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(arr);
+        args.push(val_3.l()?.into());
+        if let Some(a) = arg3 {
+            sig += "Lorg/bukkit/Location;";
+            let val_4 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_4);
+        }
+        sig += ")Ljava/util/List;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "tabComplete", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
+    }
+    pub fn set_description(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_description(arg0)
+    }
+    pub fn set_usage(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_usage(arg0)
+    }
+    pub fn set_aliases(
+        &self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/List;)Lorg/bukkit/command/Command;");
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg0 {
+            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(v.into())?,
+            ));
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Ljava/lang/String)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAliases",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::command::Command::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_permission_message(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_permission_message(arg0)
+    }
+    pub fn aliases(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getAliases", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
+    }
+    pub fn set_label(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_label(arg0)
+    }
+    pub fn label(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.label()
+    }
+    pub fn test_permission_silent(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.test_permission_silent(arg0)
+    }
+    pub fn test_permission(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.test_permission(arg0)
+    }
+    pub fn permission_message(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.permission_message()
+    }
+    pub fn usage(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.usage()
+    }
+    pub fn broadcast_command_message_with_command_sender(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: std::option::Option<bool>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/command/CommandSender;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        sig += ")V";
+        let cls = jni.find_class("void");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "broadcastCommandMessage", sig.as_str(), args);
+        jni.translate_error(res)?;
+        Ok(())
+    }
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.name()
+    }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.internal_to_string()
+    }
+    pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.is_registered()
+    }
+    pub fn register(
+        &self,
+        arg0: impl Into<crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.register(arg0)
+    }
+    pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_name(arg0)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1440,6 +1738,7 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1573,6 +1872,302 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //Command
+    //crate::command::Command
+    pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.permission()
+    }
+    pub fn set_permission(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_permission(arg0)
+    }
+    pub fn unregister(
+        &self,
+        arg0: impl Into<crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.unregister(arg0)
+    }
+    pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.description()
+    }
+    pub fn tab_complete_with_command_sender(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: Vec<String>,
+        arg3: std::option::Option<impl Into<crate::Location<'mc>>>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/command/CommandSender;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "[Ljava/lang/String;";
+        let arr = self.jni_ref().new_object_array(
+            arg2.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg2.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_3.l()?)?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(arr);
+        args.push(val_3.l()?.into());
+        if let Some(a) = arg3 {
+            sig += "Lorg/bukkit/Location;";
+            let val_4 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_4);
+        }
+        sig += ")Ljava/util/List;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "tabComplete", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
+    }
+    pub fn set_description(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_description(arg0)
+    }
+    pub fn set_usage(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_usage(arg0)
+    }
+    pub fn set_aliases(
+        &self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/List;)Lorg/bukkit/command/Command;");
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg0 {
+            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(v.into())?,
+            ));
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Ljava/lang/String)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAliases",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::command::Command::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_permission_message(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_permission_message(arg0)
+    }
+    pub fn aliases(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getAliases", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
+    }
+    pub fn set_label(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_label(arg0)
+    }
+    pub fn label(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.label()
+    }
+    pub fn test_permission_silent(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.test_permission_silent(arg0)
+    }
+    pub fn test_permission(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.test_permission(arg0)
+    }
+    pub fn permission_message(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.permission_message()
+    }
+    pub fn usage(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.usage()
+    }
+    pub fn broadcast_command_message_with_command_sender(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: std::option::Option<bool>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/command/CommandSender;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        sig += ")V";
+        let cls = jni.find_class("void");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "broadcastCommandMessage", sig.as_str(), args);
+        jni.translate_error(res)?;
+        Ok(())
+    }
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.name()
+    }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.internal_to_string()
+    }
+    pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.is_registered()
+    }
+    pub fn register(
+        &self,
+        arg0: impl Into<crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.register(arg0)
+    }
+    pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_name(arg0)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1663,6 +2258,7 @@ impl<'mc> PluginCommandYamlParser<'mc> {
         }
         Ok(new_vec)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2580,6 +3176,233 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //Command
+    //crate::command::Command
+    pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.permission()
+    }
+    pub fn set_permission(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_permission(arg0)
+    }
+    pub fn unregister(
+        &self,
+        arg0: impl Into<crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.unregister(arg0)
+    }
+    pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.description()
+    }
+    pub fn set_description(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_description(arg0)
+    }
+    pub fn set_usage(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_usage(arg0)
+    }
+    pub fn set_aliases(
+        &self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/List;)Lorg/bukkit/command/Command;");
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg0 {
+            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(v.into())?,
+            ));
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Ljava/lang/String)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAliases",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::command::Command::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_permission_message(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_permission_message(arg0)
+    }
+    pub fn aliases(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getAliases", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
+    }
+    pub fn set_label(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_label(arg0)
+    }
+    pub fn label(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.label()
+    }
+    pub fn test_permission_silent(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.test_permission_silent(arg0)
+    }
+    pub fn test_permission(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.test_permission(arg0)
+    }
+    pub fn permission_message(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.permission_message()
+    }
+    pub fn usage(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.usage()
+    }
+    pub fn broadcast_command_message_with_command_sender(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: std::option::Option<bool>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/command/CommandSender;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        sig += ")V";
+        let cls = jni.find_class("void");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "broadcastCommandMessage", sig.as_str(), args);
+        jni.translate_error(res)?;
+        Ok(())
+    }
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.name()
+    }
+    pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.is_registered()
+    }
+    pub fn register(
+        &self,
+        arg0: impl Into<crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.register(arg0)
+    }
+    pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::Command = temp_clone.into();
+        real.set_name(arg0)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

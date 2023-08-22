@@ -213,6 +213,8 @@ impl<'mc> JNIInstantiatable<'mc> for LightningStrikeEventCauseStruct<'mc> {
 }
 
 impl<'mc> LightningStrikeEventCauseStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -357,6 +359,33 @@ impl<'mc> LightningStrikeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //WeatherEvent
+    //crate::event::weather::WeatherEvent
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::weather::WeatherEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::weather::WeatherEvent = temp_clone.into();
+        real.world()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -494,6 +523,33 @@ impl<'mc> ThunderChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //WeatherEvent
+    //crate::event::weather::WeatherEvent
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::weather::WeatherEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::weather::WeatherEvent = temp_clone.into();
+        real.world()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -630,6 +686,33 @@ impl<'mc> WeatherChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //WeatherEvent
+    //crate::event::weather::WeatherEvent
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::weather::WeatherEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::weather::WeatherEvent = temp_clone.into();
+        real.world()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -714,6 +797,34 @@ impl<'mc> WeatherEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Event
+    //crate::event::Event
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

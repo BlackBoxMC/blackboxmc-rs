@@ -396,6 +396,7 @@ impl<'mc> BiomeProvider<'mc> {
         }
         Ok(new_vec)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -843,6 +844,7 @@ impl<'mc> BlockPopulator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2196,6 +2198,7 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

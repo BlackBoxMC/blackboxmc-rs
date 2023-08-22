@@ -1004,7 +1004,7 @@ def gen_jni_instantiatable(name,full_name,is_enum,variants):
     }
     """
     return st
-def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructor,dummy,parsed_name):
+def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructor,dummy,parsed_names):
     if is_constructor:
         methods = val["constructors"]
     else:
@@ -1117,10 +1117,10 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
             for group_name in method_map:
                 methods = method_map[group_name]
                 if group_name != "":
-                    if len(methods) > 1:
-                        new_name = name+"_with_"+group_name.replace("$","").replace("[]","s")
-                    else:
-                        new_name = name 
+                    #if len(methods) > 1:
+                    new_name = name+"_with_"+group_name.replace("$","").replace("[]","s")
+                    #else:
+                    #    new_name = name 
                 else:
                     new_name = name 
                 new_methods[new_name] = {}
@@ -1142,15 +1142,11 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
         types = method["method"]["parameters"]
 
         name = k
-        if name.endswith("s") and name != "equals":
+        if (name.endswith("s") and name != "equals") or "_with_" in name or name == "header":
             if dummy:
                 dummy = False
                 dummy_temp_disable = True
-            
-        if "_with_" in name:
-            if dummy:
-                dummy = False
-                dummy_temp_disable = True
+
             
         if name == "to_string":
             if len(types) <= 0:
@@ -1330,13 +1326,11 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
         func_signature_resolved_names_only = ",".join(list(map(lambda f: f, filter(lambda f: f != "&self",func_signature_resolved_parts_names_only))))
         func_signature_resolved_raw_names_only = ",".join(list(map(lambda f: "*"+f+".as_ref().unwrap()", filter(lambda f: f != "&self",func_signature_resolved_parts_names_only))))
 
+        # execute the function.
         m = return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait,options_start_at, is_constructor,nullable,library)
         if m is None:
             continue
 
-
-
-        # execute the function.
         if dummy:
             if name == "of" and "$" in og_name:
                 continue
@@ -1350,9 +1344,13 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
             if static:
                 code.append(val_group["type_name_resolved"]+"::"+name+"("+func_signature_resolved_names_only+")")
             else:
+                parsed_name = parsed_names[len(parsed_names)-1]
                 # we do an unsafe clone here but justify it because it's only to execute the method. said unsafe clone
                 # will go out of scope after this method is done.
-                code.append("let temp_clone = "+parsed_name+"::from_raw(&self.0, unsafe {jni::objects::JObject::from_raw(self.1.clone())})?;")
+                if parsed_name == "jni::objects::JObject":
+                    code.append("let temp_clone = unsafe {jni::objects::JObject::from_raw(self.1.clone())};")
+                else:
+                    code.append("let temp_clone = "+parsed_name+"::from_raw(&self.0, unsafe {jni::objects::JObject::from_raw(self.1.clone())})?;")
                 code.append("let real: "+val_group["type_name_resolved"]+" = temp_clone.into();")
                 code.append("real."+name+"("+func_signature_resolved_names_only+")")
         else:
@@ -1410,7 +1408,7 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
     if not is_constructor:
         if not dummy:
             method_names = list(map(lambda k: new_methods[k]["original_name"],new_methods))
-            gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_name)
+            gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_names,library,False)
 
     return {
         "has_to_string": has_to_string,
@@ -1418,18 +1416,44 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
         "extern_signature": extern_signature,
     }
 
-def gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_name):
+def gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_names,library,on_super_class):
     # for any inherited classes this class has
     if "interfaces" in val:
-        
         for cl in val["interfaces"]:
             if "methods" in cl:
                 methods = list(filter(lambda f: f["name"] not in method_names, cl["methods"]))
                 cl["methods"] = methods
-                parse_methods(library,cl["name"],cl,mod_path,is_trait,is_trait_decl,False,True,parsed_name)
+                parse_methods(library,cl["name"],cl,mod_path,is_trait,is_trait_decl,False,True,parsed_names)
                 method_names += list(map(lambda f: f["name"], cl["methods"]))
+    if on_super_class:
+        if "methods" in val:
+            methods = list(filter(lambda f: f["name"] not in method_names, val["methods"]))
+            val["methods"] = methods
+            parse_methods(library,val["name"],val,mod_path,is_trait,is_trait_decl,False,True,parsed_names)
+            method_names += list(map(lambda f: f["name"], val["methods"]))
     if "superClass" in val:
-        gen_dummy(val["superClass"],method_names,mod_path,is_trait,is_trait_decl,parsed_name)
+        file_cache[mod_path].append("//"+val["superClass"]["name"])
+        new_parsed_name = val["superClass"]["packageName"]+"."+val["superClass"]["name"].replace("$", "").replace("-", "_")
+        crate_name = ".".join(filter(lambda f: f.lower() == f, new_parsed_name.split(".")))
+
+        while crate_name not in library_resolves and crate_name != "":
+            parts = crate_name.split(".")
+            parts.pop()
+            crate_name = ".".join(parts)
+
+        if (library_name_format(crate_name,library) == library_name_format("java.util",library)) or (library_name_format(crate_name,library) == library_name_format("java.lang",library)):
+            class_name = "".join(filter(lambda f: f[0].upper() == f[0], new_parsed_name.split(".")))
+            new_parsed_name = new_parsed_name.replace(class_name, "Java"+class_name)
+
+        to_replace =  library_name_format(crate_name,library)
+
+        new_parsed_name = new_parsed_name.replace(
+            crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "")
+
+        if "JavaObject" in new_parsed_name or "JavaEnum" in new_parsed_name:
+            return
+        file_cache[mod_path].append("//"+new_parsed_name)
+        gen_dummy(val["superClass"],method_names,mod_path,is_trait,is_trait_decl,parsed_names+[new_parsed_name],library,True)
 
 
 def format_comment(comment):
@@ -1577,7 +1601,7 @@ def parse_classes(library, val, classes):
         has_to_string_is_static = False
         extern = []
         if "methods" in val:
-            grp = parse_methods(library, name,val,mod_path,False,False,False,False,name+"Struct")
+            grp = parse_methods(library, name,val,mod_path,False,False,False,False,[name+"Struct"])
             has_to_string = grp["has_to_string"]
             has_to_string_is_static = grp["has_to_string_is_static"]
             extern += grp["extern_signature"]
@@ -1610,7 +1634,7 @@ def parse_classes(library, val, classes):
 
         extern = []
         if "methods" in val:
-            grp = parse_methods(library,name,val,mod_path,True,True,False,False,name)
+            grp = parse_methods(library,name,val,mod_path,True,True,False,False,[name])
             has_to_string = grp["has_to_string"]
             has_to_string_is_static = grp["has_to_string_is_static"]
             extern += grp["extern_signature"]
@@ -1643,14 +1667,14 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
 
         if "constructors" in val:
-            grp = parse_methods(library, name,val,mod_path,False,False,True,False,name)
+            grp = parse_methods(library, name,val,mod_path,False,False,True,False,[name])
 
         has_to_string = False
         has_to_string_is_static = False
 
         extern = []
         if "methods" in val:
-            grp = parse_methods(library,name,val,mod_path,False,False,False,False,name)
+            grp = parse_methods(library,name,val,mod_path,False,False,False,False,[name])
             has_to_string = grp["has_to_string"]
             has_to_string_is_static = grp["has_to_string_is_static"]
             extern += grp["extern_signature"]

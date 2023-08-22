@@ -100,8 +100,10 @@ impl<'mc> Chest<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //DirectionalContainer
+    //crate::material::DirectionalContainer
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = Chest::from_raw(&self.0, unsafe {
+        let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::material::Directional = temp_clone.into();
@@ -111,12 +113,82 @@ impl<'mc> Chest<'mc> {
         &self,
         arg0: impl Into<crate::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = Chest::from_raw(&self.0, unsafe {
+        let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::material::Directional = temp_clone.into();
         real.set_facing_direction(arg0)
     }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::DirectionalContainer = temp_clone.into();
+        real.internal_to_string()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -314,6 +386,68 @@ impl<'mc> Diode<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -478,6 +612,68 @@ impl<'mc> Pumpkin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -629,6 +825,68 @@ impl<'mc> FlowerPot<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -752,6 +1010,112 @@ impl<'mc> PoweredRail<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //ExtendedRails
+    //crate::material::ExtendedRails
+    pub fn set_direction(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::ExtendedRails::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::ExtendedRails = temp_clone.into();
+        real.set_direction(arg0, arg1)
+    }
+    pub fn is_curve(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::ExtendedRails::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::ExtendedRails = temp_clone.into();
+        real.is_curve()
+    }
+    //Rails
+    //crate::material::Rails
+    pub fn direction(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::Rails::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Rails = temp_clone.into();
+        real.direction()
+    }
+    pub fn is_on_slope(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::Rails::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Rails = temp_clone.into();
+        real.is_on_slope()
+    }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::Rails::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Rails = temp_clone.into();
+        real.internal_to_string()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -951,6 +1315,78 @@ impl<'mc> TripwireHook<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //SimpleAttachableMaterialData
+    //crate::material::SimpleAttachableMaterialData
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        real.facing()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1093,6 +1529,68 @@ impl<'mc> SimpleAttachableMaterialData<'mc> {
         let real: crate::material::Attachable = temp_clone.into();
         real.attached_face()
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1305,6 +1803,87 @@ impl<'mc> Torch<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //SimpleAttachableMaterialData
+    //crate::material::SimpleAttachableMaterialData
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        real.facing()
+    }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        real.internal_to_string()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1514,6 +2093,68 @@ impl<'mc> Comparator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1694,6 +2335,78 @@ impl<'mc> Button<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //SimpleAttachableMaterialData
+    //crate::material::SimpleAttachableMaterialData
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        real.facing()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1863,6 +2576,68 @@ impl<'mc> Coal<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2118,6 +2893,97 @@ impl<'mc> Tree<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Wood
+    //crate::material::Wood
+    pub fn set_species(
+        &self,
+        arg0: impl Into<crate::TreeSpecies<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/TreeSpecies;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setSpecies",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn species(&self) -> Result<crate::TreeSpecies<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/TreeSpecies;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getSpecies", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::TreeSpecies::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2281,6 +3147,76 @@ impl<'mc> PistonBaseMaterial<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.internal_to_string()
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2475,6 +3411,78 @@ impl<'mc> TrapDoor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //SimpleAttachableMaterialData
+    //crate::material::SimpleAttachableMaterialData
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        real.facing()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2644,6 +3652,68 @@ impl<'mc> Crops<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2809,6 +3879,68 @@ impl<'mc> SpawnEgg<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2925,6 +4057,95 @@ impl<'mc> MonsterEggs<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //TexturedMaterial
+    //crate::material::TexturedMaterial
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::TexturedMaterial::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::TexturedMaterial = temp_clone.into();
+        real.material()
+    }
+    pub fn set_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::TexturedMaterial::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::TexturedMaterial = temp_clone.into();
+        real.set_material(arg0)
+    }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::TexturedMaterial::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::TexturedMaterial = temp_clone.into();
+        real.internal_to_string()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3035,8 +4256,12 @@ impl<'mc> Furnace<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //FurnaceAndDispenser
+    //crate::material::FurnaceAndDispenser
+    //DirectionalContainer
+    //crate::material::DirectionalContainer
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = Furnace::from_raw(&self.0, unsafe {
+        let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::material::Directional = temp_clone.into();
@@ -3046,12 +4271,82 @@ impl<'mc> Furnace<'mc> {
         &self,
         arg0: impl Into<crate::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = Furnace::from_raw(&self.0, unsafe {
+        let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::material::Directional = temp_clone.into();
         real.set_facing_direction(arg0)
     }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::DirectionalContainer = temp_clone.into();
+        real.internal_to_string()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3208,6 +4503,68 @@ impl<'mc> Rails<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3380,6 +4737,97 @@ impl<'mc> Sapling<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Wood
+    //crate::material::Wood
+    pub fn set_species(
+        &self,
+        arg0: impl Into<crate::TreeSpecies<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/TreeSpecies;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setSpecies",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn species(&self) -> Result<crate::TreeSpecies<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/TreeSpecies;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getSpecies", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::TreeSpecies::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3602,6 +5050,76 @@ impl<'mc> PistonExtensionMaterial<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.internal_to_string()
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3766,6 +5284,78 @@ impl<'mc> Lever<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //SimpleAttachableMaterialData
+    //crate::material::SimpleAttachableMaterialData
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        real.facing()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3915,6 +5505,68 @@ impl<'mc> DirectionalContainer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4064,6 +5716,68 @@ impl<'mc> NetherWarts<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4257,6 +5971,7 @@ impl<'mc> MaterialData<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4414,6 +6129,68 @@ impl<'mc> LongGrass<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4575,6 +6352,68 @@ impl<'mc> Tripwire<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4736,6 +6575,68 @@ impl<'mc> TexturedMaterial<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4922,6 +6823,80 @@ impl<'mc> Dispenser<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //FurnaceAndDispenser
+    //crate::material::FurnaceAndDispenser
+    //DirectionalContainer
+    //crate::material::DirectionalContainer
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::DirectionalContainer = temp_clone.into();
+        real.internal_to_string()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5075,6 +7050,68 @@ impl<'mc> Cake<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5242,6 +7279,68 @@ impl<'mc> Gate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5559,6 +7658,87 @@ impl<'mc> Step<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //TexturedMaterial
+    //crate::material::TexturedMaterial
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::TexturedMaterial::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::TexturedMaterial = temp_clone.into();
+        real.material()
+    }
+    pub fn set_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::TexturedMaterial::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::TexturedMaterial = temp_clone.into();
+        real.set_material(arg0)
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5675,6 +7855,95 @@ impl<'mc> SmoothBrick<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //TexturedMaterial
+    //crate::material::TexturedMaterial
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::TexturedMaterial::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::TexturedMaterial = temp_clone.into();
+        real.material()
+    }
+    pub fn set_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::TexturedMaterial::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::TexturedMaterial = temp_clone.into();
+        real.set_material(arg0)
+    }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::TexturedMaterial::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::TexturedMaterial = temp_clone.into();
+        real.internal_to_string()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5857,6 +8126,97 @@ impl<'mc> Leaves<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Wood
+    //crate::material::Wood
+    pub fn set_species(
+        &self,
+        arg0: impl Into<crate::TreeSpecies<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/TreeSpecies;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setSpecies",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn species(&self) -> Result<crate::TreeSpecies<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/TreeSpecies;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getSpecies", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::TreeSpecies::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6003,6 +8363,68 @@ impl<'mc> Dye<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6130,6 +8552,68 @@ impl<'mc> PressurePlate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6288,6 +8772,68 @@ impl<'mc> Observer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6496,6 +9042,68 @@ impl<'mc> Stairs<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6665,6 +9273,68 @@ impl<'mc> Sandstone<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6785,8 +9455,10 @@ impl<'mc> EnderChest<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //DirectionalContainer
+    //crate::material::DirectionalContainer
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = EnderChest::from_raw(&self.0, unsafe {
+        let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::material::Directional = temp_clone.into();
@@ -6796,12 +9468,82 @@ impl<'mc> EnderChest<'mc> {
         &self,
         arg0: impl Into<crate::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = EnderChest::from_raw(&self.0, unsafe {
+        let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::material::Directional = temp_clone.into();
         real.set_facing_direction(arg0)
     }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::DirectionalContainer = temp_clone.into();
+        real.internal_to_string()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6894,8 +9636,10 @@ impl<'mc> FurnaceAndDispenser<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //DirectionalContainer
+    //crate::material::DirectionalContainer
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = FurnaceAndDispenser::from_raw(&self.0, unsafe {
+        let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::material::Directional = temp_clone.into();
@@ -6905,12 +9649,82 @@ impl<'mc> FurnaceAndDispenser<'mc> {
         &self,
         arg0: impl Into<crate::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = FurnaceAndDispenser::from_raw(&self.0, unsafe {
+        let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::material::Directional = temp_clone.into();
         real.set_facing_direction(arg0)
     }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::DirectionalContainer = temp_clone.into();
+        real.internal_to_string()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7068,6 +9882,68 @@ impl<'mc> Bed<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7195,6 +10071,68 @@ impl<'mc> RedstoneWire<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7338,6 +10276,97 @@ impl<'mc> WoodenStep<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Wood
+    //crate::material::Wood
+    pub fn set_species(
+        &self,
+        arg0: impl Into<crate::TreeSpecies<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/TreeSpecies;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setSpecies",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn species(&self) -> Result<crate::TreeSpecies<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/TreeSpecies;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getSpecies", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::TreeSpecies::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7536,6 +10565,68 @@ impl<'mc> Vine<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7677,6 +10768,68 @@ impl<'mc> Wood<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7842,6 +10995,68 @@ impl<'mc> Banner<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8064,6 +11279,68 @@ impl<'mc> Mushroom<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8187,15 +11464,99 @@ impl<'mc> RedstoneTorch<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Torch
+    //crate::material::Torch
+    pub fn set_facing_direction(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::Torch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Torch = temp_clone.into();
+        real.set_facing_direction(arg0)
+    }
     pub fn attached_face(
         &self,
     ) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = RedstoneTorch::from_raw(&self.0, unsafe {
+        let temp_clone = crate::material::Torch::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
-        let real: crate::material::Attachable = temp_clone.into();
+        let real: crate::material::Torch = temp_clone.into();
         real.attached_face()
     }
+    //SimpleAttachableMaterialData
+    //crate::material::SimpleAttachableMaterialData
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        real.facing()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8387,6 +11748,8 @@ impl<'mc> JNIInstantiatable<'mc> for CocoaPlantCocoaPlantSizeStruct<'mc> {
 }
 
 impl<'mc> CocoaPlantCocoaPlantSizeStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -8579,6 +11942,68 @@ impl<'mc> CocoaPlant<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8876,6 +12301,68 @@ impl<'mc> Door<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9091,6 +12578,92 @@ impl<'mc> ExtendedRails<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Rails
+    //crate::material::Rails
+    pub fn direction(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::Rails::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Rails = temp_clone.into();
+        real.direction()
+    }
+    pub fn is_on_slope(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::Rails::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Rails = temp_clone.into();
+        real.is_on_slope()
+    }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::Rails::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Rails = temp_clone.into();
+        real.internal_to_string()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9211,6 +12784,68 @@ impl<'mc> Cauldron<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9345,6 +12980,87 @@ impl<'mc> Ladder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //SimpleAttachableMaterialData
+    //crate::material::SimpleAttachableMaterialData
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        real.facing()
+    }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        real.internal_to_string()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9472,6 +13188,68 @@ impl<'mc> Command<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9600,6 +13378,112 @@ impl<'mc> DetectorRail<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //ExtendedRails
+    //crate::material::ExtendedRails
+    pub fn set_direction(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::ExtendedRails::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::ExtendedRails = temp_clone.into();
+        real.set_direction(arg0, arg1)
+    }
+    pub fn is_curve(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::ExtendedRails::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::ExtendedRails = temp_clone.into();
+        real.is_curve()
+    }
+    //Rails
+    //crate::material::Rails
+    pub fn direction(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::Rails::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Rails = temp_clone.into();
+        real.direction()
+    }
+    pub fn is_on_slope(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::Rails::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Rails = temp_clone.into();
+        real.is_on_slope()
+    }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::Rails::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Rails = temp_clone.into();
+        real.internal_to_string()
+    }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9797,6 +13681,68 @@ impl<'mc> Hopper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9952,6 +13898,68 @@ impl<'mc> Skull<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10123,6 +14131,68 @@ impl<'mc> Sign<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10295,6 +14365,68 @@ impl<'mc> Wool<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //MaterialData
+    //crate::material::MaterialData
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.data()
+    }
+
+    pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.set_data(arg0)
+    }
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.item_type()
+    }
+    pub fn to_item_stack_with_int(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/ItemStack;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toItemStack", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::MaterialData = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

@@ -161,6 +161,7 @@ impl<'mc> JavaPluginLoader<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -657,13 +658,33 @@ impl<'mc> JavaPlugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //PluginBase
+    //crate::plugin::PluginBase
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = JavaPlugin::from_raw(&self.0, unsafe {
+        let temp_clone = crate::plugin::PluginBase::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::plugin::Plugin = temp_clone.into();
         real.name()
     }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::plugin::PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::PluginBase = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::plugin::PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::PluginBase = temp_clone.into();
+        real.hash_code()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

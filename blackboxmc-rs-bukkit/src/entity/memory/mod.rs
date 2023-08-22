@@ -91,6 +91,7 @@ impl<'mc> MemoryKey<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

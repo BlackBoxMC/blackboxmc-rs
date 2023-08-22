@@ -1448,6 +1448,8 @@ impl<'mc> JNIInstantiatable<'mc> for DragonBattleRespawnPhaseStruct<'mc> {
 }
 
 impl<'mc> DragonBattleRespawnPhaseStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)

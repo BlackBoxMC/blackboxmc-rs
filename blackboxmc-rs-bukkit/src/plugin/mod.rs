@@ -133,6 +133,8 @@ impl<'mc> JNIInstantiatable<'mc> for PluginAwarenessFlagsStruct<'mc> {
 }
 
 impl<'mc> PluginAwarenessFlagsStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -780,6 +782,7 @@ impl<'mc> PluginDescriptionFile<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1062,6 +1065,7 @@ impl<'mc> RegisteredServiceProvider<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1236,6 +1240,8 @@ impl<'mc> JNIInstantiatable<'mc> for ServicePriority<'mc> {
 }
 
 impl<'mc> ServicePriority<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -2051,6 +2057,7 @@ impl<'mc> PluginBase<'mc> {
         let real: crate::plugin::Plugin = temp_clone.into();
         real.logger()
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2630,6 +2637,37 @@ impl<'mc> TimedRegisteredListener<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //RegisteredListener
+    //crate::plugin::RegisteredListener
+    pub fn listener(&self) -> Result<crate::event::Listener<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::plugin::RegisteredListener::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::RegisteredListener = temp_clone.into();
+        real.listener()
+    }
+    pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::plugin::RegisteredListener::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::RegisteredListener = temp_clone.into();
+        real.plugin()
+    }
+    pub fn is_ignoring_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::plugin::RegisteredListener::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::RegisteredListener = temp_clone.into();
+        real.is_ignoring_cancelled()
+    }
+    pub fn priority(&self) -> Result<crate::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::plugin::RegisteredListener::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::RegisteredListener = temp_clone.into();
+        real.priority()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2938,6 +2976,7 @@ impl<'mc> RegisteredListener<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

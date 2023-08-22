@@ -175,6 +175,8 @@ impl<'mc> JNIInstantiatable<'mc> for BookMetaGenerationStruct<'mc> {
 }
 
 impl<'mc> BookMetaGenerationStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -10934,6 +10936,7 @@ impl<'mc> BookMetaSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

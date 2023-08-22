@@ -52,6 +52,7 @@ impl<'mc> JavaErrorManager<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::logging::JavaErrorManager::from_raw(&jni, res)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -175,6 +176,19 @@ impl<'mc> JavaXMLFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //Formatter
+    //crate::util::logging::JavaFormatter
+    pub fn format_message(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaLogRecord<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaFormatter::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaFormatter = temp_clone.into();
+        real.format_message(arg0)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -313,6 +327,7 @@ impl<'mc> JavaFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -432,6 +447,118 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //StreamHandler
+    //crate::util::logging::JavaStreamHandler
+    pub fn is_loggable(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaLogRecord<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaStreamHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaStreamHandler = temp_clone.into();
+        real.is_loggable(arg0)
+    }
+    pub fn set_encoding(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaStreamHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaStreamHandler = temp_clone.into();
+        real.set_encoding(arg0)
+    }
+    pub fn flush(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaStreamHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaStreamHandler = temp_clone.into();
+        real.flush()
+    }
+    //Handler
+    //crate::util::logging::JavaHandler
+    pub fn set_filter(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaFilter<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_filter(arg0)
+    }
+    pub fn set_level(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaLevel<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_level(arg0)
+    }
+    pub fn filter(
+        &self,
+    ) -> Result<crate::util::logging::JavaFilter<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.filter()
+    }
+    pub fn set_formatter(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaFormatter<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_formatter(arg0)
+    }
+    pub fn formatter(
+        &self,
+    ) -> Result<crate::util::logging::JavaFormatter<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.formatter()
+    }
+    pub fn set_error_manager(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaErrorManager<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_error_manager(arg0)
+    }
+    pub fn error_manager(
+        &self,
+    ) -> Result<crate::util::logging::JavaErrorManager<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.error_manager()
+    }
+    pub fn encoding(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.encoding()
+    }
+    pub fn level(
+        &self,
+    ) -> Result<crate::util::logging::JavaLevel<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.level()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -517,6 +644,39 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //Formatter
+    //crate::util::logging::JavaFormatter
+    pub fn get_head(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaHandler<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaFormatter::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaFormatter = temp_clone.into();
+        real.get_head(arg0)
+    }
+    pub fn get_tail(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaHandler<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaFormatter::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaFormatter = temp_clone.into();
+        real.get_tail(arg0)
+    }
+    pub fn format_message(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaLogRecord<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaFormatter::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaFormatter = temp_clone.into();
+        real.format_message(arg0)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -773,6 +933,7 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -972,6 +1133,99 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //Handler
+    //crate::util::logging::JavaHandler
+    pub fn set_filter(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaFilter<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_filter(arg0)
+    }
+    pub fn set_level(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaLevel<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_level(arg0)
+    }
+    pub fn filter(
+        &self,
+    ) -> Result<crate::util::logging::JavaFilter<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.filter()
+    }
+    pub fn set_formatter(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaFormatter<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_formatter(arg0)
+    }
+    pub fn formatter(
+        &self,
+    ) -> Result<crate::util::logging::JavaFormatter<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.formatter()
+    }
+    pub fn set_encoding(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_encoding(arg0)
+    }
+    pub fn set_error_manager(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaErrorManager<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_error_manager(arg0)
+    }
+    pub fn error_manager(
+        &self,
+    ) -> Result<crate::util::logging::JavaErrorManager<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.error_manager()
+    }
+    pub fn encoding(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.encoding()
+    }
+    pub fn level(
+        &self,
+    ) -> Result<crate::util::logging::JavaLevel<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.level()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1597,6 +1851,7 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1697,6 +1952,118 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //StreamHandler
+    //crate::util::logging::JavaStreamHandler
+    pub fn is_loggable(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaLogRecord<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaStreamHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaStreamHandler = temp_clone.into();
+        real.is_loggable(arg0)
+    }
+    pub fn set_encoding(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaStreamHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaStreamHandler = temp_clone.into();
+        real.set_encoding(arg0)
+    }
+    pub fn flush(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaStreamHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaStreamHandler = temp_clone.into();
+        real.flush()
+    }
+    //Handler
+    //crate::util::logging::JavaHandler
+    pub fn set_filter(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaFilter<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_filter(arg0)
+    }
+    pub fn set_level(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaLevel<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_level(arg0)
+    }
+    pub fn filter(
+        &self,
+    ) -> Result<crate::util::logging::JavaFilter<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.filter()
+    }
+    pub fn set_formatter(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaFormatter<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_formatter(arg0)
+    }
+    pub fn formatter(
+        &self,
+    ) -> Result<crate::util::logging::JavaFormatter<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.formatter()
+    }
+    pub fn set_error_manager(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaErrorManager<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_error_manager(arg0)
+    }
+    pub fn error_manager(
+        &self,
+    ) -> Result<crate::util::logging::JavaErrorManager<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.error_manager()
+    }
+    pub fn encoding(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.encoding()
+    }
+    pub fn level(
+        &self,
+    ) -> Result<crate::util::logging::JavaLevel<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.level()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2256,6 +2623,7 @@ impl<'mc> JavaLogRecord<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2416,6 +2784,92 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //Handler
+    //crate::util::logging::JavaHandler
+    pub fn set_filter(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaFilter<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_filter(arg0)
+    }
+    pub fn set_level(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaLevel<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_level(arg0)
+    }
+    pub fn filter(
+        &self,
+    ) -> Result<crate::util::logging::JavaFilter<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.filter()
+    }
+    pub fn set_formatter(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaFormatter<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_formatter(arg0)
+    }
+    pub fn formatter(
+        &self,
+    ) -> Result<crate::util::logging::JavaFormatter<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.formatter()
+    }
+    pub fn set_error_manager(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaErrorManager<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.set_error_manager(arg0)
+    }
+    pub fn error_manager(
+        &self,
+    ) -> Result<crate::util::logging::JavaErrorManager<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.error_manager()
+    }
+    pub fn encoding(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.encoding()
+    }
+    pub fn level(
+        &self,
+    ) -> Result<crate::util::logging::JavaLevel<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::logging::JavaHandler::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::logging::JavaHandler = temp_clone.into();
+        real.level()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2590,6 +3044,7 @@ impl<'mc> JavaLevel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

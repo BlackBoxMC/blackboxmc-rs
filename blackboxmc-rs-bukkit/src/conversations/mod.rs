@@ -49,11 +49,13 @@ impl<'mc> NumericPrompt<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::NumericPrompt::from_raw(&jni, res)
     }
+    //ValidatingPrompt
+    //crate::conversations::ValidatingPrompt
     pub fn get_prompt_text(
         &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = NumericPrompt::from_raw(&self.0, unsafe {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::conversations::Prompt = temp_clone.into();
@@ -63,7 +65,7 @@ impl<'mc> NumericPrompt<'mc> {
         &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = NumericPrompt::from_raw(&self.0, unsafe {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::conversations::Prompt = temp_clone.into();
@@ -74,12 +76,13 @@ impl<'mc> NumericPrompt<'mc> {
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = NumericPrompt::from_raw(&self.0, unsafe {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::conversations::Prompt = temp_clone.into();
         real.accept_input(arg0, arg1)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -454,6 +457,7 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -584,6 +588,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -716,6 +721,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1050,6 +1056,8 @@ impl<'mc> JNIInstantiatable<'mc> for ConversationConversationStateStruct<'mc> {
 }
 
 impl<'mc> ConversationConversationStateStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -1330,6 +1338,7 @@ impl<'mc> Conversation<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1674,6 +1683,7 @@ impl<'mc> ValidatingPrompt<'mc> {
         let real: crate::conversations::Prompt = temp_clone.into();
         real.get_prompt_text(arg0)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1741,11 +1751,13 @@ impl<'mc> RegexPrompt<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::RegexPrompt::from_raw(&jni, res)
     }
+    //ValidatingPrompt
+    //crate::conversations::ValidatingPrompt
     pub fn get_prompt_text(
         &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = RegexPrompt::from_raw(&self.0, unsafe {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::conversations::Prompt = temp_clone.into();
@@ -1755,7 +1767,7 @@ impl<'mc> RegexPrompt<'mc> {
         &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = RegexPrompt::from_raw(&self.0, unsafe {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::conversations::Prompt = temp_clone.into();
@@ -1766,12 +1778,13 @@ impl<'mc> RegexPrompt<'mc> {
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = RegexPrompt::from_raw(&self.0, unsafe {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::conversations::Prompt = temp_clone.into();
         real.accept_input(arg0, arg1)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1895,6 +1908,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1994,6 +2008,7 @@ impl<'mc> StringPrompt<'mc> {
         let real: crate::conversations::Prompt = temp_clone.into();
         real.accept_input(arg0, arg1)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2107,6 +2122,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2306,11 +2322,13 @@ impl<'mc> FixedSetPrompt<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::FixedSetPrompt::from_raw(&jni, res)
     }
+    //ValidatingPrompt
+    //crate::conversations::ValidatingPrompt
     pub fn get_prompt_text(
         &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = FixedSetPrompt::from_raw(&self.0, unsafe {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::conversations::Prompt = temp_clone.into();
@@ -2320,7 +2338,7 @@ impl<'mc> FixedSetPrompt<'mc> {
         &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = FixedSetPrompt::from_raw(&self.0, unsafe {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::conversations::Prompt = temp_clone.into();
@@ -2331,12 +2349,13 @@ impl<'mc> FixedSetPrompt<'mc> {
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = FixedSetPrompt::from_raw(&self.0, unsafe {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::conversations::Prompt = temp_clone.into();
         real.accept_input(arg0, arg1)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2423,6 +2442,7 @@ impl<'mc> NullConversationPrefix<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2667,6 +2687,9 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EventObject
+    //blackboxmc_java::util::JavaEventObject
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2822,6 +2845,7 @@ impl<'mc> ConversationContext<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2885,11 +2909,13 @@ impl<'mc> PlayerNamePrompt<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::PlayerNamePrompt::from_raw(&jni, res)
     }
+    //ValidatingPrompt
+    //crate::conversations::ValidatingPrompt
     pub fn get_prompt_text(
         &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = PlayerNamePrompt::from_raw(&self.0, unsafe {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::conversations::Prompt = temp_clone.into();
@@ -2899,7 +2925,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
         &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = PlayerNamePrompt::from_raw(&self.0, unsafe {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::conversations::Prompt = temp_clone.into();
@@ -2910,12 +2936,13 @@ impl<'mc> PlayerNamePrompt<'mc> {
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = PlayerNamePrompt::from_raw(&self.0, unsafe {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::conversations::Prompt = temp_clone.into();
         real.accept_input(arg0, arg1)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2975,11 +3002,13 @@ impl<'mc> BooleanPrompt<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::BooleanPrompt::from_raw(&jni, res)
     }
+    //ValidatingPrompt
+    //crate::conversations::ValidatingPrompt
     pub fn get_prompt_text(
         &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = BooleanPrompt::from_raw(&self.0, unsafe {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::conversations::Prompt = temp_clone.into();
@@ -2989,7 +3018,7 @@ impl<'mc> BooleanPrompt<'mc> {
         &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = BooleanPrompt::from_raw(&self.0, unsafe {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::conversations::Prompt = temp_clone.into();
@@ -3000,12 +3029,13 @@ impl<'mc> BooleanPrompt<'mc> {
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = BooleanPrompt::from_raw(&self.0, unsafe {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::conversations::Prompt = temp_clone.into();
         real.accept_input(arg0, arg1)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3120,6 +3150,7 @@ impl<'mc> MessagePrompt<'mc> {
         let real: crate::conversations::Prompt = temp_clone.into();
         real.get_prompt_text(arg0)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

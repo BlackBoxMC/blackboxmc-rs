@@ -179,6 +179,8 @@ impl<'mc> JNIInstantiatable<'mc> for EntityUnleashEventUnleashReasonStruct<'mc> 
 }
 
 impl<'mc> EntityUnleashEventUnleashReasonStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -515,6 +517,42 @@ impl<'mc> EntityExplodeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -654,20 +692,92 @@ impl<'mc> EntityPortalEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+    //EntityTeleportEvent
+    //crate::event::entity::EntityTeleportEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = EntityPortalEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityTeleportEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.is_cancelled()
     }
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = EntityPortalEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityTeleportEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.set_cancelled(arg0)
     }
+    pub fn from(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityTeleportEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityTeleportEvent = temp_clone.into();
+        real.from()
+    }
+    pub fn set_from(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityTeleportEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityTeleportEvent = temp_clone.into();
+        real.set_from(arg0)
+    }
+    pub fn to(&self) -> Result<Option<crate::Location<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityTeleportEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityTeleportEvent = temp_clone.into();
+        real.to()
+    }
+    pub fn set_to(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityTeleportEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityTeleportEvent = temp_clone.into();
+        real.set_to(arg0)
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -816,6 +926,35 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1378,6 +1517,8 @@ impl<'mc> JNIInstantiatable<'mc> for EntityDamageEventDamageCauseStruct<'mc> {
 }
 
 impl<'mc> EntityDamageEventDamageCauseStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -1596,6 +1737,8 @@ impl<'mc> JNIInstantiatable<'mc> for EntityDamageEventDamageModifierStruct<'mc> 
 }
 
 impl<'mc> EntityDamageEventDamageModifierStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -1696,20 +1839,144 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+    //EntityDamageEvent
+    //crate::event::entity::EntityDamageEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = EntityDamageByBlockEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityDamageEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.is_cancelled()
     }
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = EntityDamageByBlockEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityDamageEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.set_cancelled(arg0)
     }
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_damage_with_entity_damage_eventdamage_modifier(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
+        arg1: std::option::Option<f64>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/event/entity/EntityDamageEvent$DamageModifier;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "D";
+            let val_2 = jni::objects::JValueGen::Double(a);
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "setDamage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn get_damage(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityDamageEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityDamageEvent = temp_clone.into();
+        real.get_damage(arg0)
+    }
+    pub fn is_applicable(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityDamageEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityDamageEvent = temp_clone.into();
+        real.is_applicable(arg0)
+    }
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        crate::event::entity::EntityDamageEvent::handler_list(jni)
+    }
+    pub fn get_original_damage(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityDamageEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityDamageEvent = temp_clone.into();
+        real.get_original_damage(arg0)
+    }
+    pub fn final_damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityDamageEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityDamageEvent = temp_clone.into();
+        real.final_damage()
+    }
+    pub fn cause(
+        &self,
+    ) -> Result<crate::event::entity::EntityDamageEventDamageCause<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = crate::event::entity::EntityDamageEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityDamageEvent = temp_clone.into();
+        real.cause()
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2467,6 +2734,35 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2611,6 +2907,42 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2777,6 +3109,35 @@ impl<'mc> EntityPickupItemEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2945,6 +3306,35 @@ impl<'mc> HorseJumpEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3123,6 +3513,42 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3787,6 +4213,8 @@ impl<'mc> JNIInstantiatable<'mc> for CreatureSpawnEventSpawnReasonStruct<'mc> {
 }
 
 impl<'mc> CreatureSpawnEventSpawnReasonStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -3878,20 +4306,73 @@ impl<'mc> CreatureSpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntitySpawnEvent
+    //crate::event::entity::EntitySpawnEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = CreatureSpawnEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntitySpawnEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.is_cancelled()
     }
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = CreatureSpawnEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntitySpawnEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.set_cancelled(arg0)
     }
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        crate::event::entity::EntitySpawnEvent::handler_list(jni)
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntitySpawnEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntitySpawnEvent = temp_clone.into();
+        real.location()
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3985,20 +4466,73 @@ impl<'mc> ItemSpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntitySpawnEvent
+    //crate::event::entity::EntitySpawnEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = ItemSpawnEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntitySpawnEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.is_cancelled()
     }
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = ItemSpawnEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntitySpawnEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.set_cancelled(arg0)
     }
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        crate::event::entity::EntitySpawnEvent::handler_list(jni)
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntitySpawnEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntitySpawnEvent = temp_clone.into();
+        real.location()
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4329,6 +4863,42 @@ impl<'mc> EntityDropItemEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4878,6 +5448,35 @@ impl<'mc> SlimeSplitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5058,6 +5657,35 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5457,6 +6085,8 @@ impl<'mc> JNIInstantiatable<'mc> for EntityTargetEventTargetReasonStruct<'mc> {
 }
 
 impl<'mc> EntityTargetEventTargetReasonStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -5567,20 +6197,85 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //EntityTargetEvent
+    //crate::event::entity::EntityTargetEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = EntityTargetLivingEntityEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityTargetEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.is_cancelled()
     }
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = EntityTargetLivingEntityEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityTargetEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.set_cancelled(arg0)
     }
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn reason(
+        &self,
+    ) -> Result<
+        Option<crate::event::entity::EntityTargetEventTargetReason<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let temp_clone = crate::event::entity::EntityTargetEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityTargetEvent = temp_clone.into();
+        real.reason()
+    }
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        crate::event::entity::EntityTargetEvent::handler_list(jni)
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5848,6 +6543,35 @@ impl<'mc> EntityShootBowEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6002,6 +6726,35 @@ impl<'mc> EntityResurrectEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6189,6 +6942,35 @@ impl<'mc> PiglinBarterEvent<'mc> {
         }
         Ok(new_vec)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6372,6 +7154,35 @@ impl<'mc> PigZombieAngerEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6561,6 +7372,35 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6699,6 +7539,42 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6897,6 +7773,42 @@ impl<'mc> EntityTeleportEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7085,6 +7997,35 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7281,6 +8222,35 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7399,6 +8369,42 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7514,20 +8520,144 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+    //EntityDamageEvent
+    //crate::event::entity::EntityDamageEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = EntityDamageByEntityEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityDamageEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.is_cancelled()
     }
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = EntityDamageByEntityEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityDamageEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.set_cancelled(arg0)
     }
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_damage_with_entity_damage_eventdamage_modifier(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
+        arg1: std::option::Option<f64>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/event/entity/EntityDamageEvent$DamageModifier;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "D";
+            let val_2 = jni::objects::JValueGen::Double(a);
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "setDamage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn get_damage(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityDamageEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityDamageEvent = temp_clone.into();
+        real.get_damage(arg0)
+    }
+    pub fn is_applicable(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityDamageEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityDamageEvent = temp_clone.into();
+        real.is_applicable(arg0)
+    }
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        crate::event::entity::EntityDamageEvent::handler_list(jni)
+    }
+    pub fn get_original_damage(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityDamageEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityDamageEvent = temp_clone.into();
+        real.get_original_damage(arg0)
+    }
+    pub fn final_damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityDamageEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityDamageEvent = temp_clone.into();
+        real.final_damage()
+    }
+    pub fn cause(
+        &self,
+    ) -> Result<crate::event::entity::EntityDamageEventDamageCause<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = crate::event::entity::EntityDamageEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityDamageEvent = temp_clone.into();
+        real.cause()
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7695,6 +8825,8 @@ impl<'mc> JNIInstantiatable<'mc> for VillagerCareerChangeEventChangeReasonStruct
 }
 
 impl<'mc> VillagerCareerChangeEventChangeReasonStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -7879,6 +9011,35 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7977,6 +9138,34 @@ impl<'mc> EntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Event
+    //crate::event::Event
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8169,6 +9358,8 @@ impl<'mc> JNIInstantiatable<'mc> for EntityPotionEffectEventActionStruct<'mc> {
 }
 
 impl<'mc> EntityPotionEffectEventActionStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -8621,6 +9812,8 @@ impl<'mc> JNIInstantiatable<'mc> for EntityPotionEffectEventCauseStruct<'mc> {
 }
 
 impl<'mc> EntityPotionEffectEventCauseStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -8848,6 +10041,42 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9221,6 +10450,35 @@ impl<'mc> ItemMergeEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9402,6 +10660,35 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9568,6 +10855,64 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //ProjectileHitEvent
+    //crate::event::entity::ProjectileHitEvent
+    pub fn hit_block(
+        &self,
+    ) -> Result<Option<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::ProjectileHitEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::ProjectileHitEvent = temp_clone.into();
+        real.hit_block()
+    }
+    pub fn hit_block_face(
+        &self,
+    ) -> Result<Option<crate::block::BlockFace<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::ProjectileHitEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::ProjectileHitEvent = temp_clone.into();
+        real.hit_block_face()
+    }
+    pub fn hit_entity(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::ProjectileHitEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::ProjectileHitEvent = temp_clone.into();
+        real.hit_entity()
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9890,6 +11235,35 @@ impl<'mc> EntityTameEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9987,20 +11361,89 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntityChangeBlockEvent
+    //crate::event::entity::EntityChangeBlockEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = EntityBreakDoorEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityChangeBlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.is_cancelled()
     }
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = EntityBreakDoorEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityChangeBlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.set_cancelled(arg0)
     }
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityChangeBlockEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityChangeBlockEvent = temp_clone.into();
+        real.block()
+    }
+    pub fn block_data(
+        &self,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityChangeBlockEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityChangeBlockEvent = temp_clone.into();
+        real.block_data()
+    }
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        crate::event::entity::EntityChangeBlockEvent::handler_list(jni)
+    }
+    pub fn to(&self) -> Result<Option<crate::Material<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityChangeBlockEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityChangeBlockEvent = temp_clone.into();
+        real.to()
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10231,6 +11674,35 @@ impl<'mc> EntityBreedEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10428,6 +11900,42 @@ impl<'mc> EntityPlaceEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10533,20 +12041,87 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+    //EntityCombustEvent
+    //crate::event::entity::EntityCombustEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = EntityCombustByBlockEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityCombustEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.is_cancelled()
     }
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = EntityCombustByBlockEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityCombustEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.set_cancelled(arg0)
     }
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn duration(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityCombustEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityCombustEvent = temp_clone.into();
+        real.duration()
+    }
+    pub fn set_duration(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityCombustEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityCombustEvent = temp_clone.into();
+        real.set_duration(arg0)
+    }
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        crate::event::entity::EntityCombustEvent::handler_list(jni)
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10693,6 +12268,35 @@ impl<'mc> ItemDespawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10958,6 +12562,8 @@ impl<'mc> JNIInstantiatable<'mc> for EntityRegainHealthEventRegainReasonStruct<'
 }
 
 impl<'mc> EntityRegainHealthEventRegainReasonStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -11112,6 +12718,42 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -11250,6 +12892,42 @@ impl<'mc> BatToggleSleepEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -11363,6 +13041,59 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //EntitySpawnEvent
+    //crate::event::entity::EntitySpawnEvent
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        crate::event::entity::EntitySpawnEvent::handler_list(jni)
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntitySpawnEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntitySpawnEvent = temp_clone.into();
+        real.location()
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -11924,6 +13655,83 @@ impl<'mc> PlayerDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //EntityDeathEvent
+    //crate::event::entity::EntityDeathEvent
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn drops(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getDrops", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::inventory::ItemStack::from_raw(&self.0, obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        crate::event::entity::EntityDeathEvent::handler_list(jni)
+    }
+    pub fn dropped_exp(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityDeathEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityDeathEvent = temp_clone.into();
+        real.dropped_exp()
+    }
+    pub fn set_dropped_exp(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityDeathEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityDeathEvent = temp_clone.into();
+        real.set_dropped_exp(arg0)
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -12095,6 +13903,35 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
         }
         Ok(new_vec)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -12269,6 +14106,42 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -12375,20 +14248,87 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+    //EntityCombustEvent
+    //crate::event::entity::EntityCombustEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = EntityCombustByEntityEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityCombustEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.is_cancelled()
     }
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = EntityCombustByEntityEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityCombustEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.set_cancelled(arg0)
     }
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn duration(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityCombustEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityCombustEvent = temp_clone.into();
+        real.duration()
+    }
+    pub fn set_duration(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityCombustEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityCombustEvent = temp_clone.into();
+        real.set_duration(arg0)
+    }
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        crate::event::entity::EntityCombustEvent::handler_list(jni)
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -12945,6 +14885,8 @@ impl<'mc> JNIInstantiatable<'mc> for EntityExhaustionEventExhaustionReasonStruct
 }
 
 impl<'mc> EntityExhaustionEventExhaustionReasonStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -13115,6 +15057,35 @@ impl<'mc> EntityExhaustionEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -13306,6 +15277,24 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -13942,6 +15931,8 @@ impl<'mc> JNIInstantiatable<'mc> for EntityTransformEventTransformReasonStruct<'
 }
 
 impl<'mc> EntityTransformEventTransformReasonStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -14092,6 +16083,78 @@ impl<'mc> PigZapEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntityTransformEvent
+    //crate::event::entity::EntityTransformEvent
+    pub fn transformed_entity(
+        &self,
+    ) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityTransformEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityTransformEvent = temp_clone.into();
+        real.transformed_entity()
+    }
+    pub fn transformed_entities(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getTransformedEntities",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.0, obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn transform_reason(
+        &self,
+    ) -> Result<
+        crate::event::entity::EntityTransformEventTransformReason<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let temp_clone = crate::event::entity::EntityTransformEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityTransformEvent = temp_clone.into();
+        real.transform_reason()
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -14226,6 +16289,35 @@ impl<'mc> FireworkExplodeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -14414,6 +16506,35 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -14578,20 +16699,92 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //EntityTeleportEvent
+    //crate::event::entity::EntityTeleportEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = EntityPortalExitEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityTeleportEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.is_cancelled()
     }
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = EntityPortalExitEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntityTeleportEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.set_cancelled(arg0)
     }
+    pub fn from(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityTeleportEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityTeleportEvent = temp_clone.into();
+        real.from()
+    }
+    pub fn set_from(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityTeleportEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityTeleportEvent = temp_clone.into();
+        real.set_from(arg0)
+    }
+    pub fn to(&self) -> Result<Option<crate::Location<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityTeleportEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityTeleportEvent = temp_clone.into();
+        real.to()
+    }
+    pub fn set_to(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityTeleportEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityTeleportEvent = temp_clone.into();
+        real.set_to(arg0)
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -14830,6 +17023,42 @@ impl<'mc> EntityDamageEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -15005,6 +17234,35 @@ impl<'mc> EntityDeathEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -15140,6 +17398,42 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -15329,6 +17623,42 @@ impl<'mc> EntityTargetEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -15513,6 +17843,8 @@ impl<'mc> JNIInstantiatable<'mc> for CreeperPowerEventPowerCauseStruct<'mc> {
 }
 
 impl<'mc> CreeperPowerEventPowerCauseStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -15671,6 +18003,35 @@ impl<'mc> CreeperPowerEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -15767,20 +18128,80 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntitySpawnEvent
+    //crate::event::entity::EntitySpawnEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = SpawnerSpawnEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntitySpawnEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.is_cancelled()
     }
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = SpawnerSpawnEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::EntitySpawnEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.set_cancelled(arg0)
     }
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        crate::event::entity::EntitySpawnEvent::handler_list(jni)
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntitySpawnEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntitySpawnEvent = temp_clone.into();
+        real.location()
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -15973,6 +18394,35 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -16187,6 +18637,35 @@ impl<'mc> ProjectileHitEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -16305,6 +18784,42 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -16449,6 +18964,42 @@ impl<'mc> EntityAirChangeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -16577,6 +19128,42 @@ impl<'mc> EntityUnleashEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -16733,20 +19320,78 @@ impl<'mc> ExpBottleEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //ProjectileHitEvent
+    //crate::event::entity::ProjectileHitEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = ExpBottleEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::ProjectileHitEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.is_cancelled()
     }
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = ExpBottleEvent::from_raw(&self.0, unsafe {
+        let temp_clone = crate::event::entity::ProjectileHitEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::event::Cancellable = temp_clone.into();
         real.set_cancelled(arg0)
     }
+    pub fn hit_block(
+        &self,
+    ) -> Result<Option<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::ProjectileHitEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::ProjectileHitEvent = temp_clone.into();
+        real.hit_block()
+    }
+    pub fn hit_block_face(
+        &self,
+    ) -> Result<Option<crate::block::BlockFace<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::ProjectileHitEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::ProjectileHitEvent = temp_clone.into();
+        real.hit_block_face()
+    }
+    pub fn hit_entity(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::ProjectileHitEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::ProjectileHitEvent = temp_clone.into();
+        real.hit_entity()
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -16892,6 +19537,42 @@ impl<'mc> EntityCombustEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -17048,6 +19729,35 @@ impl<'mc> EntitySpellCastEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -17249,6 +19959,42 @@ impl<'mc> EntityTransformEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -17933,6 +20679,64 @@ impl<'mc> PotionSplashEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //ProjectileHitEvent
+    //crate::event::entity::ProjectileHitEvent
+    pub fn hit_block(
+        &self,
+    ) -> Result<Option<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::ProjectileHitEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::ProjectileHitEvent = temp_clone.into();
+        real.hit_block()
+    }
+    pub fn hit_block_face(
+        &self,
+    ) -> Result<Option<crate::block::BlockFace<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::ProjectileHitEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::ProjectileHitEvent = temp_clone.into();
+        real.hit_block_face()
+    }
+    pub fn hit_entity(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::ProjectileHitEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::ProjectileHitEvent = temp_clone.into();
+        real.hit_entity()
+    }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -18074,6 +20878,42 @@ impl<'mc> EntityInteractEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -18207,6 +21047,42 @@ impl<'mc> EntitySpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity()
+    }
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -18413,6 +21289,35 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //EntityEvent
+    //crate::event::entity::EntityEvent
+    pub fn entity_type(
+        &self,
+    ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::entity::EntityEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::entity::EntityEvent = temp_clone.into();
+        real.entity_type()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

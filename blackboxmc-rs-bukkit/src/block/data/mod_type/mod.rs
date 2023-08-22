@@ -1510,6 +1510,8 @@ impl<'mc> JNIInstantiatable<'mc> for BigDripleafTiltStruct<'mc> {
 }
 
 impl<'mc> BigDripleafTiltStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -1799,6 +1801,8 @@ impl<'mc> JNIInstantiatable<'mc> for WallHeightStruct<'mc> {
 }
 
 impl<'mc> WallHeightStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -2285,6 +2289,8 @@ impl<'mc> JNIInstantiatable<'mc> for JigsawOrientationStruct<'mc> {
 }
 
 impl<'mc> JigsawOrientationStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -3158,6 +3164,8 @@ impl<'mc> JNIInstantiatable<'mc> for SculkSensorPhaseStruct<'mc> {
 }
 
 impl<'mc> SculkSensorPhaseStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -4923,6 +4931,8 @@ impl<'mc> JNIInstantiatable<'mc> for StructureBlockModeStruct<'mc> {
 }
 
 impl<'mc> StructureBlockModeStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -5776,6 +5786,8 @@ impl<'mc> JNIInstantiatable<'mc> for ComparatorModeStruct<'mc> {
 }
 
 impl<'mc> ComparatorModeStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -6001,6 +6013,8 @@ impl<'mc> JNIInstantiatable<'mc> for BellAttachmentStruct<'mc> {
 }
 
 impl<'mc> BellAttachmentStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -6295,6 +6309,8 @@ impl<'mc> JNIInstantiatable<'mc> for DoorHingeStruct<'mc> {
 }
 
 impl<'mc> DoorHingeStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -6832,6 +6848,8 @@ impl<'mc> JNIInstantiatable<'mc> for ChestTypeStruct<'mc> {
 }
 
 impl<'mc> ChestTypeStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -8739,6 +8757,8 @@ impl<'mc> JNIInstantiatable<'mc> for RedstoneWireConnectionStruct<'mc> {
 }
 
 impl<'mc> RedstoneWireConnectionStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -9814,6 +9834,8 @@ impl<'mc> JNIInstantiatable<'mc> for PointedDripstoneThicknessStruct<'mc> {
 }
 
 impl<'mc> PointedDripstoneThicknessStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -10188,6 +10210,8 @@ impl<'mc> JNIInstantiatable<'mc> for SlabTypeStruct<'mc> {
 }
 
 impl<'mc> SlabTypeStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -10803,6 +10827,8 @@ impl<'mc> JNIInstantiatable<'mc> for StairsShapeStruct<'mc> {
 }
 
 impl<'mc> StairsShapeStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -11343,6 +11369,8 @@ impl<'mc> JNIInstantiatable<'mc> for SwitchFaceStruct<'mc> {
 }
 
 impl<'mc> SwitchFaceStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -12251,6 +12279,8 @@ impl<'mc> JNIInstantiatable<'mc> for BedPartStruct<'mc> {
 }
 
 impl<'mc> BedPartStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -13822,6 +13852,8 @@ impl<'mc> JNIInstantiatable<'mc> for TechnicalPistonTypeStruct<'mc> {
 }
 
 impl<'mc> TechnicalPistonTypeStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -14187,6 +14219,8 @@ impl<'mc> JNIInstantiatable<'mc> for BambooLeavesStruct<'mc> {
 }
 
 impl<'mc> BambooLeavesStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)

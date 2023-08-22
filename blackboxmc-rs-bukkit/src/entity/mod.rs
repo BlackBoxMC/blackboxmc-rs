@@ -1420,6 +1420,8 @@ impl<'mc> JNIInstantiatable<'mc> for FishHookHookStateStruct<'mc> {
 }
 
 impl<'mc> FishHookHookStateStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -3999,6 +4001,8 @@ impl<'mc> JNIInstantiatable<'mc> for WitherHeadStruct<'mc> {
 }
 
 impl<'mc> WitherHeadStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -5707,6 +5711,8 @@ impl<'mc> JNIInstantiatable<'mc> for HorseStyleStruct<'mc> {
 }
 
 impl<'mc> HorseStyleStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -6520,6 +6526,8 @@ impl<'mc> JNIInstantiatable<'mc> for AxolotlVariantStruct<'mc> {
 }
 
 impl<'mc> AxolotlVariantStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -7794,6 +7802,7 @@ impl<'mc> OcelotTypeStruct<'mc> {
         let obj = res.l()?;
         Ok(Some(crate::entity::OcelotType::from_raw(&jni, obj)?))
     }
+    //Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8071,6 +8080,8 @@ impl<'mc> JNIInstantiatable<'mc> for FoxTypeStruct<'mc> {
 }
 
 impl<'mc> FoxTypeStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -9441,6 +9452,11 @@ impl<'mc> PlayerSpigot<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Entity$Spigot
+    //crate::entity::EntitySpigot
+    //CommandSender$Spigot
+    //crate::command::CommandSenderSpigot
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -11413,6 +11429,8 @@ impl<'mc> JNIInstantiatable<'mc> for WardenAngerLevelStruct<'mc> {
 }
 
 impl<'mc> WardenAngerLevelStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -12030,6 +12048,8 @@ impl<'mc> JNIInstantiatable<'mc> for RabbitTypeStruct<'mc> {
 }
 
 impl<'mc> RabbitTypeStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -13370,6 +13390,8 @@ impl<'mc> JNIInstantiatable<'mc> for BoatStatusStruct<'mc> {
 }
 
 impl<'mc> BoatStatusStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -21795,6 +21817,8 @@ impl<'mc> JNIInstantiatable<'mc> for EnderDragonPhaseStruct<'mc> {
 }
 
 impl<'mc> EnderDragonPhaseStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -22520,6 +22544,8 @@ impl<'mc> JNIInstantiatable<'mc> for ParrotVariantStruct<'mc> {
 }
 
 impl<'mc> ParrotVariantStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -23395,6 +23421,8 @@ impl<'mc> JNIInstantiatable<'mc> for CatTypeStruct<'mc> {
 }
 
 impl<'mc> CatTypeStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -24841,6 +24869,8 @@ impl<'mc> JNIInstantiatable<'mc> for SkeletonSkeletonTypeStruct<'mc> {
 }
 
 impl<'mc> SkeletonSkeletonTypeStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -26577,6 +26607,7 @@ impl<'mc> PandaGeneStruct<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -26813,6 +26844,8 @@ impl<'mc> JNIInstantiatable<'mc> for EvokerSpellStruct<'mc> {
 }
 
 impl<'mc> EvokerSpellStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -28450,6 +28483,8 @@ impl<'mc> JNIInstantiatable<'mc> for DisplayBillboardStruct<'mc> {
 }
 
 impl<'mc> DisplayBillboardStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -28572,6 +28607,7 @@ impl<'mc> DisplayBrightness<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -28842,6 +28878,8 @@ impl<'mc> JNIInstantiatable<'mc> for ItemDisplayItemDisplayTransformStruct<'mc> 
 }
 
 impl<'mc> ItemDisplayItemDisplayTransformStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -34843,6 +34881,7 @@ impl<'mc> FrogVariantStruct<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -35170,6 +35209,7 @@ impl<'mc> VillagerProfessionStruct<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -36906,6 +36946,8 @@ impl<'mc> JNIInstantiatable<'mc> for ArmorStandLockTypeStruct<'mc> {
 }
 
 impl<'mc> ArmorStandLockTypeStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -37948,6 +37990,8 @@ impl<'mc> JNIInstantiatable<'mc> for HorseColorStruct<'mc> {
 }
 
 impl<'mc> HorseColorStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -40250,6 +40294,8 @@ impl<'mc> JNIInstantiatable<'mc> for TextDisplayTextAlignmentStruct<'mc> {
 }
 
 impl<'mc> TextDisplayTextAlignmentStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -40471,6 +40517,7 @@ impl<'mc> BoatTypeStruct<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -42428,6 +42475,8 @@ impl<'mc> JNIInstantiatable<'mc> for SpellcasterSpellStruct<'mc> {
 }
 
 impl<'mc> SpellcasterSpellStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -49323,6 +49372,7 @@ impl<'mc> VillagerTypeStruct<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -50586,6 +50636,8 @@ impl<'mc> JNIInstantiatable<'mc> for LlamaColorStruct<'mc> {
 }
 
 impl<'mc> LlamaColorStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -50781,6 +50833,8 @@ impl<'mc> JNIInstantiatable<'mc> for HorseVariantStruct<'mc> {
 }
 
 impl<'mc> HorseVariantStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -52417,6 +52471,8 @@ impl<'mc> JNIInstantiatable<'mc> for AbstractArrowPickupStatusStruct<'mc> {
 }
 
 impl<'mc> AbstractArrowPickupStatusStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -52531,6 +52587,77 @@ impl<'mc> LightningStrikeSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //Entity$Spigot
+    //crate::entity::EntitySpigot
+    //CommandSender$Spigot
+    //crate::command::CommandSenderSpigot
+    pub fn send_message_with_base_components(
+        &self,
+        arg0: Vec<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "[Lnet/md_5/bungee/api/chat/BaseComponent;";
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "net/md_5/bungee/api/chat/BaseComponent",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        args.push(val_1.l()?.into());
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+        arg1: std::option::Option<Vec<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "[Lnet/md_5/bungee/api/chat/BaseComponent;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "net/md_5/bungee/api/chat/BaseComponent",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_2 = jni::objects::JValueGen::Object(unsafe {
+                    jni::objects::JObject::from_raw(a.get(i).unwrap().jni_object().clone())
+                });
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_2.l()?)?;
+            }
+            let val_2 = jni::objects::JValueGen::Object(arr);
+            args.push(val_2.l()?.into());
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -52967,6 +53094,8 @@ impl<'mc> JNIInstantiatable<'mc> for MushroomCowVariantStruct<'mc> {
 }
 
 impl<'mc> MushroomCowVariantStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -53638,6 +53767,8 @@ impl<'mc> JNIInstantiatable<'mc> for SnifferStateStruct<'mc> {
 }
 
 impl<'mc> SnifferStateStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -54443,6 +54574,8 @@ impl<'mc> JNIInstantiatable<'mc> for TropicalFishPatternStruct<'mc> {
 }
 
 impl<'mc> TropicalFishPatternStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)

@@ -172,13 +172,80 @@ impl<'mc> EnchantmentWrapper<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //Enchantment
+    //crate::enchantments::Enchantment
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = EnchantmentWrapper::from_raw(&self.0, unsafe {
+        let temp_clone = crate::enchantments::Enchantment::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::Keyed = temp_clone.into();
         real.key()
     }
+    pub fn register_enchantment(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        crate::enchantments::Enchantment::register_enchantment(jni, arg0)
+    }
+    pub fn get_by_key(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+    ) -> Result<crate::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
+        crate::enchantments::Enchantment::get_by_key(jni, arg0)
+    }
+    pub fn stop_accepting_registrations(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let cls = jni.find_class("void");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "stopAcceptingRegistrations", sig.as_str(), vec![]);
+        jni.translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_accepting_registrations(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let cls = jni.find_class("boolean");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "isAcceptingRegistrations", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::enchantments::Enchantment::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::enchantments::Enchantment = temp_clone.into();
+        real.equals(arg0)
+    }
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::enchantments::Enchantment::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::enchantments::Enchantment = temp_clone.into();
+        real.internal_to_string()
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn get_by_name(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<crate::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
+        crate::enchantments::Enchantment::get_by_name(jni, arg0)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -334,6 +401,7 @@ impl<'mc> EnchantmentOffer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -641,6 +709,7 @@ impl<'mc> EnchantmentTargetStruct<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -935,6 +1004,7 @@ impl<'mc> Enchantment<'mc> {
         let obj = res.l()?;
         crate::enchantments::Enchantment::from_raw(&jni, obj)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

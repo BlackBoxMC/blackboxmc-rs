@@ -215,6 +215,7 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         blackboxmc_java::util::JavaComparator::nulls_last(jni, arg0)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -450,6 +451,7 @@ impl<'mc> HelpTopicComparator<'mc> {
     ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         blackboxmc_java::util::JavaComparator::nulls_last(jni, arg0)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -707,6 +709,7 @@ impl<'mc> HelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -969,6 +972,34 @@ impl<'mc> IndexHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //HelpTopic
+    //crate::help::HelpTopic
+    pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::help::HelpTopic = temp_clone.into();
+        real.short_text()
+    }
+    pub fn amend_topic(
+        &self,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::help::HelpTopic = temp_clone.into();
+        real.amend_topic(arg0, arg1)
+    }
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::help::HelpTopic = temp_clone.into();
+        real.name()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1057,6 +1088,51 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //HelpTopic
+    //crate::help::HelpTopic
+    pub fn amend_can_see(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::help::HelpTopic = temp_clone.into();
+        real.amend_can_see(arg0)
+    }
+    pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::help::HelpTopic = temp_clone.into();
+        real.short_text()
+    }
+    pub fn get_full_text(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::help::HelpTopic = temp_clone.into();
+        real.get_full_text(arg0)
+    }
+    pub fn amend_topic(
+        &self,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::help::HelpTopic = temp_clone.into();
+        real.amend_topic(arg0, arg1)
+    }
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::help::HelpTopic = temp_clone.into();
+        real.name()
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

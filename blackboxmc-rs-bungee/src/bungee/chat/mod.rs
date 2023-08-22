@@ -106,6 +106,9 @@ impl<'mc> SelectorComponentSerializer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //BaseComponentSerializer
+    //crate::bungee::chat::BaseComponentSerializer
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -227,6 +230,9 @@ impl<'mc> TextComponentSerializer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //BaseComponentSerializer
+    //crate::bungee::chat::BaseComponentSerializer
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -294,6 +300,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::chat::BaseComponentSerializer::from_raw(&jni, res)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -404,6 +411,9 @@ impl<'mc> ScoreComponentSerializer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //BaseComponentSerializer
+    //crate::bungee::chat::BaseComponentSerializer
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -527,6 +537,9 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //BaseComponentSerializer
+    //crate::bungee::chat::BaseComponentSerializer
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -649,6 +662,9 @@ impl<'mc> KeybindComponentSerializer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //BaseComponentSerializer
+    //crate::bungee::chat::BaseComponentSerializer
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -763,6 +779,7 @@ impl<'mc> TranslationRegistry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -906,6 +923,7 @@ impl<'mc> ComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

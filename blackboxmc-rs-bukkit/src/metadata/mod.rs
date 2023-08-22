@@ -662,6 +662,7 @@ impl<'mc> MetadataStoreBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -842,6 +843,8 @@ impl<'mc> JNIInstantiatable<'mc> for LazyMetadataValueCacheStrategyStruct<'mc> {
 }
 
 impl<'mc> LazyMetadataValueCacheStrategyStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -897,15 +900,17 @@ impl<'mc> LazyMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+    //MetadataValueAdapter
+    //crate::metadata::MetadataValueAdapter
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = LazyMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_string()
     }
     pub fn as_int(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let temp_clone = LazyMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
@@ -914,54 +919,55 @@ impl<'mc> LazyMetadataValue<'mc> {
     pub fn owning_plugin(
         &self,
     ) -> Result<Option<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
-        let temp_clone = LazyMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.owning_plugin()
     }
     pub fn as_float(&self) -> Result<f32, Box<dyn std::error::Error>> {
-        let temp_clone = LazyMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_float()
     }
     pub fn as_double(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let temp_clone = LazyMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_double()
     }
     pub fn as_long(&self) -> Result<i64, Box<dyn std::error::Error>> {
-        let temp_clone = LazyMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_long()
     }
     pub fn as_short(&self) -> Result<i16, Box<dyn std::error::Error>> {
-        let temp_clone = LazyMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_short()
     }
     pub fn as_byte(&self) -> Result<i8, Box<dyn std::error::Error>> {
-        let temp_clone = LazyMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_byte()
     }
     pub fn as_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = LazyMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_boolean()
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1055,15 +1061,19 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+    //LazyMetadataValue
+    //crate::metadata::LazyMetadataValue
+    //MetadataValueAdapter
+    //crate::metadata::MetadataValueAdapter
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = FixedMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_string()
     }
     pub fn as_int(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let temp_clone = FixedMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
@@ -1072,54 +1082,55 @@ impl<'mc> FixedMetadataValue<'mc> {
     pub fn owning_plugin(
         &self,
     ) -> Result<Option<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
-        let temp_clone = FixedMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.owning_plugin()
     }
     pub fn as_float(&self) -> Result<f32, Box<dyn std::error::Error>> {
-        let temp_clone = FixedMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_float()
     }
     pub fn as_double(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let temp_clone = FixedMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_double()
     }
     pub fn as_long(&self) -> Result<i64, Box<dyn std::error::Error>> {
-        let temp_clone = FixedMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_long()
     }
     pub fn as_short(&self) -> Result<i16, Box<dyn std::error::Error>> {
-        let temp_clone = FixedMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_short()
     }
     pub fn as_byte(&self) -> Result<i8, Box<dyn std::error::Error>> {
-        let temp_clone = FixedMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_byte()
     }
     pub fn as_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = FixedMetadataValue::from_raw(&self.0, unsafe {
+        let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_boolean()
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1278,6 +1289,7 @@ impl<'mc> MetadataValueAdapter<'mc> {
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.value()
     }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

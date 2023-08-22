@@ -160,6 +160,8 @@ impl<'mc> JNIInstantiatable<'mc> for DataPackCompatibilityStruct<'mc> {
 }
 
 impl<'mc> DataPackCompatibilityStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -648,6 +650,8 @@ impl<'mc> JNIInstantiatable<'mc> for DataPackSourceStruct<'mc> {
 }
 
 impl<'mc> DataPackSourceStruct<'mc> {
+    //Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)

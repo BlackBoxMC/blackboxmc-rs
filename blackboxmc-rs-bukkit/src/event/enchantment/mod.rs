@@ -247,6 +247,59 @@ impl<'mc> EnchantItemEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+    //InventoryEvent
+    //crate::event::inventory::InventoryEvent
+    pub fn inventory(
+        &self,
+    ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::inventory::InventoryEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::inventory::InventoryEvent = temp_clone.into();
+        real.inventory()
+    }
+    pub fn viewers(
+        &self,
+    ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getViewers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn view(&self) -> Result<crate::inventory::InventoryView<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::inventory::InventoryEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::inventory::InventoryEvent = temp_clone.into();
+        real.view()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -452,6 +505,59 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+    //InventoryEvent
+    //crate::event::inventory::InventoryEvent
+    pub fn inventory(
+        &self,
+    ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::inventory::InventoryEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::inventory::InventoryEvent = temp_clone.into();
+        real.inventory()
+    }
+    pub fn viewers(
+        &self,
+    ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getViewers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn view(&self) -> Result<crate::inventory::InventoryView<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::inventory::InventoryEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::inventory::InventoryEvent = temp_clone.into();
+        real.view()
+    }
+    //Event
+    //crate::event::Event
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::Event = temp_clone.into();
+        real.event_name()
+    }
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
