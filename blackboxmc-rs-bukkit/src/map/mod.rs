@@ -320,6 +320,23 @@ impl<'mc> JNIInstantiatable<'mc> for MapViewScaleStruct<'mc> {
 }
 
 impl<'mc> MapViewScaleStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::map::MapViewScale<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/map/MapView$Scale;");
+        let cls = jni.find_class("org/bukkit/map/MapView$Scale");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::map::MapViewScale::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     #[deprecated]
 
     pub fn value(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -1135,6 +1152,23 @@ impl<'mc> MapCursorTypeStruct<'mc> {
         }
         let obj = res.l()?;
         Ok(Some(crate::map::MapCursorType::from_raw(&jni, obj)?))
+    }
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::map::MapCursorType<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/map/MapCursor$Type;");
+        let cls = jni.find_class("org/bukkit/map/MapCursor$Type");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::map::MapCursorType::from_raw(&jni, res)? });
+        }
+        Ok(vec)
     }
     #[deprecated]
 
@@ -2443,6 +2477,36 @@ impl<'mc> MapPalette<'mc> {
         );
         let res = jni.translate_error(res)?;
         Ok(res.l()?)
+    }
+
+    pub fn image_to_bytes(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<Vec<i8>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/awt/Image;)B");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let cls = jni.find_class("byte");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "imageToBytes",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JByteArray>::into(res.l()?);
+
+        if arr.is_null() {
+            return Ok(Vec::new());
+        }
+        unsafe {
+            Ok(jni
+                .get_array_elements(
+                    &jni::objects::JPrimitiveArray::from_raw(arr.clone()),
+                    jni::objects::ReleaseMode::CopyBack,
+                )?
+                .to_vec())
+        }
     }
 
     pub fn set_map_color_cache(

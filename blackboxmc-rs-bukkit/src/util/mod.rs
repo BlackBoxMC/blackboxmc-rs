@@ -934,6 +934,29 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::ChatPaginatorChatPage::from_raw(&jni, res)
     }
+    #[deprecated]
+
+    pub fn lines(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getLines", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*res) })
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string()
+            });
+        }
+        Ok(vec)
+    }
 
     pub fn page_number(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3297,6 +3320,43 @@ impl<'mc> ChatPaginator<'mc> {
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::util::ChatPaginatorChatPage::from_raw(&jni, obj)
+    }
+
+    pub fn word_wrap(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+        arg1: i32,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;I)Ljava/lang/String;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let val_2 = jni::objects::JValueGen::Int(arg1);
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "wordWrap",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({
+                jni.get_string(unsafe { &jni::objects::JString::from_raw(*res) })
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string()
+            });
+        }
+        Ok(vec)
     }
     // SUPER CLASS: Object
 

@@ -413,7 +413,7 @@ def return_format_one_liner(val, var_name):
 
 def return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait, options_start_at, is_constructor, nullable, library):
     if return_group["is_array"]:
-        return None
+        end_line = ".unwrap()"
     else:
         end_line = "?"
     code = []
@@ -422,7 +422,7 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
     else:
         arr = "vec!["+",".join(types)+"]"
     if static:
-        code.append("let cls = jni.find_class(\""+return_group["type_name_original"].replace(".","/").replace("Java","")+"\"); let cls = jni.translate_error_with_class(cls)"+end_line+";")
+        code.append("let cls = jni.find_class(\""+return_group["type_name_original"].replace(".","/").replace("Java","")+"\"); let cls = jni.translate_error_with_class(cls)?;")
         if is_constructor:
             code.append("let res = "+prefix+".new_object(cls,")
         else:
@@ -433,9 +433,9 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
         if return_group["type_name_resolved"] != "()":
             code.append("let res = ")
         if is_constructor:
-            code.append("jni.translate_error_no_gen(res)"+end_line+";")
+            code.append("jni.translate_error_no_gen(res)?;")
         else:
-            code.append("jni.translate_error(res)"+end_line+";")
+            code.append("jni.translate_error(res)?;")
     else:
         code.append(
             "let res = "+prefix+".call_method("+
@@ -464,7 +464,10 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
             val_1 = "self.jni_ref()"
         else:
             val_1 = "self.0"
-        val_2 = "unsafe { jni::objects::JObject::from_raw(res.l()"+end_line+".clone()) }"
+        if return_group["is_array"]:
+            val_2 = "unsafe { jni::objects::JObject::from_raw(*res) }"
+        else:
+            val_2 = "unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }"
 
     # primitive translation should not be done inside the java.lang bindings.
     skip_primitives = False
@@ -473,52 +476,109 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
             skip_primitives = True
         else:
             skip_primitives = False
+
+    class_name = return_group["type_name_original"].replace(".","/").replace("Java","")
+
+    if return_group["is_array"]:
+        code.append("let arr = ")
+        match(return_group["type_name_alone"].replace("Java","")):
+            case "bool" | "i8" | "char" | "f64" | "f32" | "i32" | "i64" | "i16" | "u16":
+                proper = return_group["type_name_original"][0].upper() + "".join(return_group["type_name_original"][1:])
+                code.append("Into::<jni::objects::J"+proper+"Array>::into(res.l()?);")
+                code.append("""
+                    if arr.is_null() {
+                        return Ok(Vec::new());
+                    }
+                    unsafe {
+                        Ok("""+prefix+""".get_array_elements(&jni::objects::JPrimitiveArray::from_raw(arr.clone()), jni::objects::ReleaseMode::CopyBack)?
+                            .to_vec()
+                        )
+                        }
+                        """)
+                return "\n".join(code)
+            case _:
+                code.append("""
+                            Into::<jni::objects::JObjectArray>::into(res.l()?);
+                            let len = """+prefix+""".get_array_length(&arr)?;
+                            let mut vec = Vec::new();
+                            for i in 0..len {
+                                let res = """+prefix+""".get_object_array_element(&arr, i)?;
+                                vec.push({
+                                    """)
+        #res.append("let arr = "+prefix+".translate_error_no_gen(arr)?;")
+        #res.append("for i in 0.."+new_arg+".len() {")
+        #new_arg = new_new_arg
     if not skip_primitives:
         match return_group["type_name_resolved"]:
             case "()" | "u16" | "i8" | "i16" | "bool" | "i32" | "i64" | "f32" | "f64":
-                code.append("Ok(")
+                if not return_group["is_array"]:
+                    code.append("Ok(")
                 if nullable:
                     code.append("Some(")
                 code.append(return_format_one_liner(return_group["type_name_resolved"],"res"))
                 if nullable:
                     code.append(")")
-                code.append(")")
+                if not return_group["is_array"]:
+                    code.append(")")
+                else:
+                    code.append("""
+                        });
+                    }
+                    Ok(vec)""")
                 return "\n".join(code)
             case "String":
-                code.append("Ok(")
+                if not return_group["is_array"]:
+                    code.append("Ok(")
                 if nullable:
                     code.append("Some(")
+                the = "res.as_jni().l"
+                if return_group["is_array"]:
+                    the = "*res"
                 code.append(prefix+
-                            ".get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })"+end_line+
+                            ".get_string(unsafe { &jni::objects::JString::from_raw("+the+") })"+end_line+
                             ".to_string_lossy()"+
                             ".to_string()"
                 )
                 if nullable:
                     code.append(")")
-                code.append(")")
+                if not return_group["is_array"]:
+                    code.append(")")
+                else:
+                    code.append("""
+                        });
+                    }
+                    Ok(vec)""")
                 return "\n".join(code)
     match return_group["type_name_resolved"]:
         case "()":
-            code.append("Ok(")
+            if not return_group["is_array"]:
+                code.append("Ok(")
             if nullable:
                 code.append("Some(")
             code.append(return_format_one_liner(return_group["type_name_resolved"],"res"))
             if nullable:
                 code.append(")")
-            code.append(")")
+            if not return_group["is_array"]:
+                code.append(")")
         case "jni::objects::JObject":
-            code.append("Ok(")
+            if not return_group["is_array"]:
+                code.append("Ok(")
             if nullable:
                 code.append("Some(")
             if is_constructor:
                 code.append("res")
             else:
-                code.append("res.l()?")
+                if return_group["is_array"]:
+                    code.append("res")
+                else:
+                    code.append("res.l()?")
             if nullable:
                 code.append(")")
-            code.append(")")
+            if not return_group["is_array"]:
+                code.append(")")
         case "jni::objects::JClass":
-            code.append("Ok(")
+            if not return_group["is_array"]:
+                code.append("Ok(")
             if nullable:
                 code.append("Some(")
             code.append("unsafe {"+
@@ -526,7 +586,8 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                         "}")
             if nullable:
                 code.append(")")
-            code.append(")")
+            if not return_group["is_array"]:
+                code.append(")")
         case "(u8, u8, u8)":
             code.append("let r = "+prefix+
                         "            .call_method(unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }, \"getRed\", \"(V)I\", vec![]);"+
@@ -536,9 +597,10 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                         "            ; let g = "+prefix+".translate_error(g)?.i()? as u8;"+
                         "let b = "+prefix+
                         "            .call_method(unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }, \"getBlue\", \"(V)I\", vec![])"+
-                        "            ; let b = "+prefix+".translate_error(b)?.i()? as u8;"+
-                        "Ok(")
-
+                        "            ; let b = "+prefix+".translate_error(b)?.i()? as u8;")
+            
+            if not return_group["is_array"]:
+                code.append("Ok(")
             if nullable:
                 code.append("Some(")
             code.append("(r, g, b)")
@@ -552,16 +614,16 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
             match return_group["type_name_original"]:
                 case "java.util.Collection":
                     code.append("let col = blackboxmc_java::util::JavaCollection::from_raw(&"+
-                                                prefix+",res.l()"+end_line+")"+end_line+";"+
-                                "let iter = col.iterator()"+end_line+";")
+                                                prefix+",res.l()?)?;"+
+                                "let iter = col.iterator()?;")
                 case "java.util.List":
-                    code.append("let list = blackboxmc_java::util::JavaList::from_raw(&"+val_1+", res.l()"+end_line+")"+end_line+";"+
-                                "let iter = list.iterator()"+end_line+";")
+                    code.append("let list = blackboxmc_java::util::JavaList::from_raw(&"+val_1+", res.l()?)?;"+
+                                "let iter = list.iterator()?;")
                 case _:
                     print("Unhandled map ty (return):\t\t"+return_group["type_name_original"])
                     return None
-            code.append("while iter.has_next()"+end_line+" {"+
-                "            let obj = iter.next()"+end_line+";")
+            code.append("while iter.has_next()? {"+
+                "            let obj = iter.next()?;")
             match gen:
                 case "()" | "u16" | "i8" | "i16" | "bool" | "i32" | "i64" | "f32" | "f64":
                     return None
@@ -578,14 +640,17 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                         ".to_string_lossy()"+
                         ".to_string());")
                 case _:
-                    code.append("new_vec.push("+gen+"::from_raw(&"+val_1+",obj,)"+end_line+");")
-            code.append("};Ok(")
+                    code.append("new_vec.push("+gen+"::from_raw(&"+val_1+",obj,)?);")
+            code.append("};")
+            if not return_group["is_array"]:
+                code.append("Ok(")
             if nullable:
                 code.append("Some(")
             code.append("new_vec")
             if nullable:
                 code.append(")")
-            code.append(")")
+            if not return_group["is_array"]:
+                code.append(")")
         case _:
             if return_group["type_name_resolved"] == "blackboxmc_java::lang::JavaEnum":
                 return_group["type_name_resolved"] = "Self"
@@ -594,36 +659,34 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                 name = what[len(what)-1]
                 what.pop()
                 return_group["type_name_resolved"] = "::".join(what)+name
-            #if return_group["is_array"]:
-            #    code.append("let arr = &Into::<jni::objects::JObjectArray>::into(unsafe {"+
-            #                "    jni::objects::JObject::from_raw(res.as_jni().l)"+
-            #                "});"+
-            #                "let num = "+prefix+".get_array_length(arr)"+end_line+";"+
-            #                "let mut vec = (0..num)"+
-            #                "    .map(|i| {")
 
-            if static and not is_constructor:
-                code.append("let obj = res.l()"+end_line+";")
+            if static and not is_constructor and not return_group["is_array"]:
+                code.append("let obj = res.l()?;")
+            if return_group["is_array"]:
+                val_2 = "res"
 
             if nullable:
-                code.append("Ok(Some(")
+                if not return_group["is_array"]:
+                    code.append("Ok(")
+                code.append("Some(")
             code.append(return_group["type_name_resolved"]+"::from_raw(&"+
                                                 prefix+","+
                                                 val_2)
             #if return_group["type_name_original"] in enums:
             #    code.append(", "+return_group["type_name_resolved"]+"::from_string(variant_str).ok_or(eyre::eyre!(\"String gaven for variant was invalid\"))"+end_line)
             if nullable:
-                code.append(")"+end_line+")")
+                if not return_group["is_array"]:
+                    code.append(")?")
+                code.append(")")
             code.append(")")
-            #if return_group["is_array"]:
-            #    return_val = "Box::leak(Box::new(vec))"
-            #    code.append("})"+
-            #                ".collect::<Vec<"+return_group["type_name_resolved"]+">>();")
-            #else:
-            #    return_val = "ret"
-            #    if return_group["is_array"]:
-            #        code.append("};")
-            #
+            if return_group["is_array"]:
+                code.append("?")
+    if return_group["is_array"]:
+        code.append("""
+            });
+        }
+        Ok(vec)""")
+
     return "\n".join(code)
 
 def java_call_signature_format(types, return_ty, is_constructor=False):

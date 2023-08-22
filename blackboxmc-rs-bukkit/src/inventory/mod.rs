@@ -788,6 +788,23 @@ impl<'mc> HorseInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -815,6 +832,26 @@ impl<'mc> HorseInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,
@@ -1239,6 +1276,23 @@ impl<'mc> DoubleChestInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -1266,6 +1320,26 @@ impl<'mc> DoubleChestInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,
@@ -1734,6 +1808,23 @@ impl<'mc> JukeboxInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -1761,6 +1852,26 @@ impl<'mc> JukeboxInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,
@@ -2686,6 +2797,23 @@ impl<'mc> JNIInstantiatable<'mc> for InventoryViewPropertyStruct<'mc> {
 }
 
 impl<'mc> InventoryViewPropertyStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::inventory::InventoryViewProperty<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/InventoryView$Property;");
+        let cls = jni.find_class("org/bukkit/inventory/InventoryView$Property");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::InventoryViewProperty::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     pub fn id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -4479,6 +4607,24 @@ impl<'mc> Inventory<'mc> {
         })
     }
 
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
+
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -4506,6 +4652,27 @@ impl<'mc> Inventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
 
     pub fn set_storage_contents(
@@ -5113,6 +5280,23 @@ impl<'mc> LecternInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -5140,6 +5324,26 @@ impl<'mc> LecternInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,
@@ -5573,6 +5777,23 @@ impl<'mc> BrewerInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -5600,6 +5821,26 @@ impl<'mc> BrewerInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,
@@ -7187,6 +7428,27 @@ impl<'mc> EntityEquipment<'mc> {
         Ok(())
     }
 
+    pub fn armor_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getArmorContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
+
     pub fn set_armor_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -7576,6 +7838,23 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -7603,6 +7882,26 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,
@@ -8374,6 +8673,23 @@ impl<'mc> AnvilInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -8401,6 +8717,26 @@ impl<'mc> AnvilInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,
@@ -9358,6 +9694,23 @@ impl<'mc> EnchantingInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -9385,6 +9738,26 @@ impl<'mc> EnchantingInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,
@@ -9877,6 +10250,24 @@ impl<'mc> CraftingInventory<'mc> {
         )?))
     }
 
+    pub fn matrix(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getMatrix", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
+
     pub fn set_matrix(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -9989,6 +10380,23 @@ impl<'mc> CraftingInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -10016,6 +10424,26 @@ impl<'mc> CraftingInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,
@@ -10823,6 +11251,23 @@ impl<'mc> MerchantInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -10850,6 +11295,26 @@ impl<'mc> MerchantInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,
@@ -11258,6 +11723,23 @@ impl<'mc> LlamaInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -11285,6 +11767,26 @@ impl<'mc> LlamaInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,
@@ -12272,6 +12774,23 @@ impl<'mc> SmithingInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -12299,6 +12818,26 @@ impl<'mc> SmithingInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,
@@ -12854,6 +13393,27 @@ impl<'mc> PlayerInventory<'mc> {
         Ok(())
     }
 
+    pub fn armor_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getArmorContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
+
     pub fn set_armor_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -12881,6 +13441,27 @@ impl<'mc> PlayerInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+
+    pub fn extra_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getExtraContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
 
     pub fn set_extra_contents(
@@ -12988,6 +13569,23 @@ impl<'mc> PlayerInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -13015,6 +13613,26 @@ impl<'mc> PlayerInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,
@@ -13477,6 +14095,23 @@ impl<'mc> FurnaceInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -13504,6 +14139,26 @@ impl<'mc> FurnaceInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,
@@ -13894,6 +14549,23 @@ impl<'mc> AbstractHorseInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -13921,6 +14593,26 @@ impl<'mc> AbstractHorseInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,
@@ -14282,6 +14974,23 @@ impl<'mc> BeaconInventory<'mc> {
         let real: crate::inventory::Inventory = temp_clone.into();
         real.remove_item(arg0)
     }
+    pub fn contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     pub fn set_contents(
         &self,
         arg0: Vec<crate::inventory::ItemStack<'mc>>,
@@ -14309,6 +15018,26 @@ impl<'mc> BeaconInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn storage_contents(
+        &self,
+    ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getStorageContents",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::inventory::ItemStack::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn set_storage_contents(
         &self,

@@ -179,6 +179,28 @@ impl<'mc> JNIInstantiatable<'mc> for EntityUnleashEventUnleashReasonStruct<'mc> 
 }
 
 impl<'mc> EntityUnleashEventUnleashReasonStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::event::entity::EntityUnleashEventUnleashReason<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/event/entity/EntityUnleashEvent$UnleashReason;");
+        let cls = jni.find_class("org/bukkit/event/entity/EntityUnleashEvent$UnleashReason");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({
+                crate::event::entity::EntityUnleashEventUnleashReason::from_raw(&jni, res)?
+            });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1510,6 +1532,26 @@ impl<'mc> JNIInstantiatable<'mc> for EntityDamageEventDamageCauseStruct<'mc> {
 }
 
 impl<'mc> EntityDamageEventDamageCauseStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::event::entity::EntityDamageEventDamageCause<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/event/entity/EntityDamageEvent$DamageCause;");
+        let cls = jni.find_class("org/bukkit/event/entity/EntityDamageEvent$DamageCause");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::event::entity::EntityDamageEventDamageCause::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1730,6 +1772,28 @@ impl<'mc> JNIInstantiatable<'mc> for EntityDamageEventDamageModifierStruct<'mc> 
 }
 
 impl<'mc> EntityDamageEventDamageModifierStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/event/entity/EntityDamageEvent$DamageModifier;");
+        let cls = jni.find_class("org/bukkit/event/entity/EntityDamageEvent$DamageModifier");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({
+                crate::event::entity::EntityDamageEventDamageModifier::from_raw(&jni, res)?
+            });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -4193,6 +4257,26 @@ impl<'mc> JNIInstantiatable<'mc> for CreatureSpawnEventSpawnReasonStruct<'mc> {
 }
 
 impl<'mc> CreatureSpawnEventSpawnReasonStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::event::entity::CreatureSpawnEventSpawnReason<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/event/entity/CreatureSpawnEvent$SpawnReason;");
+        let cls = jni.find_class("org/bukkit/event/entity/CreatureSpawnEvent$SpawnReason");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::event::entity::CreatureSpawnEventSpawnReason::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -6053,6 +6137,26 @@ impl<'mc> JNIInstantiatable<'mc> for EntityTargetEventTargetReasonStruct<'mc> {
 }
 
 impl<'mc> EntityTargetEventTargetReasonStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::event::entity::EntityTargetEventTargetReason<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/event/entity/EntityTargetEvent$TargetReason;");
+        let cls = jni.find_class("org/bukkit/event/entity/EntityTargetEvent$TargetReason");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::event::entity::EntityTargetEventTargetReason::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -8767,6 +8871,29 @@ impl<'mc> JNIInstantiatable<'mc> for VillagerCareerChangeEventChangeReasonStruct
 }
 
 impl<'mc> VillagerCareerChangeEventChangeReasonStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::event::entity::VillagerCareerChangeEventChangeReason<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig =
+            String::from("()Lorg/bukkit/event/entity/VillagerCareerChangeEvent$ChangeReason;");
+        let cls = jni.find_class("org/bukkit/event/entity/VillagerCareerChangeEvent$ChangeReason");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({
+                crate::event::entity::VillagerCareerChangeEventChangeReason::from_raw(&jni, res)?
+            });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -9297,6 +9424,26 @@ impl<'mc> JNIInstantiatable<'mc> for EntityPotionEffectEventActionStruct<'mc> {
 }
 
 impl<'mc> EntityPotionEffectEventActionStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::event::entity::EntityPotionEffectEventAction<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/event/entity/EntityPotionEffectEvent$Action;");
+        let cls = jni.find_class("org/bukkit/event/entity/EntityPotionEffectEvent$Action");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::event::entity::EntityPotionEffectEventAction::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -9751,6 +9898,26 @@ impl<'mc> JNIInstantiatable<'mc> for EntityPotionEffectEventCauseStruct<'mc> {
 }
 
 impl<'mc> EntityPotionEffectEventCauseStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::event::entity::EntityPotionEffectEventCause<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/event/entity/EntityPotionEffectEvent$Cause;");
+        let cls = jni.find_class("org/bukkit/event/entity/EntityPotionEffectEvent$Cause");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::event::entity::EntityPotionEffectEventCause::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -12478,6 +12645,28 @@ impl<'mc> JNIInstantiatable<'mc> for EntityRegainHealthEventRegainReasonStruct<'
 }
 
 impl<'mc> EntityRegainHealthEventRegainReasonStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::event::entity::EntityRegainHealthEventRegainReason<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/event/entity/EntityRegainHealthEvent$RegainReason;");
+        let cls = jni.find_class("org/bukkit/event/entity/EntityRegainHealthEvent$RegainReason");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({
+                crate::event::entity::EntityRegainHealthEventRegainReason::from_raw(&jni, res)?
+            });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -14784,6 +14973,29 @@ impl<'mc> JNIInstantiatable<'mc> for EntityExhaustionEventExhaustionReasonStruct
 }
 
 impl<'mc> EntityExhaustionEventExhaustionReasonStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::event::entity::EntityExhaustionEventExhaustionReason<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig =
+            String::from("()Lorg/bukkit/event/entity/EntityExhaustionEvent$ExhaustionReason;");
+        let cls = jni.find_class("org/bukkit/event/entity/EntityExhaustionEvent$ExhaustionReason");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({
+                crate::event::entity::EntityExhaustionEventExhaustionReason::from_raw(&jni, res)?
+            });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -15827,6 +16039,28 @@ impl<'mc> JNIInstantiatable<'mc> for EntityTransformEventTransformReasonStruct<'
 }
 
 impl<'mc> EntityTransformEventTransformReasonStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::event::entity::EntityTransformEventTransformReason<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/event/entity/EntityTransformEvent$TransformReason;");
+        let cls = jni.find_class("org/bukkit/event/entity/EntityTransformEvent$TransformReason");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({
+                crate::event::entity::EntityTransformEventTransformReason::from_raw(&jni, res)?
+            });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -17721,6 +17955,26 @@ impl<'mc> JNIInstantiatable<'mc> for CreeperPowerEventPowerCauseStruct<'mc> {
 }
 
 impl<'mc> CreeperPowerEventPowerCauseStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::event::entity::CreeperPowerEventPowerCause<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/event/entity/CreeperPowerEvent$PowerCause;");
+        let cls = jni.find_class("org/bukkit/event/entity/CreeperPowerEvent$PowerCause");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::event::entity::CreeperPowerEventPowerCause::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

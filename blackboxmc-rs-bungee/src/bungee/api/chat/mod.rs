@@ -108,6 +108,40 @@ impl<'mc> TextComponent<'mc> {
         Ok(())
     }
 
+    pub fn from_legacy_text_with_string(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+        arg1: std::option::Option<impl Into<crate::bungee::api::ChatColor<'mc>>>,
+    ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lnet/md_5/bungee/api/ChatColor;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")[Lnet/md_5/bungee/api/chat/BaseComponent;";
+        let cls = jni.find_class("net/md_5/bungee/api/chat/BaseComponent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "fromLegacyText", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::bungee::api::chat::BaseComponent::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
+
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -901,6 +935,24 @@ impl<'mc> JNIInstantiatable<'mc> for HoverEventActionStruct<'mc> {
 }
 
 impl<'mc> HoverEventActionStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::bungee::api::chat::HoverEventAction<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lnet/md_5/bungee/api/chat/HoverEvent$Action;");
+        let cls = jni.find_class("net/md_5/bungee/api/chat/HoverEvent$Action");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::bungee::api::chat::HoverEventAction::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1112,6 +1164,24 @@ impl<'mc> HoverEvent<'mc> {
         );
         let res = jni.translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
+    }
+
+    pub fn value(
+        &self,
+    ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lnet/md_5/bungee/api/chat/BaseComponent;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getValue", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     // SUPER CLASS: Object
 
@@ -3190,6 +3260,24 @@ impl<'mc> JNIInstantiatable<'mc> for ClickEventActionStruct<'mc> {
 }
 
 impl<'mc> ClickEventActionStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::bungee::api::chat::ClickEventAction<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lnet/md_5/bungee/api/chat/ClickEvent$Action;");
+        let cls = jni.find_class("net/md_5/bungee/api/chat/ClickEvent$Action");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::bungee::api::chat::ClickEventAction::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -5097,6 +5185,28 @@ impl<'mc> JNIInstantiatable<'mc> for ComponentBuilderFormatRetentionStruct<'mc> 
 }
 
 impl<'mc> ComponentBuilderFormatRetentionStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;");
+        let cls = jni.find_class("net/md_5/bungee/api/chat/ComponentBuilder$FormatRetention");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({
+                crate::bungee::api::chat::ComponentBuilderFormatRetention::from_raw(&jni, res)?
+            });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -5622,6 +5732,24 @@ impl<'mc> ComponentBuilder<'mc> {
         crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+
+    pub fn create(
+        &self,
+    ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lnet/md_5/bungee/api/chat/BaseComponent;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "create", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
 
     pub fn color(

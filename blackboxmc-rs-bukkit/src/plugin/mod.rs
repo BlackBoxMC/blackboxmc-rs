@@ -133,6 +133,23 @@ impl<'mc> JNIInstantiatable<'mc> for PluginAwarenessFlagsStruct<'mc> {
 }
 
 impl<'mc> PluginAwarenessFlagsStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::plugin::PluginAwarenessFlags<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/plugin/PluginAwareness$Flags;");
+        let cls = jni.find_class("org/bukkit/plugin/PluginAwareness$Flags");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::plugin::PluginAwarenessFlags::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1240,6 +1257,23 @@ impl<'mc> JNIInstantiatable<'mc> for ServicePriority<'mc> {
 }
 
 impl<'mc> ServicePriority<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::plugin::ServicePriority<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/plugin/ServicePriority;");
+        let cls = jni.find_class("org/bukkit/plugin/ServicePriority");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::plugin::ServicePriority::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1640,6 +1674,22 @@ impl<'mc> PluginManager<'mc> {
         Ok(())
     }
 
+    pub fn plugins(&self) -> Result<Vec<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPlugins", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::plugin::Plugin::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
+
     pub fn is_plugin_enabled_with_string(
         &self,
         arg0: impl Into<String>,
@@ -1657,6 +1707,29 @@ impl<'mc> PluginManager<'mc> {
                 .call_method(&self.jni_object(), "isPluginEnabled", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+
+    pub fn load_plugins(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<Vec<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/io/File;)Lorg/bukkit/plugin/Plugin;");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "loadPlugins",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::plugin::Plugin::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
 
     pub fn disable_plugins(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -2791,6 +2864,30 @@ impl<'mc> PluginLoader<'mc> {
         crate::plugin::PluginDescriptionFile::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+
+    pub fn plugin_file_filters(
+        &self,
+    ) -> Result<Vec<blackboxmc_java::util::regex::JavaPattern<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Ljava/util/regex/Pattern;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPluginFileFilters",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({
+                blackboxmc_java::util::regex::JavaPattern::from_raw(&self.jni_ref(), res)?
+            });
+        }
+        Ok(vec)
     }
 
     pub fn create_registered_listeners(

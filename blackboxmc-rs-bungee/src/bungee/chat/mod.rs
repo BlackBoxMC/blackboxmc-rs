@@ -840,6 +840,33 @@ impl<'mc> ComponentSerializer<'mc> {
         crate::bungee::chat::ComponentSerializer::from_raw(&jni, res)
     }
 
+    pub fn parse(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/BaseComponent;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("net/md_5/bungee/api/chat/BaseComponent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "parse",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::bungee::api::chat::BaseComponent::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
+
     pub fn deserialize_with_json_element(
         &self,
         arg0: jni::objects::JObject<'mc>,

@@ -3919,6 +3919,28 @@ impl<'mc> JavaString<'mc> {
         Ok(res.i()?)
     }
 
+    pub fn bytes(&self) -> Result<Vec<i8>, Box<dyn std::error::Error>> {
+        let sig = String::from("()B");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getBytes", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JByteArray>::into(res.l()?);
+
+        if arr.is_null() {
+            return Ok(Vec::new());
+        }
+        unsafe {
+            Ok(self
+                .jni_ref()
+                .get_array_elements(
+                    &jni::objects::JPrimitiveArray::from_raw(arr.clone()),
+                    jni::objects::ReleaseMode::CopyBack,
+                )?
+                .to_vec())
+        }
+    }
+
     pub fn region_matches_with_boolean(
         &self,
         arg0: bool,
@@ -4138,6 +4160,44 @@ impl<'mc> JavaString<'mc> {
             .to_string())
     }
 
+    pub fn split_with_string(
+        &self,
+        arg0: impl Into<String>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a);
+            args.push(val_2);
+        }
+        sig += ")[Ljava/lang/String;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "split", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*res) })
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string()
+            });
+        }
+        Ok(vec)
+    }
+
     pub fn to_lower_case_with_locale(
         &self,
         arg0: std::option::Option<impl Into<crate::util::JavaLocale<'mc>>>,
@@ -4264,6 +4324,28 @@ impl<'mc> JavaString<'mc> {
             .call_method(&self.jni_object(), "isBlank", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+
+    pub fn to_char_array(&self) -> Result<Vec<u16>, Box<dyn std::error::Error>> {
+        let sig = String::from("()C");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toCharArray", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JCharArray>::into(res.l()?);
+
+        if arr.is_null() {
+            return Ok(Vec::new());
+        }
+        unsafe {
+            Ok(self
+                .jni_ref()
+                .get_array_elements(
+                    &jni::objects::JPrimitiveArray::from_raw(arr.clone()),
+                    jni::objects::ReleaseMode::CopyBack,
+                )?
+                .to_vec())
+        }
     }
 
     pub fn format_with_locale(

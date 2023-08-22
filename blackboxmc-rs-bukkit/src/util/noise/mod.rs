@@ -564,7 +564,23 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         let real: crate::util::noise::OctaveGenerator = temp_clone.into();
         real.zscale()
     }
-    // SUPER CLASS: Object
+    pub fn octaves(
+        &self,
+    ) -> Result<Vec<crate::util::noise::NoiseGenerator<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/util/noise/NoiseGenerator;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getOctaves", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::util::noise::NoiseGenerator::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -697,6 +713,24 @@ impl<'mc> OctaveGenerator<'mc> {
             .call_method(&self.jni_object(), "getZScale", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
+    }
+
+    pub fn octaves(
+        &self,
+    ) -> Result<Vec<crate::util::noise::NoiseGenerator<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/util/noise/NoiseGenerator;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getOctaves", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::util::noise::NoiseGenerator::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
     pub fn noise_with_double(
@@ -880,6 +914,23 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         })?;
         let real: crate::util::noise::OctaveGenerator = temp_clone.into();
         real.zscale()
+    }
+    pub fn octaves(
+        &self,
+    ) -> Result<Vec<crate::util::noise::NoiseGenerator<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/util/noise/NoiseGenerator;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getOctaves", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::util::noise::NoiseGenerator::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
     }
     pub fn noise_with_double(
         &self,

@@ -190,6 +190,29 @@ impl<'mc> SignSide<'mc> {
         Ok(res.z()?)
     }
     #[deprecated]
+
+    pub fn lines(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getLines", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*res) })
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string()
+            });
+        }
+        Ok(vec)
+    }
+    #[deprecated]
     /// Gets the line of text at the specified index on this side of the sign.<p>For example, getLine(0) will return the first line of text.</p>
     pub fn get_line(&self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/String;");

@@ -2532,6 +2532,24 @@ impl<'mc> JNIInstantiatable<'mc> for BigDripleafTiltStruct<'mc> {
 }
 
 impl<'mc> BigDripleafTiltStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::block::data::mod_type::BigDripleafTilt<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/block/data/type/BigDripleaf$Tilt;");
+        let cls = jni.find_class("org/bukkit/block/data/type/BigDripleaf$Tilt");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::data::mod_type::BigDripleafTilt::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2823,6 +2841,24 @@ impl<'mc> JNIInstantiatable<'mc> for WallHeightStruct<'mc> {
 }
 
 impl<'mc> WallHeightStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::block::data::mod_type::WallHeight<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/block/data/type/Wall$Height;");
+        let cls = jni.find_class("org/bukkit/block/data/type/Wall$Height");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::data::mod_type::WallHeight::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -3312,6 +3348,24 @@ impl<'mc> JNIInstantiatable<'mc> for JigsawOrientationStruct<'mc> {
 }
 
 impl<'mc> JigsawOrientationStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::block::data::mod_type::JigsawOrientation<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/block/data/type/Jigsaw$Orientation;");
+        let cls = jni.find_class("org/bukkit/block/data/type/Jigsaw$Orientation");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::data::mod_type::JigsawOrientation::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -4188,6 +4242,24 @@ impl<'mc> JNIInstantiatable<'mc> for SculkSensorPhaseStruct<'mc> {
 }
 
 impl<'mc> SculkSensorPhaseStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::block::data::mod_type::SculkSensorPhase<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/block/data/type/SculkSensor$Phase;");
+        let cls = jni.find_class("org/bukkit/block/data/type/SculkSensor$Phase");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::data::mod_type::SculkSensorPhase::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -6786,6 +6858,26 @@ impl<'mc> JNIInstantiatable<'mc> for StructureBlockModeStruct<'mc> {
 }
 
 impl<'mc> StructureBlockModeStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::block::data::mod_type::StructureBlockMode<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/block/data/type/StructureBlock$Mode;");
+        let cls = jni.find_class("org/bukkit/block/data/type/StructureBlock$Mode");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::data::mod_type::StructureBlockMode::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -7808,6 +7900,24 @@ impl<'mc> JNIInstantiatable<'mc> for ComparatorModeStruct<'mc> {
 }
 
 impl<'mc> ComparatorModeStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::block::data::mod_type::ComparatorMode<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/block/data/type/Comparator$Mode;");
+        let cls = jni.find_class("org/bukkit/block/data/type/Comparator$Mode");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::data::mod_type::ComparatorMode::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -8035,6 +8145,24 @@ impl<'mc> JNIInstantiatable<'mc> for BellAttachmentStruct<'mc> {
 }
 
 impl<'mc> BellAttachmentStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::block::data::mod_type::BellAttachment<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/block/data/type/Bell$Attachment;");
+        let cls = jni.find_class("org/bukkit/block/data/type/Bell$Attachment");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::data::mod_type::BellAttachment::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -8498,6 +8626,23 @@ impl<'mc> JNIInstantiatable<'mc> for DoorHingeStruct<'mc> {
 }
 
 impl<'mc> DoorHingeStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::block::data::mod_type::DoorHinge<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/data/type/Door$Hinge;");
+        let cls = jni.find_class("org/bukkit/block/data/type/Door$Hinge");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::data::mod_type::DoorHinge::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -9202,6 +9347,23 @@ impl<'mc> JNIInstantiatable<'mc> for ChestTypeStruct<'mc> {
 }
 
 impl<'mc> ChestTypeStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::block::data::mod_type::ChestType<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/data/type/Chest$Type;");
+        let cls = jni.find_class("org/bukkit/block/data/type/Chest$Type");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::data::mod_type::ChestType::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -12314,6 +12476,28 @@ impl<'mc> JNIInstantiatable<'mc> for RedstoneWireConnectionStruct<'mc> {
 }
 
 impl<'mc> RedstoneWireConnectionStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::block::data::mod_type::RedstoneWireConnection<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/block/data/type/RedstoneWire$Connection;");
+        let cls = jni.find_class("org/bukkit/block/data/type/RedstoneWire$Connection");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({
+                crate::block::data::mod_type::RedstoneWireConnection::from_raw(&jni, res)?
+            });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -13558,6 +13742,28 @@ impl<'mc> JNIInstantiatable<'mc> for PointedDripstoneThicknessStruct<'mc> {
 }
 
 impl<'mc> PointedDripstoneThicknessStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::block::data::mod_type::PointedDripstoneThickness<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/block/data/type/PointedDripstone$Thickness;");
+        let cls = jni.find_class("org/bukkit/block/data/type/PointedDripstone$Thickness");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({
+                crate::block::data::mod_type::PointedDripstoneThickness::from_raw(&jni, res)?
+            });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -14099,6 +14305,23 @@ impl<'mc> JNIInstantiatable<'mc> for SlabTypeStruct<'mc> {
 }
 
 impl<'mc> SlabTypeStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::block::data::mod_type::SlabType<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/data/type/Slab$Type;");
+        let cls = jni.find_class("org/bukkit/block/data/type/Slab$Type");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::data::mod_type::SlabType::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -15048,6 +15271,24 @@ impl<'mc> JNIInstantiatable<'mc> for StairsShapeStruct<'mc> {
 }
 
 impl<'mc> StairsShapeStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::block::data::mod_type::StairsShape<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/block/data/type/Stairs$Shape;");
+        let cls = jni.find_class("org/bukkit/block/data/type/Stairs$Shape");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::data::mod_type::StairsShape::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -15758,6 +15999,24 @@ impl<'mc> JNIInstantiatable<'mc> for SwitchFaceStruct<'mc> {
 }
 
 impl<'mc> SwitchFaceStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::block::data::mod_type::SwitchFace<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/block/data/type/Switch$Face;");
+        let cls = jni.find_class("org/bukkit/block/data/type/Switch$Face");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::data::mod_type::SwitchFace::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -17165,6 +17424,23 @@ impl<'mc> JNIInstantiatable<'mc> for BedPartStruct<'mc> {
 }
 
 impl<'mc> BedPartStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::block::data::mod_type::BedPart<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/data/type/Bed$Part;");
+        let cls = jni.find_class("org/bukkit/block/data/type/Bed$Part");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::data::mod_type::BedPart::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -19733,6 +20009,26 @@ impl<'mc> JNIInstantiatable<'mc> for TechnicalPistonTypeStruct<'mc> {
 }
 
 impl<'mc> TechnicalPistonTypeStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        Vec<crate::block::data::mod_type::TechnicalPistonType<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/block/data/type/TechnicalPiston$Type;");
+        let cls = jni.find_class("org/bukkit/block/data/type/TechnicalPiston$Type");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::data::mod_type::TechnicalPistonType::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -20100,6 +20396,24 @@ impl<'mc> JNIInstantiatable<'mc> for BambooLeavesStruct<'mc> {
 }
 
 impl<'mc> BambooLeavesStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::block::data::mod_type::BambooLeaves<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/block/data/type/Bamboo$Leaves;");
+        let cls = jni.find_class("org/bukkit/block/data/type/Bamboo$Leaves");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::data::mod_type::BambooLeaves::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

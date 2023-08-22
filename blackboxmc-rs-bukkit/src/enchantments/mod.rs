@@ -230,13 +230,29 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let real: crate::enchantments::Enchantment = temp_clone.into();
         real.internal_to_string()
     }
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::enchantments::Enchantment<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/enchantments/Enchantment;");
+        let cls = jni.find_class("org/bukkit/enchantments/Enchantment");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::enchantments::Enchantment::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
+        let temp_clone = crate::enchantments::Enchantment::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::enchantments::Enchantment = temp_clone.into();
+        real.hash_code()
     }
     pub fn get_by_name(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -708,6 +724,24 @@ impl<'mc> EnchantmentTargetStruct<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::enchantments::EnchantmentTarget<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/enchantments/EnchantmentTarget;");
+        let cls = jni.find_class("org/bukkit/enchantments/EnchantmentTarget");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::enchantments::EnchantmentTarget::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -961,6 +995,24 @@ impl<'mc> Enchantment<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::enchantments::Enchantment<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/enchantments/Enchantment;");
+        let cls = jni.find_class("org/bukkit/enchantments/Enchantment");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::enchantments::Enchantment::from_raw(&jni, res)? });
+        }
+        Ok(vec)
     }
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {

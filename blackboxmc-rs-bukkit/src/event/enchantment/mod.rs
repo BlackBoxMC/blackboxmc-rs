@@ -492,6 +492,24 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         })
     }
 
+    pub fn offers(
+        &self,
+    ) -> Result<Vec<crate::enchantments::EnchantmentOffer<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/enchantments/EnchantmentOffer;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getOffers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::enchantments::EnchantmentOffer::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
+
     pub fn enchantment_bonus(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
@@ -502,6 +520,31 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+
+    pub fn exp_level_costs_offered(&self) -> Result<Vec<i32>, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getExpLevelCostsOffered",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JIntArray>::into(res.l()?);
+
+        if arr.is_null() {
+            return Ok(Vec::new());
+        }
+        unsafe {
+            Ok(self
+                .jni_ref()
+                .get_array_elements(
+                    &jni::objects::JPrimitiveArray::from_raw(arr.clone()),
+                    jni::objects::ReleaseMode::CopyBack,
+                )?
+                .to_vec())
+        }
     }
     // SUPER CLASS: InventoryEvent
     pub fn inventory(

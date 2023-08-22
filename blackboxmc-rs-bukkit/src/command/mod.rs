@@ -1829,6 +1829,24 @@ impl<'mc> MultipleCommandAlias<'mc> {
         crate::command::MultipleCommandAlias::from_raw(&jni, res)
     }
 
+    pub fn commands(
+        &self,
+    ) -> Result<Vec<crate::command::Command<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/command/Command;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getCommands", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::command::Command::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
+
     pub fn execute(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,

@@ -253,6 +253,43 @@ impl<'mc> JavaArrayList<'mc> {
         })
     }
 
+    pub fn to_array_with_objects(
+        &self,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Ljava/lang/Object;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")[Ljava/lang/Object;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
+    }
+
     pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
@@ -1501,6 +1538,42 @@ impl<'mc> JavaTreeSet<'mc> {
     ) -> Result<crate::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         crate::util::JavaSet::copy_of(jni, arg0)
     }
+    pub fn to_array_with_objects(
+        &self,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Ljava/lang/Object;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")[Ljava/lang/Object;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
+    }
     pub fn of_with_objects(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
@@ -2125,6 +2198,43 @@ impl<'mc> JavaVector<'mc> {
         crate::util::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+
+    pub fn to_array_with_objects(
+        &self,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Ljava/lang/Object;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")[Ljava/lang/Object;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
     }
 
     pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
@@ -4513,6 +4623,43 @@ impl<'mc> JavaSet<'mc> {
         Ok(res.i()?)
     }
 
+    pub fn to_array_with_objects(
+        &self,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Ljava/lang/Object;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")[Ljava/lang/Object;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
+    }
+
     pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
@@ -4909,6 +5056,43 @@ impl<'mc> JavaAbstractCollection<'mc> {
         Ok(res.i()?)
     }
 
+    pub fn to_array_with_objects(
+        &self,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Ljava/lang/Object;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")[Ljava/lang/Object;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
+    }
+
     pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
@@ -5198,15 +5382,48 @@ impl<'mc> JavaSortedSet<'mc> {
         let real: crate::util::JavaSet = temp_clone.into();
         real.size()
     }
-    pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Iterator;");
+    pub fn to_array_with_objects(
+        &self,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Ljava/lang/Object;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")[Ljava/lang/Object;";
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "iterator", sig.as_str(), vec![]);
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
+    }
+    pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = JavaSortedSet::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::JavaSet = temp_clone.into();
+        real.iterator()
     }
     pub fn of_with_objects(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5544,6 +5761,33 @@ impl<'mc> JavaAbstractQueue<'mc> {
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
         real.size()
+    }
+    pub fn to_array_with_int_function(
+        &self,
+        arg0: std::option::Option<impl Into<crate::util::function::JavaIntFunction<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/util/function/IntFunction;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        sig += ")[Ljava/lang/Object;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
     }
     pub fn contains(
         &self,
@@ -6104,15 +6348,39 @@ impl<'mc> JavaQueue<'mc> {
         let real: crate::util::JavaCollection = temp_clone.into();
         real.size()
     }
-    pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Iterator;");
+    pub fn to_array_with_int_function(
+        &self,
+        arg0: std::option::Option<impl Into<crate::util::function::JavaIntFunction<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/util/function/IntFunction;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        sig += ")[Ljava/lang/Object;";
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "iterator", sig.as_str(), vec![]);
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
+    }
+    pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = JavaQueue::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::JavaCollection = temp_clone.into();
+        real.iterator()
     }
     pub fn contains(
         &self,
@@ -7148,15 +7416,48 @@ impl<'mc> JavaAbstractSet<'mc> {
         let real: crate::util::JavaSet = temp_clone.into();
         real.size()
     }
-    pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Iterator;");
+    pub fn to_array_with_objects(
+        &self,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Ljava/lang/Object;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")[Ljava/lang/Object;";
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "iterator", sig.as_str(), vec![]);
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
+    }
+    pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = JavaAbstractSet::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::JavaSet = temp_clone.into();
+        real.iterator()
     }
     pub fn of_with_objects(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8966,22 +9267,42 @@ impl<'mc> JavaDeque<'mc> {
         let real: crate::util::JavaCollection = temp_clone.into();
         real.is_empty()
     }
+    pub fn to_array_with_int_function(
+        &self,
+        arg0: std::option::Option<impl Into<crate::util::function::JavaIntFunction<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/util/function/IntFunction;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        sig += ")[Ljava/lang/Object;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
+    }
     pub fn remove_if(
         &self,
         arg0: impl Into<crate::util::function::JavaPredicate<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/function/Predicate;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeIf",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::JavaCollection = temp_clone.into();
+        real.remove_if(arg0)
     }
     pub fn remove_all(
         &self,
@@ -9662,15 +9983,48 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let real: crate::util::JavaSet = temp_clone.into();
         real.size()
     }
-    pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Iterator;");
+    pub fn to_array_with_objects(
+        &self,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Ljava/lang/Object;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")[Ljava/lang/Object;";
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "iterator", sig.as_str(), vec![]);
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
+    }
+    pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = JavaLinkedHashSet::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::JavaSet = temp_clone.into();
+        real.iterator()
     }
     pub fn of_with_objects(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10119,6 +10473,24 @@ impl<'mc> JavaLocale<'mc> {
             .to_string())
     }
 
+    pub fn available_locales(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::util::JavaLocale<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Locale;");
+        let cls = jni.find_class("java/util/Locale");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getAvailableLocales", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::util::JavaLocale::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
+
     pub fn script(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -10338,6 +10710,52 @@ impl<'mc> JavaLocale<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+
+    pub fn isocountries(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getISOCountries", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({
+                jni.get_string(unsafe { &jni::objects::JString::from_raw(*res) })
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string()
+            });
+        }
+        Ok(vec)
+    }
+
+    pub fn isolanguages(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getISOLanguages", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({
+                jni.get_string(unsafe { &jni::objects::JString::from_raw(*res) })
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string()
+            });
+        }
+        Ok(vec)
     }
 
     pub fn strip_extensions(
@@ -12677,6 +13095,42 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let real: crate::util::JavaList = temp_clone.into();
         real.sub_list(arg0, arg1)
     }
+    pub fn to_array_with_objects(
+        &self,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Ljava/lang/Object;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")[Ljava/lang/Object;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
+    }
     pub fn of_with_objects(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
@@ -13664,6 +14118,43 @@ impl<'mc> JavaList<'mc> {
         })
     }
 
+    pub fn to_array_with_objects(
+        &self,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Ljava/lang/Object;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")[Ljava/lang/Object;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
+    }
+
     pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
@@ -14388,6 +14879,43 @@ impl<'mc> JavaHashSet<'mc> {
         Ok(res.i()?)
     }
 
+    pub fn to_array_with_objects(
+        &self,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Ljava/lang/Object;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")[Ljava/lang/Object;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
+    }
+
     pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
@@ -14911,6 +15439,42 @@ impl<'mc> JavaAbstractList<'mc> {
         })?;
         let real: crate::util::JavaList = temp_clone.into();
         real.size()
+    }
+    pub fn to_array_with_objects(
+        &self,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Ljava/lang/Object;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")[Ljava/lang/Object;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
     }
     pub fn of_with_objects(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15990,6 +16554,43 @@ impl<'mc> JavaLinkedList<'mc> {
         Ok(res.i()?)
     }
 
+    pub fn to_array_with_objects(
+        &self,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Ljava/lang/Object;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")[Ljava/lang/Object;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
+    }
+
     pub fn contains(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -16684,6 +17285,34 @@ impl<'mc> JavaCollection<'mc> {
             .call_method(&self.jni_object(), "size", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+
+    pub fn to_array_with_int_function(
+        &self,
+        arg0: std::option::Option<impl Into<crate::util::function::JavaIntFunction<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/util/function/IntFunction;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        sig += ")[Ljava/lang/Object;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
     }
 
     pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
@@ -17487,15 +18116,48 @@ impl<'mc> JavaEnumSet<'mc> {
         let real: crate::util::JavaSet = temp_clone.into();
         real.size()
     }
-    pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Iterator;");
+    pub fn to_array_with_objects(
+        &self,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Ljava/lang/Object;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")[Ljava/lang/Object;";
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "iterator", sig.as_str(), vec![]);
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
+    }
+    pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::JavaAbstractSet::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::JavaSet = temp_clone.into();
+        real.iterator()
     }
     pub fn contains(
         &self,
@@ -18473,6 +19135,43 @@ impl<'mc> JavaArrayDeque<'mc> {
             .call_method(&self.jni_object(), "size", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+
+    pub fn to_array_with_objects(
+        &self,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "[Ljava/lang/Object;";
+            let arr = self.jni_ref().new_object_array(
+                a.len() as i32,
+                "java/lang/Object",
+                jni::objects::JObject::null(),
+            );
+            let arr = self.jni_ref().translate_error_no_gen(arr)?;
+            for i in 0..a.len() {
+                let val_1 = jni::objects::JValueGen::Object(a.get(i).unwrap());
+                self.jni_ref()
+                    .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+            }
+            let val_1 = jni::objects::JValueGen::Object(arr);
+            args.push(val_1.l()?.into());
+        }
+        sig += ")[Ljava/lang/Object;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toArray", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
     }
 
     pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {

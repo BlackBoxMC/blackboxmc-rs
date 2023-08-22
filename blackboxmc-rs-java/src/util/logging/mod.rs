@@ -1379,6 +1379,24 @@ impl<'mc> JavaLogger<'mc> {
         Ok(res.z()?)
     }
 
+    pub fn handlers(
+        &self,
+    ) -> Result<Vec<crate::util::logging::JavaHandler<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/logging/Handler;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ crate::util::logging::JavaHandler::from_raw(&self.jni_ref(), res)? });
+        }
+        Ok(vec)
+    }
+
     pub fn use_parent_handlers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
@@ -2615,6 +2633,24 @@ impl<'mc> JavaLogRecord<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+
+    pub fn parameters(
+        &self,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Object;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getParameters", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({ res });
+        }
+        Ok(vec)
     }
     // SUPER CLASS: Object
 

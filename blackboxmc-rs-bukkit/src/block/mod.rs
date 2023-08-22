@@ -4026,6 +4026,23 @@ impl<'mc> JNIInstantiatable<'mc> for DecoratedPotSideStruct<'mc> {
 }
 
 impl<'mc> DecoratedPotSideStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<crate::block::DecoratedPotSide<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/DecoratedPot$Side;");
+        let cls = jni.find_class("org/bukkit/block/DecoratedPot$Side");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = jni.get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = jni.get_object_array_element(&arr, i)?;
+            vec.push({ crate::block::DecoratedPotSide::from_raw(&jni, res)? });
+        }
+        Ok(vec)
+    }
     // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -14198,6 +14215,29 @@ impl<'mc> Sign<'mc> {
                 .call_method(&self.jni_object(), "isGlowingText", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+    #[deprecated]
+
+    pub fn lines(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getLines", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*res) })
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string()
+            });
+        }
+        Ok(vec)
     }
     #[deprecated = "A sign may have multiple writable sides now. Use <a href='#getSide(org.bukkit.block.sign.Side)'><code>getSide(Side)</code></a> and <a href='sign/SignSide.html#getLine(int)'><code>SignSide.getLine(int)</code></a>. "]
     /// Gets the line of text at the specified index.<p>For example, getLine(0) will return the first line of text on the <a href="sign/Side.html#FRONT"><code>Side.FRONT</code></a>.</p>

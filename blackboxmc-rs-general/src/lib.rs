@@ -525,6 +525,12 @@ impl<'mc> SharedJNIEnv<'mc> {
     ) -> Result<AutoElements<'mc, 'other_local, 'array, T>, jni::errors::Error> {
         self.jni.borrow_mut().get_array_elements(array, mode)
     }
+    pub fn get_array_length<'other_local, 'array>(
+        &self,
+        array: &'array impl AsJArrayRaw<'other_local>,
+    ) -> Result<jsize, jni::errors::Error> {
+        self.jni.borrow_mut().get_array_length(array)
+    }
     /*pub unsafe fn get_array_elements_critical<'other_local, 'array, 'env, T: TypeArray>(
         &'env mut self,
         array: &'array JPrimitiveArray<'other_local, T>,

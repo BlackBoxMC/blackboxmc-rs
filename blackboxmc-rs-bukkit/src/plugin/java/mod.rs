@@ -98,6 +98,30 @@ impl<'mc> JavaPluginLoader<'mc> {
         })
     }
 
+    pub fn plugin_file_filters(
+        &self,
+    ) -> Result<Vec<blackboxmc_java::util::regex::JavaPattern<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Ljava/util/regex/Pattern;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPluginFileFilters",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
+        let len = self.jni_ref().get_array_length(&arr)?;
+        let mut vec = Vec::new();
+        for i in 0..len {
+            let res = self.jni_ref().get_object_array_element(&arr, i)?;
+            vec.push({
+                blackboxmc_java::util::regex::JavaPattern::from_raw(&self.jni_ref(), res)?
+            });
+        }
+        Ok(vec)
+    }
+
     pub fn create_registered_listeners(
         &self,
         arg0: impl Into<crate::event::Listener<'mc>>,
