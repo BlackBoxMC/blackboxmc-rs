@@ -1746,15 +1746,6 @@ impl<'mc> Team<'mc> {
             .to_string())
     }
 
-    pub fn unregister(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "unregister", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
     pub fn set_color(
         &self,
         arg0: impl Into<crate::ChatColor<'mc>>,
@@ -1789,6 +1780,15 @@ impl<'mc> Team<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+
+    pub fn unregister(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "unregister", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
 
     pub fn prefix(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {

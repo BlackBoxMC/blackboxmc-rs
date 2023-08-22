@@ -41,15 +41,6 @@ impl<'mc> JNIInstantiatable<'mc> for Entity<'mc> {
 }
 
 impl<'mc> Entity<'mc> {
-    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isValid", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
         let res = self
@@ -92,6 +83,31 @@ impl<'mc> Entity<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/PistonMoveReaction;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPistonMoveReaction",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isValid", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
     /// Returns a list of entities within a bounding box centered around this entity
     pub fn get_nearby_entities(
         &self,
@@ -122,22 +138,6 @@ impl<'mc> Entity<'mc> {
             new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
-    }
-
-    pub fn piston_move_reaction(
-        &self,
-    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/PistonMoveReaction;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPistonMoveReaction",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     /// Sets the entity's rotation.
     /// <p>Note that if the entity is affected by AI, it may override this rotation.</p>
@@ -1009,6 +1009,136 @@ impl<'mc> Entity<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    pub fn set_metadata(
+        &self,
+        arg0: impl Into<String>,
+        arg1: impl Into<crate::metadata::MetadataValue<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Entity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::metadata::Metadatable = temp_clone.into();
+        real.set_metadata(arg0, arg1)
+    }
+    pub fn get_metadata(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<Vec<crate::metadata::MetadataValue<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Entity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::metadata::Metadatable = temp_clone.into();
+        real.get_metadata(arg0)
+    }
+    pub fn has_metadata(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Entity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::metadata::Metadatable = temp_clone.into();
+        real.has_metadata(arg0)
+    }
+    pub fn remove_metadata(
+        &self,
+        arg0: impl Into<String>,
+        arg1: impl Into<crate::plugin::Plugin<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Entity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::metadata::Metadatable = temp_clone.into();
+        real.remove_metadata(arg0, arg1)
+    }
+    pub fn send_message_with_strings(
+        &self,
+        arg0: Vec<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "[Ljava/lang/String;";
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg0.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        args.push(val_1.l()?.into());
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+        arg1: std::option::Option<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Entity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::CommandSender = temp_clone.into();
+        real.name()
+    }
+    pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
+        let temp_clone = Entity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::Nameable = temp_clone.into();
+        real.custom_name()
+    }
+    pub fn set_custom_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Entity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::Nameable = temp_clone.into();
+        real.set_custom_name(arg0)
+    }
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Entity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1597,6 +1727,65 @@ impl<'mc> EnderDragon<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+    pub fn parts(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getParts", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn boss_bar(
+        &self,
+    ) -> Result<Option<crate::boss::BossBar<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderDragon::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Boss = temp_clone.into();
+        real.boss_bar()
+    }
+    pub fn set_aware(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderDragon::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Mob = temp_clone.into();
+        real.set_aware(arg0)
+    }
+    pub fn is_aware(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderDragon::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Mob = temp_clone.into();
+        real.is_aware()
+    }
+    pub fn ambient_sound(&self) -> Result<Option<crate::Sound<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderDragon::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Mob = temp_clone.into();
+        real.ambient_sound()
+    }
+    pub fn target(
+        &self,
+    ) -> Result<Option<crate::entity::LivingEntity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderDragon::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Mob = temp_clone.into();
+        real.target()
+    }
+    pub fn set_target(
+        &self,
+        arg0: impl Into<crate::entity::LivingEntity<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderDragon::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Mob = temp_clone.into();
+        real.set_target(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1919,6 +2108,69 @@ impl<'mc> Piglin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn is_immune_to_zombification(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Piglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::PiglinAbstract = temp_clone.into();
+        real.is_immune_to_zombification()
+    }
+    pub fn set_immune_to_zombification(
+        &self,
+        arg0: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Piglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::PiglinAbstract = temp_clone.into();
+        real.set_immune_to_zombification(arg0)
+    }
+
+    pub fn set_baby(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Piglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::PiglinAbstract = temp_clone.into();
+        real.set_baby(arg0)
+    }
+
+    pub fn is_baby(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Piglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::PiglinAbstract = temp_clone.into();
+        real.is_baby()
+    }
+    pub fn is_converting(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Piglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::PiglinAbstract = temp_clone.into();
+        real.is_converting()
+    }
+    pub fn conversion_time(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Piglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::PiglinAbstract = temp_clone.into();
+        real.conversion_time()
+    }
+    pub fn set_conversion_time(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Piglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::PiglinAbstract = temp_clone.into();
+        real.set_conversion_time(arg0)
+    }
+    pub fn inventory(
+        &self,
+    ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Piglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::InventoryHolder = temp_clone.into();
+        real.inventory()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1989,6 +2241,131 @@ impl<'mc> AbstractVillager<'mc> {
         crate::inventory::Inventory::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+
+    pub fn set_age_lock(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AbstractVillager::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Breedable = temp_clone.into();
+        real.set_age_lock(arg0)
+    }
+
+    pub fn age_lock(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AbstractVillager::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Breedable = temp_clone.into();
+        real.age_lock()
+    }
+
+    pub fn can_breed(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AbstractVillager::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Breedable = temp_clone.into();
+        real.can_breed()
+    }
+
+    pub fn set_breed(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AbstractVillager::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Breedable = temp_clone.into();
+        real.set_breed(arg0)
+    }
+    pub fn recipes(
+        &self,
+    ) -> Result<Vec<crate::inventory::MerchantRecipe<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getRecipes", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::inventory::MerchantRecipe::from_raw(
+                &self.jni_ref(),
+                obj,
+            )?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_recipes(
+        &self,
+        arg0: Vec<impl Into<crate::inventory::MerchantRecipe<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/List;)V");
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg0 {
+            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(v.into().jni_object().clone())
+            });
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Lorg/bukkit/inventory/crate::inventory::MerchantRecipe)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setRecipes",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn get_recipe(
+        &self,
+        arg0: i32,
+    ) -> Result<crate::inventory::MerchantRecipe<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AbstractVillager::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::Merchant = temp_clone.into();
+        real.get_recipe(arg0)
+    }
+    pub fn set_recipe(
+        &self,
+        arg0: i32,
+        arg1: impl Into<crate::inventory::MerchantRecipe<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AbstractVillager::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::Merchant = temp_clone.into();
+        real.set_recipe(arg0, arg1)
+    }
+    pub fn recipe_count(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = AbstractVillager::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::Merchant = temp_clone.into();
+        real.recipe_count()
+    }
+    pub fn is_trading(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AbstractVillager::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::Merchant = temp_clone.into();
+        real.is_trading()
+    }
+    pub fn trader(
+        &self,
+    ) -> Result<Option<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = AbstractVillager::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::Merchant = temp_clone.into();
+        real.trader()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2380,6 +2757,121 @@ impl<'mc> Arrow<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn set_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Arrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.set_damage(arg0)
+    }
+    pub fn damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Arrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.damage()
+    }
+    pub fn knockback_strength(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Arrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.knockback_strength()
+    }
+    pub fn set_knockback_strength(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Arrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.set_knockback_strength(arg0)
+    }
+    pub fn pierce_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Arrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.pierce_level()
+    }
+    pub fn set_pierce_level(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Arrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.set_pierce_level(arg0)
+    }
+    pub fn is_critical(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Arrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.is_critical()
+    }
+    pub fn set_critical(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Arrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.set_critical(arg0)
+    }
+    pub fn is_in_block(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Arrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.is_in_block()
+    }
+    pub fn attached_block(
+        &self,
+    ) -> Result<Option<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Arrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.attached_block()
+    }
+    pub fn pickup_status(
+        &self,
+    ) -> Result<crate::entity::AbstractArrowPickupStatus<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/AbstractArrow$PickupStatus;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPickupStatus", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::entity::AbstractArrowPickupStatus::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_pickup_status(
+        &self,
+        arg0: impl Into<crate::entity::AbstractArrowPickupStatus<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/entity/AbstractArrow$PickupStatus;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPickupStatus",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_shot_from_crossbow(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Arrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.is_shot_from_crossbow()
+    }
+    pub fn set_shot_from_crossbow(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Arrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.set_shot_from_crossbow(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2455,6 +2947,652 @@ impl<'mc> LightningStrike<'mc> {
             .call_method(&self.jni_object(), "isEffect", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LightningStrike::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -3103,6 +4241,23 @@ impl<'mc> JNIInstantiatable<'mc> for EvokerFangs<'mc> {
 }
 
 impl<'mc> EvokerFangs<'mc> {
+    pub fn owner(
+        &self,
+    ) -> Result<Option<crate::entity::LivingEntity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/LivingEntity;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getOwner", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::LivingEntity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+
     pub fn set_owner(
         &self,
         arg0: impl Into<crate::entity::LivingEntity<'mc>>,
@@ -3120,22 +4275,660 @@ impl<'mc> EvokerFangs<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-
-    pub fn owner(
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
         &self,
-    ) -> Result<Option<crate::entity::LivingEntity<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/LivingEntity;");
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getOwner", sig.as_str(), vec![]);
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
         }
-        Ok(Some(crate::entity::LivingEntity::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EvokerFangs::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -3438,6 +5231,39 @@ impl<'mc> Firework<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn shooter(
+        &self,
+    ) -> Result<Option<crate::projectiles::ProjectileSource<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Firework::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.shooter()
+    }
+    pub fn set_shooter(
+        &self,
+        arg0: impl Into<crate::projectiles::ProjectileSource<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Firework::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.set_shooter(arg0)
+    }
+    pub fn does_bounce(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Firework::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.does_bounce()
+    }
+    pub fn set_bounce(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Firework::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.set_bounce(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -4101,6 +5927,39 @@ impl<'mc> AbstractArrow<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn shooter(
+        &self,
+    ) -> Result<Option<crate::projectiles::ProjectileSource<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = AbstractArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.shooter()
+    }
+    pub fn set_shooter(
+        &self,
+        arg0: impl Into<crate::projectiles::ProjectileSource<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AbstractArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.set_shooter(arg0)
+    }
+    pub fn does_bounce(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AbstractArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.does_bounce()
+    }
+    pub fn set_bounce(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AbstractArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.set_bounce(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4705,21 +6564,6 @@ impl<'mc> JNIInstantiatable<'mc> for TextDisplay<'mc> {
 }
 
 impl<'mc> TextDisplay<'mc> {
-    pub fn set_text(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setText",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
     pub fn text(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -4744,6 +6588,21 @@ impl<'mc> TextDisplay<'mc> {
                 .call_method(&self.jni_object(), "getLineWidth", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+
+    pub fn set_text(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setText",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     /// Sets the maximum line width before wrapping.
     pub fn set_line_width(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -4912,6 +6771,210 @@ impl<'mc> TextDisplay<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setAlignment",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn transformation(
+        &self,
+    ) -> Result<crate::util::Transformation<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.transformation()
+    }
+    pub fn set_transformation(
+        &self,
+        arg0: impl Into<crate::util::Transformation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_transformation(arg0)
+    }
+    pub fn set_transformation_matrix(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_transformation_matrix(arg0)
+    }
+    pub fn interpolation_duration(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.interpolation_duration()
+    }
+    pub fn set_interpolation_duration(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_interpolation_duration(arg0)
+    }
+    pub fn view_range(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.view_range()
+    }
+    pub fn set_view_range(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_view_range(arg0)
+    }
+    pub fn shadow_radius(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let sig = String::from("()F");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getShadowRadius", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.f()?)
+    }
+    pub fn set_shadow_radius(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(F)V");
+        let val_1 = jni::objects::JValueGen::Float(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setShadowRadius",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn shadow_strength(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.shadow_strength()
+    }
+    pub fn set_shadow_strength(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_shadow_strength(arg0)
+    }
+    pub fn display_width(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.display_width()
+    }
+    pub fn set_display_width(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_display_width(arg0)
+    }
+    pub fn display_height(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.display_height()
+    }
+    pub fn set_display_height(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_display_height(arg0)
+    }
+    pub fn interpolation_delay(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.interpolation_delay()
+    }
+    pub fn set_interpolation_delay(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_interpolation_delay(arg0)
+    }
+    pub fn billboard(
+        &self,
+    ) -> Result<crate::entity::DisplayBillboard<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.billboard()
+    }
+    pub fn set_billboard(
+        &self,
+        arg0: impl Into<crate::entity::DisplayBillboard<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_billboard(arg0)
+    }
+    pub fn glow_color_override(
+        &self,
+    ) -> Result<Option<crate::Color<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.glow_color_override()
+    }
+    pub fn set_glow_color_override(
+        &self,
+        arg0: impl Into<crate::Color<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TextDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_glow_color_override(arg0)
+    }
+    pub fn brightness(
+        &self,
+    ) -> Result<Option<crate::entity::DisplayBrightness<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/Display$Brightness;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getBrightness", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::DisplayBrightness::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    pub fn set_brightness(
+        &self,
+        arg0: impl Into<crate::entity::DisplayBrightness<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/entity/Display$Brightness;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setBrightness",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -5475,6 +7538,53 @@ impl<'mc> Wolf<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn owner(
+        &self,
+    ) -> Result<Option<crate::entity::AnimalTamer<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Wolf::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.owner()
+    }
+    pub fn set_owner(
+        &self,
+        arg0: impl Into<crate::entity::AnimalTamer<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Wolf::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.set_owner(arg0)
+    }
+    pub fn is_tamed(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Wolf::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.is_tamed()
+    }
+    pub fn set_tamed(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Wolf::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.set_tamed(arg0)
+    }
+    pub fn is_sitting(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Wolf::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Sittable = temp_clone.into();
+        real.is_sitting()
+    }
+    pub fn set_sitting(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Wolf::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Sittable = temp_clone.into();
+        real.set_sitting(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5799,6 +7909,15 @@ impl<'mc> Wither<'mc> {
             .call_method(&self.jni_object(), "setTarget", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn boss_bar(
+        &self,
+    ) -> Result<Option<crate::boss::BossBar<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Wither::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Boss = temp_clone.into();
+        real.boss_bar()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -6150,6 +8269,73 @@ impl<'mc> Bee<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn breed_cause(
+        &self,
+    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Bee::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.breed_cause()
+    }
+    pub fn set_breed_cause(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Bee::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.set_breed_cause(arg0)
+    }
+    pub fn is_love_mode(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Bee::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.is_love_mode()
+    }
+    pub fn love_mode_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLoveModeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_love_mode_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLoveModeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_breed_item_with_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBreedItem", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6162,7 +8348,7 @@ impl<'mc> Into<crate::entity::Animals<'mc>> for Bee<'mc> {
             .expect("Error converting Bee into crate::entity::Animals")
     }
 }
-/// Represents an <a href="Entity.html" title="interface in org.bukkit.entity"><code>Entity</code></a> that has health and can take damage.
+/// Represents an <a title="interface in org.bukkit.entity" href="Entity.html"><code>Entity</code></a> that has health and can take damage.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -6283,7 +8469,7 @@ impl<'mc> Damageable<'mc> {
         Ok(res.d()?)
     }
     #[deprecated = "use <a href='../attribute/Attribute.html#GENERIC_MAX_HEALTH'><code>Attribute.GENERIC_MAX_HEALTH</code></a>. "]
-    /// Sets the maximum health this entity can have.<p>If the health of the entity is above the value provided it will be set to that value.</p> <p>Note: An entity with a health bar (<a title="interface in org.bukkit.entity" href="Player.html"><code>Player</code></a>, <a href="EnderDragon.html" title="interface in org.bukkit.entity"><code>EnderDragon</code></a>, <a href="Wither.html" title="interface in org.bukkit.entity"><code>Wither</code></a>, etc...} will have their bar scaled accordingly.</p>
+    /// Sets the maximum health this entity can have.<p>If the health of the entity is above the value provided it will be set to that value.</p> <p>Note: An entity with a health bar (<a href="Player.html" title="interface in org.bukkit.entity"><code>Player</code></a>, <a href="EnderDragon.html" title="interface in org.bukkit.entity"><code>EnderDragon</code></a>, <a title="interface in org.bukkit.entity" href="Wither.html"><code>Wither</code></a>, etc...} will have their bar scaled accordingly.</p>
     pub fn set_max_health(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
         let val_1 = jni::objects::JValueGen::Double(arg0);
@@ -6305,6 +8491,661 @@ impl<'mc> Damageable<'mc> {
                 .call_method(&self.jni_object(), "resetMaxHealth", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -6404,6 +9245,41 @@ impl<'mc> Breedable<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn age(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Breedable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.age()
+    }
+    pub fn set_age(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Breedable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.set_age(arg0)
+    }
+    pub fn set_baby(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Breedable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.set_baby()
+    }
+    pub fn set_adult(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Breedable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.set_adult()
+    }
+    pub fn is_adult(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Breedable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.is_adult()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -6577,7 +9453,7 @@ impl<'mc> Into<crate::entity::EntitySpigot<'mc>> for PlayerSpigot<'mc> {
             .expect("Error converting PlayerSpigot into crate::entity::EntitySpigot")
     }
 }
-/// Represents a Husk - variant of <a title="interface in org.bukkit.entity" href="Zombie.html"><code>Zombie</code></a>.
+/// Represents a Husk - variant of <a href="Zombie.html" title="interface in org.bukkit.entity"><code>Zombie</code></a>.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -6643,6 +9519,76 @@ impl<'mc> Husk<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setConversionTime",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn set_baby(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Husk::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.set_baby(arg0)
+    }
+
+    pub fn is_baby(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Husk::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.is_baby()
+    }
+
+    pub fn is_villager(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Husk::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.is_villager()
+    }
+    pub fn set_villager_profession(
+        &self,
+        arg0: impl Into<crate::entity::VillagerProfession<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Husk::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.set_villager_profession(arg0)
+    }
+    pub fn set_villager(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Husk::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.set_villager(arg0)
+    }
+    pub fn villager_profession(
+        &self,
+    ) -> Result<crate::entity::VillagerProfession<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Husk::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.villager_profession()
+    }
+    pub fn can_break_doors(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "canBreakDoors", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn set_can_break_doors(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCanBreakDoors",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -7104,6 +10050,661 @@ impl<'mc> AreaEffectCloud<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AreaEffectCloud::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7175,6 +10776,46 @@ impl<'mc> Slime<'mc> {
             .call_method(&self.jni_object(), "getSize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+    pub fn set_aware(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Slime::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Mob = temp_clone.into();
+        real.set_aware(arg0)
+    }
+    pub fn is_aware(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Slime::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Mob = temp_clone.into();
+        real.is_aware()
+    }
+    pub fn ambient_sound(&self) -> Result<Option<crate::Sound<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Slime::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Mob = temp_clone.into();
+        real.ambient_sound()
+    }
+    pub fn target(
+        &self,
+    ) -> Result<Option<crate::entity::LivingEntity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Slime::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Mob = temp_clone.into();
+        real.target()
+    }
+    pub fn set_target(
+        &self,
+        arg0: impl Into<crate::entity::LivingEntity<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Slime::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Mob = temp_clone.into();
+        real.set_target(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -7597,6 +11238,20 @@ impl<'mc> Llama<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn is_carrying_chest(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Llama::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::ChestedHorse = temp_clone.into();
+        real.is_carrying_chest()
+    }
+    pub fn set_carrying_chest(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Llama::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::ChestedHorse = temp_clone.into();
+        real.set_carrying_chest(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7873,6 +11528,76 @@ impl<'mc> PigZombie<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setAngry",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn set_baby(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PigZombie::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.set_baby(arg0)
+    }
+
+    pub fn is_baby(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PigZombie::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.is_baby()
+    }
+
+    pub fn is_villager(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PigZombie::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.is_villager()
+    }
+    pub fn set_villager_profession(
+        &self,
+        arg0: impl Into<crate::entity::VillagerProfession<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PigZombie::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.set_villager_profession(arg0)
+    }
+    pub fn set_villager(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PigZombie::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.set_villager(arg0)
+    }
+    pub fn villager_profession(
+        &self,
+    ) -> Result<crate::entity::VillagerProfession<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PigZombie::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.villager_profession()
+    }
+    pub fn can_break_doors(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "canBreakDoors", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn set_can_break_doors(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCanBreakDoors",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -8373,6 +12098,66 @@ impl<'mc> Zoglin<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    pub fn age(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Zoglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.age()
+    }
+    pub fn set_age(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Zoglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.set_age(arg0)
+    }
+
+    pub fn set_age_lock(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Zoglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.set_age_lock(arg0)
+    }
+
+    pub fn age_lock(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Zoglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.age_lock()
+    }
+
+    pub fn can_breed(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Zoglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.can_breed()
+    }
+
+    pub fn set_breed(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Zoglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.set_breed(arg0)
+    }
+    pub fn set_adult(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Zoglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.set_adult()
+    }
+    pub fn is_adult(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Zoglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.is_adult()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8747,6 +12532,661 @@ impl<'mc> Display<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Display::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -9351,6 +13791,23 @@ impl<'mc> Minecart<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Minecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Vehicle = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Minecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Vehicle = temp_clone.into();
+        real.velocity()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -11432,6 +15889,661 @@ impl<'mc> FallingBlock<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FallingBlock::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -11510,6 +16622,644 @@ impl<'mc> Vehicle<'mc> {
         crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Vehicle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -11606,6 +17356,661 @@ impl<'mc> Explosive<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Explosive::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -11678,6 +18083,670 @@ impl<'mc> Hanging<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
+    }
+    pub fn attached_face(
+        &self,
+    ) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hanging::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Attachable = temp_clone.into();
+        real.attached_face()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -11841,6 +18910,661 @@ impl<'mc> EnderSignal<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderSignal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -12386,6 +20110,73 @@ impl<'mc> Turtle<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    pub fn breed_cause(
+        &self,
+    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Turtle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.breed_cause()
+    }
+    pub fn set_breed_cause(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Turtle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.set_breed_cause(arg0)
+    }
+    pub fn is_love_mode(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Turtle::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.is_love_mode()
+    }
+    pub fn love_mode_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLoveModeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_love_mode_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLoveModeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_breed_item_with_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBreedItem", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -12797,6 +20588,661 @@ impl<'mc> Interaction<'mc> {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })?,
         ))
+    }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Interaction::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -13541,6 +21987,87 @@ impl<'mc> Fox<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    pub fn breed_cause(
+        &self,
+    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Fox::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.breed_cause()
+    }
+    pub fn set_breed_cause(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Fox::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.set_breed_cause(arg0)
+    }
+    pub fn is_love_mode(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Fox::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.is_love_mode()
+    }
+    pub fn love_mode_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLoveModeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_love_mode_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLoveModeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_breed_item_with_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBreedItem", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_sitting(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Fox::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Sittable = temp_clone.into();
+        real.is_sitting()
+    }
+    pub fn set_sitting(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Fox::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Sittable = temp_clone.into();
+        real.set_sitting(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -13697,6 +22224,73 @@ impl<'mc> Ocelot<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn breed_cause(
+        &self,
+    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Ocelot::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.breed_cause()
+    }
+    pub fn set_breed_cause(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Ocelot::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.set_breed_cause(arg0)
+    }
+    pub fn is_love_mode(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Ocelot::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.is_love_mode()
+    }
+    pub fn love_mode_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLoveModeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_love_mode_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLoveModeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_breed_item_with_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBreedItem", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -14297,6 +22891,15 @@ impl<'mc> Allay<'mc> {
         Ok(Some(crate::Location::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
+    }
+    pub fn inventory(
+        &self,
+    ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Allay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::InventoryHolder = temp_clone.into();
+        real.inventory()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -15412,6 +24015,665 @@ impl<'mc> ArmorStand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    pub fn maximum_no_damage_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaximumNoDamageTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_arrows_in_body(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_arrows_in_body(arg0)
+    }
+    pub fn get_eye_height(&self, arg0: bool) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_eye_height(arg0)
+    }
+    pub fn eye_location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.eye_location()
+    }
+    pub fn get_line_of_sight(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaSet<'mc>>,
+        arg1: i32,
+    ) -> Result<Vec<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_line_of_sight(arg0, arg1)
+    }
+    pub fn get_target_block(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaSet<'mc>>,
+        arg1: i32,
+    ) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_target_block(arg0, arg1)
+    }
+    pub fn get_last_two_target_blocks(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaSet<'mc>>,
+        arg1: i32,
+    ) -> Result<Vec<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/Set;I)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Int(arg1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLastTwoTargetBlocks",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::block::Block::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn get_target_block_exact_with_int(
+        &self,
+        arg0: i32,
+        arg1: std::option::Option<impl Into<crate::FluidCollisionMode<'mc>>>,
+    ) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/FluidCollisionMode;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Lorg/bukkit/block/Block;";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getTargetBlockExact",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::Block::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn ray_trace_blocks_with_double(
+        &self,
+        arg0: f64,
+        arg1: std::option::Option<impl Into<crate::FluidCollisionMode<'mc>>>,
+    ) -> Result<crate::util::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "D";
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/FluidCollisionMode;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Lorg/bukkit/util/RayTraceResult;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "rayTraceBlocks", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::RayTraceResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn remaining_air(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.remaining_air()
+    }
+    pub fn set_remaining_air(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_remaining_air(arg0)
+    }
+    pub fn maximum_air(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.maximum_air()
+    }
+    pub fn set_maximum_air(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_maximum_air(arg0)
+    }
+    pub fn arrow_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.arrow_cooldown()
+    }
+    pub fn set_arrow_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_arrow_cooldown(arg0)
+    }
+    pub fn arrows_in_body(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.arrows_in_body()
+    }
+    pub fn set_maximum_no_damage_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setMaximumNoDamageTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn last_damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.last_damage()
+    }
+    pub fn set_last_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_last_damage(arg0)
+    }
+    pub fn no_damage_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNoDamageTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_no_damage_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setNoDamageTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn no_action_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNoActionTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_no_action_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setNoActionTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn killer(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.killer()
+    }
+    pub fn add_potion_effect_with_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffect<'mc>>,
+        arg1: std::option::Option<bool>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/potion/PotionEffect;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Z";
+            let val_2 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "addPotionEffect", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/potion/PotionEffectType;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPotionEffect",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn get_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
+    ) -> Result<crate::potion::PotionEffect<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_potion_effect(arg0)
+    }
+    pub fn remove_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.remove_potion_effect(arg0)
+    }
+    pub fn active_potion_effects(
+        &self,
+    ) -> Result<Vec<crate::potion::PotionEffect<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Collection;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getActivePotionEffects",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::potion::PotionEffect::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn has_line_of_sight(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.has_line_of_sight(arg0)
+    }
+    pub fn remove_when_far_away(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.remove_when_far_away()
+    }
+    pub fn set_remove_when_far_away(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_remove_when_far_away(arg0)
+    }
+    pub fn equipment(
+        &self,
+    ) -> Result<Option<crate::inventory::EntityEquipment<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.equipment()
+    }
+    pub fn set_can_pickup_items(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCanPickupItems",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn can_pickup_items(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCanPickupItems",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_leashed(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_leashed()
+    }
+    pub fn leash_holder(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.leash_holder()
+    }
+    pub fn set_leash_holder(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_leash_holder(arg0)
+    }
+    pub fn is_gliding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_gliding()
+    }
+    pub fn set_gliding(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_gliding(arg0)
+    }
+    pub fn is_swimming(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_swimming()
+    }
+    pub fn set_swimming(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_swimming(arg0)
+    }
+    pub fn is_riptiding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_riptiding()
+    }
+    pub fn is_sleeping(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_sleeping()
+    }
+    pub fn is_climbing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_climbing()
+    }
+    pub fn set_ai(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_ai(arg0)
+    }
+    pub fn has_ai(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.has_ai()
+    }
+    pub fn attack(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.attack(arg0)
+    }
+    pub fn swing_main_hand(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.swing_main_hand()
+    }
+    pub fn swing_off_hand(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.swing_off_hand()
+    }
+    pub fn play_hurt_animation(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.play_hurt_animation(arg0)
+    }
+    pub fn set_collidable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_collidable(arg0)
+    }
+    pub fn is_collidable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_collidable()
+    }
+    pub fn collidable_exemptions(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCollidableExemptions",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn get_memory(
+        &self,
+        arg0: impl Into<crate::entity::memory::MemoryKey<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_memory(arg0)
+    }
+    pub fn hurt_sound(&self) -> Result<Option<crate::Sound<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.hurt_sound()
+    }
+    pub fn death_sound(&self) -> Result<Option<crate::Sound<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.death_sound()
+    }
+    pub fn get_fall_damage_sound(
+        &self,
+        arg0: i32,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_fall_damage_sound(arg0)
+    }
+    pub fn fall_damage_sound_small(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.fall_damage_sound_small()
+    }
+    pub fn fall_damage_sound_big(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.fall_damage_sound_big()
+    }
+    pub fn get_drinking_sound(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_drinking_sound(arg0)
+    }
+    pub fn get_eating_sound(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_eating_sound(arg0)
+    }
+    pub fn can_breathe_underwater(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.can_breathe_underwater()
+    }
+    pub fn category(
+        &self,
+    ) -> Result<crate::entity::EntityCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.category()
+    }
+    pub fn set_invisible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_invisible(arg0)
+    }
+    pub fn is_invisible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_invisible()
+    }
+    pub fn set_memory(
+        &self,
+        arg0: impl Into<crate::entity::memory::MemoryKey<'mc>>,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorStand::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_memory(arg0, arg1)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -15716,7 +24978,7 @@ impl<'mc> Into<crate::entity::Hanging<'mc>> for LeashHitch<'mc> {
     }
 }
 /// Represents a Skeleton.
-/// <p>This interface only represents the normal skeleton type on the server. Other skeleton-like entities, such as the <a href="WitherSkeleton.html" title="interface in org.bukkit.entity"><code>WitherSkeleton</code></a> or the <a title="interface in org.bukkit.entity" href="Stray.html"><code>Stray</code></a> are not related to this type.</p>
+/// <p>This interface only represents the normal skeleton type on the server. Other skeleton-like entities, such as the <a href="WitherSkeleton.html" title="interface in org.bukkit.entity"><code>WitherSkeleton</code></a> or the <a href="Stray.html" title="interface in org.bukkit.entity"><code>Stray</code></a> are not related to this type.</p>
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -15790,6 +25052,26 @@ impl<'mc> Skeleton<'mc> {
         Ok(())
     }
 
+    pub fn skeleton_type(
+        &self,
+    ) -> Result<crate::entity::SkeletonSkeletonType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Skeleton::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractSkeleton = temp_clone.into();
+        real.skeleton_type()
+    }
+    pub fn set_skeleton_type(
+        &self,
+        arg0: impl Into<crate::entity::SkeletonSkeletonType<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Skeleton::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractSkeleton = temp_clone.into();
+        real.set_skeleton_type(arg0)
+    }
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -15801,7 +25083,7 @@ impl<'mc> Into<crate::entity::AbstractSkeleton<'mc>> for Skeleton<'mc> {
             .expect("Error converting Skeleton into crate::entity::AbstractSkeleton")
     }
 }
-/// Represents a small <a title="interface in org.bukkit.entity" href="Fireball.html"><code>Fireball</code></a>
+/// Represents a small <a href="Fireball.html" title="interface in org.bukkit.entity"><code>Fireball</code></a>
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -15851,7 +25133,7 @@ impl<'mc> Into<crate::entity::SizedFireball<'mc>> for SmallFireball<'mc> {
             .expect("Error converting SmallFireball into crate::entity::SizedFireball")
     }
 }
-/// Represents a SkeletonHorse - variant of <a title="interface in org.bukkit.entity" href="AbstractHorse.html"><code>AbstractHorse</code></a>.
+/// Represents a SkeletonHorse - variant of <a href="AbstractHorse.html" title="interface in org.bukkit.entity"><code>AbstractHorse</code></a>.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -15933,6 +25215,88 @@ impl<'mc> SkeletonHorse<'mc> {
                 .call_method(&self.jni_object(), "getTrapTime", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+    pub fn variant(&self) -> Result<crate::entity::HorseVariant<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = SkeletonHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.variant()
+    }
+    pub fn inventory(
+        &self,
+    ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = SkeletonHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.inventory()
+    }
+    pub fn set_variant(
+        &self,
+        arg0: impl Into<crate::entity::HorseVariant<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SkeletonHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_variant(arg0)
+    }
+    pub fn domestication(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = SkeletonHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.domestication()
+    }
+    pub fn set_domestication(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SkeletonHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_domestication(arg0)
+    }
+    pub fn max_domestication(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = SkeletonHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.max_domestication()
+    }
+    pub fn set_max_domestication(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SkeletonHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_max_domestication(arg0)
+    }
+    pub fn jump_strength(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = SkeletonHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.jump_strength()
+    }
+    pub fn set_jump_strength(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SkeletonHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_jump_strength(arg0)
+    }
+    pub fn is_eating_haystack(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SkeletonHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.is_eating_haystack()
+    }
+    pub fn set_eating_haystack(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SkeletonHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_eating_haystack(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -16105,6 +25469,698 @@ impl<'mc> Mob<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn maximum_no_damage_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaximumNoDamageTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_arrows_in_body(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_arrows_in_body(arg0)
+    }
+    pub fn get_eye_height(&self, arg0: bool) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_eye_height(arg0)
+    }
+    pub fn eye_location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.eye_location()
+    }
+    pub fn get_line_of_sight(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaSet<'mc>>,
+        arg1: i32,
+    ) -> Result<Vec<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_line_of_sight(arg0, arg1)
+    }
+    pub fn get_target_block(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaSet<'mc>>,
+        arg1: i32,
+    ) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_target_block(arg0, arg1)
+    }
+    pub fn get_last_two_target_blocks(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaSet<'mc>>,
+        arg1: i32,
+    ) -> Result<Vec<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/Set;I)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Int(arg1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLastTwoTargetBlocks",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::block::Block::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn get_target_block_exact_with_int(
+        &self,
+        arg0: i32,
+        arg1: std::option::Option<impl Into<crate::FluidCollisionMode<'mc>>>,
+    ) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/FluidCollisionMode;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Lorg/bukkit/block/Block;";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getTargetBlockExact",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::Block::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn ray_trace_blocks_with_double(
+        &self,
+        arg0: f64,
+        arg1: std::option::Option<impl Into<crate::FluidCollisionMode<'mc>>>,
+    ) -> Result<crate::util::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "D";
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/FluidCollisionMode;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Lorg/bukkit/util/RayTraceResult;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "rayTraceBlocks", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::RayTraceResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn remaining_air(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.remaining_air()
+    }
+    pub fn set_remaining_air(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_remaining_air(arg0)
+    }
+    pub fn maximum_air(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.maximum_air()
+    }
+    pub fn set_maximum_air(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_maximum_air(arg0)
+    }
+    pub fn arrow_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.arrow_cooldown()
+    }
+    pub fn set_arrow_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_arrow_cooldown(arg0)
+    }
+    pub fn arrows_in_body(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.arrows_in_body()
+    }
+    pub fn set_maximum_no_damage_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setMaximumNoDamageTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn last_damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.last_damage()
+    }
+    pub fn set_last_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_last_damage(arg0)
+    }
+    pub fn no_damage_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNoDamageTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_no_damage_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setNoDamageTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn no_action_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNoActionTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_no_action_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setNoActionTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn killer(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.killer()
+    }
+    pub fn add_potion_effect_with_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffect<'mc>>,
+        arg1: std::option::Option<bool>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/potion/PotionEffect;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Z";
+            let val_2 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "addPotionEffect", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/potion/PotionEffectType;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPotionEffect",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn get_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
+    ) -> Result<crate::potion::PotionEffect<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_potion_effect(arg0)
+    }
+    pub fn remove_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.remove_potion_effect(arg0)
+    }
+    pub fn active_potion_effects(
+        &self,
+    ) -> Result<Vec<crate::potion::PotionEffect<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Collection;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getActivePotionEffects",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::potion::PotionEffect::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn has_line_of_sight(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.has_line_of_sight(arg0)
+    }
+    pub fn remove_when_far_away(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.remove_when_far_away()
+    }
+    pub fn set_remove_when_far_away(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_remove_when_far_away(arg0)
+    }
+    pub fn equipment(
+        &self,
+    ) -> Result<Option<crate::inventory::EntityEquipment<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.equipment()
+    }
+    pub fn set_can_pickup_items(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCanPickupItems",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn can_pickup_items(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCanPickupItems",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_leashed(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_leashed()
+    }
+    pub fn leash_holder(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.leash_holder()
+    }
+    pub fn set_leash_holder(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_leash_holder(arg0)
+    }
+    pub fn is_gliding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_gliding()
+    }
+    pub fn set_gliding(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_gliding(arg0)
+    }
+    pub fn is_swimming(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_swimming()
+    }
+    pub fn set_swimming(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_swimming(arg0)
+    }
+    pub fn is_riptiding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_riptiding()
+    }
+    pub fn is_sleeping(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_sleeping()
+    }
+    pub fn is_climbing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_climbing()
+    }
+    pub fn set_ai(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_ai(arg0)
+    }
+    pub fn has_ai(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.has_ai()
+    }
+    pub fn attack(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.attack(arg0)
+    }
+    pub fn swing_main_hand(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.swing_main_hand()
+    }
+    pub fn swing_off_hand(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.swing_off_hand()
+    }
+    pub fn play_hurt_animation(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.play_hurt_animation(arg0)
+    }
+    pub fn set_collidable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_collidable(arg0)
+    }
+    pub fn is_collidable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_collidable()
+    }
+    pub fn collidable_exemptions(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCollidableExemptions",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn get_memory(
+        &self,
+        arg0: impl Into<crate::entity::memory::MemoryKey<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_memory(arg0)
+    }
+    pub fn hurt_sound(&self) -> Result<Option<crate::Sound<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.hurt_sound()
+    }
+    pub fn death_sound(&self) -> Result<Option<crate::Sound<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.death_sound()
+    }
+    pub fn get_fall_damage_sound(
+        &self,
+        arg0: i32,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_fall_damage_sound(arg0)
+    }
+    pub fn fall_damage_sound_small(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.fall_damage_sound_small()
+    }
+    pub fn fall_damage_sound_big(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.fall_damage_sound_big()
+    }
+    pub fn get_drinking_sound(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_drinking_sound(arg0)
+    }
+    pub fn get_eating_sound(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_eating_sound(arg0)
+    }
+    pub fn can_breathe_underwater(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.can_breathe_underwater()
+    }
+    pub fn category(
+        &self,
+    ) -> Result<crate::entity::EntityCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.category()
+    }
+    pub fn set_invisible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_invisible(arg0)
+    }
+    pub fn is_invisible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_invisible()
+    }
+    pub fn set_memory(
+        &self,
+        arg0: impl Into<crate::entity::memory::MemoryKey<'mc>>,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_memory(arg0, arg1)
+    }
+    pub fn seed(&self) -> Result<i64, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::loot::Lootable = temp_clone.into();
+        real.seed()
+    }
+    pub fn set_seed(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::loot::Lootable = temp_clone.into();
+        real.set_seed(arg0)
+    }
+    pub fn set_loot_table(
+        &self,
+        arg0: impl Into<crate::loot::LootTable<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::loot::Lootable = temp_clone.into();
+        real.set_loot_table(arg0)
+    }
+    pub fn loot_table(
+        &self,
+    ) -> Result<Option<crate::loot::LootTable<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Mob::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::loot::Lootable = temp_clone.into();
+        real.loot_table()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -16284,6 +26340,34 @@ impl<'mc> TNTPrimed<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn set_yield(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TNTPrimed::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Explosive = temp_clone.into();
+        real.set_yield(arg0)
+    }
+    pub fn get_yield(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = TNTPrimed::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Explosive = temp_clone.into();
+        real.get_yield()
+    }
+    pub fn set_is_incendiary(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TNTPrimed::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Explosive = temp_clone.into();
+        real.set_is_incendiary(arg0)
+    }
+    pub fn is_incendiary(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = TNTPrimed::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Explosive = temp_clone.into();
+        real.is_incendiary()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -16903,6 +26987,39 @@ impl<'mc> ThrowableProjectile<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn shooter(
+        &self,
+    ) -> Result<Option<crate::projectiles::ProjectileSource<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ThrowableProjectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.shooter()
+    }
+    pub fn set_shooter(
+        &self,
+        arg0: impl Into<crate::projectiles::ProjectileSource<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ThrowableProjectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.set_shooter(arg0)
+    }
+    pub fn does_bounce(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ThrowableProjectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.does_bounce()
+    }
+    pub fn set_bounce(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ThrowableProjectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.set_bounce(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -16915,7 +27032,7 @@ impl<'mc> Into<crate::entity::Projectile<'mc>> for ThrowableProjectile<'mc> {
             .expect("Error converting ThrowableProjectile into crate::entity::Projectile")
     }
 }
-/// Represents a single part of a <a title="interface in org.bukkit.entity" href="ComplexLivingEntity.html"><code>ComplexLivingEntity</code></a>
+/// Represents a single part of a <a href="ComplexLivingEntity.html" title="interface in org.bukkit.entity"><code>ComplexLivingEntity</code></a>
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -16967,6 +27084,661 @@ impl<'mc> ComplexEntityPart<'mc> {
         crate::entity::ComplexLivingEntity::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexEntityPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -17091,6 +27863,210 @@ impl<'mc> BlockDisplay<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBlock",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn transformation(
+        &self,
+    ) -> Result<crate::util::Transformation<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.transformation()
+    }
+    pub fn set_transformation(
+        &self,
+        arg0: impl Into<crate::util::Transformation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_transformation(arg0)
+    }
+    pub fn set_transformation_matrix(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_transformation_matrix(arg0)
+    }
+    pub fn interpolation_duration(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.interpolation_duration()
+    }
+    pub fn set_interpolation_duration(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_interpolation_duration(arg0)
+    }
+    pub fn view_range(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.view_range()
+    }
+    pub fn set_view_range(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_view_range(arg0)
+    }
+    pub fn shadow_radius(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let sig = String::from("()F");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getShadowRadius", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.f()?)
+    }
+    pub fn set_shadow_radius(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(F)V");
+        let val_1 = jni::objects::JValueGen::Float(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setShadowRadius",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn shadow_strength(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.shadow_strength()
+    }
+    pub fn set_shadow_strength(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_shadow_strength(arg0)
+    }
+    pub fn display_width(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.display_width()
+    }
+    pub fn set_display_width(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_display_width(arg0)
+    }
+    pub fn display_height(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.display_height()
+    }
+    pub fn set_display_height(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_display_height(arg0)
+    }
+    pub fn interpolation_delay(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.interpolation_delay()
+    }
+    pub fn set_interpolation_delay(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_interpolation_delay(arg0)
+    }
+    pub fn billboard(
+        &self,
+    ) -> Result<crate::entity::DisplayBillboard<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.billboard()
+    }
+    pub fn set_billboard(
+        &self,
+        arg0: impl Into<crate::entity::DisplayBillboard<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_billboard(arg0)
+    }
+    pub fn glow_color_override(
+        &self,
+    ) -> Result<Option<crate::Color<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.glow_color_override()
+    }
+    pub fn set_glow_color_override(
+        &self,
+        arg0: impl Into<crate::Color<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_glow_color_override(arg0)
+    }
+    pub fn brightness(
+        &self,
+    ) -> Result<Option<crate::entity::DisplayBrightness<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/Display$Brightness;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getBrightness", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::DisplayBrightness::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    pub fn set_brightness(
+        &self,
+        arg0: impl Into<crate::entity::DisplayBrightness<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/entity/Display$Brightness;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setBrightness",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -17234,6 +28210,66 @@ impl<'mc> PiglinAbstract<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn age(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = PiglinAbstract::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.age()
+    }
+    pub fn set_age(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PiglinAbstract::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.set_age(arg0)
+    }
+
+    pub fn set_age_lock(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PiglinAbstract::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.set_age_lock(arg0)
+    }
+
+    pub fn age_lock(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PiglinAbstract::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.age_lock()
+    }
+
+    pub fn can_breed(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PiglinAbstract::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.can_breed()
+    }
+
+    pub fn set_breed(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PiglinAbstract::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.set_breed(arg0)
+    }
+    pub fn set_adult(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PiglinAbstract::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.set_adult()
+    }
+    pub fn is_adult(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PiglinAbstract::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.is_adult()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -17850,6 +28886,23 @@ impl<'mc> JNIInstantiatable<'mc> for Item<'mc> {
 }
 
 impl<'mc> Item<'mc> {
+    pub fn owner(
+        &self,
+    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/UUID;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getOwner", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(blackboxmc_java::util::JavaUUID::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+
     pub fn set_owner(
         &self,
         arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
@@ -17866,23 +28919,6 @@ impl<'mc> Item<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-
-    pub fn owner(
-        &self,
-    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/UUID;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getOwner", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(blackboxmc_java::util::JavaUUID::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
     }
     /// Sets if this Item should live forever
     pub fn set_unlimited_lifetime(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -17997,6 +29033,661 @@ impl<'mc> Item<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Item::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -18075,6 +29766,67 @@ impl<'mc> Fireball<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn shooter(
+        &self,
+    ) -> Result<Option<crate::projectiles::ProjectileSource<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Fireball::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.shooter()
+    }
+    pub fn set_shooter(
+        &self,
+        arg0: impl Into<crate::projectiles::ProjectileSource<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Fireball::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.set_shooter(arg0)
+    }
+    pub fn does_bounce(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Fireball::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.does_bounce()
+    }
+    pub fn set_bounce(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Fireball::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.set_bounce(arg0)
+    }
+    pub fn set_yield(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Fireball::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Explosive = temp_clone.into();
+        real.set_yield(arg0)
+    }
+    pub fn get_yield(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = Fireball::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Explosive = temp_clone.into();
+        real.get_yield()
+    }
+    pub fn set_is_incendiary(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Fireball::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Explosive = temp_clone.into();
+        real.set_is_incendiary(arg0)
+    }
+    pub fn is_incendiary(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Fireball::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Explosive = temp_clone.into();
+        real.is_incendiary()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -18486,6 +30238,15 @@ impl<'mc> Villager<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+    pub fn inventory(
+        &self,
+    ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Villager::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractVillager = temp_clone.into();
+        real.inventory()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -19122,7 +30883,7 @@ impl<'mc> HumanEntity<'mc> {
     }
     /// Make the entity drop the item in their hand.
     ///
-    /// This will force the entity to drop the item they are holding with an option to drop the entire <a title="class in org.bukkit.inventory" href="../inventory/ItemStack.html"><code>ItemStack</code></a> or just 1 of the items.
+    /// This will force the entity to drop the item they are holding with an option to drop the entire <a href="../inventory/ItemStack.html" title="class in org.bukkit.inventory"><code>ItemStack</code></a> or just 1 of the items.
     pub fn drop_item(&self, arg0: bool) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Z");
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -19369,6 +31130,674 @@ impl<'mc> HumanEntity<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    pub fn maximum_no_damage_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaximumNoDamageTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_arrows_in_body(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_arrows_in_body(arg0)
+    }
+    pub fn get_eye_height(&self, arg0: bool) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_eye_height(arg0)
+    }
+    pub fn eye_location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.eye_location()
+    }
+    pub fn get_line_of_sight(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaSet<'mc>>,
+        arg1: i32,
+    ) -> Result<Vec<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_line_of_sight(arg0, arg1)
+    }
+    pub fn get_target_block(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaSet<'mc>>,
+        arg1: i32,
+    ) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_target_block(arg0, arg1)
+    }
+    pub fn get_last_two_target_blocks(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaSet<'mc>>,
+        arg1: i32,
+    ) -> Result<Vec<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/Set;I)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Int(arg1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLastTwoTargetBlocks",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::block::Block::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn get_target_block_exact_with_int(
+        &self,
+        arg0: i32,
+        arg1: std::option::Option<impl Into<crate::FluidCollisionMode<'mc>>>,
+    ) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/FluidCollisionMode;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Lorg/bukkit/block/Block;";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getTargetBlockExact",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::Block::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn ray_trace_blocks_with_double(
+        &self,
+        arg0: f64,
+        arg1: std::option::Option<impl Into<crate::FluidCollisionMode<'mc>>>,
+    ) -> Result<crate::util::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "D";
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/FluidCollisionMode;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Lorg/bukkit/util/RayTraceResult;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "rayTraceBlocks", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::RayTraceResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn remaining_air(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.remaining_air()
+    }
+    pub fn set_remaining_air(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_remaining_air(arg0)
+    }
+    pub fn maximum_air(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.maximum_air()
+    }
+    pub fn set_maximum_air(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_maximum_air(arg0)
+    }
+    pub fn arrow_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.arrow_cooldown()
+    }
+    pub fn set_arrow_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_arrow_cooldown(arg0)
+    }
+    pub fn arrows_in_body(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.arrows_in_body()
+    }
+    pub fn set_maximum_no_damage_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setMaximumNoDamageTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn last_damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.last_damage()
+    }
+    pub fn set_last_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_last_damage(arg0)
+    }
+    pub fn no_damage_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNoDamageTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_no_damage_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setNoDamageTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn no_action_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNoActionTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_no_action_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setNoActionTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn killer(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.killer()
+    }
+    pub fn add_potion_effect_with_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffect<'mc>>,
+        arg1: std::option::Option<bool>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/potion/PotionEffect;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Z";
+            let val_2 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "addPotionEffect", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/potion/PotionEffectType;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPotionEffect",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn get_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
+    ) -> Result<crate::potion::PotionEffect<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_potion_effect(arg0)
+    }
+    pub fn remove_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.remove_potion_effect(arg0)
+    }
+    pub fn active_potion_effects(
+        &self,
+    ) -> Result<Vec<crate::potion::PotionEffect<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Collection;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getActivePotionEffects",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::potion::PotionEffect::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn has_line_of_sight(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.has_line_of_sight(arg0)
+    }
+    pub fn remove_when_far_away(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.remove_when_far_away()
+    }
+    pub fn set_remove_when_far_away(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_remove_when_far_away(arg0)
+    }
+    pub fn equipment(
+        &self,
+    ) -> Result<Option<crate::inventory::EntityEquipment<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.equipment()
+    }
+    pub fn set_can_pickup_items(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCanPickupItems",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn can_pickup_items(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCanPickupItems",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_leashed(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_leashed()
+    }
+    pub fn leash_holder(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.leash_holder()
+    }
+    pub fn set_leash_holder(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_leash_holder(arg0)
+    }
+    pub fn is_gliding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_gliding()
+    }
+    pub fn set_gliding(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_gliding(arg0)
+    }
+    pub fn is_swimming(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_swimming()
+    }
+    pub fn set_swimming(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_swimming(arg0)
+    }
+    pub fn is_riptiding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_riptiding()
+    }
+    pub fn is_sleeping(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_sleeping()
+    }
+    pub fn is_climbing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_climbing()
+    }
+    pub fn set_ai(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_ai(arg0)
+    }
+    pub fn has_ai(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.has_ai()
+    }
+    pub fn attack(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.attack(arg0)
+    }
+    pub fn swing_main_hand(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.swing_main_hand()
+    }
+    pub fn swing_off_hand(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.swing_off_hand()
+    }
+    pub fn play_hurt_animation(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.play_hurt_animation(arg0)
+    }
+    pub fn set_collidable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_collidable(arg0)
+    }
+    pub fn is_collidable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_collidable()
+    }
+    pub fn collidable_exemptions(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCollidableExemptions",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn get_memory(
+        &self,
+        arg0: impl Into<crate::entity::memory::MemoryKey<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_memory(arg0)
+    }
+    pub fn hurt_sound(&self) -> Result<Option<crate::Sound<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.hurt_sound()
+    }
+    pub fn death_sound(&self) -> Result<Option<crate::Sound<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.death_sound()
+    }
+    pub fn get_fall_damage_sound(
+        &self,
+        arg0: i32,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_fall_damage_sound(arg0)
+    }
+    pub fn fall_damage_sound_small(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.fall_damage_sound_small()
+    }
+    pub fn fall_damage_sound_big(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.fall_damage_sound_big()
+    }
+    pub fn get_drinking_sound(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_drinking_sound(arg0)
+    }
+    pub fn get_eating_sound(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_eating_sound(arg0)
+    }
+    pub fn can_breathe_underwater(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.can_breathe_underwater()
+    }
+    pub fn category(
+        &self,
+    ) -> Result<crate::entity::EntityCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.category()
+    }
+    pub fn set_invisible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_invisible(arg0)
+    }
+    pub fn is_invisible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_invisible()
+    }
+    pub fn set_memory(
+        &self,
+        arg0: impl Into<crate::entity::memory::MemoryKey<'mc>>,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_memory(arg0, arg1)
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HumanEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AnimalTamer = temp_clone.into();
+        real.unique_id()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -19596,7 +32025,7 @@ impl<'mc> Guardian<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    #[deprecated = "Must spawn a new <a href='ElderGuardian.html' title='interface in org.bukkit.entity'><code>ElderGuardian</code></a>. "]
+    #[deprecated = "Must spawn a new <a title='interface in org.bukkit.entity' href='ElderGuardian.html'><code>ElderGuardian</code></a>. "]
 
     pub fn set_elder(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
@@ -19734,6 +32163,73 @@ impl<'mc> Goat<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn breed_cause(
+        &self,
+    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Goat::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.breed_cause()
+    }
+    pub fn set_breed_cause(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Goat::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.set_breed_cause(arg0)
+    }
+    pub fn is_love_mode(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Goat::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.is_love_mode()
+    }
+    pub fn love_mode_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLoveModeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_love_mode_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLoveModeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_breed_item_with_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBreedItem", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -20366,6 +32862,87 @@ impl<'mc> Panda<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+    pub fn breed_cause(
+        &self,
+    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Panda::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.breed_cause()
+    }
+    pub fn set_breed_cause(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Panda::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.set_breed_cause(arg0)
+    }
+    pub fn is_love_mode(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Panda::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.is_love_mode()
+    }
+    pub fn love_mode_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLoveModeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_love_mode_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLoveModeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_breed_item_with_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBreedItem", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_sitting(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Panda::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Sittable = temp_clone.into();
+        real.is_sitting()
+    }
+    pub fn set_sitting(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Panda::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Sittable = temp_clone.into();
+        real.set_sitting(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -20726,6 +33303,210 @@ impl<'mc> ItemDisplay<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn transformation(
+        &self,
+    ) -> Result<crate::util::Transformation<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.transformation()
+    }
+    pub fn set_transformation(
+        &self,
+        arg0: impl Into<crate::util::Transformation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_transformation(arg0)
+    }
+    pub fn set_transformation_matrix(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_transformation_matrix(arg0)
+    }
+    pub fn interpolation_duration(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.interpolation_duration()
+    }
+    pub fn set_interpolation_duration(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_interpolation_duration(arg0)
+    }
+    pub fn view_range(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.view_range()
+    }
+    pub fn set_view_range(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_view_range(arg0)
+    }
+    pub fn shadow_radius(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let sig = String::from("()F");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getShadowRadius", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.f()?)
+    }
+    pub fn set_shadow_radius(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(F)V");
+        let val_1 = jni::objects::JValueGen::Float(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setShadowRadius",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn shadow_strength(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.shadow_strength()
+    }
+    pub fn set_shadow_strength(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_shadow_strength(arg0)
+    }
+    pub fn display_width(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.display_width()
+    }
+    pub fn set_display_width(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_display_width(arg0)
+    }
+    pub fn display_height(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.display_height()
+    }
+    pub fn set_display_height(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_display_height(arg0)
+    }
+    pub fn interpolation_delay(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.interpolation_delay()
+    }
+    pub fn set_interpolation_delay(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_interpolation_delay(arg0)
+    }
+    pub fn billboard(
+        &self,
+    ) -> Result<crate::entity::DisplayBillboard<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.billboard()
+    }
+    pub fn set_billboard(
+        &self,
+        arg0: impl Into<crate::entity::DisplayBillboard<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_billboard(arg0)
+    }
+    pub fn glow_color_override(
+        &self,
+    ) -> Result<Option<crate::Color<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.glow_color_override()
+    }
+    pub fn set_glow_color_override(
+        &self,
+        arg0: impl Into<crate::Color<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ItemDisplay::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Display = temp_clone.into();
+        real.set_glow_color_override(arg0)
+    }
+    pub fn brightness(
+        &self,
+    ) -> Result<Option<crate::entity::DisplayBrightness<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/Display$Brightness;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getBrightness", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::DisplayBrightness::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    pub fn set_brightness(
+        &self,
+        arg0: impl Into<crate::entity::DisplayBrightness<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/entity/Display$Brightness;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setBrightness",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -20788,7 +33569,7 @@ impl<'mc> Into<crate::entity::Spider<'mc>> for CaveSpider<'mc> {
             .expect("Error converting CaveSpider into crate::entity::Spider")
     }
 }
-/// A <a href="Boat.html" title="interface in org.bukkit.entity"><code>Boat</code></a> with a chest.
+/// A <a title="interface in org.bukkit.entity" href="Boat.html"><code>Boat</code></a> with a chest.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -20850,7 +33631,7 @@ impl<'mc> Into<crate::loot::Lootable<'mc>> for ChestBoat<'mc> {
             .expect("Error converting ChestBoat into crate::loot::Lootable")
     }
 }
-/// Represents a <a href="Zombie.html" title="interface in org.bukkit.entity"><code>Zombie</code></a> which was once a <a href="Villager.html" title="interface in org.bukkit.entity"><code>Villager</code></a>.
+/// Represents a <a title="interface in org.bukkit.entity" href="Zombie.html"><code>Zombie</code></a> which was once a <a title="interface in org.bukkit.entity" href="Villager.html"><code>Villager</code></a>.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -21028,6 +33809,57 @@ impl<'mc> ZombieVillager<'mc> {
         Ok(())
     }
 
+    pub fn set_baby(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ZombieVillager::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.set_baby(arg0)
+    }
+
+    pub fn is_baby(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ZombieVillager::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.is_baby()
+    }
+
+    pub fn is_villager(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ZombieVillager::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.is_villager()
+    }
+    pub fn set_villager(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ZombieVillager::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Zombie = temp_clone.into();
+        real.set_villager(arg0)
+    }
+    pub fn can_break_doors(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "canBreakDoors", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn set_can_break_doors(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCanBreakDoors",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -21039,7 +33871,7 @@ impl<'mc> Into<crate::entity::Zombie<'mc>> for ZombieVillager<'mc> {
             .expect("Error converting ZombieVillager into crate::entity::Zombie")
     }
 }
-/// This interface defines or represents the abstract concept of skeleton-like entities on the server. The interface is hence not a direct representation of an entity but rather serves as a parent to interfaces/entity types like <a title="interface in org.bukkit.entity" href="Skeleton.html"><code>Skeleton</code></a>, <a href="WitherSkeleton.html" title="interface in org.bukkit.entity"><code>WitherSkeleton</code></a> or <a href="Stray.html" title="interface in org.bukkit.entity"><code>Stray</code></a>. To compute what specific type of skeleton is present in a variable/field of this type, instanceOf checks against the specific subtypes listed prior are recommended.
+/// This interface defines or represents the abstract concept of skeleton-like entities on the server. The interface is hence not a direct representation of an entity but rather serves as a parent to interfaces/entity types like <a href="Skeleton.html" title="interface in org.bukkit.entity"><code>Skeleton</code></a>, <a href="WitherSkeleton.html" title="interface in org.bukkit.entity"><code>WitherSkeleton</code></a> or <a title="interface in org.bukkit.entity" href="Stray.html"><code>Stray</code></a>. To compute what specific type of skeleton is present in a variable/field of this type, instanceOf checks against the specific subtypes listed prior are recommended.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -21193,6 +34025,73 @@ impl<'mc> Rabbit<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn breed_cause(
+        &self,
+    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Rabbit::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.breed_cause()
+    }
+    pub fn set_breed_cause(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Rabbit::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.set_breed_cause(arg0)
+    }
+    pub fn is_love_mode(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Rabbit::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.is_love_mode()
+    }
+    pub fn love_mode_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLoveModeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_love_mode_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLoveModeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_breed_item_with_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBreedItem", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -21264,6 +34163,102 @@ impl<'mc> Camel<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn variant(&self) -> Result<crate::entity::HorseVariant<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Camel::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.variant()
+    }
+    pub fn inventory(
+        &self,
+    ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Camel::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.inventory()
+    }
+    pub fn set_variant(
+        &self,
+        arg0: impl Into<crate::entity::HorseVariant<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Camel::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_variant(arg0)
+    }
+    pub fn domestication(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Camel::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.domestication()
+    }
+    pub fn set_domestication(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Camel::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_domestication(arg0)
+    }
+    pub fn max_domestication(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Camel::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.max_domestication()
+    }
+    pub fn set_max_domestication(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Camel::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_max_domestication(arg0)
+    }
+    pub fn jump_strength(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Camel::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.jump_strength()
+    }
+    pub fn set_jump_strength(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Camel::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_jump_strength(arg0)
+    }
+    pub fn is_eating_haystack(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Camel::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.is_eating_haystack()
+    }
+    pub fn set_eating_haystack(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Camel::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_eating_haystack(arg0)
+    }
+    pub fn is_sitting(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Camel::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Sittable = temp_clone.into();
+        real.is_sitting()
+    }
+    pub fn set_sitting(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Camel::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Sittable = temp_clone.into();
+        real.set_sitting(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -21425,6 +34420,39 @@ impl<'mc> ShulkerBullet<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn shooter(
+        &self,
+    ) -> Result<Option<crate::projectiles::ProjectileSource<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ShulkerBullet::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.shooter()
+    }
+    pub fn set_shooter(
+        &self,
+        arg0: impl Into<crate::projectiles::ProjectileSource<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ShulkerBullet::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.set_shooter(arg0)
+    }
+    pub fn does_bounce(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ShulkerBullet::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.does_bounce()
+    }
+    pub fn set_bounce(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ShulkerBullet::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.set_bounce(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -22269,6 +35297,73 @@ impl<'mc> Steerable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn breed_cause(
+        &self,
+    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Steerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.breed_cause()
+    }
+    pub fn set_breed_cause(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Steerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.set_breed_cause(arg0)
+    }
+    pub fn is_love_mode(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Steerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.is_love_mode()
+    }
+    pub fn love_mode_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLoveModeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_love_mode_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLoveModeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_breed_item_with_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBreedItem", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -22651,6 +35746,73 @@ impl<'mc> Hoglin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn breed_cause(
+        &self,
+    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Hoglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.breed_cause()
+    }
+    pub fn set_breed_cause(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hoglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.set_breed_cause(arg0)
+    }
+    pub fn is_love_mode(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hoglin::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.is_love_mode()
+    }
+    pub fn love_mode_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLoveModeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_love_mode_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLoveModeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_breed_item_with_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBreedItem", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -22942,6 +36104,119 @@ impl<'mc> Witch<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+    pub fn set_raid(
+        &self,
+        arg0: impl Into<crate::Raid<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Witch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Raider = temp_clone.into();
+        real.set_raid(arg0)
+    }
+    pub fn raid(&self) -> Result<Option<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Witch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Raider = temp_clone.into();
+        real.raid()
+    }
+    pub fn wave(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Witch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Raider = temp_clone.into();
+        real.wave()
+    }
+    pub fn set_wave(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Witch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Raider = temp_clone.into();
+        real.set_wave(arg0)
+    }
+    pub fn patrol_target(
+        &self,
+    ) -> Result<Option<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Witch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Raider = temp_clone.into();
+        real.patrol_target()
+    }
+    pub fn set_patrol_target(
+        &self,
+        arg0: impl Into<crate::block::Block<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Witch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Raider = temp_clone.into();
+        real.set_patrol_target(arg0)
+    }
+    pub fn is_patrol_leader(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Witch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Raider = temp_clone.into();
+        real.is_patrol_leader()
+    }
+    pub fn set_patrol_leader(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Witch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Raider = temp_clone.into();
+        real.set_patrol_leader(arg0)
+    }
+    pub fn is_can_join_raid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Witch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Raider = temp_clone.into();
+        real.is_can_join_raid()
+    }
+    pub fn set_can_join_raid(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Witch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Raider = temp_clone.into();
+        real.set_can_join_raid(arg0)
+    }
+    pub fn ticks_outside_raid(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Witch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Raider = temp_clone.into();
+        real.ticks_outside_raid()
+    }
+    pub fn set_ticks_outside_raid(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Witch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Raider = temp_clone.into();
+        real.set_ticks_outside_raid(arg0)
+    }
+    pub fn is_celebrating(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Witch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Raider = temp_clone.into();
+        real.is_celebrating()
+    }
+    pub fn set_celebrating(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Witch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Raider = temp_clone.into();
+        real.set_celebrating(arg0)
+    }
+    pub fn celebration_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Witch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Raider = temp_clone.into();
+        real.celebration_sound()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -23236,6 +36511,23 @@ impl<'mc> JNIInstantiatable<'mc> for Tameable<'mc> {
 }
 
 impl<'mc> Tameable<'mc> {
+    pub fn owner(
+        &self,
+    ) -> Result<Option<crate::entity::AnimalTamer<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/AnimalTamer;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getOwner", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::AnimalTamer::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+
     pub fn set_owner(
         &self,
         arg0: impl Into<crate::entity::AnimalTamer<'mc>>,
@@ -23252,23 +36544,6 @@ impl<'mc> Tameable<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-
-    pub fn owner(
-        &self,
-    ) -> Result<Option<crate::entity::AnimalTamer<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/AnimalTamer;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getOwner", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::entity::AnimalTamer::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
     }
 
     pub fn is_tamed(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -23292,6 +36567,73 @@ impl<'mc> Tameable<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn breed_cause(
+        &self,
+    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Tameable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.breed_cause()
+    }
+    pub fn set_breed_cause(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Tameable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.set_breed_cause(arg0)
+    }
+    pub fn is_love_mode(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Tameable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.is_love_mode()
+    }
+    pub fn love_mode_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLoveModeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_love_mode_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLoveModeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_breed_item_with_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBreedItem", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -23355,7 +36697,7 @@ impl<'mc> Into<crate::entity::ThrowableProjectile<'mc>> for EnderPearl<'mc> {
             .expect("Error converting EnderPearl into crate::entity::ThrowableProjectile")
     }
 }
-/// Represents a Mule - variant of <a href="ChestedHorse.html" title="interface in org.bukkit.entity"><code>ChestedHorse</code></a>.
+/// Represents a Mule - variant of <a title="interface in org.bukkit.entity" href="ChestedHorse.html"><code>ChestedHorse</code></a>.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -23569,7 +36911,7 @@ impl<'mc> ArmorStandLockTypeStruct<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// A baby <a title="interface in org.bukkit.entity" href="Frog.html"><code>Frog</code></a>.
+/// A baby <a href="Frog.html" title="interface in org.bukkit.entity"><code>Frog</code></a>.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -23750,6 +37092,661 @@ impl<'mc> ExperienceOrb<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExperienceOrb::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -24157,6 +38154,661 @@ impl<'mc> Projectile<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Projectile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -24495,6 +39147,82 @@ impl<'mc> EnderDragonPart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn damage_with_double(
+        &self,
+        arg0: f64,
+        arg1: std::option::Option<impl Into<crate::entity::Entity<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "D";
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/entity/Entity;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "damage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn health(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = EnderDragonPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Damageable = temp_clone.into();
+        real.health()
+    }
+    pub fn set_health(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderDragonPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Damageable = temp_clone.into();
+        real.set_health(arg0)
+    }
+    pub fn absorption_amount(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = EnderDragonPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Damageable = temp_clone.into();
+        real.absorption_amount()
+    }
+    pub fn set_absorption_amount(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderDragonPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Damageable = temp_clone.into();
+        real.set_absorption_amount(arg0)
+    }
+
+    pub fn max_health(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = EnderDragonPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Damageable = temp_clone.into();
+        real.max_health()
+    }
+
+    pub fn set_max_health(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderDragonPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Damageable = temp_clone.into();
+        real.set_max_health(arg0)
+    }
+
+    pub fn reset_max_health(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderDragonPart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Damageable = temp_clone.into();
+        real.reset_max_health()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -24643,6 +39371,23 @@ impl<'mc> WitherSkull<'mc> {
             .call_method(&self.jni_object(), "isCharged", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+    pub fn direction(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = WitherSkull::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Fireball = temp_clone.into();
+        real.direction()
+    }
+    pub fn set_direction(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = WitherSkull::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Fireball = temp_clone.into();
+        real.set_direction(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -25060,6 +39805,23 @@ impl<'mc> Boat<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boat::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Vehicle = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boat::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Vehicle = temp_clone.into();
+        real.velocity()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -25255,6 +40017,56 @@ impl<'mc> AbstractHorse<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AbstractHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Vehicle = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AbstractHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Vehicle = temp_clone.into();
+        real.velocity()
+    }
+    pub fn owner(
+        &self,
+    ) -> Result<Option<crate::entity::AnimalTamer<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = AbstractHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.owner()
+    }
+    pub fn set_owner(
+        &self,
+        arg0: impl Into<crate::entity::AnimalTamer<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AbstractHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.set_owner(arg0)
+    }
+    pub fn is_tamed(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AbstractHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.is_tamed()
+    }
+    pub fn set_tamed(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AbstractHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.set_tamed(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -25976,6 +40788,17 @@ impl<'mc> ItemFrame<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn set_facing_direction(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ItemFrame::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Hanging = temp_clone.into();
+        real.set_facing_direction(arg0, arg1)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -26048,6 +40871,121 @@ impl<'mc> SpectralArrow<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn set_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SpectralArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.set_damage(arg0)
+    }
+    pub fn damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = SpectralArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.damage()
+    }
+    pub fn knockback_strength(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = SpectralArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.knockback_strength()
+    }
+    pub fn set_knockback_strength(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SpectralArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.set_knockback_strength(arg0)
+    }
+    pub fn pierce_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = SpectralArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.pierce_level()
+    }
+    pub fn set_pierce_level(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SpectralArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.set_pierce_level(arg0)
+    }
+    pub fn is_critical(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SpectralArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.is_critical()
+    }
+    pub fn set_critical(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SpectralArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.set_critical(arg0)
+    }
+    pub fn is_in_block(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SpectralArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.is_in_block()
+    }
+    pub fn attached_block(
+        &self,
+    ) -> Result<Option<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = SpectralArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.attached_block()
+    }
+    pub fn pickup_status(
+        &self,
+    ) -> Result<crate::entity::AbstractArrowPickupStatus<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/AbstractArrow$PickupStatus;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPickupStatus", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::entity::AbstractArrowPickupStatus::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_pickup_status(
+        &self,
+        arg0: impl Into<crate::entity::AbstractArrowPickupStatus<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/entity/AbstractArrow$PickupStatus;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPickupStatus",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_shot_from_crossbow(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SpectralArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.is_shot_from_crossbow()
+    }
+    pub fn set_shot_from_crossbow(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SpectralArrow::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractArrow = temp_clone.into();
+        real.set_shot_from_crossbow(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -26114,6 +41052,661 @@ impl<'mc> Boss<'mc> {
             &self.jni_ref(),
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
+    }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Boss::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -26239,6 +41832,87 @@ impl<'mc> Strider<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn has_saddle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Strider::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Steerable = temp_clone.into();
+        real.has_saddle()
+    }
+    pub fn set_saddle(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Strider::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Steerable = temp_clone.into();
+        real.set_saddle(arg0)
+    }
+    pub fn boost_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getBoostTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_boost_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setBoostTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn current_boost_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCurrentBoostTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_current_boost_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCurrentBoostTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn steer_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Strider::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Steerable = temp_clone.into();
+        real.steer_material()
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Strider::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Vehicle = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Strider::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Vehicle = temp_clone.into();
+        real.velocity()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -26356,9 +42030,9 @@ impl<'mc> Horse<'mc> {
     }
     /// <span class="deprecated-label">Deprecated.</span>
     /// <div class="deprecation-comment">
-    /// see <a href="ChestedHorse.html" title="interface in org.bukkit.entity"><code>ChestedHorse</code></a>
+    /// see <a title="interface in org.bukkit.entity" href="ChestedHorse.html"><code>ChestedHorse</code></a>
     /// </div>
-    /// see <a href="ChestedHorse.html" title="interface in org.bukkit.entity"><code>ChestedHorse</code></a>
+    /// see <a title="interface in org.bukkit.entity" href="ChestedHorse.html"><code>ChestedHorse</code></a>
     ///
     pub fn set_carrying_chest(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
@@ -26400,6 +42074,79 @@ impl<'mc> Horse<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn variant(&self) -> Result<crate::entity::HorseVariant<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Horse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.variant()
+    }
+    pub fn set_variant(
+        &self,
+        arg0: impl Into<crate::entity::HorseVariant<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Horse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_variant(arg0)
+    }
+    pub fn domestication(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Horse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.domestication()
+    }
+    pub fn set_domestication(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Horse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_domestication(arg0)
+    }
+    pub fn max_domestication(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Horse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.max_domestication()
+    }
+    pub fn set_max_domestication(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Horse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_max_domestication(arg0)
+    }
+    pub fn jump_strength(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = Horse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.jump_strength()
+    }
+    pub fn set_jump_strength(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Horse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_jump_strength(arg0)
+    }
+    pub fn is_eating_haystack(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Horse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.is_eating_haystack()
+    }
+    pub fn set_eating_haystack(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Horse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_eating_haystack(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -26474,6 +42221,15 @@ impl<'mc> WanderingTrader<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn inventory(
+        &self,
+    ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = WanderingTrader::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractVillager = temp_clone.into();
+        real.inventory()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -27080,6 +42836,39 @@ impl<'mc> FishHook<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn shooter(
+        &self,
+    ) -> Result<Option<crate::projectiles::ProjectileSource<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = FishHook::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.shooter()
+    }
+    pub fn set_shooter(
+        &self,
+        arg0: impl Into<crate::projectiles::ProjectileSource<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FishHook::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.set_shooter(arg0)
+    }
+    pub fn does_bounce(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FishHook::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.does_bounce()
+    }
+    pub fn set_bounce(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FishHook::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Projectile = temp_clone.into();
+        real.set_bounce(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -27495,6 +43284,56 @@ impl<'mc> Player<'mc> {
         Ok(())
     }
 
+    pub fn send_sign_change_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: Vec<String>,
+        arg2: std::option::Option<impl Into<crate::DyeColor<'mc>>>,
+        arg3: std::option::Option<bool>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "[Ljava/lang/String;";
+        let arr = self.jni_ref().new_object_array(
+            arg1.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg1.len() {
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg1.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_2.l()?)?;
+        }
+        let val_2 = jni::objects::JValueGen::Object(arr);
+        args.push(val_2.l()?.into());
+        if let Some(a) = arg2 {
+            sig += "Lorg/bukkit/DyeColor;";
+            let val_3 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "Z";
+            let val_4 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_4);
+        }
+        sig += ")V";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "sendSignChange", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub fn send_block_update(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
@@ -27697,7 +43536,7 @@ impl<'mc> Player<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    /// Sets the player's cooldown between picking up experience orbs.. <strong>Note:</strong> Setting this to 0 allows the player to pick up instantly, but setting this to a negative value will cause the player to be unable to pick up xp-orbs. Calling this Method will result in <a href="../event/player/PlayerExpCooldownChangeEvent.html" title="class in org.bukkit.event.player"><code>PlayerExpCooldownChangeEvent</code></a> being called.
+    /// Sets the player's cooldown between picking up experience orbs.. <strong>Note:</strong> Setting this to 0 allows the player to pick up instantly, but setting this to a negative value will cause the player to be unable to pick up xp-orbs. Calling this Method will result in <a title="class in org.bukkit.event.player" href="../event/player/PlayerExpCooldownChangeEvent.html"><code>PlayerExpCooldownChangeEvent</code></a> being called.
     pub fn set_exp_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0);
@@ -29039,6 +44878,790 @@ impl<'mc> Player<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+    pub fn wakeup(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.wakeup(arg0)
+    }
+    pub fn inventory(
+        &self,
+    ) -> Result<crate::inventory::PlayerInventory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.inventory()
+    }
+
+    pub fn item_in_hand(
+        &self,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.item_in_hand()
+    }
+    pub fn set_item_in_hand(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.set_item_in_hand(arg0)
+    }
+    pub fn ender_chest(
+        &self,
+    ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.ender_chest()
+    }
+    pub fn main_hand(&self) -> Result<crate::inventory::MainHand<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.main_hand()
+    }
+    pub fn set_window_property(
+        &self,
+        arg0: impl Into<crate::inventory::InventoryViewProperty<'mc>>,
+        arg1: i32,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.set_window_property(arg0, arg1)
+    }
+    pub fn enchantment_seed(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.enchantment_seed()
+    }
+    pub fn set_enchantment_seed(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.set_enchantment_seed(arg0)
+    }
+    pub fn open_inventory_with_inventory(
+        &self,
+        arg0: std::option::Option<impl Into<crate::inventory::Inventory<'mc>>>,
+    ) -> Result<crate::inventory::InventoryView<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Lorg/bukkit/inventory/Inventory;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/inventory/InventoryView;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "openInventory", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::InventoryView::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn open_workbench(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: bool,
+    ) -> Result<crate::inventory::InventoryView<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.open_workbench(arg0, arg1)
+    }
+    pub fn open_enchanting(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: bool,
+    ) -> Result<crate::inventory::InventoryView<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.open_enchanting(arg0, arg1)
+    }
+    pub fn open_merchant_with_villager(
+        &self,
+        arg0: impl Into<crate::entity::Villager<'mc>>,
+        arg1: bool,
+    ) -> Result<crate::inventory::InventoryView<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Villager;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Z";
+        let val_2 = jni::objects::JValueGen::Bool(arg1.into());
+        args.push(val_2);
+        sig += ")Lorg/bukkit/inventory/InventoryView;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "openMerchant", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::InventoryView::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn close_inventory(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.close_inventory()
+    }
+    pub fn item_on_cursor(
+        &self,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.item_on_cursor()
+    }
+    pub fn set_item_on_cursor(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.set_item_on_cursor(arg0)
+    }
+    pub fn has_cooldown(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.has_cooldown(arg0)
+    }
+    pub fn get_cooldown(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.get_cooldown(arg0)
+    }
+    pub fn set_cooldown(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+        arg1: i32,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.set_cooldown(arg0, arg1)
+    }
+    pub fn sleep_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getSleepTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn bed_location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.bed_location()
+    }
+    pub fn game_mode(&self) -> Result<crate::GameMode<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.game_mode()
+    }
+    pub fn set_game_mode(
+        &self,
+        arg0: impl Into<crate::GameMode<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.set_game_mode(arg0)
+    }
+    pub fn is_blocking(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.is_blocking()
+    }
+    pub fn is_hand_raised(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.is_hand_raised()
+    }
+    pub fn item_in_use(
+        &self,
+    ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.item_in_use()
+    }
+    pub fn exp_to_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.exp_to_level()
+    }
+    pub fn attack_cooldown(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.attack_cooldown()
+    }
+    pub fn discover_recipe(
+        &self,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.discover_recipe(arg0)
+    }
+    pub fn undiscover_recipe(
+        &self,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/NamespacedKey;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "undiscoverRecipe",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_discovered_recipe(
+        &self,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/NamespacedKey;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasDiscoveredRecipe",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn discovered_recipes(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDiscoveredRecipes",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn shoulder_entity_left(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.shoulder_entity_left()
+    }
+    pub fn set_shoulder_entity_left(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.set_shoulder_entity_left(arg0)
+    }
+
+    pub fn shoulder_entity_right(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.shoulder_entity_right()
+    }
+    pub fn set_shoulder_entity_right(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.set_shoulder_entity_right(arg0)
+    }
+    pub fn drop_item(&self, arg0: bool) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.drop_item(arg0)
+    }
+    pub fn exhaustion(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.exhaustion()
+    }
+    pub fn set_exhaustion(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.set_exhaustion(arg0)
+    }
+    pub fn saturation(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.saturation()
+    }
+    pub fn set_saturation(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.set_saturation(arg0)
+    }
+    pub fn food_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.food_level()
+    }
+    pub fn set_food_level(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.set_food_level(arg0)
+    }
+    pub fn saturated_regen_rate(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.saturated_regen_rate()
+    }
+    pub fn set_saturated_regen_rate(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.set_saturated_regen_rate(arg0)
+    }
+    pub fn unsaturated_regen_rate(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.unsaturated_regen_rate()
+    }
+    pub fn set_unsaturated_regen_rate(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.set_unsaturated_regen_rate(arg0)
+    }
+    pub fn starvation_rate(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.starvation_rate()
+    }
+    pub fn set_starvation_rate(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.set_starvation_rate(arg0)
+    }
+    pub fn last_death_location(
+        &self,
+    ) -> Result<Option<crate::Location<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.last_death_location()
+    }
+    pub fn set_last_death_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.set_last_death_location(arg0)
+    }
+    pub fn firework_boost(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<crate::entity::Firework<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.firework_boost(arg0)
+    }
+    pub fn sleep(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::HumanEntity = temp_clone.into();
+        real.sleep(arg0, arg1)
+    }
+    pub fn accept_conversation_input(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Conversable = temp_clone.into();
+        real.accept_conversation_input(arg0)
+    }
+    pub fn begin_conversation(
+        &self,
+        arg0: impl Into<crate::conversations::Conversation<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Conversable = temp_clone.into();
+        real.begin_conversation(arg0)
+    }
+    pub fn abandon_conversation_with_conversation(
+        &self,
+        arg0: impl Into<crate::conversations::Conversation<'mc>>,
+        arg1: std::option::Option<impl Into<crate::conversations::ConversationAbandonedEvent<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/conversations/Conversation;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/conversations/ConversationAbandonedEvent;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "abandonConversation",
+            sig.as_str(),
+            args,
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_conversing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Conversable = temp_clone.into();
+        real.is_conversing()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::OfflinePlayer = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn is_banned(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::OfflinePlayer = temp_clone.into();
+        real.is_banned()
+    }
+    pub fn player(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::OfflinePlayer = temp_clone.into();
+        real.player()
+    }
+    pub fn is_online(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::OfflinePlayer = temp_clone.into();
+        real.is_online()
+    }
+    pub fn player_profile(
+        &self,
+    ) -> Result<crate::profile::PlayerProfile<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::OfflinePlayer = temp_clone.into();
+        real.player_profile()
+    }
+    pub fn is_whitelisted(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::OfflinePlayer = temp_clone.into();
+        real.is_whitelisted()
+    }
+    pub fn set_whitelisted(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::OfflinePlayer = temp_clone.into();
+        real.set_whitelisted(arg0)
+    }
+    pub fn first_played(&self) -> Result<i64, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::OfflinePlayer = temp_clone.into();
+        real.first_played()
+    }
+    pub fn last_played(&self) -> Result<i64, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::OfflinePlayer = temp_clone.into();
+        real.last_played()
+    }
+    pub fn has_played_before(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::OfflinePlayer = temp_clone.into();
+        real.has_played_before()
+    }
+    pub fn increment_statistic_with_statistic(
+        &self,
+        arg0: impl Into<crate::Statistic<'mc>>,
+        arg1: std::option::Option<impl Into<crate::entity::EntityType<'mc>>>,
+        arg2: std::option::Option<i32>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Statistic;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/entity/EntityType;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "I";
+            let val_3 = jni::objects::JValueGen::Int(a);
+            args.push(val_3);
+        }
+        sig += ")V";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "incrementStatistic",
+            sig.as_str(),
+            args,
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn decrement_statistic_with_statistic(
+        &self,
+        arg0: impl Into<crate::Statistic<'mc>>,
+        arg1: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg2: std::option::Option<i32>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Statistic;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/Material;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "I";
+            let val_3 = jni::objects::JValueGen::Int(a);
+            args.push(val_3);
+        }
+        sig += ")V";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "decrementStatistic",
+            sig.as_str(),
+            args,
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_statistic_with_statistic(
+        &self,
+        arg0: impl Into<crate::Statistic<'mc>>,
+        arg1: impl Into<crate::Material<'mc>>,
+        arg2: std::option::Option<i32>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Statistic;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/Material;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
+        if let Some(a) = arg2 {
+            sig += "I";
+            let val_3 = jni::objects::JValueGen::Int(a);
+            args.push(val_3);
+        }
+        sig += ")V";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "setStatistic", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn get_statistic_with_statistic(
+        &self,
+        arg0: impl Into<crate::Statistic<'mc>>,
+        arg1: std::option::Option<impl Into<crate::entity::EntityType<'mc>>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Statistic;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/entity/EntityType;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")I";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getStatistic", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn send_plugin_message(
+        &self,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
+        arg1: impl Into<String>,
+        arg2: Vec<i8>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Player::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::messaging::PluginMessageRecipient = temp_clone.into();
+        real.send_plugin_message(arg0, arg1, arg2)
+    }
+    pub fn listening_plugin_channels(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getListeningPluginChannels",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -29295,6 +45918,66 @@ impl<'mc> Zombie<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn age(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Zombie::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.age()
+    }
+    pub fn set_age(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Zombie::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.set_age(arg0)
+    }
+
+    pub fn set_age_lock(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Zombie::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.set_age_lock(arg0)
+    }
+
+    pub fn age_lock(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Zombie::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.age_lock()
+    }
+
+    pub fn can_breed(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Zombie::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.can_breed()
+    }
+
+    pub fn set_breed(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Zombie::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.set_breed(arg0)
+    }
+    pub fn set_adult(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Zombie::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.set_adult()
+    }
+    pub fn is_adult(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Zombie::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Ageable = temp_clone.into();
+        real.is_adult()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -29388,6 +46071,53 @@ impl<'mc> Parrot<'mc> {
             .call_method(&self.jni_object(), "isDancing", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+    pub fn owner(
+        &self,
+    ) -> Result<Option<crate::entity::AnimalTamer<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Parrot::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.owner()
+    }
+    pub fn set_owner(
+        &self,
+        arg0: impl Into<crate::entity::AnimalTamer<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Parrot::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.set_owner(arg0)
+    }
+    pub fn is_tamed(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Parrot::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.is_tamed()
+    }
+    pub fn set_tamed(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Parrot::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.set_tamed(arg0)
+    }
+    pub fn is_sitting(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Parrot::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Sittable = temp_clone.into();
+        real.is_sitting()
+    }
+    pub fn set_sitting(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Parrot::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Sittable = temp_clone.into();
+        real.set_sitting(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -29499,6 +46229,661 @@ impl<'mc> EnderCrystal<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.facing()
+    }
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.world()
+    }
+    pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_silent()
+    }
+    pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.portal_cooldown()
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_valid()
+    }
+    pub fn get_nearby_entities(
+        &self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(DDD)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        let val_2 = jni::objects::JValueGen::Double(arg1);
+        let val_3 = jni::objects::JValueGen::Double(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNearbyEntities",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_rotation(arg0, arg1)
+    }
+    pub fn set_velocity(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_velocity(arg0)
+    }
+    pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.velocity()
+    }
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.height()
+    }
+    pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.width()
+    }
+    pub fn bounding_box(
+        &self,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.bounding_box()
+    }
+    pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_on_ground()
+    }
+    pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_in_water()
+    }
+    pub fn teleport_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn teleport_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.entity_id()
+    }
+    pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxFireTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visual_fire(arg0)
+    }
+    pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visual_fire()
+    }
+    pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFreezeTicks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxFreezeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFreezeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_dead()
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.server()
+    }
+    pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_persistent()
+    }
+    pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_persistent(arg0)
+    }
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.passenger()
+    }
+    pub fn set_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_passenger(arg0)
+    }
+    pub fn passengers(
+        &self,
+    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPassengers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_passenger(arg0)
+    }
+    pub fn remove_passenger(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_passenger(arg0)
+    }
+    pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.eject()
+    }
+    pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.fall_distance()
+    }
+    pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_fall_distance(arg0)
+    }
+    pub fn set_last_damage_cause(
+        &self,
+        arg0: impl Into<crate::event::entity::EntityDamageEvent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_last_damage_cause(arg0)
+    }
+    pub fn last_damage_cause(
+        &self,
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.last_damage_cause()
+    }
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.unique_id()
+    }
+    pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.ticks_lived()
+    }
+    pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_ticks_lived(arg0)
+    }
+    pub fn play_effect(
+        &self,
+        arg0: impl Into<crate::EntityEffect<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.play_effect(arg0)
+    }
+    pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_sound()
+    }
+    pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_splash_sound()
+    }
+    pub fn swim_high_speed_splash_sound(
+        &self,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.swim_high_speed_splash_sound()
+    }
+    pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_inside_vehicle()
+    }
+    pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.leave_vehicle()
+    }
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.vehicle()
+    }
+    pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_custom_name_visible(arg0)
+    }
+    pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_custom_name_visible()
+    }
+    pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_visible_by_default(arg0)
+    }
+    pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_visible_by_default()
+    }
+    pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_glowing(arg0)
+    }
+    pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_glowing()
+    }
+    pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_invulnerable(arg0)
+    }
+    pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_invulnerable()
+    }
+    pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_silent(arg0)
+    }
+    pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.has_gravity()
+    }
+    pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_gravity(arg0)
+    }
+    pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.set_portal_cooldown(arg0)
+    }
+    pub fn scoreboard_tags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboardTags",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.add_scoreboard_tag(arg0)
+    }
+    pub fn remove_scoreboard_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove_scoreboard_tag(arg0)
+    }
+    pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.pose()
+    }
+    pub fn spawn_category(
+        &self,
+    ) -> Result<crate::entity::SpawnCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spawn_category()
+    }
+    pub fn spigot(
+        &self,
+    ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.spigot()
+    }
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.remove()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.location()
+    }
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.get_type()
+    }
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnderCrystal::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Entity = temp_clone.into();
+        real.is_frozen()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -29581,6 +46966,25 @@ impl<'mc> Evoker<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn spell(
+        &self,
+    ) -> Result<crate::entity::SpellcasterSpell<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Evoker::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Spellcaster = temp_clone.into();
+        real.spell()
+    }
+    pub fn set_spell(
+        &self,
+        arg0: impl Into<crate::entity::SpellcasterSpell<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Evoker::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Spellcaster = temp_clone.into();
+        real.set_spell(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -31076,7 +48480,7 @@ impl<'mc> EntityTypeStruct<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a ZombieHorse - variant of <a href="AbstractHorse.html" title="interface in org.bukkit.entity"><code>AbstractHorse</code></a>.
+/// Represents a ZombieHorse - variant of <a title="interface in org.bukkit.entity" href="AbstractHorse.html"><code>AbstractHorse</code></a>.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -31468,6 +48872,88 @@ impl<'mc> ChestedHorse<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn variant(&self) -> Result<crate::entity::HorseVariant<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ChestedHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.variant()
+    }
+    pub fn inventory(
+        &self,
+    ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ChestedHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.inventory()
+    }
+    pub fn set_variant(
+        &self,
+        arg0: impl Into<crate::entity::HorseVariant<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ChestedHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_variant(arg0)
+    }
+    pub fn domestication(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ChestedHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.domestication()
+    }
+    pub fn set_domestication(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ChestedHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_domestication(arg0)
+    }
+    pub fn max_domestication(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ChestedHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.max_domestication()
+    }
+    pub fn set_max_domestication(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ChestedHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_max_domestication(arg0)
+    }
+    pub fn jump_strength(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = ChestedHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.jump_strength()
+    }
+    pub fn set_jump_strength(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ChestedHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_jump_strength(arg0)
+    }
+    pub fn is_eating_haystack(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ChestedHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.is_eating_haystack()
+    }
+    pub fn set_eating_haystack(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ChestedHorse::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::AbstractHorse = temp_clone.into();
+        real.set_eating_haystack(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -31575,6 +49061,53 @@ impl<'mc> Cat<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn owner(
+        &self,
+    ) -> Result<Option<crate::entity::AnimalTamer<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Cat::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.owner()
+    }
+    pub fn set_owner(
+        &self,
+        arg0: impl Into<crate::entity::AnimalTamer<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Cat::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.set_owner(arg0)
+    }
+    pub fn is_tamed(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Cat::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.is_tamed()
+    }
+    pub fn set_tamed(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Cat::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Tameable = temp_clone.into();
+        real.set_tamed(arg0)
+    }
+    pub fn is_sitting(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Cat::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Sittable = temp_clone.into();
+        real.is_sitting()
+    }
+    pub fn set_sitting(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Cat::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Sittable = temp_clone.into();
+        real.set_sitting(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -31887,6 +49420,73 @@ impl<'mc> Axolotl<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn breed_cause(
+        &self,
+    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Axolotl::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.breed_cause()
+    }
+    pub fn set_breed_cause(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Axolotl::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.set_breed_cause(arg0)
+    }
+    pub fn is_love_mode(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Axolotl::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.is_love_mode()
+    }
+    pub fn love_mode_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLoveModeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_love_mode_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLoveModeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_breed_item_with_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBreedItem", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -32158,6 +49758,665 @@ impl<'mc> ComplexLivingEntity<'mc> {
         blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn maximum_no_damage_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaximumNoDamageTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_arrows_in_body(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_arrows_in_body(arg0)
+    }
+    pub fn get_eye_height(&self, arg0: bool) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_eye_height(arg0)
+    }
+    pub fn eye_location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.eye_location()
+    }
+    pub fn get_line_of_sight(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaSet<'mc>>,
+        arg1: i32,
+    ) -> Result<Vec<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_line_of_sight(arg0, arg1)
+    }
+    pub fn get_target_block(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaSet<'mc>>,
+        arg1: i32,
+    ) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_target_block(arg0, arg1)
+    }
+    pub fn get_last_two_target_blocks(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaSet<'mc>>,
+        arg1: i32,
+    ) -> Result<Vec<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/Set;I)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Int(arg1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLastTwoTargetBlocks",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::block::Block::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn get_target_block_exact_with_int(
+        &self,
+        arg0: i32,
+        arg1: std::option::Option<impl Into<crate::FluidCollisionMode<'mc>>>,
+    ) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/FluidCollisionMode;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Lorg/bukkit/block/Block;";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getTargetBlockExact",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::Block::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn ray_trace_blocks_with_double(
+        &self,
+        arg0: f64,
+        arg1: std::option::Option<impl Into<crate::FluidCollisionMode<'mc>>>,
+    ) -> Result<crate::util::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "D";
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/FluidCollisionMode;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Lorg/bukkit/util/RayTraceResult;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "rayTraceBlocks", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::RayTraceResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn remaining_air(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.remaining_air()
+    }
+    pub fn set_remaining_air(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_remaining_air(arg0)
+    }
+    pub fn maximum_air(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.maximum_air()
+    }
+    pub fn set_maximum_air(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_maximum_air(arg0)
+    }
+    pub fn arrow_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.arrow_cooldown()
+    }
+    pub fn set_arrow_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_arrow_cooldown(arg0)
+    }
+    pub fn arrows_in_body(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.arrows_in_body()
+    }
+    pub fn set_maximum_no_damage_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setMaximumNoDamageTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn last_damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.last_damage()
+    }
+    pub fn set_last_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_last_damage(arg0)
+    }
+    pub fn no_damage_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNoDamageTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_no_damage_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setNoDamageTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn no_action_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNoActionTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_no_action_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setNoActionTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn killer(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.killer()
+    }
+    pub fn add_potion_effect_with_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffect<'mc>>,
+        arg1: std::option::Option<bool>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/potion/PotionEffect;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Z";
+            let val_2 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "addPotionEffect", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/potion/PotionEffectType;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPotionEffect",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn get_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
+    ) -> Result<crate::potion::PotionEffect<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_potion_effect(arg0)
+    }
+    pub fn remove_potion_effect(
+        &self,
+        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.remove_potion_effect(arg0)
+    }
+    pub fn active_potion_effects(
+        &self,
+    ) -> Result<Vec<crate::potion::PotionEffect<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Collection;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getActivePotionEffects",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::potion::PotionEffect::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
+    }
+    pub fn has_line_of_sight(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.has_line_of_sight(arg0)
+    }
+    pub fn remove_when_far_away(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.remove_when_far_away()
+    }
+    pub fn set_remove_when_far_away(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_remove_when_far_away(arg0)
+    }
+    pub fn equipment(
+        &self,
+    ) -> Result<Option<crate::inventory::EntityEquipment<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.equipment()
+    }
+    pub fn set_can_pickup_items(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCanPickupItems",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn can_pickup_items(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCanPickupItems",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_leashed(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_leashed()
+    }
+    pub fn leash_holder(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.leash_holder()
+    }
+    pub fn set_leash_holder(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_leash_holder(arg0)
+    }
+    pub fn is_gliding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_gliding()
+    }
+    pub fn set_gliding(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_gliding(arg0)
+    }
+    pub fn is_swimming(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_swimming()
+    }
+    pub fn set_swimming(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_swimming(arg0)
+    }
+    pub fn is_riptiding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_riptiding()
+    }
+    pub fn is_sleeping(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_sleeping()
+    }
+    pub fn is_climbing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_climbing()
+    }
+    pub fn set_ai(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_ai(arg0)
+    }
+    pub fn has_ai(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.has_ai()
+    }
+    pub fn attack(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.attack(arg0)
+    }
+    pub fn swing_main_hand(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.swing_main_hand()
+    }
+    pub fn swing_off_hand(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.swing_off_hand()
+    }
+    pub fn play_hurt_animation(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.play_hurt_animation(arg0)
+    }
+    pub fn set_collidable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_collidable(arg0)
+    }
+    pub fn is_collidable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_collidable()
+    }
+    pub fn collidable_exemptions(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCollidableExemptions",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn get_memory(
+        &self,
+        arg0: impl Into<crate::entity::memory::MemoryKey<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_memory(arg0)
+    }
+    pub fn hurt_sound(&self) -> Result<Option<crate::Sound<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.hurt_sound()
+    }
+    pub fn death_sound(&self) -> Result<Option<crate::Sound<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.death_sound()
+    }
+    pub fn get_fall_damage_sound(
+        &self,
+        arg0: i32,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_fall_damage_sound(arg0)
+    }
+    pub fn fall_damage_sound_small(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.fall_damage_sound_small()
+    }
+    pub fn fall_damage_sound_big(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.fall_damage_sound_big()
+    }
+    pub fn get_drinking_sound(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_drinking_sound(arg0)
+    }
+    pub fn get_eating_sound(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.get_eating_sound(arg0)
+    }
+    pub fn can_breathe_underwater(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.can_breathe_underwater()
+    }
+    pub fn category(
+        &self,
+    ) -> Result<crate::entity::EntityCategory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.category()
+    }
+    pub fn set_invisible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_invisible(arg0)
+    }
+    pub fn is_invisible(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.is_invisible()
+    }
+    pub fn set_memory(
+        &self,
+        arg0: impl Into<crate::entity::memory::MemoryKey<'mc>>,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ComplexLivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::LivingEntity = temp_clone.into();
+        real.set_memory(arg0, arg1)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -32617,6 +50876,23 @@ impl<'mc> Shulker<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn set_color(
+        &self,
+        arg0: impl Into<crate::DyeColor<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Shulker::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Colorable = temp_clone.into();
+        real.set_color(arg0)
+    }
+    pub fn color(&self) -> Result<Option<crate::DyeColor<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Shulker::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Colorable = temp_clone.into();
+        real.color()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -33687,7 +51963,7 @@ impl<'mc> LivingEntity<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    /// Get the <a title="enum in org.bukkit" href="../Sound.html"><code>Sound</code></a> this entity will make when falling from the given height (in blocks). The sound will often differ between either a small or a big fall damage sound if the height exceeds 4 blocks.
+    /// Get the <a href="../Sound.html" title="enum in org.bukkit"><code>Sound</code></a> this entity will make when falling from the given height (in blocks). The sound will often differ between either a small or a big fall damage sound if the height exceeds 4 blocks.
     pub fn get_fall_damage_sound(
         &self,
         arg0: i32,
@@ -33842,6 +52118,118 @@ impl<'mc> LivingEntity<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn get_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+    ) -> Result<crate::attribute::AttributeInstance<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::attribute::Attributable = temp_clone.into();
+        real.get_attribute(arg0)
+    }
+    pub fn damage_with_double(
+        &self,
+        arg0: f64,
+        arg1: std::option::Option<impl Into<crate::entity::Entity<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "D";
+        let val_1 = jni::objects::JValueGen::Double(arg0);
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/entity/Entity;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "damage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn health(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = LivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Damageable = temp_clone.into();
+        real.health()
+    }
+    pub fn set_health(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Damageable = temp_clone.into();
+        real.set_health(arg0)
+    }
+    pub fn absorption_amount(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = LivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Damageable = temp_clone.into();
+        real.absorption_amount()
+    }
+    pub fn set_absorption_amount(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Damageable = temp_clone.into();
+        real.set_absorption_amount(arg0)
+    }
+
+    pub fn max_health(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = LivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Damageable = temp_clone.into();
+        real.max_health()
+    }
+
+    pub fn set_max_health(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Damageable = temp_clone.into();
+        real.set_max_health(arg0)
+    }
+
+    pub fn reset_max_health(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LivingEntity::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Damageable = temp_clone.into();
+        real.reset_max_health()
+    }
+    pub fn launch_projectile_with_class(
+        &self,
+        arg0: jni::objects::JClass<'mc>,
+        arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
+    ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/Class;";
+        let val_1 = jni::objects::JValueGen::Object(arg0.into());
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/util/Vector;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Lorg/bukkit/entity/Projectile;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "launchProjectile", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::entity::Projectile::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -34357,6 +52745,73 @@ impl<'mc> Frog<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn breed_cause(
+        &self,
+    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Frog::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.breed_cause()
+    }
+    pub fn set_breed_cause(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Frog::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.set_breed_cause(arg0)
+    }
+    pub fn is_love_mode(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Frog::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.is_love_mode()
+    }
+    pub fn love_mode_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLoveModeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_love_mode_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLoveModeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_breed_item_with_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBreedItem", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -34586,6 +53041,23 @@ impl<'mc> SizedFireball<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn direction(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = SizedFireball::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Fireball = temp_clone.into();
+        real.direction()
+    }
+    pub fn set_direction(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SizedFireball::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Fireball = temp_clone.into();
+        real.set_direction(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -34750,6 +53222,73 @@ impl<'mc> Sniffer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn breed_cause(
+        &self,
+    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Sniffer::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.breed_cause()
+    }
+    pub fn set_breed_cause(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Sniffer::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.set_breed_cause(arg0)
+    }
+    pub fn is_love_mode(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Sniffer::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.is_love_mode()
+    }
+    pub fn love_mode_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLoveModeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_love_mode_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLoveModeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_breed_item_with_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBreedItem", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -34885,6 +53424,17 @@ impl<'mc> Painting<'mc> {
             .call_method(&self.jni_object(), "setArt", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+    pub fn set_facing_direction(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Painting::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Hanging = temp_clone.into();
+        real.set_facing_direction(arg0, arg1)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -35220,6 +53770,38 @@ impl<'mc> Animals<'mc> {
         Ok(res.z()?)
     }
 
+    pub fn set_age_lock(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Animals::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Breedable = temp_clone.into();
+        real.set_age_lock(arg0)
+    }
+
+    pub fn age_lock(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Animals::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Breedable = temp_clone.into();
+        real.age_lock()
+    }
+
+    pub fn can_breed(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Animals::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Breedable = temp_clone.into();
+        real.can_breed()
+    }
+
+    pub fn set_breed(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Animals::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Breedable = temp_clone.into();
+        real.set_breed(arg0)
+    }
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -35491,6 +54073,90 @@ impl<'mc> Sheep<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn breed_cause(
+        &self,
+    ) -> Result<Option<blackboxmc_java::util::JavaUUID<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Sheep::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.breed_cause()
+    }
+    pub fn set_breed_cause(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Sheep::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.set_breed_cause(arg0)
+    }
+    pub fn is_love_mode(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Sheep::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Animals = temp_clone.into();
+        real.is_love_mode()
+    }
+    pub fn love_mode_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLoveModeTicks",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn set_love_mode_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLoveModeTicks",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_breed_item_with_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBreedItem", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn set_color(
+        &self,
+        arg0: impl Into<crate::DyeColor<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Sheep::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Colorable = temp_clone.into();
+        real.set_color(arg0)
+    }
+    pub fn color(&self) -> Result<Option<crate::DyeColor<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = Sheep::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Colorable = temp_clone.into();
+        real.color()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

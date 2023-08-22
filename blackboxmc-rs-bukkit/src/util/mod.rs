@@ -434,6 +434,16 @@ impl<'mc> BlockIterator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn for_each_remaining(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::function::JavaConsumer<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockIterator::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: blackboxmc_java::util::JavaIterator = temp_clone.into();
+        real.for_each_remaining(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -884,6 +894,43 @@ impl<'mc> JNIInstantiatable<'mc> for ChatPaginatorChatPage<'mc> {
 }
 
 impl<'mc> ChatPaginatorChatPage<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: Vec<String>,
+        arg1: i32,
+        arg2: i32,
+    ) -> Result<crate::util::ChatPaginatorChatPage<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("([Ljava/lang/String;II)V");
+        let arr = jni.new_object_array(
+            arg0.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = jni.translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                jni.new_string(arg0.get(i).unwrap().clone())?,
+            ));
+            jni.set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
+        let val_3 = jni::objects::JValueGen::Int(arg2);
+        let cls = jni.find_class("org/bukkit/util/ChatPaginator$ChatPage");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1.l()?),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::ChatPaginatorChatPage::from_raw(&jni, res)
+    }
+
     pub fn page_number(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
@@ -2216,6 +2263,16 @@ impl<'mc> BlockVector<'mc> {
             .call_method(&self.jni_object(), "clone", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
+    }
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = BlockVector::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

@@ -265,6 +265,396 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = BlockDataMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.clone()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -376,6 +766,389 @@ impl<'mc> ArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -484,6 +1257,389 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AxolotlBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -535,21 +1691,6 @@ impl<'mc> JNIInstantiatable<'mc> for SkullMeta<'mc> {
 }
 
 impl<'mc> SkullMeta<'mc> {
-    pub fn set_owner(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Z");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setOwner",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
     pub fn owner(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -565,6 +1706,21 @@ impl<'mc> SkullMeta<'mc> {
                 .to_string_lossy()
                 .to_string(),
         ))
+    }
+
+    pub fn set_owner(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Z");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setOwner",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
 
     pub fn has_owner(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -698,6 +1854,389 @@ impl<'mc> SkullMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SkullMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -824,6 +2363,389 @@ impl<'mc> CompassMeta<'mc> {
             .call_method(&self.jni_object(), "clone", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
+    }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CompassMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -997,6 +2919,389 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SuspiciousStewMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1081,6 +3386,36 @@ impl<'mc> CrossbowMeta<'mc> {
         Ok(new_vec)
     }
 
+    pub fn set_charged_projectiles(
+        &self,
+        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/List;)V");
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg0 {
+            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(v.into().jni_object().clone())
+            });
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Lorg/bukkit/inventory/crate::inventory::ItemStack)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setChargedProjectiles",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub fn add_charged_projectile(
         &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -1097,6 +3432,396 @@ impl<'mc> CrossbowMeta<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = CrossbowMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.clone()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1280,6 +4005,33 @@ impl<'mc> ItemMeta<'mc> {
             );
         }
         Ok(Some(new_vec))
+    }
+
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/List;)V");
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg0 {
+            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(v.into())?,
+            ));
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Ljava/lang/String)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLore",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1720,6 +4472,25 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1822,6 +4593,389 @@ impl<'mc> Repairable<'mc> {
         crate::inventory::meta::Repairable::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Repairable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1929,6 +5083,36 @@ impl<'mc> BannerMeta<'mc> {
         Ok(new_vec)
     }
 
+    pub fn set_patterns(
+        &self,
+        arg0: Vec<impl Into<crate::block::banner::Pattern<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/List;)V");
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg0 {
+            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(v.into().jni_object().clone())
+            });
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Lorg/bukkit/block/banner/crate::block::banner::Pattern)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPatterns",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub fn add_pattern(
         &self,
         arg0: impl Into<crate::block::banner::Pattern<'mc>>,
@@ -2016,6 +5200,396 @@ impl<'mc> BannerMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = BannerMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.clone()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2113,6 +5687,426 @@ impl<'mc> BundleMeta<'mc> {
         Ok(new_vec)
     }
 
+    pub fn set_items(
+        &self,
+        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/List;)V");
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg0 {
+            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(v.into().jni_object().clone())
+            });
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Lorg/bukkit/inventory/crate::inventory::ItemStack)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItems",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = BundleMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.clone()
+    }
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -2179,6 +6173,50 @@ impl<'mc> ColorableArmorMeta<'mc> {
         crate::inventory::meta::ColorableArmorMeta::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn has_trim(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ColorableArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ArmorMeta = temp_clone.into();
+        real.has_trim()
+    }
+    pub fn set_trim(
+        &self,
+        arg0: impl Into<crate::inventory::meta::trim::ArmorTrim<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ColorableArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ArmorMeta = temp_clone.into();
+        real.set_trim(arg0)
+    }
+    pub fn trim(
+        &self,
+    ) -> Result<Option<crate::inventory::meta::trim::ArmorTrim<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = ColorableArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ArmorMeta = temp_clone.into();
+        real.trim()
+    }
+    pub fn set_color(
+        &self,
+        arg0: impl Into<crate::Color<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ColorableArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::LeatherArmorMeta = temp_clone.into();
+        real.set_color(arg0)
+    }
+    pub fn color(&self) -> Result<Option<crate::Color<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = ColorableArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::LeatherArmorMeta = temp_clone.into();
+        real.color()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2283,6 +6321,389 @@ impl<'mc> SpawnEggMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SpawnEggMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2379,6 +6800,389 @@ impl<'mc> Damageable<'mc> {
         crate::inventory::meta::Damageable::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Damageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2540,6 +7344,389 @@ impl<'mc> FireworkMeta<'mc> {
         crate::inventory::meta::FireworkMeta::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FireworkMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2803,6 +7990,389 @@ impl<'mc> PotionMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PotionMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2892,6 +8462,396 @@ impl<'mc> BlockStateMeta<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = BlockStateMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.clone()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -3253,6 +9213,389 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentStorageMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3323,6 +9666,36 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         Ok(new_vec)
     }
 
+    pub fn set_recipes(
+        &self,
+        arg0: Vec<impl Into<crate::NamespacedKey<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/List;)V");
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg0 {
+            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(v.into().jni_object().clone())
+            });
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Lorg/bukkit/crate::NamespacedKey)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setRecipes",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub fn add_recipe(
         &self,
         arg0: Vec<crate::NamespacedKey<'mc>>,
@@ -3370,6 +9743,389 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             .call_method(&self.jni_object(), "clone", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
+    }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = KnowledgeBookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -3617,6 +10373,389 @@ impl<'mc> MapMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = MapMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3733,6 +10872,38 @@ impl<'mc> BookMetaSpigot<'mc> {
                 .push(blackboxmc_bungee::bungee::api::chat::BaseComponent::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
+    }
+
+    pub fn set_pages_with_list(
+        &self,
+        arg0: Vec<impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/List;";
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg0 {
+            sig += "Lnet/md_5/bungee/api/chat/blackboxmc_bungee::bungee::api::chat::BaseComponent;";
+            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(v.into().jni_object().clone())
+            });
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Lnet/md_5/bungee/api/chat/blackboxmc_bungee::bungee::api::chat::BaseComponent)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        args.push(val_1);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "setPages", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
 
     pub fn add_page(
@@ -3857,6 +11028,389 @@ impl<'mc> LeatherArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = LeatherArmorMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3966,6 +11520,389 @@ impl<'mc> FireworkEffectMeta<'mc> {
         crate::inventory::meta::FireworkEffectMeta::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FireworkEffectMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -4129,6 +12066,389 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             .call_method(&self.jni_object(), "clone", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
+    }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = TropicalFishBucketMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -4297,6 +12617,62 @@ impl<'mc> BookMeta<'mc> {
         Ok(new_vec)
     }
 
+    pub fn set_pages_with_strings(
+        &self,
+        arg0: Vec<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "[Ljava/lang/String;";
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg0.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        args.push(val_1.l()?.into());
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "setPages", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn add_page(&self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Ljava/lang/String;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg0.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addPage",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub fn set_title(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -4407,6 +12783,389 @@ impl<'mc> BookMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = BookMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4509,6 +13268,389 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         crate::inventory::meta::MusicInstrumentMeta::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = MusicInstrumentMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

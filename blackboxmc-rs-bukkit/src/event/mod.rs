@@ -2,6 +2,156 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+pub enum EventResult<'mc> {
+    Deny { inner: EventResultStruct<'mc> },
+    Default { inner: EventResultStruct<'mc> },
+    Allow { inner: EventResultStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for EventResult<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            EventResult::Deny { .. } => f.write_str("DENY"),
+            EventResult::Default { .. } => f.write_str("DEFAULT"),
+            EventResult::Allow { .. } => f.write_str("ALLOW"),
+        }
+    }
+}
+
+impl<'mc> EventResult<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<EventResult<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/Event$Result");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/Event$Result;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "DENY" => Ok(EventResult::Deny {
+                inner: EventResultStruct::from_raw(env, obj)?,
+            }),
+            "DEFAULT" => Ok(EventResult::Default {
+                inner: EventResultStruct::from_raw(env, obj)?,
+            }),
+            "ALLOW" => Ok(EventResult::Allow {
+                inner: EventResultStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct EventResultStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for EventResult<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Deny { inner } => inner.0.clone(),
+            Self::Default { inner } => inner.0.clone(),
+            Self::Allow { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Deny { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Default { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Allow { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EventResult<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate EventResult from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/Event$Result")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a EventResult object, got {}",
+                name
+            )
+            .into())
+        } else {
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "DENY" => Ok(EventResult::Deny {
+                    inner: EventResultStruct::from_raw(env, obj)?,
+                }),
+                "DEFAULT" => Ok(EventResult::Default {
+                    inner: EventResultStruct::from_raw(env, obj)?,
+                }),
+                "ALLOW" => Ok(EventResult::Allow {
+                    inner: EventResultStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
+        }
+    }
+}
+
+impl<'mc> JNIRaw<'mc> for EventResultStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EventResultStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate EventResultStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/Event$Result")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a EventResultStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> EventResultStruct<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
 /// A list of event handlers, stored per-event. Based on lahwran's fevents.
 #[repr(C)]
 pub struct HandlerList<'mc>(
@@ -359,162 +509,12 @@ impl<'mc> EventHandler<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents an event. All events require a static method named getHandlerList() which returns the same <a title="class in org.bukkit.event" href="HandlerList.html"><code>HandlerList</code></a> as <a href="#getHandlers()"><code>getHandlers()</code></a>.
+/// Represents an event. All events require a static method named getHandlerList() which returns the same <a href="HandlerList.html" title="class in org.bukkit.event"><code>HandlerList</code></a> as <a href="#getHandlers()"><code>getHandlers()</code></a>.
 #[repr(C)]
 pub struct Event<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-pub enum EventResult<'mc> {
-    Deny { inner: EventResultStruct<'mc> },
-    Default { inner: EventResultStruct<'mc> },
-    Allow { inner: EventResultStruct<'mc> },
-}
-impl<'mc> std::fmt::Display for EventResult<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            EventResult::Deny { .. } => f.write_str("DENY"),
-            EventResult::Default { .. } => f.write_str("DEFAULT"),
-            EventResult::Allow { .. } => f.write_str("ALLOW"),
-        }
-    }
-}
-
-impl<'mc> EventResult<'mc> {
-    pub fn value_of(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<EventResult<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
-        let cls = env.find_class("org/bukkit/event/Event$Result");
-        let cls = env.translate_error_with_class(cls)?;
-        let res = env.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/Event$Result;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = env.translate_error(res)?;
-        let obj = res.l()?;
-        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = env.translate_error(variant)?;
-        let variant_str = env
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        match variant_str.as_str() {
-            "DENY" => Ok(EventResult::Deny {
-                inner: EventResultStruct::from_raw(env, obj)?,
-            }),
-            "DEFAULT" => Ok(EventResult::Default {
-                inner: EventResultStruct::from_raw(env, obj)?,
-            }),
-            "ALLOW" => Ok(EventResult::Allow {
-                inner: EventResultStruct::from_raw(env, obj)?,
-            }),
-
-            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-        }
-    }
-}
-
-#[repr(C)]
-pub struct EventResultStruct<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for EventResult<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {
-            Self::Deny { inner } => inner.0.clone(),
-            Self::Default { inner } => inner.0.clone(),
-            Self::Allow { inner } => inner.0.clone(),
-        }
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {
-            Self::Deny { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::Default { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::Allow { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-        }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for EventResult<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate EventResult from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/Event$Result")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a EventResult object, got {}",
-                name
-            )
-            .into())
-        } else {
-            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-            let variant = env.translate_error(variant)?;
-            let variant_str = env
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            match variant_str.as_str() {
-                "DENY" => Ok(EventResult::Deny {
-                    inner: EventResultStruct::from_raw(env, obj)?,
-                }),
-                "DEFAULT" => Ok(EventResult::Default {
-                    inner: EventResultStruct::from_raw(env, obj)?,
-                }),
-                "ALLOW" => Ok(EventResult::Allow {
-                    inner: EventResultStruct::from_raw(env, obj)?,
-                }),
-                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-            }
-        }
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for EventResultStruct<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for EventResultStruct<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate EventResultStruct from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/Event$Result")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a EventResultStruct object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> EventResultStruct<'mc> {
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
 
 impl<'mc> JNIRaw<'mc> for Event<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {

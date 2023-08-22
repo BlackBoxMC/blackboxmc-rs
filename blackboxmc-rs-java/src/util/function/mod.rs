@@ -2,7 +2,7 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// Represents a supplier of <code>int</code>-valued results. This is the <code>int</code>-producing primitive specialization of <a title="interface in java.util.function" href="../../../java/util/function/Supplier.html"><code>Supplier</code></a>.
+/// Represents a supplier of <code>int</code>-valued results. This is the <code>int</code>-producing primitive specialization of <a href="../../../java/util/function/Supplier.html" title="interface in java.util.function"><code>Supplier</code></a>.
 /// <p>There is no requirement that a distinct result be returned each time the supplier is invoked.</p>
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntSupplier.html#getAsInt--"><code>getAsInt()</code></a>.</p>
 ///
@@ -59,7 +59,7 @@ impl<'mc> JavaIntSupplier<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts a double-valued argument and produces a long-valued result. This is the <code>double</code>-to-<code>long</code> primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
+/// Represents a function that accepts a double-valued argument and produces a long-valued result. This is the <code>double</code>-to-<code>long</code> primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleToLongFunction.html#applyAsLong-double-"><code>applyAsLong(double)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -633,7 +633,7 @@ impl<'mc> JavaFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that produces a long-valued result. This is the <code>long</code>-producing primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
+/// Represents a function that produces a long-valued result. This is the <code>long</code>-producing primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ToLongFunction.html#applyAsLong-T-"><code>applyAsLong(Object)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -777,7 +777,7 @@ impl<'mc> JavaConsumer<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts two arguments and produces an int-valued result. This is the <code>int</code>-producing primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/BiFunction.html"><code>BiFunction</code></a>.
+/// Represents a function that accepts two arguments and produces an int-valued result. This is the <code>int</code>-producing primitive specialization for <a href="../../../java/util/function/BiFunction.html" title="interface in java.util.function"><code>BiFunction</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ToIntBiFunction.html#applyAsInt-T-U-"><code>applyAsInt(Object, Object)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -1082,6 +1082,36 @@ impl<'mc> JavaUnaryOperator<'mc> {
         let obj = res.l()?;
         crate::util::function::JavaUnaryOperator::from_raw(&jni, obj)
     }
+    pub fn and_then(
+        &self,
+        arg0: impl Into<crate::util::function::JavaFunction<'mc>>,
+    ) -> Result<crate::util::function::JavaFunction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = JavaUnaryOperator::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::function::JavaFunction = temp_clone.into();
+        real.and_then(arg0)
+    }
+    pub fn compose(
+        &self,
+        arg0: impl Into<crate::util::function::JavaFunction<'mc>>,
+    ) -> Result<crate::util::function::JavaFunction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = JavaUnaryOperator::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::function::JavaFunction = temp_clone.into();
+        real.compose(arg0)
+    }
+    pub fn apply(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = JavaUnaryOperator::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::function::JavaFunction = temp_clone.into();
+        real.apply(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1245,6 +1275,27 @@ impl<'mc> JavaBinaryOperator<'mc> {
         let obj = res.l()?;
         crate::util::function::JavaBinaryOperator::from_raw(&jni, obj)
     }
+    pub fn and_then(
+        &self,
+        arg0: impl Into<crate::util::function::JavaFunction<'mc>>,
+    ) -> Result<crate::util::function::JavaBiFunction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = JavaBinaryOperator::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::function::JavaBiFunction = temp_clone.into();
+        real.and_then(arg0)
+    }
+    pub fn apply(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = JavaBinaryOperator::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::function::JavaBiFunction = temp_clone.into();
+        real.apply(arg0, arg1)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1258,7 +1309,7 @@ impl<'mc> Into<crate::util::function::JavaBiFunction<'mc>> for JavaBinaryOperato
         )
     }
 }
-/// Represents a supplier of <code>boolean</code>-valued results. This is the <code>boolean</code>-producing primitive specialization of <a title="interface in java.util.function" href="../../../java/util/function/Supplier.html"><code>Supplier</code></a>.
+/// Represents a supplier of <code>boolean</code>-valued results. This is the <code>boolean</code>-producing primitive specialization of <a href="../../../java/util/function/Supplier.html" title="interface in java.util.function"><code>Supplier</code></a>.
 /// <p>There is no requirement that a new or distinct result be returned each time the supplier is invoked.</p>
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/BooleanSupplier.html#getAsBoolean--"><code>getAsBoolean()</code></a>.</p>
 ///
@@ -1315,7 +1366,7 @@ impl<'mc> JavaBooleanSupplier<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that produces a double-valued result. This is the <code>double</code>-producing primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
+/// Represents a function that produces a double-valued result. This is the <code>double</code>-producing primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ToDoubleFunction.html#applyAsDouble-T-"><code>applyAsDouble(Object)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -1795,7 +1846,7 @@ impl<'mc> JavaDoublePredicate<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts two arguments and produces a double-valued result. This is the <code>double</code>-producing primitive specialization for <a href="../../../java/util/function/BiFunction.html" title="interface in java.util.function"><code>BiFunction</code></a>.
+/// Represents a function that accepts two arguments and produces a double-valued result. This is the <code>double</code>-producing primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/BiFunction.html"><code>BiFunction</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/ToDoubleBiFunction.html#applyAsDouble-T-U-"><code>applyAsDouble(Object, Object)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2121,7 +2172,7 @@ impl<'mc> JavaLongToDoubleFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts a double-valued argument and produces a result. This is the <code>double</code>-consuming primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
+/// Represents a function that accepts a double-valued argument and produces a result. This is the <code>double</code>-consuming primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleFunction.html#apply-double-"><code>apply(double)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2347,7 +2398,7 @@ impl<'mc> JavaDoubleConsumer<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents an operation upon two <code>double</code>-valued operands and producing a <code>double</code>-valued result. This is the primitive type specialization of <a href="../../../java/util/function/BinaryOperator.html" title="interface in java.util.function"><code>BinaryOperator</code></a> for <code>double</code>.
+/// Represents an operation upon two <code>double</code>-valued operands and producing a <code>double</code>-valued result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/BinaryOperator.html"><code>BinaryOperator</code></a> for <code>double</code>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleBinaryOperator.html#applyAsDouble-double-double-"><code>applyAsDouble(double, double)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2475,7 +2526,7 @@ impl<'mc> JavaLongFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts two arguments and produces a result. This is the two-arity specialization of <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
+/// Represents a function that accepts two arguments and produces a result. This is the two-arity specialization of <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/BiFunction.html#apply-T-U-"><code>apply(Object, Object)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2563,7 +2614,7 @@ impl<'mc> JavaBiFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a supplier of <code>double</code>-valued results. This is the <code>double</code>-producing primitive specialization of <a title="interface in java.util.function" href="../../../java/util/function/Supplier.html"><code>Supplier</code></a>.
+/// Represents a supplier of <code>double</code>-valued results. This is the <code>double</code>-producing primitive specialization of <a href="../../../java/util/function/Supplier.html" title="interface in java.util.function"><code>Supplier</code></a>.
 /// <p>There is no requirement that a distinct result be returned each time the supplier is invoked.</p>
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleSupplier.html#getAsDouble--"><code>getAsDouble()</code></a>.</p>
 ///
@@ -2620,7 +2671,7 @@ impl<'mc> JavaDoubleSupplier<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts an int-valued argument and produces a result. This is the <code>int</code>-consuming primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
+/// Represents a function that accepts an int-valued argument and produces a result. This is the <code>int</code>-consuming primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntFunction.html#apply-int-"><code>apply(int)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2683,7 +2734,7 @@ impl<'mc> JavaIntFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents an operation upon two <code>int</code>-valued operands and producing an <code>int</code>-valued result. This is the primitive type specialization of <a href="../../../java/util/function/BinaryOperator.html" title="interface in java.util.function"><code>BinaryOperator</code></a> for <code>int</code>.
+/// Represents an operation upon two <code>int</code>-valued operands and producing an <code>int</code>-valued result. This is the primitive type specialization of <a title="interface in java.util.function" href="../../../java/util/function/BinaryOperator.html"><code>BinaryOperator</code></a> for <code>int</code>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntBinaryOperator.html#applyAsInt-int-int-"><code>applyAsInt(int, int)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -2865,7 +2916,7 @@ impl<'mc> JavaLongUnaryOperator<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts an int-valued argument and produces a long-valued result. This is the <code>int</code>-to-<code>long</code> primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
+/// Represents a function that accepts an int-valued argument and produces a long-valued result. This is the <code>int</code>-to-<code>long</code> primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/IntToLongFunction.html#applyAsLong-int-"><code>applyAsLong(int)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -3114,7 +3165,7 @@ impl<'mc> JavaToLongBiFunction<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents an operation that accepts two input arguments and returns no result. This is the two-arity specialization of <a title="interface in java.util.function" href="../../../java/util/function/Consumer.html"><code>Consumer</code></a>. Unlike most other functional interfaces, <code>BiConsumer</code> is expected to operate via side-effects.
+/// Represents an operation that accepts two input arguments and returns no result. This is the two-arity specialization of <a href="../../../java/util/function/Consumer.html" title="interface in java.util.function"><code>Consumer</code></a>. Unlike most other functional interfaces, <code>BiConsumer</code> is expected to operate via side-effects.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/BiConsumer.html#accept-T-U-"><code>accept(Object, Object)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -3238,7 +3289,7 @@ impl<'mc> JavaBiConsumer<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a predicate (boolean-valued function) of two arguments. This is the two-arity specialization of <a href="../../../java/util/function/Predicate.html" title="interface in java.util.function"><code>Predicate</code></a>.
+/// Represents a predicate (boolean-valued function) of two arguments. This is the two-arity specialization of <a title="interface in java.util.function" href="../../../java/util/function/Predicate.html"><code>Predicate</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/BiPredicate.html#test-T-U-"><code>test(Object, Object)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -3361,7 +3412,7 @@ impl<'mc> JavaBiPredicate<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a function that accepts a double-valued argument and produces an int-valued result. This is the <code>double</code>-to-<code>int</code> primitive specialization for <a href="../../../java/util/function/Function.html" title="interface in java.util.function"><code>Function</code></a>.
+/// Represents a function that accepts a double-valued argument and produces an int-valued result. This is the <code>double</code>-to-<code>int</code> primitive specialization for <a title="interface in java.util.function" href="../../../java/util/function/Function.html"><code>Function</code></a>.
 /// <p>This is a <a href="package-summary.html">functional interface</a> whose functional method is <a href="../../../java/util/function/DoubleToIntFunction.html#applyAsInt-double-"><code>applyAsInt(double)</code></a>.</p>
 ///
 /// This is a representation of an abstract class.

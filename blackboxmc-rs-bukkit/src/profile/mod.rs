@@ -2,7 +2,7 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// Provides access to the textures stored inside a <a href="PlayerProfile.html" title="interface in org.bukkit.profile"><code>PlayerProfile</code></a>.
+/// Provides access to the textures stored inside a <a title="interface in org.bukkit.profile" href="PlayerProfile.html"><code>PlayerProfile</code></a>.
 /// <p>Modifying the textures immediately invalidates and clears any previously present attributes that are specific to official player profiles, such as the <a href="#getTimestamp()"><code>timestamp</code></a> and <a href="#isSigned()"><code>signature</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -44,15 +44,6 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerTextures<'mc> {
 }
 
 impl<'mc> PlayerTextures<'mc> {
-    pub fn is_signed(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isSigned", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
     pub fn timestamp(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res =
@@ -60,6 +51,15 @@ impl<'mc> PlayerTextures<'mc> {
                 .call_method(&self.jni_object(), "getTimestamp", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
+    }
+
+    pub fn is_signed(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSigned", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
 
     pub fn skin(&self) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
@@ -432,6 +432,16 @@ impl<'mc> PlayerProfile<'mc> {
         crate::profile::PlayerProfile::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PlayerProfile::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

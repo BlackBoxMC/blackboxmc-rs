@@ -2,7 +2,7 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// A simple wrapper for ease of selecting <a href="Enchantment.html" title="class in org.bukkit.enchantments"><code>Enchantment</code></a>s
+/// A simple wrapper for ease of selecting <a title="class in org.bukkit.enchantments" href="Enchantment.html"><code>Enchantment</code></a>s
 #[repr(C)]
 pub struct EnchantmentWrapper<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -171,6 +171,13 @@ impl<'mc> EnchantmentWrapper<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnchantmentWrapper::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::Keyed = temp_clone.into();
+        real.key()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

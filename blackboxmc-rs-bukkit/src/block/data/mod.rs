@@ -71,6 +71,170 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hatchable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hatchable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Hatchable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hatchable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Hatchable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hatchable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hatchable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hatchable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hatchable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hatchable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hatchable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hatchable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hatchable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hatchable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -143,6 +307,170 @@ impl<'mc> Lightable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Lightable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Lightable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Lightable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Lightable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Lightable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Lightable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Lightable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Lightable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Lightable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Lightable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Lightable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Lightable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Lightable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Lightable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -157,7 +485,7 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Lightable<'mc> {
 }
 /// 'face' represents the face to which a lever or button is stuck.
 ///
-/// This is used in conjunction with <a href="Directional.html" title="interface in org.bukkit.block.data"><code>Directional</code></a> to compute the orientation of these blocks.
+/// This is used in conjunction with <a title="interface in org.bukkit.block.data" href="Directional.html"><code>Directional</code></a> to compute the orientation of these blocks.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -228,6 +556,170 @@ impl<'mc> FaceAttachable<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FaceAttachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FaceAttachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = FaceAttachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FaceAttachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = FaceAttachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FaceAttachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FaceAttachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FaceAttachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FaceAttachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FaceAttachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FaceAttachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FaceAttachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FaceAttachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FaceAttachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -462,6 +954,170 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Ageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Ageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Ageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Ageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Ageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Ageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Ageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Ageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Ageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Ageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Ageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Ageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Ageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Ageable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -534,6 +1190,170 @@ impl<'mc> Openable<'mc> {
             .call_method(&self.jni_object(), "isOpen", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Openable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Openable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Openable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Openable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Openable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Openable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Openable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Openable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Openable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Openable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Openable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Openable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Openable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Openable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -628,6 +1448,20 @@ impl<'mc> Rail<'mc> {
         blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_waterlogged(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Rail::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::Waterlogged = temp_clone.into();
+        real.is_waterlogged()
+    }
+    pub fn set_waterlogged(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Rail::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::Waterlogged = temp_clone.into();
+        real.set_waterlogged(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1029,6 +1863,170 @@ impl<'mc> Orientable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Orientable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Orientable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Orientable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Orientable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Orientable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Orientable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Orientable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Orientable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Orientable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Orientable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Orientable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Orientable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Orientable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Orientable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1100,6 +2098,170 @@ impl<'mc> Powerable<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Powerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Powerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Powerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Powerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Powerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Powerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Powerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Powerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Powerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Powerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Powerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Powerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Powerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Powerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1350,6 +2512,170 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Levelled::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Levelled::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Levelled::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Levelled::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Levelled::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Levelled::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Levelled::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Levelled::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Levelled::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Levelled::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Levelled::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Levelled::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Levelled::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Levelled::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1468,6 +2794,170 @@ impl<'mc> MultipleFacing<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = MultipleFacing::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = MultipleFacing::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = MultipleFacing::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = MultipleFacing::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = MultipleFacing::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MultipleFacing::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MultipleFacing::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = MultipleFacing::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = MultipleFacing::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = MultipleFacing::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = MultipleFacing::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = MultipleFacing::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = MultipleFacing::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = MultipleFacing::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1780,6 +3270,170 @@ impl<'mc> Snowable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Snowable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Snowable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Snowable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Snowable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Snowable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Snowable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Snowable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Snowable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Snowable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Snowable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Snowable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Snowable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Snowable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Snowable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1871,6 +3525,170 @@ impl<'mc> Directional<'mc> {
         blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2089,6 +3907,170 @@ impl<'mc> Rotatable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Rotatable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Rotatable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Rotatable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Rotatable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Rotatable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Rotatable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Rotatable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Rotatable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Rotatable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Rotatable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Rotatable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Rotatable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Rotatable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Rotatable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2161,6 +4143,170 @@ impl<'mc> Hangable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hangable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hangable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Hangable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hangable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Hangable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hangable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hangable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hangable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Hangable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hangable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Hangable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hangable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hangable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Hangable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2232,6 +4378,170 @@ impl<'mc> Waterlogged<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Waterlogged::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Waterlogged::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Waterlogged::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Waterlogged::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Waterlogged::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Waterlogged::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Waterlogged::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Waterlogged::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Waterlogged::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Waterlogged::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Waterlogged::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Waterlogged::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Waterlogged::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Waterlogged::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2318,6 +4628,170 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AnaloguePowerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AnaloguePowerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = AnaloguePowerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AnaloguePowerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = AnaloguePowerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AnaloguePowerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AnaloguePowerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AnaloguePowerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = AnaloguePowerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AnaloguePowerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = AnaloguePowerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AnaloguePowerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AnaloguePowerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = AnaloguePowerable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2402,6 +4876,170 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Brushable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Brushable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Brushable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Brushable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Brushable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Brushable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Brushable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Brushable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Brushable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Brushable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Brushable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Brushable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Brushable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Brushable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2475,6 +5113,170 @@ impl<'mc> Attachable<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2558,6 +5360,170 @@ impl<'mc> Bisected<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Bisected::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Bisected::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = Bisected::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Bisected::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = Bisected::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Bisected::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Bisected::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Bisected::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Bisected::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Bisected::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Bisected::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Bisected::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Bisected::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Bisected::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

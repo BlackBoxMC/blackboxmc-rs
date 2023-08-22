@@ -103,6 +103,54 @@ impl<'mc> JNIInstantiatable<'mc> for RaidSpawnWaveEvent<'mc> {
 }
 
 impl<'mc> RaidSpawnWaveEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::Raid<'mc>>,
+        arg1: impl Into<crate::World<'mc>>,
+        arg2: impl Into<crate::entity::Raider<'mc>>,
+        arg3: Vec<impl Into<crate::event::raid::RaidSpawnWaveEvent<'mc>>>,
+    ) -> Result<crate::event::raid::RaidSpawnWaveEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Lorg/bukkit/Raid;Lorg/bukkit/World;Lorg/bukkit/entity/Raider;Ljava/util/List;)V",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        let raw_val_4 = jni.new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg3 {
+            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(v.into().jni_object().clone())
+            });
+            jni.call_method(
+                &raw_val_4,
+                "add",
+                "(Lorg/bukkit/event/raid/crate::event::raid::RaidSpawnWaveEvent)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_4 = jni::objects::JValueGen::Object(raw_val_4);
+        let cls = jni.find_class("org/bukkit/event/raid/RaidSpawnWaveEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::raid::RaidSpawnWaveEvent::from_raw(&jni, res)
+    }
+
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
@@ -318,7 +366,7 @@ impl<'mc> Into<crate::event::raid::RaidEvent<'mc>> for RaidTriggerEvent<'mc> {
             .expect("Error converting RaidTriggerEvent into crate::event::raid::RaidEvent")
     }
 }
-/// This event is called when a <a href="../../Raid.html" title="interface in org.bukkit"><code>Raid</code></a> was complete with a clear result.
+/// This event is called when a <a title="interface in org.bukkit" href="../../Raid.html"><code>Raid</code></a> was complete with a clear result.
 #[repr(C)]
 pub struct RaidFinishEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -357,6 +405,47 @@ impl<'mc> JNIInstantiatable<'mc> for RaidFinishEvent<'mc> {
 }
 
 impl<'mc> RaidFinishEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::Raid<'mc>>,
+        arg1: impl Into<crate::World<'mc>>,
+        arg2: Vec<impl Into<crate::event::raid::RaidFinishEvent<'mc>>>,
+    ) -> Result<crate::event::raid::RaidFinishEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/Raid;Lorg/bukkit/World;Ljava/util/List;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let raw_val_3 = jni.new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg2 {
+            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(v.into().jni_object().clone())
+            });
+            jni.call_method(
+                &raw_val_3,
+                "add",
+                "(Lorg/bukkit/event/raid/crate::event::raid::RaidFinishEvent)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(raw_val_3);
+        let cls = jni.find_class("org/bukkit/event/raid/RaidFinishEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::raid::RaidFinishEvent::from_raw(&jni, res)
+    }
+
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =

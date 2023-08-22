@@ -100,6 +100,23 @@ impl<'mc> Chest<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Chest::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
+        real.facing()
+    }
+    pub fn set_facing_direction(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Chest::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
+        real.set_facing_direction(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1066,6 +1083,15 @@ impl<'mc> SimpleAttachableMaterialData<'mc> {
             .call_method(&self.jni_object(), "clone", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
+    }
+    pub fn attached_face(
+        &self,
+    ) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Attachable = temp_clone.into();
+        real.attached_face()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -3008,6 +3034,23 @@ impl<'mc> Furnace<'mc> {
         crate::material::Furnace::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Furnace::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
+        real.facing()
+    }
+    pub fn set_facing_direction(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Furnace::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
+        real.set_facing_direction(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -6742,6 +6785,23 @@ impl<'mc> EnderChest<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = EnderChest::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
+        real.facing()
+    }
+    pub fn set_facing_direction(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = EnderChest::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
+        real.set_facing_direction(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6833,6 +6893,23 @@ impl<'mc> FurnaceAndDispenser<'mc> {
         crate::material::FurnaceAndDispenser::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FurnaceAndDispenser::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
+        real.facing()
+    }
+    pub fn set_facing_direction(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = FurnaceAndDispenser::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
+        real.set_facing_direction(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -8110,6 +8187,15 @@ impl<'mc> RedstoneTorch<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn attached_face(
+        &self,
+    ) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = RedstoneTorch::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Attachable = temp_clone.into();
+        real.attached_face()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8897,7 +8983,7 @@ impl<'mc> Directional<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// This is the superclass for the <a title="class in org.bukkit.material" href="DetectorRail.html"><code>DetectorRail</code></a> and <a title="class in org.bukkit.material" href="PoweredRail.html"><code>PoweredRail</code></a> classes
+/// This is the superclass for the <a href="DetectorRail.html" title="class in org.bukkit.material"><code>DetectorRail</code></a> and <a href="PoweredRail.html" title="class in org.bukkit.material"><code>PoweredRail</code></a> classes
 #[repr(C)]
 pub struct ExtendedRails<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10287,6 +10373,23 @@ impl<'mc> Attachable<'mc> {
         crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
+        real.facing()
+    }
+    pub fn set_facing_direction(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Attachable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
+        real.set_facing_direction(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

@@ -80,6 +80,19 @@ impl<'mc> TextComponent<'mc> {
         crate::bungee::api::chat::TextComponent::from_raw(&jni, res)
     }
 
+    pub fn text(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getText", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+
     pub fn set_text(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -93,19 +106,6 @@ impl<'mc> TextComponent<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-
-    pub fn text(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getText", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
 
     pub fn equals(
@@ -793,20 +793,39 @@ impl<'mc> BaseComponent<'mc> {
         crate::bungee::api::chat::BaseComponent::from_raw(&jni, res)
     }
 
-    pub fn duplicate_without_formatting(
+    pub fn copy_formatting_with_base_component(
         &self,
-    ) -> Result<crate::bungee::api::chat::BaseComponent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lnet/md_5/bungee/api/chat/BaseComponent;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "duplicateWithoutFormatting",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        >,
+        arg2: std::option::Option<bool>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        sig += ")V";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "copyFormatting", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
 
     pub fn retain(
@@ -908,54 +927,6 @@ impl<'mc> BaseComponent<'mc> {
         })
     }
 
-    pub fn font(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getFont", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn copy_formatting_with_base_component(
-        &self,
-        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
-        arg1: std::option::Option<
-            impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
-        >,
-        arg2: std::option::Option<bool>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Z";
-            let val_3 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_3);
-        }
-        sig += ")V";
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "copyFormatting", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
     pub fn insertion(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -993,6 +964,24 @@ impl<'mc> BaseComponent<'mc> {
         crate::bungee::api::chat::HoverEvent::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+
+    pub fn is_obfuscated(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isObfuscated", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Boolean;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isObfuscatedRaw", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
 
     pub fn add_extra_with_base_component(
@@ -1187,6 +1176,19 @@ impl<'mc> BaseComponent<'mc> {
         Ok(())
     }
 
+    pub fn font(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getFont", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+
     pub fn font_raw(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -1275,22 +1277,50 @@ impl<'mc> BaseComponent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn is_obfuscated(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isObfuscated", sig.as_str(), vec![]);
+    pub fn duplicate_without_formatting(
+        &self,
+    ) -> Result<crate::bungee::api::chat::BaseComponent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lnet/md_5/bungee/api/chat/BaseComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "duplicateWithoutFormatting",
+            sig.as_str(),
+            vec![],
+        );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
+        crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
-    pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Boolean;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isObfuscatedRaw", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
+    pub fn set_extra(
+        &self,
+        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/List;)V");
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg0 {
+            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(v.into().jni_object().clone())
+            });
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setExtra",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
 
     pub fn extra(
@@ -2384,46 +2414,46 @@ impl<'mc> TranslatableComponent<'mc> {
         crate::bungee::api::chat::TranslatableComponent::from_raw(&jni, res)
     }
 
-    pub fn set_translate(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setTranslate",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn set_fallback(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFallback",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn add_with_with_base_component(
+    pub fn set_with(
         &self,
-        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/List;)V");
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg0 {
+            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(v.into().jni_object().clone())
+            });
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setWith",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn add_with_with_string(
+        &self,
+        arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         args.push(val_1);
         sig += ")V";
         let res = self
@@ -2477,6 +2507,36 @@ impl<'mc> TranslatableComponent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+
+    pub fn set_translate(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setTranslate",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn set_fallback(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFallback",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
 
     pub fn format(
@@ -3151,6 +3211,26 @@ impl<'mc> JNIInstantiatable<'mc> for ComponentBuilder<'mc> {
 }
 
 impl<'mc> ComponentBuilder<'mc> {
+    pub fn new_with_string(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<String>>,
+    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/String;";
+            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                jni.new_string(a.into())?,
+            ));
+            args.push(val_1);
+        }
+        sig += ")V";
+        let cls = jni.find_class("net/md_5/bungee/api/chat/ComponentBuilder");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::bungee::api::chat::ComponentBuilder::from_raw(&jni, res)
+    }
     pub fn new_with_component_builder(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::ComponentBuilder<'mc>>>,
@@ -3171,46 +3251,6 @@ impl<'mc> ComponentBuilder<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::api::chat::ComponentBuilder::from_raw(&jni, res)
     }
-    pub fn new_with_base_component(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
-    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")V";
-        let cls = jni.find_class("net/md_5/bungee/api/chat/ComponentBuilder");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::bungee::api::chat::ComponentBuilder::from_raw(&jni, res)
-    }
-
-    pub fn font(
-        &self,
-        arg0: impl Into<String>,
-    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/ComponentBuilder;");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "font",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
 
     pub fn retain(
         &self,
@@ -3223,60 +3263,6 @@ impl<'mc> ComponentBuilder<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "retain",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn bold(
-        &self,
-        arg0: bool,
-    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;");
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "bold",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn italic(
-        &self,
-        arg0: bool,
-    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;");
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "italic",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn underlined(
-        &self,
-        arg0: bool,
-    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;");
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "underlined",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -3342,31 +3328,76 @@ impl<'mc> ComponentBuilder<'mc> {
         })
     }
 
-    pub fn reset_cursor(
+    pub fn font(
         &self,
+        arg0: impl Into<String>,
     ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lnet/md_5/bungee/api/chat/ComponentBuilder;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "resetCursor", sig.as_str(), vec![]);
+        let sig = String::from("(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/ComponentBuilder;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "font",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
         let res = self.jni_ref().translate_error(res)?;
         crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
 
-    pub fn current_component(
+    pub fn bold(
         &self,
-    ) -> Result<crate::bungee::api::chat::BaseComponent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lnet/md_5/bungee/api/chat/BaseComponent;");
+        arg0: bool,
+    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;");
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "getCurrentComponent",
+            "bold",
             sig.as_str(),
-            vec![],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), unsafe {
+        crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn italic(
+        &self,
+        arg0: bool,
+    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;");
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "italic",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn underlined(
+        &self,
+        arg0: bool,
+    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;");
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "underlined",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -3418,26 +3449,6 @@ impl<'mc> ComponentBuilder<'mc> {
         Ok(new_vec)
     }
 
-    pub fn append_legacy(
-        &self,
-        arg0: impl Into<String>,
-    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/ComponentBuilder;");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "appendLegacy",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
     pub fn remove_component(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0);
@@ -3469,6 +3480,55 @@ impl<'mc> ComponentBuilder<'mc> {
         })
     }
 
+    pub fn current_component(
+        &self,
+    ) -> Result<crate::bungee::api::chat::BaseComponent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lnet/md_5/bungee/api/chat/BaseComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCurrentComponent",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn reset_cursor(
+        &self,
+    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lnet/md_5/bungee/api/chat/ComponentBuilder;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "resetCursor", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn append_legacy(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/ComponentBuilder;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "appendLegacy",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
     pub fn append_with_component_builderjoiner(
         &self,
         arg0: impl Into<crate::bungee::api::chat::ComponentBuilderJoiner<'mc>>,
@@ -3479,6 +3539,37 @@ impl<'mc> ComponentBuilder<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$Joiner;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Lnet/md_5/bungee/api/chat/ComponentBuilder;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "append", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn append_with_base_component(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        >,
+    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
@@ -3555,37 +3646,6 @@ impl<'mc> ComponentBuilder<'mc> {
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
         ));
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        sig += ")Lnet/md_5/bungee/api/chat/ComponentBuilder;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "append", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn append_with_base_component(
-        &self,
-        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
-        arg1: std::option::Option<
-            impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
-        >,
-    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";

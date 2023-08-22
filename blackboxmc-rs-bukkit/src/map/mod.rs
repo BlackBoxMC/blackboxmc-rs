@@ -509,6 +509,115 @@ pub struct MinecraftFont<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
+#[repr(C)]
+pub struct MapFontCharacterSprite<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for MapFontCharacterSprite<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for MapFontCharacterSprite<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate MapFontCharacterSprite from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MapFont$CharacterSprite")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a MapFontCharacterSprite object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> MapFontCharacterSprite<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i32,
+        arg1: i32,
+        arg2: Vec<bool>,
+    ) -> Result<crate::map::MapFontCharacterSprite<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(II[Z)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
+        let arr = jni.new_boolean_array(arg2.len() as i32);
+        let mut vec = Vec::new();
+        let arr = jni.translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = *arg2.get(i).unwrap() as u8;
+            vec.push(val_3)
+        }
+        jni.set_boolean_array_region(&arr, 0, &vec)?;
+        let val_3 = jni::objects::JValueGen::Object(arr);
+        let cls = jni.find_class("org/bukkit/map/MapFont$CharacterSprite");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::map::MapFontCharacterSprite::from_raw(&jni, res)
+    }
+    pub fn height(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getHeight", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn width(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getWidth", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    pub fn get(&self, arg0: i32, arg1: i32) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(II)Z");
+        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let val_2 = jni::objects::JValueGen::Int(arg1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "get",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
 
 impl<'mc> JNIRaw<'mc> for MinecraftFont<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
@@ -1292,119 +1401,6 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents the graphics for a single character in a MapFont.
-#[repr(C)]
-pub struct MapFontCharacterSprite<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for MapFontCharacterSprite<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for MapFontCharacterSprite<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate MapFontCharacterSprite from null object."
-            )
-            .into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MapFont$CharacterSprite")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a MapFontCharacterSprite object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> MapFontCharacterSprite<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: i32,
-        arg1: i32,
-        arg2: Vec<bool>,
-    ) -> Result<crate::map::MapFontCharacterSprite<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(II[Z)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0);
-        let val_2 = jni::objects::JValueGen::Int(arg1);
-        let arr = jni.new_boolean_array(arg2.len() as i32);
-        let mut vec = Vec::new();
-        let arr = jni.translate_error_no_gen(arr)?;
-        for i in 0..arg2.len() {
-            let val_3 = *arg2.get(i).unwrap() as u8;
-            vec.push(val_3)
-        }
-        jni.set_boolean_array_region(&arr, 0, &vec)?;
-        let val_3 = jni::objects::JValueGen::Object(arr);
-        let cls = jni.find_class("org/bukkit/map/MapFont$CharacterSprite");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3.l()?),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::map::MapFontCharacterSprite::from_raw(&jni, res)
-    }
-
-    pub fn height(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getHeight", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-
-    pub fn width(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getWidth", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// Get the value of a pixel of the character.
-    pub fn get(&self, arg0: i32, arg1: i32) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(II)Z");
-        let val_1 = jni::objects::JValueGen::Int(arg0);
-        let val_2 = jni::objects::JValueGen::Int(arg1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "get",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
 /// Represents a canvas for drawing to a map. Each canvas is associated with a specific <a title="class in org.bukkit.map" href="MapRenderer.html"><code>MapRenderer</code></a> and represents that renderer's layer on the map.
 ///
 /// This is a representation of an abstract class.
@@ -1872,24 +1868,6 @@ impl<'mc> JNIInstantiatable<'mc> for MapView<'mc> {
 }
 
 impl<'mc> MapView<'mc> {
-    pub fn set_scale(
-        &self,
-        arg0: impl Into<crate::map::MapViewScale<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/map/MapView$Scale;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setScale",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
     pub fn is_locked(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
@@ -1908,6 +1886,24 @@ impl<'mc> MapView<'mc> {
         crate::World::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+
+    pub fn set_scale(
+        &self,
+        arg0: impl Into<crate::map::MapViewScale<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/map/MapView$Scale;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setScale",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
 
     pub fn scale(&self) -> Result<crate::map::MapViewScale<'mc>, Box<dyn std::error::Error>> {

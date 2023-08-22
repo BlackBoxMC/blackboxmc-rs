@@ -58,6 +58,102 @@ impl<'mc> ReloadCommand<'mc> {
         crate::command::defaults::ReloadCommand::from_raw(&jni, res)
     }
 
+    pub fn tab_complete(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: Vec<String>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;Ljava/lang/String;[Ljava/lang/String;)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        let arr = self.jni_ref().new_object_array(
+            arg2.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg2.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_3.l()?)?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "tabComplete",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
+    }
+
+    pub fn execute(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: Vec<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;[Ljava/lang/String;)Z",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        let arr = self.jni_ref().new_object_array(
+            arg2.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg2.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_3.l()?)?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "execute",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -126,6 +222,138 @@ impl<'mc> TimingsCommand<'mc> {
         );
         let res = jni.translate_error_no_gen(res)?;
         crate::command::defaults::TimingsCommand::from_raw(&jni, res)
+    }
+
+    pub fn tab_complete(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: Vec<String>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;Ljava/lang/String;[Ljava/lang/String;)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        let arr = self.jni_ref().new_object_array(
+            arg2.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg2.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_3.l()?)?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "tabComplete",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
+    }
+
+    pub fn execute_spigot_timings(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: Vec<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;[Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let arr = self.jni_ref().new_object_array(
+            arg1.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg1.len() {
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg1.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_2.l()?)?;
+        }
+        let val_2 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "executeSpigotTimings",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2.l()?),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn execute(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: Vec<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;[Ljava/lang/String;)Z",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        let arr = self.jni_ref().new_object_array(
+            arg2.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg2.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_3.l()?)?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "execute",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -246,6 +474,102 @@ impl<'mc> VersionCommand<'mc> {
         crate::command::defaults::VersionCommand::from_raw(&jni, res)
     }
 
+    pub fn tab_complete(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: Vec<String>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;Ljava/lang/String;[Ljava/lang/String;)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        let arr = self.jni_ref().new_object_array(
+            arg2.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg2.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_3.l()?)?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "tabComplete",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
+    }
+
+    pub fn execute(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: Vec<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;[Ljava/lang/String;)Z",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        let arr = self.jni_ref().new_object_array(
+            arg2.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg2.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_3.l()?)?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "execute",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -303,6 +627,102 @@ impl<'mc> HelpCommand<'mc> {
         let res = jni.new_object(cls, sig.as_str(), vec![]);
         let res = jni.translate_error_no_gen(res)?;
         crate::command::defaults::HelpCommand::from_raw(&jni, res)
+    }
+
+    pub fn tab_complete(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: Vec<String>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;Ljava/lang/String;[Ljava/lang/String;)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        let arr = self.jni_ref().new_object_array(
+            arg2.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg2.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_3.l()?)?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "tabComplete",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
+    }
+
+    pub fn execute(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: Vec<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;[Ljava/lang/String;)Z",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        let arr = self.jni_ref().new_object_array(
+            arg2.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg2.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_3.l()?)?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "execute",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -373,6 +793,102 @@ impl<'mc> PluginsCommand<'mc> {
         );
         let res = jni.translate_error_no_gen(res)?;
         crate::command::defaults::PluginsCommand::from_raw(&jni, res)
+    }
+
+    pub fn tab_complete(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: Vec<String>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;Ljava/lang/String;[Ljava/lang/String;)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        let arr = self.jni_ref().new_object_array(
+            arg2.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg2.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_3.l()?)?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "tabComplete",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
+    }
+
+    pub fn execute(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: Vec<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;[Ljava/lang/String;)Z",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        let arr = self.jni_ref().new_object_array(
+            arg2.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg2.len() {
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(arg2.get(i).unwrap().clone())?,
+            ));
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_3.l()?)?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "execute",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3.l()?),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

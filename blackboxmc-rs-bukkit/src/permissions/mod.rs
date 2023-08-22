@@ -2,7 +2,7 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// Represents an object that may become a server operator, such as a <a href="../entity/Player.html" title="interface in org.bukkit.entity"><code>Player</code></a>
+/// Represents an object that may become a server operator, such as a <a title="interface in org.bukkit.entity" href="../entity/Player.html"><code>Player</code></a>
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -629,6 +629,20 @@ impl<'mc> Permissible<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = Permissible::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::permissions::ServerOperator = temp_clone.into();
+        real.is_op()
+    }
+    pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = Permissible::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::permissions::ServerOperator = temp_clone.into();
+        real.set_op(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -641,7 +655,7 @@ impl<'mc> Into<crate::permissions::ServerOperator<'mc>> for Permissible<'mc> {
             .expect("Error converting Permissible into crate::permissions::ServerOperator")
     }
 }
-/// Represents a unique permission that may be attached to a <a title="interface in org.bukkit.permissions" href="Permissible.html"><code>Permissible</code></a>
+/// Represents a unique permission that may be attached to a <a href="Permissible.html" title="interface in org.bukkit.permissions"><code>Permissible</code></a>
 #[repr(C)]
 pub struct Permission<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -868,6 +882,59 @@ impl<'mc> Permission<'mc> {
             new_vec.push(crate::permissions::Permission::from_raw(&jni, obj)?);
         }
         Ok(new_vec)
+    }
+
+    pub fn load_permission_with_string(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+        arg1: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
+        arg2: std::option::Option<impl Into<crate::permissions::PermissionDefault<'mc>>>,
+        arg3: std::option::Option<Vec<impl Into<crate::permissions::Permission<'mc>>>>,
+    ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        sig += "Ljava/util/Map;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
+        if let Some(a) = arg2 {
+            sig += "Lorg/bukkit/permissions/PermissionDefault;";
+            let val_3 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "Ljava/util/List;";
+            let raw_val_4 = jni.new_object("java/util/ArrayList", "()V", vec![])?;
+            for v in a {
+                sig += "Lorg/bukkit/permissions/crate::permissions::Permission;";
+                let map_val_0 = jni::objects::JValueGen::Object(unsafe {
+                    jni::objects::JObject::from_raw(v.into().jni_object().clone())
+                });
+                jni.call_method(
+                    &raw_val_4,
+                    "add",
+                    "(Lorg/bukkit/permissions/crate::permissions::Permission)V",
+                    vec![jni::objects::JValueGen::from(map_val_0)],
+                )?;
+            }
+            let val_4 = jni::objects::JValueGen::Object(raw_val_4);
+            args.push(val_4);
+        }
+        sig += ")Lorg/bukkit/permissions/Permission;";
+        let cls = jni.find_class("org/bukkit/permissions/Permission");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "loadPermission", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::permissions::Permission::from_raw(&jni, obj)
     }
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1235,7 +1302,7 @@ impl<'mc> PermissionAttachment<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a class which is to be notified when a <a href="PermissionAttachment.html" title="class in org.bukkit.permissions"><code>PermissionAttachment</code></a> is removed from a <a href="Permissible.html" title="interface in org.bukkit.permissions"><code>Permissible</code></a>
+/// Represents a class which is to be notified when a <a title="class in org.bukkit.permissions" href="PermissionAttachment.html"><code>PermissionAttachment</code></a> is removed from a <a href="Permissible.html" title="interface in org.bukkit.permissions"><code>Permissible</code></a>
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]

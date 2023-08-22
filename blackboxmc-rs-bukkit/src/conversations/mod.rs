@@ -49,6 +49,37 @@ impl<'mc> NumericPrompt<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::NumericPrompt::from_raw(&jni, res)
     }
+    pub fn get_prompt_text(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = NumericPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.get_prompt_text(arg0)
+    }
+    pub fn blocks_for_input(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = NumericPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.blocks_for_input(arg0)
+    }
+    pub fn accept_input(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = NumericPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.accept_input(arg0, arg1)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -221,7 +252,7 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Sets the modality of all <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a>s created by this factory. If a conversation is modal, all messages directed to the player are suppressed for the duration of the conversation.
+    /// Sets the modality of all <a title="class in org.bukkit.conversations" href="Conversation.html"><code>Conversation</code></a>s created by this factory. If a conversation is modal, all messages directed to the player are suppressed for the duration of the conversation.
     /// <p>The default is True.</p>
     pub fn with_modality(
         &self,
@@ -429,7 +460,7 @@ impl<'mc> ConversationFactory<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// An InactivityConversationCanceller will cancel a <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a> after a period of inactivity by the user.
+/// An InactivityConversationCanceller will cancel a <a title="class in org.bukkit.conversations" href="Conversation.html"><code>Conversation</code></a> after a period of inactivity by the user.
 #[repr(C)]
 pub struct InactivityConversationCanceller<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -845,10 +876,10 @@ impl<'mc> Conversable<'mc> {
     }
 }
 /// The Conversation class is responsible for tracking the current state of a conversation, displaying prompts to the user, and dispatching the user's response to the appropriate place. Conversation objects are not typically instantiated directly. Instead a <a title="class in org.bukkit.conversations" href="ConversationFactory.html"><code>ConversationFactory</code></a> is used to construct identical conversations on demand.
-/// <p>Conversation flow consists of a directed graph of <a title="interface in org.bukkit.conversations" href="Prompt.html"><code>Prompt</code></a> objects. Each time a prompt gets input from the user, it must return the next prompt in the graph. Since each Prompt chooses the next Prompt, complex conversation trees can be implemented where the nature of the player's response directs the flow of the conversation.</p>
+/// <p>Conversation flow consists of a directed graph of <a href="Prompt.html" title="interface in org.bukkit.conversations"><code>Prompt</code></a> objects. Each time a prompt gets input from the user, it must return the next prompt in the graph. Since each Prompt chooses the next Prompt, complex conversation trees can be implemented where the nature of the player's response directs the flow of the conversation.</p>
 /// <p>Each conversation has a <a href="ConversationPrefix.html" title="interface in org.bukkit.conversations"><code>ConversationPrefix</code></a> that prepends all output from the conversation to the player. The ConversationPrefix can be used to display the plugin name or conversation status as the conversation evolves.</p>
 /// <p>Each conversation has a timeout measured in the number of inactive seconds to wait before abandoning the conversation. If the inactivity timeout is reached, the conversation is abandoned and the user's incoming and outgoing chat is returned to normal.</p>
-/// <p>You should not construct a conversation manually. Instead, use the <a href="ConversationFactory.html" title="class in org.bukkit.conversations"><code>ConversationFactory</code></a> for access to all available options.</p>
+/// <p>You should not construct a conversation manually. Instead, use the <a title="class in org.bukkit.conversations" href="ConversationFactory.html"><code>ConversationFactory</code></a> for access to all available options.</p>
 #[repr(C)]
 pub struct Conversation<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1633,6 +1664,16 @@ impl<'mc> ValidatingPrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn get_prompt_text(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = ValidatingPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.get_prompt_text(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1699,6 +1740,37 @@ impl<'mc> RegexPrompt<'mc> {
         let res = jni.new_object(cls, sig.as_str(), args);
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::RegexPrompt::from_raw(&jni, res)
+    }
+    pub fn get_prompt_text(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = RegexPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.get_prompt_text(arg0)
+    }
+    pub fn blocks_for_input(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = RegexPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.blocks_for_input(arg0)
+    }
+    pub fn accept_input(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = RegexPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.accept_input(arg0, arg1)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1900,6 +1972,27 @@ impl<'mc> StringPrompt<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+    pub fn get_prompt_text(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = StringPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.get_prompt_text(arg0)
+    }
+    pub fn accept_input(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = StringPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.accept_input(arg0, arg1)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2185,6 +2278,66 @@ impl<'mc> JNIInstantiatable<'mc> for FixedSetPrompt<'mc> {
 }
 
 impl<'mc> FixedSetPrompt<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: Vec<String>,
+    ) -> Result<crate::conversations::FixedSetPrompt<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("([Ljava/lang/String;)V");
+        let arr = jni.new_object_array(
+            arg0.len() as i32,
+            "java/lang/String",
+            jni::objects::JObject::null(),
+        );
+        let arr = jni.translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                jni.new_string(arg0.get(i).unwrap().clone())?,
+            ));
+            jni.set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let cls = jni.find_class("org/bukkit/conversations/FixedSetPrompt");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::FixedSetPrompt::from_raw(&jni, res)
+    }
+    pub fn get_prompt_text(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = FixedSetPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.get_prompt_text(arg0)
+    }
+    pub fn blocks_for_input(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = FixedSetPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.blocks_for_input(arg0)
+    }
+    pub fn accept_input(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = FixedSetPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.accept_input(arg0, arg1)
+    }
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -2283,7 +2436,7 @@ impl<'mc> Into<crate::conversations::ConversationPrefix<'mc>> for NullConversati
         )
     }
 }
-/// A Prompt is the main constituent of a <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a>. Each prompt displays text to the user and optionally waits for a user's response. Prompts are chained together into a directed graph that represents the conversation flow. To halt a conversation, END_OF_CONVERSATION is returned in liu of another Prompt object.
+/// A Prompt is the main constituent of a <a title="class in org.bukkit.conversations" href="Conversation.html"><code>Conversation</code></a>. Each prompt displays text to the user and optionally waits for a user's response. Prompts are chained together into a directed graph that represents the conversation flow. To halt a conversation, END_OF_CONVERSATION is returned in liu of another Prompt object.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -2475,6 +2628,15 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         crate::conversations::ConversationAbandonedEvent::from_raw(&jni, res)
     }
 
+    pub fn graceful_exit(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "gracefulExit", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
     pub fn canceller(
         &self,
     ) -> Result<Option<crate::conversations::ConversationCanceller<'mc>>, Box<dyn std::error::Error>>
@@ -2491,15 +2653,6 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
             &self.jni_ref(),
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
-    }
-
-    pub fn graceful_exit(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "gracefulExit", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
 
     pub fn context(
@@ -2732,6 +2885,37 @@ impl<'mc> PlayerNamePrompt<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::PlayerNamePrompt::from_raw(&jni, res)
     }
+    pub fn get_prompt_text(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = PlayerNamePrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.get_prompt_text(arg0)
+    }
+    pub fn blocks_for_input(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PlayerNamePrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.blocks_for_input(arg0)
+    }
+    pub fn accept_input(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PlayerNamePrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.accept_input(arg0, arg1)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2790,6 +2974,37 @@ impl<'mc> BooleanPrompt<'mc> {
         let res = jni.new_object(cls, sig.as_str(), vec![]);
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::BooleanPrompt::from_raw(&jni, res)
+    }
+    pub fn get_prompt_text(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = BooleanPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.get_prompt_text(arg0)
+    }
+    pub fn blocks_for_input(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = BooleanPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.blocks_for_input(arg0)
+    }
+    pub fn accept_input(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = BooleanPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.accept_input(arg0, arg1)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2894,6 +3109,16 @@ impl<'mc> MessagePrompt<'mc> {
         crate::conversations::Prompt::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn get_prompt_text(
+        &self,
+        arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = MessagePrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::Prompt = temp_clone.into();
+        real.get_prompt_text(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

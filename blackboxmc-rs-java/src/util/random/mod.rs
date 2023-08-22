@@ -60,6 +60,24 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         Ok(res.z()?)
     }
 
+    pub fn state_bits(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "stateBits", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+
+    pub fn is_statistical(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isStatistical", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
     pub fn equidistribution(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
@@ -77,24 +95,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isDeprecated", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn state_bits(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "stateBits", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-
-    pub fn is_statistical(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isStatistical", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
@@ -549,6 +549,33 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+    pub fn jump_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = JavaRandomGeneratorLeapableGenerator::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::random::JavaRandomGeneratorJumpableGenerator = temp_clone.into();
+        real.jump_distance()
+    }
+    pub fn copy_and_jump(
+        &self,
+    ) -> Result<crate::util::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/random/RandomGenerator;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "copyAndJump", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::random::JavaRandomGenerator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn jump(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "jump", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -858,25 +885,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGeneratorArbitrarilyJumpableGener
 }
 
 impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
-    pub fn jump_with_double(
-        &self,
-        arg0: std::option::Option<f64>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "D";
-            let val_1 = jni::objects::JValueGen::Double(a);
-            args.push(val_1);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "jump", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
     pub fn copy_and_jump(
         &self,
         arg0: f64,
@@ -922,6 +930,25 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         Ok(())
     }
 
+    pub fn jump_with_double(
+        &self,
+        arg0: std::option::Option<f64>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "D";
+            let val_1 = jni::objects::JValueGen::Double(a);
+            args.push(val_1);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "jump", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -962,6 +989,30 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             .call_method(&self.jni_object(), "copy", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         crate::util::random::JavaRandomGeneratorLeapableGenerator::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )
+    }
+    pub fn leap_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone =
+            JavaRandomGeneratorArbitrarilyJumpableGenerator::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::util::random::JavaRandomGeneratorLeapableGenerator = temp_clone.into();
+        real.leap_distance()
+    }
+    pub fn copy_and_leap(
+        &self,
+    ) -> Result<
+        crate::util::random::JavaRandomGeneratorJumpableGenerator<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Ljava/util/random/RandomGenerator$JumpableGenerator;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "copyAndLeap", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::random::JavaRandomGeneratorJumpableGenerator::from_raw(
             &self.jni_ref(),
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
@@ -1022,15 +1073,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGeneratorJumpableGenerator<'mc> {
 }
 
 impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
-    pub fn jump(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "jump", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
     pub fn jump_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
@@ -1051,6 +1093,15 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         crate::util::random::JavaRandomGenerator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+
+    pub fn jump(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "jump", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
 
     pub fn of(

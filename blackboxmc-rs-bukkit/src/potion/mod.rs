@@ -103,6 +103,13 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PotionEffectTypeWrapper::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::Keyed = temp_clone.into();
+        real.key()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -377,7 +384,7 @@ impl<'mc> Potion<'mc> {
         Ok(new_vec)
     }
     /// <span class="deprecated-label">Deprecated.</span>
-    /// Converts this potion to an <a title="class in org.bukkit.inventory" href="../inventory/ItemStack.html"><code>ItemStack</code></a> with the specified amount and a correct damage value.
+    /// Converts this potion to an <a href="../inventory/ItemStack.html" title="class in org.bukkit.inventory"><code>ItemStack</code></a> with the specified amount and a correct damage value.
     pub fn to_item_stack(
         &self,
         arg0: i32,
@@ -620,7 +627,7 @@ impl<'mc> Potion<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a potion effect, that can be added to a <a href="../entity/LivingEntity.html" title="interface in org.bukkit.entity"><code>LivingEntity</code></a>. A potion effect has a duration that it will last for, an amplifier that will enhance its effects, and a <a href="PotionEffectType.html" title="class in org.bukkit.potion"><code>PotionEffectType</code></a>, that represents its effect on an entity.
+/// Represents a potion effect, that can be added to a <a title="interface in org.bukkit.entity" href="../entity/LivingEntity.html"><code>LivingEntity</code></a>. A potion effect has a duration that it will last for, an amplifier that will enhance its effects, and a <a title="class in org.bukkit.potion" href="PotionEffectType.html"><code>PotionEffectType</code></a>, that represents its effect on an entity.
 #[repr(C)]
 pub struct PotionEffect<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,

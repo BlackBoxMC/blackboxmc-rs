@@ -236,7 +236,7 @@ impl<'mc> PluginMessageListener<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Contains information about a <a href="../Plugin.html" title="interface in org.bukkit.plugin"><code>Plugin</code></a>s registration to a plugin channel.
+/// Contains information about a <a title="interface in org.bukkit.plugin" href="../Plugin.html"><code>Plugin</code></a>s registration to a plugin channel.
 #[repr(C)]
 pub struct PluginMessageListenerRegistration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -318,15 +318,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         crate::plugin::messaging::PluginMessageListenerRegistration::from_raw(&jni, res)
     }
 
-    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isValid", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
     pub fn channel(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -338,6 +329,15 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isValid", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
 
     pub fn listener(
@@ -395,7 +395,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// A class responsible for managing the registrations of plugin channels and their listeners. Channel names must contain a colon separator and consist of only [a-z0-9/._-] - i.e. they MUST be valid <a title="class in org.bukkit" href="../../NamespacedKey.html"><code>NamespacedKey</code></a>. The "BungeeCord" channel is an exception and may only take this form.
+/// A class responsible for managing the registrations of plugin channels and their listeners. Channel names must contain a colon separator and consist of only [a-z0-9/._-] - i.e. they MUST be valid <a href="../../NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>. The "BungeeCord" channel is an exception and may only take this form.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]

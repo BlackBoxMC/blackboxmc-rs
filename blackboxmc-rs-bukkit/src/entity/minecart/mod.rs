@@ -103,6 +103,138 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn set_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_damage(arg0)
+    }
+    pub fn damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.damage()
+    }
+    pub fn max_speed(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.max_speed()
+    }
+    pub fn set_max_speed(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_max_speed(arg0)
+    }
+    pub fn is_slow_when_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.is_slow_when_empty()
+    }
+    pub fn set_slow_when_empty(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_slow_when_empty(arg0)
+    }
+    pub fn flying_velocity_mod(
+        &self,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.flying_velocity_mod()
+    }
+    pub fn set_flying_velocity_mod(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_flying_velocity_mod(arg0)
+    }
+    pub fn derailed_velocity_mod(
+        &self,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.derailed_velocity_mod()
+    }
+    pub fn set_derailed_velocity_mod(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_derailed_velocity_mod(arg0)
+    }
+    pub fn set_display_block(
+        &self,
+        arg0: impl Into<crate::material::MaterialData<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_display_block(arg0)
+    }
+    pub fn display_block(
+        &self,
+    ) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.display_block()
+    }
+    pub fn set_display_block_data(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_display_block_data(arg0)
+    }
+    pub fn display_block_data(
+        &self,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.display_block_data()
+    }
+    pub fn set_display_block_offset(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_display_block_offset(arg0)
+    }
+    pub fn display_block_offset(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = ExplosiveMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.display_block_offset()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -176,6 +308,180 @@ impl<'mc> HopperMinecart<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn set_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_damage(arg0)
+    }
+    pub fn damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.damage()
+    }
+    pub fn max_speed(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.max_speed()
+    }
+    pub fn set_max_speed(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_max_speed(arg0)
+    }
+    pub fn is_slow_when_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.is_slow_when_empty()
+    }
+    pub fn set_slow_when_empty(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_slow_when_empty(arg0)
+    }
+    pub fn flying_velocity_mod(
+        &self,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.flying_velocity_mod()
+    }
+    pub fn set_flying_velocity_mod(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_flying_velocity_mod(arg0)
+    }
+    pub fn derailed_velocity_mod(
+        &self,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.derailed_velocity_mod()
+    }
+    pub fn set_derailed_velocity_mod(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_derailed_velocity_mod(arg0)
+    }
+    pub fn set_display_block(
+        &self,
+        arg0: impl Into<crate::material::MaterialData<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_display_block(arg0)
+    }
+    pub fn display_block(
+        &self,
+    ) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.display_block()
+    }
+    pub fn set_display_block_data(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_display_block_data(arg0)
+    }
+    pub fn display_block_data(
+        &self,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.display_block_data()
+    }
+    pub fn set_display_block_offset(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_display_block_offset(arg0)
+    }
+    pub fn display_block_offset(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.display_block_offset()
+    }
+    pub fn inventory(
+        &self,
+    ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::InventoryHolder = temp_clone.into();
+        real.inventory()
+    }
+    pub fn seed(&self) -> Result<i64, Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::loot::Lootable = temp_clone.into();
+        real.seed()
+    }
+    pub fn set_seed(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::loot::Lootable = temp_clone.into();
+        real.set_seed(arg0)
+    }
+    pub fn set_loot_table(
+        &self,
+        arg0: impl Into<crate::loot::LootTable<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::loot::Lootable = temp_clone.into();
+        real.set_loot_table(arg0)
+    }
+    pub fn loot_table(
+        &self,
+    ) -> Result<Option<crate::loot::LootTable<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = HopperMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::loot::Lootable = temp_clone.into();
+        real.loot_table()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -266,7 +572,7 @@ impl<'mc> Into<crate::loot::Lootable<'mc>> for StorageMinecart<'mc> {
             .expect("Error converting StorageMinecart into crate::loot::Lootable")
     }
 }
-/// Represents a Minecart with an <a href="../../block/CreatureSpawner.html" title="interface in org.bukkit.block"><code>entity spawner</code></a> inside it.
+/// Represents a Minecart with an <a title="interface in org.bukkit.block" href="../../block/CreatureSpawner.html"><code>entity spawner</code></a> inside it.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -383,6 +689,138 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(Some(res.i()?))
     }
+    pub fn set_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_damage(arg0)
+    }
+    pub fn damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.damage()
+    }
+    pub fn max_speed(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.max_speed()
+    }
+    pub fn set_max_speed(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_max_speed(arg0)
+    }
+    pub fn is_slow_when_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.is_slow_when_empty()
+    }
+    pub fn set_slow_when_empty(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_slow_when_empty(arg0)
+    }
+    pub fn flying_velocity_mod(
+        &self,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.flying_velocity_mod()
+    }
+    pub fn set_flying_velocity_mod(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_flying_velocity_mod(arg0)
+    }
+    pub fn derailed_velocity_mod(
+        &self,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.derailed_velocity_mod()
+    }
+    pub fn set_derailed_velocity_mod(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_derailed_velocity_mod(arg0)
+    }
+    pub fn set_display_block(
+        &self,
+        arg0: impl Into<crate::material::MaterialData<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_display_block(arg0)
+    }
+    pub fn display_block(
+        &self,
+    ) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.display_block()
+    }
+    pub fn set_display_block_data(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_display_block_data(arg0)
+    }
+    pub fn display_block_data(
+        &self,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.display_block_data()
+    }
+    pub fn set_display_block_offset(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_display_block_offset(arg0)
+    }
+    pub fn display_block_offset(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = PoweredMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.display_block_offset()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -395,7 +833,7 @@ impl<'mc> Into<crate::entity::Minecart<'mc>> for PoweredMinecart<'mc> {
             .expect("Error converting PoweredMinecart into crate::entity::Minecart")
     }
 }
-/// Represents a minecart that can have certain <a href="../Entity.html" title="interface in org.bukkit.entity"><code>entities</code></a> as passengers. Normal passengers include all <a href="../LivingEntity.html" title="interface in org.bukkit.entity"><code>living entities</code></a> with the exception of <a title="interface in org.bukkit.entity" href="../IronGolem.html"><code>iron golems</code></a>. Non-player entities that meet normal passenger criteria automatically mount these minecarts when close enough.
+/// Represents a minecart that can have certain <a title="interface in org.bukkit.entity" href="../Entity.html"><code>entities</code></a> as passengers. Normal passengers include all <a title="interface in org.bukkit.entity" href="../LivingEntity.html"><code>living entities</code></a> with the exception of <a href="../IronGolem.html" title="interface in org.bukkit.entity"><code>iron golems</code></a>. Non-player entities that meet normal passenger criteria automatically mount these minecarts when close enough.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -531,6 +969,138 @@ impl<'mc> CommandMinecart<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn set_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_damage(arg0)
+    }
+    pub fn damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.damage()
+    }
+    pub fn max_speed(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.max_speed()
+    }
+    pub fn set_max_speed(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_max_speed(arg0)
+    }
+    pub fn is_slow_when_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.is_slow_when_empty()
+    }
+    pub fn set_slow_when_empty(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_slow_when_empty(arg0)
+    }
+    pub fn flying_velocity_mod(
+        &self,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.flying_velocity_mod()
+    }
+    pub fn set_flying_velocity_mod(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_flying_velocity_mod(arg0)
+    }
+    pub fn derailed_velocity_mod(
+        &self,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.derailed_velocity_mod()
+    }
+    pub fn set_derailed_velocity_mod(
+        &self,
+        arg0: impl Into<crate::util::Vector<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_derailed_velocity_mod(arg0)
+    }
+    pub fn set_display_block(
+        &self,
+        arg0: impl Into<crate::material::MaterialData<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_display_block(arg0)
+    }
+    pub fn display_block(
+        &self,
+    ) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.display_block()
+    }
+    pub fn set_display_block_data(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_display_block_data(arg0)
+    }
+    pub fn display_block_data(
+        &self,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.display_block_data()
+    }
+    pub fn set_display_block_offset(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.set_display_block_offset(arg0)
+    }
+    pub fn display_block_offset(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = CommandMinecart::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::entity::Minecart = temp_clone.into();
+        real.display_block_offset()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

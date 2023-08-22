@@ -15,7 +15,7 @@ file_cache = {}
 # rust's reserved words; we use this to rename any functions
 reserved_words = ["as", "break", "const", "continue", "else", "enum", "extern", "false", "fn", "for", "if", "impl", "in", "let", "loop", "match",
                   "move", "mut", "pub", "ref", "return", "self", "Self", "static", "struct", "super", "trait", "true", "type", "unsafe", "use", "where", "while",
-                  "abstract", "become", "box", "do", "final", "macro", "override", "priv", "typeof", "unsized", "virtual", "yield"]
+                  "abstract", "become", "box", "do", "final", "macro", "override", "priv", "tyof", "unsized", "virtual", "yield"]
 
 library_resolves = {
     "net.md_5": "blackboxmc-rs-bungee",
@@ -173,10 +173,12 @@ def func_signature_format(ty, increment, returning, options_start_at=-1):
         else:
             if (internal_do_into or is_string) and not returning:
                 thing += "impl Into<"
+            
             if len(ty["generics"]) >= 1:
                 thing += ty["type_name_alone"]+"<"
                 j = []
                 for g in ty["generics"]:
+                    
                     g = g["type_name_resolved"]
                     if len(g) >= 2:
                         if g.startswith("crate") or g.startswith("bukkit") or g.startswith("jni") or g.startswith("blackbox") or g == "String":
@@ -220,20 +222,20 @@ def argument_name_format(objects):
     name = parts[len(parts) - 1].replace("[]", "s").replace("$", "")
     return re.sub(r"([a-z])([A-Z])", r"\1_\2", name).lower()
 
-def code_format(type, prefix, n, var_prefix="val", arg="", is_array=False, options_start_at=-1, no_sig=False):
+def code_format(ty, prefix, n, var_prefix="val", arg="", is_array=False, options_start_at=-1, no_sig=False):
     if arg == "":
-        if "type_name_lhand" in type:
-            arg = type["type_name_lhand"]
+        if "type_name_lhand" in ty:
+            arg = ty["type_name_lhand"]
         else:
             arg = "arg"+str(n)
 
-    ty = type["type_name_resolved"].replace("&dyn ","")
+    typ = ty["type_name_resolved"].replace("&dyn ","")
 
     res = []
 
     do_option = n >= options_start_at and options_start_at != -1
 
-    let = java_letter_from_rust(type["type_name_original"],is_array)
+    let = java_letter_from_rust(ty["type_name_original"],is_array)
     if do_option:
         res.append("if let Some(a) = "+arg+" {")
         if not no_sig:
@@ -245,28 +247,28 @@ def code_format(type, prefix, n, var_prefix="val", arg="", is_array=False, optio
             res.append("sig += \""+let+"\";")
 
     
-    class_name = type["type_name_original"].replace(".","/").replace("Java","")
+    class_name = ty["type_name_original"].replace(".","/").replace("Java","")
 
     if is_array:
         res.append("let arr = ")
         new_new_arg = new_arg
-        match(type["type_name_alone"].replace("Java","")):
+        match(ty["type_name_alone"].replace("Java","")):
             case "bool" | "i8" | "char" | "f64" | "f32" | "i32" | "i64" | "i16" | "u16":
-                res.append(prefix+".new_"+type["type_name_original"]+"_array("+new_arg+".len() as i32);")
+                res.append(prefix+".new_"+ty["type_name_original"]+"_array("+new_arg+".len() as i32);")
                 res.append("let mut vec = Vec::new();")
                 new_new_arg = "*"+new_arg+".get(i).unwrap()"
             case _:
                 res.append(prefix+".new_object_array("+new_arg+".len() as i32, \""+class_name+"\", jni::objects::JObject::null());")
                 new_new_arg = new_arg+".get(i).unwrap()"
-                if type["type_name_alone"].endswith("String") or type["type_name_alone"].endswith("Class"):
+                if ty["type_name_alone"].endswith("String") or ty["type_name_alone"].endswith("Class"):
                     new_new_arg = new_new_arg+".clone()"
         res.append("let arr = "+prefix+".translate_error_no_gen(arr)?;")
         res.append("for i in 0.."+new_arg+".len() {")
         new_arg = new_new_arg
         
 
-    if(ty.startswith("crate") or ty.startswith("blackbox")): # for internal types...
-        if "JavaEnum" in ty:
+    if(typ.startswith("crate") or typ.startswith("blackbox")): # for internal types...
+        if "JavaEnum" in typ:
             return None
 
         # get the original object.
@@ -274,21 +276,21 @@ def code_format(type, prefix, n, var_prefix="val", arg="", is_array=False, optio
         if not is_array:
             fcall += ".into()"
         fcall += ".jni_object().clone()"
-        if type["type_name_resolved"].startswith("&dyn"):
+        if ty["type_name_resolved"].startswith("&dyn"):
             fcall = ".jni_object().clone()"
 
         res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw("+new_arg+fcall+")});")
     else:
-        match(type["type_name_alone"].replace("Java","")):
+        match(ty["type_name_alone"].replace("Java","")):
             case "bool" | "i8" | "char" | "f64" | "f32" | "i32" | "i64" | "i16" | "u16":
-                if is_array and "." not in type["type_name_original"]:
-                    if "boolean" in type["type_name_original"]:
+                if is_array and "." not in ty["type_name_original"]:
+                    if "boolean" in ty["type_name_original"]:
                         res.append("let "+var_prefix+"_"+str(n)+" = "+new_arg+" as u8;")
                     else:
                         res.append("let "+var_prefix+"_"+str(n)+" = "+new_arg+";")
                 else:
-                    v = java_type_from_rust(type)
-                    match(type["type_name_original"]):
+                    v = java_type_from_rust(ty)
+                    match(ty["type_name_original"]):
                         case "boolean":
                             res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+new_arg+".into());")
                         case "byte":
@@ -308,17 +310,19 @@ def code_format(type, prefix, n, var_prefix="val", arg="", is_array=False, optio
                         case _:
                             res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object("+prefix+".new_object(\""+class_name+"\", \""+v["function_signature"]+"\", vec!["+new_arg+".into()])?);")
             case "String":
-                if is_array: 
-                    return None
-                res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object(jni::objects::JObject::from("+prefix+".new_string("+new_arg+".into())?));")
+                a = new_arg
+                if not is_array:
+                    a += ".into()"
+                res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object(jni::objects::JObject::from("+prefix+".new_string("+a+")?));")
             case "jni::objects::JObject":
                 res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object("+new_arg+");")
             case "jni::objects::JClass":
-                if is_array: 
-                    return None
-                res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object("+new_arg+".into());")
+                a = new_arg
+                if not is_array:
+                    a += ".into()"
+                res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object("+a+");")
             case "Vec":
-                match type["type_name_original"]:
+                match ty["type_name_original"]:
                     # TODO: convert this to use the new java.util bindings instad.
                     case "java.util.List":
                         c = [
@@ -326,24 +330,29 @@ def code_format(type, prefix, n, var_prefix="val", arg="", is_array=False, optio
                             "for v in "+new_arg+"{"
                         ]
 
-                        if 0 not in type["generics"]:
-                            return None
+                        if type(ty["generics"]) == dict:
+                            generics = [ty["generics"]]
+                        else:
+                            generics = ty["generics"]
 
-                        t1 = java_type_from_rust(type["generics"][0])["class_name"]
+                        
 
-                        co = code_format({
-                            "type_name_resolved": type["generics"][0]["type_name_resolved"],
+                        t1 = java_type_from_rust(generics[0])["class_name"]
+
+                        co = code_format(ty={
+                            "type_name_resolved": generics[0]["type_name_resolved"],
                             "type_name_lhand": "v",
-                            "is_array": type["is_array"],
-                            "is_interface": type["is_interface"],
+                            "is_array": ty["is_array"],
+                            "is_interface": ty["is_interface"],
                             "type_name_original": t1,
-                            "type_name_alone": type["generics"][0]["type_name_resolved"],
-                            "generics": type["generics"],
-                            "package_name": type["package_name"],
+                            "type_name_alone": generics[0]["type_name_resolved"],
+                            "generics": generics,
+                            "package_name": ty["package_name"],
                             "options_start_at": options_start_at,
                             "usage_unsafe": False,
-                        }, prefix, 0, "map_val", is_array, options_start_at, no_sig=True)
+                        }, prefix=prefix, n=0, var_prefix="map_val", is_array=is_array, options_start_at=options_start_at, no_sig=True)
                         if co is None:
+                            print("co is none")
                             return None
                         c.append("\n\t\t".join(co))
 
@@ -363,18 +372,18 @@ def code_format(type, prefix, n, var_prefix="val", arg="", is_array=False, optio
                         res += c
 
                     case _:
-                        print("Unhandled map type:\t\t"+type["type_name_original"],"\t\t",type["type_name_original"])
+                        print("Unhandled map ty (arg):\t\t"+ty["type_name_original"])
                         return None
             case _:
-                print("Untranslated argument:\t\t"+type["type_name_alone"],"\t\t",type["type_name_original"])
+                print("Untranslated argument:\t\t"+ty["type_name_alone"],"\t\t",ty["type_name_original"])
                 return None
 
     if is_array:
-        match(type["type_name_alone"].replace("Java","")):
+        match(ty["type_name_alone"].replace("Java","")):
             case "bool" | "i8" | "char" | "f64" | "f32" | "i32" | "i64" | "i16" | "u16":
                 res.append("vec.push("+var_prefix+"_"+str(n)+")")
                 res.append("}")
-                res.append(prefix+".set_"+type["type_name_original"]+"_array_region(&arr, 0, &vec)?;")
+                res.append(prefix+".set_"+ty["type_name_original"]+"_array_region(&arr, 0, &vec)?;")
             case _:
                 res.append(prefix+".set_object_array_element(&arr, i as i32, "+var_prefix+"_"+str(n)+".l()?)?;")
                 res.append("}")
@@ -549,7 +558,7 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                     code.append("let list = blackboxmc_java::util::JavaList::from_raw(&"+val_1+", res.l()"+end_line+")"+end_line+";"+
                                 "let iter = list.iterator()"+end_line+";")
                 case _:
-                    print("Unhandled map type as return type:\t\t"+return_group["type_name_original"])
+                    print("Unhandled map ty (return):\t\t"+return_group["type_name_original"])
                     return None
             code.append("while iter.has_next()"+end_line+" {"+
                 "            let obj = iter.next()"+end_line+";")
@@ -617,14 +626,14 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
             #
     return "\n".join(code)
 
-def java_call_signature_format(types, return_type, is_constructor=False):
+def java_call_signature_format(types, return_ty, is_constructor=False):
     results = []
     for ty in types:
         results.append(java_letter_from_rust(ty["type_name_original"],ty["is_array"]))
     if is_constructor:
         return "("+"".join(results)+")V"
     else:
-        return "("+"".join(results)+")"+java_letter_from_rust(return_type,False)
+        return "("+"".join(results)+")"+java_letter_from_rust(return_ty,False)
 
 def correct_question_mark(argname, ty, method, i, returning, library, is_constructor):
     gen = re.search("^(.*?)<(.*?)>$", ty)
@@ -657,7 +666,7 @@ def correct_question_mark(argname, ty, method, i, returning, library, is_constru
         gen2 = re.search("<(.*?)>", grp["type_name_resolved"])
         if gen2 is not None:
             return None
-        return grp
+        return [grp]
 
 def java_type_to_rust_primitive(ty):
     type_name_resolved = ""
@@ -691,16 +700,16 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
     if method is not None and not is_constructor:
         if returning:
             if "genericReturnType" not in method["method"]:
-                parameter_type = method["method"]["name"]
+                parameter_ty = method["method"]["name"]
             else:
-                parameter_type = method["method"]["genericReturnType"]
+                parameter_ty = method["method"]["genericReturnType"]
         else:
             if i <= len(method["method"]["genericParameterTypes"]):
-                parameter_type = method["method"]["genericParameterTypes"][i]
+                parameter_ty = method["method"]["genericParameterTypes"][i]
             else:
-                parameter_type = ""
+                parameter_ty = ""
     else:
-        parameter_type = ""
+        parameter_ty = ""
 
     type_name_resolved = "jni::objects::JObject"
     is_array = False
@@ -745,7 +754,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                 if skip_vec:
                     return None
                 type_name_resolved = "Vec"
-                grp = correct_question_mark(argname, parameter_type, method, i, returning, library, is_constructor)
+                grp = correct_question_mark(argname, parameter_ty, method, i, returning, library, is_constructor)
                 if grp is None:
                     return None
                 generics = grp
@@ -754,7 +763,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
             #        return None
             #    type_name_resolved = "std::collections::HashMap"
             #    parts = []
-            #    grp = correct_question_mark(argname, parameter_type, method, i, returning, library, is_constructor)
+            #    grp = correct_question_mark(argname, parameter_ty, method, i, returning, library, is_constructor)
             #    if grp is None:
             #        return None
             #    parts += grp
@@ -825,8 +834,9 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
         "usage_unsafe": usage_unsafe,
     }
 
-def java_type_from_rust(type):
-    match(type["type_name_alone"]):
+def java_type_from_rust(ty):
+    #print(ty)
+    match(ty["type_name_alone"]):
         case "bool":
             class_name = "boolean"
             function_signature = "(Z)V"
@@ -852,16 +862,16 @@ def java_type_from_rust(type):
             class_name = "double"
             function_signature = "(D)V"
         case _:
-            class_name = (type["package_name"].replace(".","/"))+"/"+type["type_name_alone"]
+            class_name = (ty["package_name"].replace(".","/"))+"/"+ty["type_name_alone"]
             function_signature = "(Ljava/Lang/Object)V"
     return {
         "class_name": class_name,
         "function_signature": function_signature
     }
 
-def java_letter_from_rust(type,is_array):
+def java_letter_from_rust(ty,is_array):
     res = ""
-    match(type.replace("Java","")):
+    match(ty.replace("Java","")):
         case "boolean":
             res = "Z"
         case "byte":
@@ -883,7 +893,7 @@ def java_letter_from_rust(type,is_array):
         case "":
             res = ""
         case _:
-            res = "L"+type.replace(".","/").replace("Java","")+";"
+            res = "L"+ty.replace(".","/").replace("Java","")+";"
     if is_array:
         return "["+res
     else:
@@ -994,8 +1004,11 @@ def gen_jni_instantiatable(name,full_name,is_enum,variants):
     }
     """
     return st
-
-def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,variants,is_constructor,full_name):
+def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructor,dummy,parsed_name):
+    if is_constructor:
+        methods = val["constructors"]
+    else:
+        methods = val["methods"]
     og_name = name
     impl_signature = []
     extern_signature = []
@@ -1007,7 +1020,6 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
     names = {}
     methods_ = {}
     for method in methods:
-
         if "modifiers" in method:
             if(method["modifiers"]&1 != 1): # skip private methods
                 continue
@@ -1105,7 +1117,10 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             for group_name in method_map:
                 methods = method_map[group_name]
                 if group_name != "":
-                    new_name = name+"_with_"+group_name.replace("$","").replace("[]","s")
+                    if len(methods) > 1:
+                        new_name = name+"_with_"+group_name.replace("$","").replace("[]","s")
+                    else:
+                        new_name = name 
                 else:
                     new_name = name 
                 new_methods[new_name] = {}
@@ -1119,6 +1134,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             new_methods[name]["method"] = method[0]
             new_methods[name]["original_name"] = k
 
+    dummy_temp_disable = False
     for k in new_methods:
         method = new_methods[k]
 
@@ -1126,6 +1142,16 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         types = method["method"]["parameters"]
 
         name = k
+        if name.endswith("s") and name != "equals":
+            if dummy:
+                dummy = False
+                dummy_temp_disable = True
+            
+        if "_with_" in name:
+            if dummy:
+                dummy = False
+                dummy_temp_disable = True
+            
         if name == "to_string":
             if len(types) <= 0:
                 has_to_string = True
@@ -1150,7 +1176,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                 "is_interface": False,
                 "type_name_original": "",
                 "type_name_alone": "",
-                "generics": "",
+                "generics": [],
                 "package_name": "",
                 "options_start_at": options_start_at,
                 "usage_unsafe": False,
@@ -1163,7 +1189,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                 "is_interface": False,
                 "type_name_original": "",
                 "type_name_alone": "",
-                "generics": "",
+                "generics": [],
                 "package_name": "",
                 "options_start_at": options_start_at,
                 "usage_unsafe": False,
@@ -1171,8 +1197,8 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         should_continue = True
         i = 0
         # make the function signature
-        for type in types:
-            group = java_type_to_rust(type[0], type[1],method, i, is_constructor, library)
+        for ty in types:
+            group = java_type_to_rust(ty[0], ty[1],method, i, is_constructor, library)
 
             if group is None:
                 should_continue = False
@@ -1208,37 +1234,39 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
         if return_group is None:
             continue
-
-        if options_start_at != -1:
-            if len(func_signature) > 1:
-                code.append("let mut args = Vec::new();")
+        
+        if not dummy:
+            if options_start_at != -1:
+                if len(func_signature) > 1:
+                    code.append("let mut args = Vec::new();")
+                else:
+                    code.append("let args = Vec::new();")
+                code.append("let mut sig = String::from(\"(\");")
             else:
-                code.append("let args = Vec::new();")
-            code.append("let mut sig = String::from(\"(\");")
-        else:
-            code.append("let sig = String::from(\""+java_call_signature_format(func_signature, return_group["type_name_original"],is_constructor)+"\");")
-        for type in func_signature:
-            if(type["type_name_lhand"] == "") or in_excluded_classes(type["type_name_original"]):
+                code.append("let sig = String::from(\""+java_call_signature_format(func_signature, return_group["type_name_original"],is_constructor)+"\");")
+        for ty in func_signature:
+            if(ty["type_name_lhand"] == "") or in_excluded_classes(ty["type_name_original"]) or dummy:
                 n += 1
                 continue
             else:
-                ty = code_format(type, prefix, n, is_array=type["is_array"], options_start_at=options_start_at, no_sig=False)
-                if ty is None:
+                typ = code_format(ty, prefix, n, is_array=ty["is_array"], options_start_at=options_start_at, no_sig=False)
+                if typ is None:
                     should_continue = False
                     break
-                for t in ty:
+                for t in typ:
                     code.append(t)
-            if type["is_array"]:
+            if ty["is_array"]:
                 types.append("jni::objects::JValueGen::from(val_"+str(n)+".l()?)")
             else:
                 types.append("jni::objects::JValueGen::from(val_"+str(n)+")")
             n += 1
 
-        if options_start_at != -1:
-            if not is_constructor:
-                code.append("sig += \")"+java_letter_from_rust(return_group["type_name_original"],return_group["is_array"])+"\";")
-            else:
-                code.append("sig += \")V\";")
+        if not dummy:
+            if options_start_at != -1:
+                if not is_constructor:
+                    code.append("sig += \")"+java_letter_from_rust(return_group["type_name_original"],return_group["is_array"])+"\";")
+                else:
+                    code.append("sig += \")V\";")
         if(not should_continue):
             continue
 
@@ -1275,13 +1303,6 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             if i[2] is not None:
                 method["method"]["comment"] = i[2]
 
-        # execute the function.
-        m = return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait,options_start_at, is_constructor,nullable,library)
-        if m is None:
-            continue
-
-        impl_signature += impl_signature_canidate
-        code.append(m)
 
         func_signature_resolved = ""
         func_signature_resolved_parts = []
@@ -1289,7 +1310,6 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         generic_letters = []
         generic_args = []
         j = 0
-        usage_unsafe = False
 
         for ty in func_signature:
             if ty["usage_unsafe"]:
@@ -1304,10 +1324,44 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             generic_letters += group["generic_letters"]
             generic_args += group["generic_args"]
 
+        func_signature_resolved = ",".join(func_signature_resolved_parts)
+        func_signature_resolved_raw = ",".join(list(map(lambda f: f.replace("&self","this: "+og_name).replace(": ",": *mut ").replace("<'mc>","<'static>"),func_signature_resolved_parts)))
+        
+        func_signature_resolved_names_only = ",".join(list(map(lambda f: f, filter(lambda f: f != "&self",func_signature_resolved_parts_names_only))))
+        func_signature_resolved_raw_names_only = ",".join(list(map(lambda f: "*"+f+".as_ref().unwrap()", filter(lambda f: f != "&self",func_signature_resolved_parts_names_only))))
+
+        m = return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait,options_start_at, is_constructor,nullable,library)
+        if m is None:
+            continue
 
 
 
-        return_type = func_signature_format(return_group,j,True)
+        # execute the function.
+        if dummy:
+            if name == "of" and "$" in og_name:
+                continue
+            val_group = java_type_to_rust("", val["packageName"]+"."+val["name"], None, 0, True, library, False)
+            if val_group is None:
+                continue
+            if in_excluded_classes(val_group["type_name_original"]):
+                continue
+            if val_group["type_name_alone"] in omitted_classes:
+                continue
+            if static:
+                code.append(val_group["type_name_resolved"]+"::"+name+"("+func_signature_resolved_names_only+")")
+            else:
+                # we do an unsafe clone here but justify it because it's only to execute the method. said unsafe clone
+                # will go out of scope after this method is done.
+                code.append("let temp_clone = "+parsed_name+"::from_raw(&self.0, unsafe {jni::objects::JObject::from_raw(self.1.clone())})?;")
+                code.append("let real: "+val_group["type_name_resolved"]+" = temp_clone.into();")
+                code.append("real."+name+"("+func_signature_resolved_names_only+")")
+        else:
+            impl_signature += impl_signature_canidate
+            code.append(m)
+
+
+
+        return_ty = func_signature_format(return_group,j,True)
 
         generic_letters_str = ""
         if len(generic_letters) >= 1:
@@ -1316,11 +1370,8 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         if len(generic_args) >= 1:
             generic_args_str = " where "+",".join(generic_args)
 
-        func_signature_resolved = ",".join(func_signature_resolved_parts)
-        func_signature_resolved_raw = ",".join(list(map(lambda f: f.replace("&self","this: "+og_name).replace(": ",": *mut ").replace("<'mc>","<'static>"),func_signature_resolved_parts)))
-        
-        func_signature_resolved_names_only = ",".join(list(map(lambda f: "*"+f+".as_ref().unwrap()", filter(lambda f: f != "&self",func_signature_resolved_parts_names_only))))
 
+        
         if "comment" in method["method"]:
             impl_signature.append(format_comment(method["method"]["comment"]))
         if name.startswith("internal_"):
@@ -1330,9 +1381,9 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         )
 
         if nullable:
-            return_type["result"] = "Option<"+return_type["result"]+">"
+            return_ty["result"] = "Option<"+return_ty["result"]+">"
 
-        impl_signature.append("-> Result<"+return_type["result"]+", Box<dyn std::error::Error>>")
+        impl_signature.append("-> Result<"+return_ty["result"]+", Box<dyn std::error::Error>>")
 
         impl_signature.append(generic_args_str)
 
@@ -1341,7 +1392,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         else:
             impl_signature.append("{"+"\n".join(code)+"}")
 
-        raw_return = "*mut "+return_type["result"].replace("<'mc>","<'static>")
+        raw_return = "*mut "+return_ty["result"].replace("<'mc>","<'static>")
         # c binding.
         #if static:
         #    extern_signature.append("#[no_mangle]\npub extern fn "+camel_case_to_snake_case(og_name)+"_"+name+"("+func_signature_resolved_raw+") -> Result<"+raw_return+", Box<dyn std::error::Error>> ")
@@ -1350,15 +1401,36 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         #    extern_signature.append("#[no_mangle]\npub extern fn "+camel_case_to_snake_case(og_name)+"_"+name+"("+func_signature_resolved_raw+") -> Result<"+raw_return+", Box<dyn std::error::Error>> ")
         #    extern_signature.append("{\n\tunsafe {\n\t\tOk(Box::leak(Box::new(this.as_ref().unwrap()."+name+"("+func_signature_resolved_names_only+")?)) as "+raw_return+")\n\t}\n}")
 
+        if dummy_temp_disable:
+            dummy = True
+            
     for impl in impl_signature:
         file_cache[mod_path].append(impl)
 
+    if not is_constructor:
+        if not dummy:
+            method_names = list(map(lambda k: new_methods[k]["original_name"],new_methods))
+            gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_name)
 
     return {
         "has_to_string": has_to_string,
         "has_to_string_is_static": has_to_string_is_static,
         "extern_signature": extern_signature,
     }
+
+def gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_name):
+    # for any inherited classes this class has
+    if "interfaces" in val:
+        
+        for cl in val["interfaces"]:
+            if "methods" in cl:
+                methods = list(filter(lambda f: f["name"] not in method_names, cl["methods"]))
+                cl["methods"] = methods
+                parse_methods(library,cl["name"],cl,mod_path,is_trait,is_trait_decl,False,True,parsed_name)
+                method_names += list(map(lambda f: f["name"], cl["methods"]))
+    if "superClass" in val:
+        gen_dummy(val["superClass"],method_names,mod_path,is_trait,is_trait_decl,parsed_name)
+
 
 def format_comment(comment):
     final_comment = ""
@@ -1505,7 +1577,7 @@ def parse_classes(library, val, classes):
         has_to_string_is_static = False
         extern = []
         if "methods" in val:
-            grp = parse_methods(library, name,val["methods"],mod_path,True,False,False,variants,False,full_name)
+            grp = parse_methods(library, name,val,mod_path,False,False,False,False,name+"Struct")
             has_to_string = grp["has_to_string"]
             has_to_string_is_static = grp["has_to_string_is_static"]
             extern += grp["extern_signature"]
@@ -1538,7 +1610,7 @@ def parse_classes(library, val, classes):
 
         extern = []
         if "methods" in val:
-            grp = parse_methods(library,name,val["methods"],mod_path,False,True,True,[],False,full_name)
+            grp = parse_methods(library,name,val,mod_path,True,True,False,False,name)
             has_to_string = grp["has_to_string"]
             has_to_string_is_static = grp["has_to_string_is_static"]
             extern += grp["extern_signature"]
@@ -1571,14 +1643,14 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
 
         if "constructors" in val:
-            grp = parse_methods(library, name,val["constructors"],mod_path,False,False,False,[],True,full_name)
+            grp = parse_methods(library, name,val,mod_path,False,False,True,False,name)
 
         has_to_string = False
         has_to_string_is_static = False
 
         extern = []
         if "methods" in val:
-            grp = parse_methods(library,name,val["methods"],mod_path,False,False,False,[],False,full_name)
+            grp = parse_methods(library,name,val,mod_path,False,False,False,False,name)
             has_to_string = grp["has_to_string"]
             has_to_string_is_static = grp["has_to_string_is_static"]
             extern += grp["extern_signature"]
@@ -1630,9 +1702,9 @@ def parse_into_impl(val,name,mod_path):
     if ".".join(val_resolved["package_name"].split(".")[0:2]) in libraries:
         temp_lib = libraries[".".join(val_resolved["package_name"].split(".")[0:2])]
         temp_pkg = temp_lib[val_resolved["package_name"]]
-        typealone = "".join(filter(lambda f: f[0].isupper(), val_resolved["type_name_original"].split(".")))
-        if typealone in temp_pkg:
-            temp_cls = temp_pkg[typealone]
+        tyalone = "".join(filter(lambda f: f[0].isupper(), val_resolved["type_name_original"].split(".")))
+        if tyalone in temp_pkg:
+            temp_cls = temp_pkg[tyalone]
 
     if "impl<'mc> Into<"+val_resolved["type_name_resolved"]+"<'mc>> for "+name+"<'mc>{\n" in file_cache[mod_path]:
         return

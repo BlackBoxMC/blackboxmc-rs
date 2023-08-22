@@ -245,7 +245,7 @@ impl<'mc> PersistentDataAdapterContext<'mc> {
     }
 }
 /// This class represents an enum with a generic content type. It defines the types a custom tag can have.
-/// <p>This interface can be used to create your own custom <a href="PersistentDataType.html" title="interface in org.bukkit.persistence"><code>PersistentDataType</code></a> with different complex types. This may be useful for the likes of a UUIDTagType:</p>
+/// <p>This interface can be used to create your own custom <a title="interface in org.bukkit.persistence" href="PersistentDataType.html"><code>PersistentDataType</code></a> with different complex types. This may be useful for the likes of a UUIDTagType:</p>
 /// <pre> <code>
 /// public class UUIDTagType implements PersistentDataType&lt;byte[], UUID&gt; {
 /// {@literal @Override}

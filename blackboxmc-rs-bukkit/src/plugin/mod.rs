@@ -2,7 +2,7 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// Each entry here represents a particular plugin's awareness. These can be checked by using <a href="PluginDescriptionFile.html#getAwareness()"><code>PluginDescriptionFile.getAwareness()</code></a>.<a title="class or interface in java.util" class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html#contains-java.lang.Object-"><code>contains(flag)</code></a>.
+/// Each entry here represents a particular plugin's awareness. These can be checked by using <a href="PluginDescriptionFile.html#getAwareness()"><code>PluginDescriptionFile.getAwareness()</code></a>.<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html#contains-java.lang.Object-" class="external-link" title="class or interface in java.util"><code>contains(flag)</code></a>.
 pub enum PluginAwarenessFlags<'mc> {
     Utf8 {
         inner: PluginAwarenessFlagsStruct<'mc>,
@@ -1761,7 +1761,7 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Gets a set containing all subscribed <a title="interface in org.bukkit.permissions" href="../permissions/Permissible.html"><code>Permissible</code></a>s to the given default list, by op status
+    /// Gets a set containing all subscribed <a href="../permissions/Permissible.html" title="interface in org.bukkit.permissions"><code>Permissible</code></a>s to the given default list, by op status
     pub fn get_default_perm_subscriptions(
         &self,
         arg0: bool,
@@ -1799,7 +1799,7 @@ impl<'mc> PluginManager<'mc> {
     }
 }
 /// Represents a base <a title="interface in org.bukkit.plugin" href="Plugin.html"><code>Plugin</code></a>
-/// <p>Extend this class if your plugin is not a <a href="java/JavaPlugin.html" title="class in org.bukkit.plugin.java"><code>JavaPlugin</code></a></p>
+/// <p>Extend this class if your plugin is not a <a title="class in org.bukkit.plugin.java" href="java/JavaPlugin.html"><code>JavaPlugin</code></a></p>
 #[repr(C)]
 pub struct PluginBase<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1893,6 +1893,163 @@ impl<'mc> PluginBase<'mc> {
             .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.server()
+    }
+    pub fn description(
+        &self,
+    ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.description()
+    }
+    pub fn get_default_biome_provider(
+        &self,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
+    ) -> Result<crate::generator::BiomeProvider<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.get_default_biome_provider(arg0, arg1)
+    }
+    pub fn is_enabled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.is_enabled()
+    }
+    pub fn config(
+        &self,
+    ) -> Result<crate::configuration::file::FileConfiguration<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.config()
+    }
+    pub fn data_folder(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.data_folder()
+    }
+    pub fn save_config(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.save_config()
+    }
+    pub fn save_default_config(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.save_default_config()
+    }
+    pub fn save_resource(
+        &self,
+        arg0: impl Into<String>,
+        arg1: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.save_resource(arg0, arg1)
+    }
+    pub fn reload_config(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.reload_config()
+    }
+    pub fn plugin_loader(
+        &self,
+    ) -> Result<crate::plugin::PluginLoader<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.plugin_loader()
+    }
+    pub fn on_disable(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.on_disable()
+    }
+    pub fn on_load(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.on_load()
+    }
+    pub fn on_enable(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.on_enable()
+    }
+    pub fn is_naggable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.is_naggable()
+    }
+    pub fn set_naggable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.set_naggable(arg0)
+    }
+    pub fn get_default_world_generator(
+        &self,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
+    ) -> Result<crate::generator::ChunkGenerator<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.get_default_world_generator(arg0, arg1)
+    }
+    pub fn get_resource(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.get_resource(arg0)
+    }
+    pub fn logger(
+        &self,
+    ) -> Result<blackboxmc_java::util::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = PluginBase::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::Plugin = temp_clone.into();
+        real.logger()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

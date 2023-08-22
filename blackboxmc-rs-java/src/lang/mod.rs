@@ -3477,7 +3477,7 @@ impl<'mc> JavaLong<'mc> {
 /// searching strings, for extracting substrings, and for creating a
 /// copy of a string with all characters translated to uppercase or to
 /// lowercase. Case mapping is based on the Unicode Standard version
-/// specified by the <a title="class in java.lang" href="../../java/lang/Character.html"><code>Character</code></a> class.
+/// specified by the <a href="../../java/lang/Character.html" title="class in java.lang"><code>Character</code></a> class.
 /// </p><p>
 /// The Java language provides special support for the string
 /// concatenation operator (&nbsp;+&nbsp;), and for conversion of

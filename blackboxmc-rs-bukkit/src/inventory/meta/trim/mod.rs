@@ -121,7 +121,7 @@ impl<'mc> ArmorTrim<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a material that may be used in an <a href="ArmorTrim.html" title="class in org.bukkit.inventory.meta.trim"><code>ArmorTrim</code></a>.
+/// Represents a material that may be used in an <a title="class in org.bukkit.inventory.meta.trim" href="ArmorTrim.html"><code>ArmorTrim</code></a>.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
@@ -172,7 +172,7 @@ impl<'mc> Into<crate::Keyed<'mc>> for TrimMaterial<'mc> {
             .expect("Error converting TrimMaterial into crate::Keyed")
     }
 }
-/// Represents a pattern that may be used in an <a href="ArmorTrim.html" title="class in org.bukkit.inventory.meta.trim"><code>ArmorTrim</code></a>.
+/// Represents a pattern that may be used in an <a title="class in org.bukkit.inventory.meta.trim" href="ArmorTrim.html"><code>ArmorTrim</code></a>.
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]

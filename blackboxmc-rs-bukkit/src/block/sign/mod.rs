@@ -244,6 +244,23 @@ impl<'mc> SignSide<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn set_color(
+        &self,
+        arg0: impl Into<crate::DyeColor<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = SignSide::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Colorable = temp_clone.into();
+        real.set_color(arg0)
+    }
+    pub fn color(&self) -> Result<Option<crate::DyeColor<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = SignSide::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Colorable = temp_clone.into();
+        real.color()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

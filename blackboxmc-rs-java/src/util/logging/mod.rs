@@ -446,7 +446,7 @@ impl<'mc> Into<crate::util::logging::JavaStreamHandler<'mc>> for JavaSocketHandl
     }
 }
 /// Print a brief summary of the <code>LogRecord</code> in a human readable format. The summary will typically be 1 or 2 lines.
-/// <p><a name="formatting"> <b>Configuration:</b></a> The <code>SimpleFormatter</code> is initialized with the <a href="../Formatter.html#syntax">format string</a> specified in the <code>java.util.logging.SimpleFormatter.format</code> property to <a href="../../../java/util/logging/SimpleFormatter.html#format">format</a> the log messages. This property can be defined in the <a href="../../../java/util/logging/LogManager.html#getProperty-java.lang.String-">logging properties</a> configuration file or as a system property. If this property is set in both the logging properties and system properties, the format string specified in the system property will be used. If this property is not defined or the given format string is <a href="../../../java/util/IllegalFormatException.html" title="class in java.util">illegal</a>, the default format is implementation-specific.</p>
+/// <p><a name="formatting"> <b>Configuration:</b></a> The <code>SimpleFormatter</code> is initialized with the <a href="../Formatter.html#syntax">format string</a> specified in the <code>java.util.logging.SimpleFormatter.format</code> property to <a href="../../../java/util/logging/SimpleFormatter.html#format">format</a> the log messages. This property can be defined in the <a href="../../../java/util/logging/LogManager.html#getProperty-java.lang.String-">logging properties</a> configuration file or as a system property. If this property is set in both the logging properties and system properties, the format string specified in the system property will be used. If this property is not defined or the given format string is <a title="class in java.util" href="../../../java/util/IllegalFormatException.html">illegal</a>, the default format is implementation-specific.</p>
 #[repr(C)]
 pub struct JavaSimpleFormatter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -568,19 +568,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaHandler<'mc> {
 }
 
 impl<'mc> JavaHandler<'mc> {
-    pub fn filter(
-        &self,
-    ) -> Result<crate::util::logging::JavaFilter<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/logging/Filter;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getFilter", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::logging::JavaFilter::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
     pub fn set_filter(
         &self,
         arg0: impl Into<crate::util::logging::JavaFilter<'mc>>,
@@ -633,6 +620,19 @@ impl<'mc> JavaHandler<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+
+    pub fn filter(
+        &self,
+    ) -> Result<crate::util::logging::JavaFilter<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/logging/Filter;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getFilter", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::logging::JavaFilter::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn set_formatter(
@@ -994,7 +994,7 @@ impl<'mc> Into<crate::util::logging::JavaHandler<'mc>> for JavaMemoryHandler<'mc
 /// <p>After passing this initial (cheap) test, the Logger will allocate a LogRecord to describe the logging message. It will then call a Filter (if present) to do a more detailed check on whether the record should be published. If that passes it will then publish the LogRecord to its output Handlers. By default, loggers also publish to their parent's Handlers, recursively up the tree.</p>
 /// <p>Each Logger may have a <code>ResourceBundle</code> associated with it. The <code>ResourceBundle</code> may be specified by name, using the <a href="../../../java/util/logging/Logger.html#getLogger-java.lang.String-java.lang.String-"><code>getLogger(java.lang.String, java.lang.String)</code></a> factory method, or by value - using the <a href="../../../java/util/logging/Logger.html#setResourceBundle-java.util.ResourceBundle-"><code>setResourceBundle</code></a> method. This bundle will be used for localizing logging messages. If a Logger does not have its own <code>ResourceBundle</code> or resource bundle name, then it will inherit the <code>ResourceBundle</code> or resource bundle name from its parent, recursively up the tree.</p>
 /// <p>Most of the logger output methods take a "msg" argument. This msg argument may be either a raw value or a localization key. During formatting, if the logger has (or inherits) a localization <code>ResourceBundle</code> and if the <code>ResourceBundle</code> has a mapping for the msg string, then the msg string is replaced by the localized value. Otherwise the original msg string is used. Typically, formatters use java.text.MessageFormat style formatting to format parameters, so for example a format string "{0} {1}" would format two parameters as strings.</p>
-/// <p>A set of methods alternatively take a "msgSupplier" instead of a "msg" argument. These methods take a <a href="../../../java/util/function/Supplier.html" title="interface in java.util.function"><code>Supplier</code></a><code>&lt;String&gt;</code> function which is invoked to construct the desired log message only when the message actually is to be logged based on the effective log level thus eliminating unnecessary message construction. For example, if the developer wants to log system health status for diagnosis, with the String-accepting version, the code would look like:</p>
+/// <p>A set of methods alternatively take a "msgSupplier" instead of a "msg" argument. These methods take a <a title="interface in java.util.function" href="../../../java/util/function/Supplier.html"><code>Supplier</code></a><code>&lt;String&gt;</code> function which is invoked to construct the desired log message only when the message actually is to be logged based on the effective log level thus eliminating unnecessary message construction. For example, if the developer wants to log system health status for diagnosis, with the String-accepting version, the code would look like:</p>
 /// <pre><code>
 /// class DiagnosisMessages {
 /// static String systemHealthStatus() {
@@ -1066,35 +1066,13 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLogger<'mc> {
 }
 
 impl<'mc> JavaLogger<'mc> {
-    pub fn filter(
-        &self,
-    ) -> Result<crate::util::logging::JavaFilter<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/logging/Filter;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getFilter", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::logging::JavaFilter::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn get_anonymous_logger(
+    pub fn anonymous_logger(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
     ) -> Result<crate::util::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Ljava/util/logging/Logger;");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg0.into())?,
-        ));
+        let sig = String::from("()Ljava/util/logging/Logger;");
         let cls = jni.find_class("java/util/logging/Logger");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "getAnonymousLogger",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
+        let res = jni.call_static_method(cls, "getAnonymousLogger", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::util::logging::JavaLogger::from_raw(&jni, obj)
@@ -1232,7 +1210,7 @@ impl<'mc> JavaLogger<'mc> {
         arg2: impl Into<String>,
         arg3: impl Into<String>,
         arg4: std::option::Option<impl Into<String>>,
-        arg5: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+        arg5: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1264,20 +1242,9 @@ impl<'mc> JavaLogger<'mc> {
             args.push(val_5);
         }
         if let Some(a) = arg5 {
-            sig += "[Ljava/lang/Object;";
-            let arr = self.jni_ref().new_object_array(
-                a.len() as i32,
-                "java/lang/Object",
-                jni::objects::JObject::null(),
-            );
-            let arr = self.jni_ref().translate_error_no_gen(arr)?;
-            for i in 0..a.len() {
-                let val_6 = jni::objects::JValueGen::Object(a.get(i).unwrap());
-                self.jni_ref()
-                    .set_object_array_element(&arr, i as i32, val_6.l()?)?;
-            }
-            let val_6 = jni::objects::JValueGen::Object(arr);
-            args.push(val_6.l()?.into());
+            sig += "Ljava/lang/Object;";
+            let val_6 = jni::objects::JValueGen::Object(a);
+            args.push(val_6);
         }
         sig += ")V";
         let res = self
@@ -1291,7 +1258,7 @@ impl<'mc> JavaLogger<'mc> {
         &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
-        arg2: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+        arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1306,20 +1273,9 @@ impl<'mc> JavaLogger<'mc> {
         ));
         args.push(val_2);
         if let Some(a) = arg2 {
-            sig += "[Ljava/lang/Object;";
-            let arr = self.jni_ref().new_object_array(
-                a.len() as i32,
-                "java/lang/Object",
-                jni::objects::JObject::null(),
-            );
-            let arr = self.jni_ref().translate_error_no_gen(arr)?;
-            for i in 0..a.len() {
-                let val_3 = jni::objects::JValueGen::Object(a.get(i).unwrap());
-                self.jni_ref()
-                    .set_object_array_element(&arr, i as i32, val_3.l()?)?;
-            }
-            let val_3 = jni::objects::JValueGen::Object(arr);
-            args.push(val_3.l()?.into());
+            sig += "Ljava/lang/Object;";
+            let val_3 = jni::objects::JValueGen::Object(a);
+            args.push(val_3);
         }
         sig += ")V";
         let res = self
@@ -1379,26 +1335,7 @@ impl<'mc> JavaLogger<'mc> {
         Ok(())
     }
 
-    pub fn fine_with_string(
-        &self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/lang/String;";
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        args.push(val_1);
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "fine", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn finer_with_supplier(
+    pub fn fine_with_supplier(
         &self,
         arg0: impl Into<crate::util::function::JavaSupplier<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1408,6 +1345,25 @@ impl<'mc> JavaLogger<'mc> {
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
+        args.push(val_1);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "fine", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn finer_with_string(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         args.push(val_1);
         sig += ")V";
         let res = self
@@ -1454,16 +1410,29 @@ impl<'mc> JavaLogger<'mc> {
         Ok(())
     }
 
-    pub fn warning_with_supplier(
+    pub fn filter(
         &self,
-        arg0: impl Into<crate::util::function::JavaSupplier<'mc>>,
+    ) -> Result<crate::util::logging::JavaFilter<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/logging/Filter;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getFilter", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::logging::JavaFilter::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn warning_with_string(
+        &self,
+        arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/util/function/Supplier;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         args.push(val_1);
         sig += ")V";
         let res = self
@@ -1948,6 +1917,19 @@ impl<'mc> JavaLogRecord<'mc> {
         crate::util::logging::JavaLogRecord::from_raw(&jni, res)
     }
 
+    pub fn set_millis(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(J)V");
+        let val_1 = jni::objects::JValueGen::Long(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setMillis",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub fn resource_bundle_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
@@ -2081,6 +2063,15 @@ impl<'mc> JavaLogRecord<'mc> {
         Ok(())
     }
 
+    pub fn millis(&self) -> Result<i64, Box<dyn std::error::Error>> {
+        let sig = String::from("()J");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getMillis", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.j()?)
+    }
+
     pub fn sequence_number(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res = self.jni_ref().call_method(
@@ -2210,28 +2201,6 @@ impl<'mc> JavaLogRecord<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-
-    pub fn set_millis(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(J)V");
-        let val_1 = jni::objects::JValueGen::Long(arg0);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setMillis",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn millis(&self) -> Result<i64, Box<dyn std::error::Error>> {
-        let sig = String::from("()J");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getMillis", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j()?)
     }
 
     pub fn logger_name(&self) -> Result<String, Box<dyn std::error::Error>> {

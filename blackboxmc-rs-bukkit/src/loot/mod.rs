@@ -105,6 +105,13 @@ impl<'mc> LootTable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = LootTable::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::Keyed = temp_clone.into();
+        real.key()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2418,7 +2425,7 @@ impl<'mc> LootTablesLootTablesStruct<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a <a href="../block/Container.html" title="interface in org.bukkit.block"><code>Container</code></a> or a <a title="interface in org.bukkit.entity" href="../entity/Mob.html"><code>Mob</code></a> that can have a loot table.
+/// Represents a <a href="../block/Container.html" title="interface in org.bukkit.block"><code>Container</code></a> or a <a href="../entity/Mob.html" title="interface in org.bukkit.entity"><code>Mob</code></a> that can have a loot table.
 ///
 /// Container loot will only generate upon opening, and only when the container is <i>first</i> opened.
 ///

@@ -712,7 +712,7 @@ impl<'mc> RespawnPhaseStruct<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a custom <a href="BossBar.html" title="interface in org.bukkit.boss"><code>BossBar</code></a> that has a <a href="../NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>
+/// Represents a custom <a title="interface in org.bukkit.boss" href="BossBar.html"><code>BossBar</code></a> that has a <a href="../NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>
 ///
 /// This is a representation of an abstract class.
 #[repr(C)]
