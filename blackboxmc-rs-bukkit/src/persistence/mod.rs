@@ -174,7 +174,7 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -524,7 +524,7 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

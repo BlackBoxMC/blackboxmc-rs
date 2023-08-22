@@ -34,4 +34,4 @@ for arg in args:
             print(arg+" not in "+":".join(past))
 
 if should_print:
-    print(cur)
+    print(json.dumps(cur,indent=2))

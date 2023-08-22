@@ -100,8 +100,7 @@ impl<'mc> Chest<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //DirectionalContainer
-    //crate::material::DirectionalContainer
+    // SUPER CLASS: DirectionalContainer
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -127,8 +126,7 @@ impl<'mc> Chest<'mc> {
         let real: crate::material::DirectionalContainer = temp_clone.into();
         real.internal_to_string()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -188,7 +186,7 @@ impl<'mc> Chest<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -386,8 +384,7 @@ impl<'mc> Diode<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -447,7 +444,7 @@ impl<'mc> Diode<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -612,8 +609,7 @@ impl<'mc> Pumpkin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -673,7 +669,7 @@ impl<'mc> Pumpkin<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -825,8 +821,7 @@ impl<'mc> FlowerPot<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -886,7 +881,7 @@ impl<'mc> FlowerPot<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1010,8 +1005,7 @@ impl<'mc> PoweredRail<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //ExtendedRails
-    //crate::material::ExtendedRails
+    // SUPER CLASS: ExtendedRails
     pub fn set_direction(
         &self,
         arg0: impl Into<crate::block::BlockFace<'mc>>,
@@ -1030,8 +1024,7 @@ impl<'mc> PoweredRail<'mc> {
         let real: crate::material::ExtendedRails = temp_clone.into();
         real.is_curve()
     }
-    //Rails
-    //crate::material::Rails
+    // SUPER CLASS: Rails
     pub fn direction(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::Rails::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1054,8 +1047,7 @@ impl<'mc> PoweredRail<'mc> {
         let real: crate::material::Rails = temp_clone.into();
         real.internal_to_string()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1115,7 +1107,7 @@ impl<'mc> PoweredRail<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1315,18 +1307,16 @@ impl<'mc> TripwireHook<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //SimpleAttachableMaterialData
-    //crate::material::SimpleAttachableMaterialData
+    // SUPER CLASS: SimpleAttachableMaterialData
+    // SUPER CLASS: Directional
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone =
-            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
-                jni::objects::JObject::from_raw(self.1.clone())
-            })?;
-        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        let temp_clone = crate::material::Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
         real.facing()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1386,7 +1376,7 @@ impl<'mc> TripwireHook<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1529,8 +1519,18 @@ impl<'mc> SimpleAttachableMaterialData<'mc> {
         let real: crate::material::Attachable = temp_clone.into();
         real.attached_face()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: Directional
+    pub fn set_facing_direction(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::material::Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
+        real.set_facing_direction(arg0)
+    }
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1590,7 +1590,7 @@ impl<'mc> SimpleAttachableMaterialData<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1803,14 +1803,13 @@ impl<'mc> Torch<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //SimpleAttachableMaterialData
-    //crate::material::SimpleAttachableMaterialData
+    // SUPER CLASS: SimpleAttachableMaterialData
+    // SUPER CLASS: Directional
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone =
-            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
-                jni::objects::JObject::from_raw(self.1.clone())
-            })?;
-        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        let temp_clone = crate::material::Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
         real.facing()
     }
     #[doc(hidden)]
@@ -1822,8 +1821,7 @@ impl<'mc> Torch<'mc> {
         let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
         real.internal_to_string()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1883,7 +1881,7 @@ impl<'mc> Torch<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2093,8 +2091,7 @@ impl<'mc> Comparator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2154,7 +2151,7 @@ impl<'mc> Comparator<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2335,18 +2332,16 @@ impl<'mc> Button<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //SimpleAttachableMaterialData
-    //crate::material::SimpleAttachableMaterialData
+    // SUPER CLASS: SimpleAttachableMaterialData
+    // SUPER CLASS: Directional
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone =
-            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
-                jni::objects::JObject::from_raw(self.1.clone())
-            })?;
-        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        let temp_clone = crate::material::Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
         real.facing()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2406,7 +2401,7 @@ impl<'mc> Button<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2576,8 +2571,7 @@ impl<'mc> Coal<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2637,7 +2631,7 @@ impl<'mc> Coal<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2893,8 +2887,7 @@ impl<'mc> Tree<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Wood
-    //crate::material::Wood
+    // SUPER CLASS: Wood
     pub fn set_species(
         &self,
         arg0: impl Into<crate::TreeSpecies<'mc>>,
@@ -2922,8 +2915,7 @@ impl<'mc> Tree<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2983,7 +2975,7 @@ impl<'mc> Tree<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3147,8 +3139,7 @@ impl<'mc> PistonBaseMaterial<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -3216,7 +3207,7 @@ impl<'mc> PistonBaseMaterial<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3411,18 +3402,16 @@ impl<'mc> TrapDoor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //SimpleAttachableMaterialData
-    //crate::material::SimpleAttachableMaterialData
+    // SUPER CLASS: SimpleAttachableMaterialData
+    // SUPER CLASS: Directional
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone =
-            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
-                jni::objects::JObject::from_raw(self.1.clone())
-            })?;
-        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        let temp_clone = crate::material::Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
         real.facing()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -3482,7 +3471,7 @@ impl<'mc> TrapDoor<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3652,8 +3641,7 @@ impl<'mc> Crops<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -3713,7 +3701,7 @@ impl<'mc> Crops<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3879,8 +3867,7 @@ impl<'mc> SpawnEgg<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -3940,7 +3927,7 @@ impl<'mc> SpawnEgg<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4057,8 +4044,7 @@ impl<'mc> MonsterEggs<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //TexturedMaterial
-    //crate::material::TexturedMaterial
+    // SUPER CLASS: TexturedMaterial
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::TexturedMaterial::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4084,8 +4070,7 @@ impl<'mc> MonsterEggs<'mc> {
         let real: crate::material::TexturedMaterial = temp_clone.into();
         real.internal_to_string()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4145,7 +4130,7 @@ impl<'mc> MonsterEggs<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4256,10 +4241,8 @@ impl<'mc> Furnace<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //FurnaceAndDispenser
-    //crate::material::FurnaceAndDispenser
-    //DirectionalContainer
-    //crate::material::DirectionalContainer
+    // SUPER CLASS: FurnaceAndDispenser
+    // SUPER CLASS: DirectionalContainer
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4285,8 +4268,7 @@ impl<'mc> Furnace<'mc> {
         let real: crate::material::DirectionalContainer = temp_clone.into();
         real.internal_to_string()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4346,7 +4328,7 @@ impl<'mc> Furnace<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4503,8 +4485,7 @@ impl<'mc> Rails<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4564,7 +4545,7 @@ impl<'mc> Rails<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4737,8 +4718,7 @@ impl<'mc> Sapling<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Wood
-    //crate::material::Wood
+    // SUPER CLASS: Wood
     pub fn set_species(
         &self,
         arg0: impl Into<crate::TreeSpecies<'mc>>,
@@ -4766,8 +4746,7 @@ impl<'mc> Sapling<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4827,7 +4806,7 @@ impl<'mc> Sapling<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5050,8 +5029,8 @@ impl<'mc> PistonExtensionMaterial<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: Directional
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -5119,7 +5098,7 @@ impl<'mc> PistonExtensionMaterial<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5284,18 +5263,16 @@ impl<'mc> Lever<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //SimpleAttachableMaterialData
-    //crate::material::SimpleAttachableMaterialData
+    // SUPER CLASS: SimpleAttachableMaterialData
+    // SUPER CLASS: Directional
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone =
-            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
-                jni::objects::JObject::from_raw(self.1.clone())
-            })?;
-        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        let temp_clone = crate::material::Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
         real.facing()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -5355,7 +5332,7 @@ impl<'mc> Lever<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5505,8 +5482,7 @@ impl<'mc> DirectionalContainer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -5566,7 +5542,7 @@ impl<'mc> DirectionalContainer<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5716,8 +5692,7 @@ impl<'mc> NetherWarts<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -5777,7 +5752,7 @@ impl<'mc> NetherWarts<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5971,7 +5946,7 @@ impl<'mc> MaterialData<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6129,8 +6104,7 @@ impl<'mc> LongGrass<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -6190,7 +6164,7 @@ impl<'mc> LongGrass<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6352,8 +6326,7 @@ impl<'mc> Tripwire<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -6413,7 +6386,7 @@ impl<'mc> Tripwire<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6575,8 +6548,7 @@ impl<'mc> TexturedMaterial<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -6636,7 +6608,7 @@ impl<'mc> TexturedMaterial<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6823,10 +6795,8 @@ impl<'mc> Dispenser<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //FurnaceAndDispenser
-    //crate::material::FurnaceAndDispenser
-    //DirectionalContainer
-    //crate::material::DirectionalContainer
+    // SUPER CLASS: FurnaceAndDispenser
+    // SUPER CLASS: DirectionalContainer
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
@@ -6835,8 +6805,7 @@ impl<'mc> Dispenser<'mc> {
         let real: crate::material::DirectionalContainer = temp_clone.into();
         real.internal_to_string()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -6896,7 +6865,7 @@ impl<'mc> Dispenser<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7050,8 +7019,7 @@ impl<'mc> Cake<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7111,7 +7079,7 @@ impl<'mc> Cake<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7279,8 +7247,7 @@ impl<'mc> Gate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7340,7 +7307,7 @@ impl<'mc> Gate<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7658,8 +7625,7 @@ impl<'mc> Step<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //TexturedMaterial
-    //crate::material::TexturedMaterial
+    // SUPER CLASS: TexturedMaterial
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::TexturedMaterial::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7677,8 +7643,7 @@ impl<'mc> Step<'mc> {
         let real: crate::material::TexturedMaterial = temp_clone.into();
         real.set_material(arg0)
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7738,7 +7703,7 @@ impl<'mc> Step<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7855,8 +7820,7 @@ impl<'mc> SmoothBrick<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //TexturedMaterial
-    //crate::material::TexturedMaterial
+    // SUPER CLASS: TexturedMaterial
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::TexturedMaterial::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7882,8 +7846,7 @@ impl<'mc> SmoothBrick<'mc> {
         let real: crate::material::TexturedMaterial = temp_clone.into();
         real.internal_to_string()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7943,7 +7906,7 @@ impl<'mc> SmoothBrick<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8126,8 +8089,7 @@ impl<'mc> Leaves<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Wood
-    //crate::material::Wood
+    // SUPER CLASS: Wood
     pub fn set_species(
         &self,
         arg0: impl Into<crate::TreeSpecies<'mc>>,
@@ -8155,8 +8117,7 @@ impl<'mc> Leaves<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -8216,7 +8177,7 @@ impl<'mc> Leaves<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8363,8 +8324,7 @@ impl<'mc> Dye<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -8424,7 +8384,7 @@ impl<'mc> Dye<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8552,8 +8512,7 @@ impl<'mc> PressurePlate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -8613,7 +8572,7 @@ impl<'mc> PressurePlate<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8772,8 +8731,7 @@ impl<'mc> Observer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -8833,7 +8791,7 @@ impl<'mc> Observer<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9042,8 +9000,7 @@ impl<'mc> Stairs<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -9103,7 +9060,7 @@ impl<'mc> Stairs<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9273,8 +9230,7 @@ impl<'mc> Sandstone<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -9334,7 +9290,7 @@ impl<'mc> Sandstone<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9455,8 +9411,7 @@ impl<'mc> EnderChest<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //DirectionalContainer
-    //crate::material::DirectionalContainer
+    // SUPER CLASS: DirectionalContainer
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -9482,8 +9437,7 @@ impl<'mc> EnderChest<'mc> {
         let real: crate::material::DirectionalContainer = temp_clone.into();
         real.internal_to_string()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -9543,7 +9497,7 @@ impl<'mc> EnderChest<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9636,8 +9590,7 @@ impl<'mc> FurnaceAndDispenser<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //DirectionalContainer
-    //crate::material::DirectionalContainer
+    // SUPER CLASS: DirectionalContainer
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::DirectionalContainer::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -9663,8 +9616,7 @@ impl<'mc> FurnaceAndDispenser<'mc> {
         let real: crate::material::DirectionalContainer = temp_clone.into();
         real.internal_to_string()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -9724,7 +9676,7 @@ impl<'mc> FurnaceAndDispenser<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9882,8 +9834,7 @@ impl<'mc> Bed<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -9943,7 +9894,7 @@ impl<'mc> Bed<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10071,8 +10022,7 @@ impl<'mc> RedstoneWire<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -10132,7 +10082,7 @@ impl<'mc> RedstoneWire<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10276,8 +10226,7 @@ impl<'mc> WoodenStep<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Wood
-    //crate::material::Wood
+    // SUPER CLASS: Wood
     pub fn set_species(
         &self,
         arg0: impl Into<crate::TreeSpecies<'mc>>,
@@ -10305,8 +10254,7 @@ impl<'mc> WoodenStep<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -10366,7 +10314,7 @@ impl<'mc> WoodenStep<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10565,8 +10513,7 @@ impl<'mc> Vine<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -10626,7 +10573,7 @@ impl<'mc> Vine<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10768,8 +10715,7 @@ impl<'mc> Wood<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -10829,7 +10775,7 @@ impl<'mc> Wood<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10995,8 +10941,8 @@ impl<'mc> Banner<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: Directional
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -11056,7 +11002,7 @@ impl<'mc> Banner<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -11279,8 +11225,7 @@ impl<'mc> Mushroom<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -11340,7 +11285,7 @@ impl<'mc> Mushroom<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -11464,8 +11409,7 @@ impl<'mc> RedstoneTorch<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Torch
-    //crate::material::Torch
+    // SUPER CLASS: Torch
     pub fn set_facing_direction(
         &self,
         arg0: impl Into<crate::block::BlockFace<'mc>>,
@@ -11485,18 +11429,16 @@ impl<'mc> RedstoneTorch<'mc> {
         let real: crate::material::Torch = temp_clone.into();
         real.attached_face()
     }
-    //SimpleAttachableMaterialData
-    //crate::material::SimpleAttachableMaterialData
+    // SUPER CLASS: SimpleAttachableMaterialData
+    // SUPER CLASS: Directional
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone =
-            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
-                jni::objects::JObject::from_raw(self.1.clone())
-            })?;
-        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        let temp_clone = crate::material::Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
         real.facing()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -11556,7 +11498,7 @@ impl<'mc> RedstoneTorch<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -11748,7 +11690,7 @@ impl<'mc> JNIInstantiatable<'mc> for CocoaPlantCocoaPlantSizeStruct<'mc> {
 }
 
 impl<'mc> CocoaPlantCocoaPlantSizeStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -11942,8 +11884,8 @@ impl<'mc> CocoaPlant<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: Directional
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -12003,7 +11945,7 @@ impl<'mc> CocoaPlant<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -12301,8 +12243,7 @@ impl<'mc> Door<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -12362,7 +12303,7 @@ impl<'mc> Door<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -12578,8 +12519,7 @@ impl<'mc> ExtendedRails<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Rails
-    //crate::material::Rails
+    // SUPER CLASS: Rails
     pub fn direction(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::Rails::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -12602,8 +12542,7 @@ impl<'mc> ExtendedRails<'mc> {
         let real: crate::material::Rails = temp_clone.into();
         real.internal_to_string()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -12663,7 +12602,7 @@ impl<'mc> ExtendedRails<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -12784,8 +12723,7 @@ impl<'mc> Cauldron<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -12845,7 +12783,7 @@ impl<'mc> Cauldron<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -12980,14 +12918,13 @@ impl<'mc> Ladder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //SimpleAttachableMaterialData
-    //crate::material::SimpleAttachableMaterialData
+    // SUPER CLASS: SimpleAttachableMaterialData
+    // SUPER CLASS: Directional
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone =
-            crate::material::SimpleAttachableMaterialData::from_raw(&self.0, unsafe {
-                jni::objects::JObject::from_raw(self.1.clone())
-            })?;
-        let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
+        let temp_clone = crate::material::Directional::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::material::Directional = temp_clone.into();
         real.facing()
     }
     #[doc(hidden)]
@@ -12999,8 +12936,7 @@ impl<'mc> Ladder<'mc> {
         let real: crate::material::SimpleAttachableMaterialData = temp_clone.into();
         real.internal_to_string()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -13060,7 +12996,7 @@ impl<'mc> Ladder<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -13188,8 +13124,7 @@ impl<'mc> Command<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -13249,7 +13184,7 @@ impl<'mc> Command<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -13378,8 +13313,7 @@ impl<'mc> DetectorRail<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //ExtendedRails
-    //crate::material::ExtendedRails
+    // SUPER CLASS: ExtendedRails
     pub fn set_direction(
         &self,
         arg0: impl Into<crate::block::BlockFace<'mc>>,
@@ -13398,8 +13332,7 @@ impl<'mc> DetectorRail<'mc> {
         let real: crate::material::ExtendedRails = temp_clone.into();
         real.is_curve()
     }
-    //Rails
-    //crate::material::Rails
+    // SUPER CLASS: Rails
     pub fn direction(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::Rails::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -13422,8 +13355,7 @@ impl<'mc> DetectorRail<'mc> {
         let real: crate::material::Rails = temp_clone.into();
         real.internal_to_string()
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -13483,7 +13415,7 @@ impl<'mc> DetectorRail<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -13681,8 +13613,7 @@ impl<'mc> Hopper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -13742,7 +13673,7 @@ impl<'mc> Hopper<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -13898,8 +13829,7 @@ impl<'mc> Skull<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -13959,7 +13889,7 @@ impl<'mc> Skull<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -14131,8 +14061,8 @@ impl<'mc> Sign<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: Directional
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -14192,7 +14122,7 @@ impl<'mc> Sign<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -14365,8 +14295,7 @@ impl<'mc> Wool<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MaterialData
-    //crate::material::MaterialData
+    // SUPER CLASS: MaterialData
     pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let temp_clone = crate::material::MaterialData::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -14426,7 +14355,7 @@ impl<'mc> Wool<'mc> {
         let real: crate::material::MaterialData = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

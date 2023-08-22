@@ -52,8 +52,7 @@ impl<'mc> RaidEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //WorldEvent
-    //crate::event::world::WorldEvent
+    // SUPER CLASS: WorldEvent
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::world::WorldEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -61,8 +60,7 @@ impl<'mc> RaidEvent<'mc> {
         let real: crate::event::world::WorldEvent = temp_clone.into();
         real.world()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
@@ -88,7 +86,7 @@ impl<'mc> RaidEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -243,8 +241,7 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //RaidEvent
-    //crate::event::raid::RaidEvent
+    // SUPER CLASS: RaidEvent
     pub fn raid(&self) -> Result<Option<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::raid::RaidEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -252,8 +249,7 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         let real: crate::event::raid::RaidEvent = temp_clone.into();
         real.raid()
     }
-    //WorldEvent
-    //crate::event::world::WorldEvent
+    // SUPER CLASS: WorldEvent
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::world::WorldEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -261,8 +257,7 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         let real: crate::event::world::WorldEvent = temp_clone.into();
         real.world()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -278,7 +273,7 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -421,8 +416,7 @@ impl<'mc> RaidTriggerEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //RaidEvent
-    //crate::event::raid::RaidEvent
+    // SUPER CLASS: RaidEvent
     pub fn raid(&self) -> Result<Option<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::raid::RaidEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -430,8 +424,7 @@ impl<'mc> RaidTriggerEvent<'mc> {
         let real: crate::event::raid::RaidEvent = temp_clone.into();
         real.raid()
     }
-    //WorldEvent
-    //crate::event::world::WorldEvent
+    // SUPER CLASS: WorldEvent
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::world::WorldEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -439,8 +432,7 @@ impl<'mc> RaidTriggerEvent<'mc> {
         let real: crate::event::world::WorldEvent = temp_clone.into();
         real.world()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -456,7 +448,7 @@ impl<'mc> RaidTriggerEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -593,8 +585,7 @@ impl<'mc> RaidFinishEvent<'mc> {
         }
         Ok(new_vec)
     }
-    //RaidEvent
-    //crate::event::raid::RaidEvent
+    // SUPER CLASS: RaidEvent
     pub fn raid(&self) -> Result<Option<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::raid::RaidEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -602,8 +593,7 @@ impl<'mc> RaidFinishEvent<'mc> {
         let real: crate::event::raid::RaidEvent = temp_clone.into();
         real.raid()
     }
-    //WorldEvent
-    //crate::event::world::WorldEvent
+    // SUPER CLASS: WorldEvent
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::world::WorldEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -611,8 +601,7 @@ impl<'mc> RaidFinishEvent<'mc> {
         let real: crate::event::world::WorldEvent = temp_clone.into();
         real.world()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -628,7 +617,7 @@ impl<'mc> RaidFinishEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -831,7 +820,7 @@ impl<'mc> JNIInstantiatable<'mc> for RaidStopEventReasonStruct<'mc> {
 }
 
 impl<'mc> RaidStopEventReasonStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -942,8 +931,7 @@ impl<'mc> RaidStopEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //RaidEvent
-    //crate::event::raid::RaidEvent
+    // SUPER CLASS: RaidEvent
     pub fn raid(&self) -> Result<Option<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::raid::RaidEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -951,8 +939,7 @@ impl<'mc> RaidStopEvent<'mc> {
         let real: crate::event::raid::RaidEvent = temp_clone.into();
         real.raid()
     }
-    //WorldEvent
-    //crate::event::world::WorldEvent
+    // SUPER CLASS: WorldEvent
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::world::WorldEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -960,8 +947,7 @@ impl<'mc> RaidStopEvent<'mc> {
         let real: crate::event::world::WorldEvent = temp_clone.into();
         real.world()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -977,7 +963,7 @@ impl<'mc> RaidStopEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

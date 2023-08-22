@@ -124,8 +124,7 @@ impl<'mc> MoistureChangeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -133,8 +132,7 @@ impl<'mc> MoistureChangeEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -150,7 +148,7 @@ impl<'mc> MoistureChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -310,8 +308,7 @@ impl<'mc> BlockReceiveGameEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -319,8 +316,7 @@ impl<'mc> BlockReceiveGameEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -336,7 +332,7 @@ impl<'mc> BlockReceiveGameEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -527,8 +523,7 @@ impl<'mc> BlockDropItemEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -536,8 +531,7 @@ impl<'mc> BlockDropItemEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -553,7 +547,7 @@ impl<'mc> BlockDropItemEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -792,7 +786,7 @@ impl<'mc> JNIInstantiatable<'mc> for TNTPrimeEventPrimeCauseStruct<'mc> {
 }
 
 impl<'mc> TNTPrimeEventPrimeCauseStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -961,8 +955,7 @@ impl<'mc> TNTPrimeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -970,8 +963,7 @@ impl<'mc> TNTPrimeEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -987,7 +979,7 @@ impl<'mc> TNTPrimeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1124,8 +1116,7 @@ impl<'mc> BellResonateEvent<'mc> {
         }
         Ok(new_vec)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1133,8 +1124,7 @@ impl<'mc> BellResonateEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1150,7 +1140,7 @@ impl<'mc> BellResonateEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1324,8 +1314,7 @@ impl<'mc> BlockExplodeEvent<'mc> {
         }
         Ok(new_vec)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1333,8 +1322,7 @@ impl<'mc> BlockExplodeEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1350,7 +1338,7 @@ impl<'mc> BlockExplodeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1652,7 +1640,7 @@ impl<'mc> JNIInstantiatable<'mc> for CauldronLevelChangeEventChangeReasonStruct<
 }
 
 impl<'mc> CauldronLevelChangeEventChangeReasonStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1854,8 +1842,7 @@ impl<'mc> CauldronLevelChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1863,8 +1850,7 @@ impl<'mc> CauldronLevelChangeEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1880,7 +1866,7 @@ impl<'mc> CauldronLevelChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2009,8 +1995,7 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
         }
         Ok(new_vec)
     }
-    //BlockPlaceEvent
-    //crate::event::block::BlockPlaceEvent
+    // SUPER CLASS: BlockPlaceEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockPlaceEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2101,8 +2086,7 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
         let real: crate::event::block::BlockPlaceEvent = temp_clone.into();
         real.set_build(arg0)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2110,8 +2094,7 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2127,7 +2110,7 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2481,8 +2464,7 @@ impl<'mc> BlockCanBuildEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2490,8 +2472,7 @@ impl<'mc> BlockCanBuildEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2507,7 +2488,7 @@ impl<'mc> BlockCanBuildEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2632,10 +2613,8 @@ impl<'mc> BlockSpreadEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //BlockFormEvent
-    //crate::event::block::BlockFormEvent
-    //BlockGrowEvent
-    //crate::event::block::BlockGrowEvent
+    // SUPER CLASS: BlockFormEvent
+    // SUPER CLASS: BlockGrowEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockGrowEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2657,8 +2636,7 @@ impl<'mc> BlockSpreadEvent<'mc> {
         let real: crate::event::block::BlockGrowEvent = temp_clone.into();
         real.new_state()
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2666,8 +2644,7 @@ impl<'mc> BlockSpreadEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2683,7 +2660,7 @@ impl<'mc> BlockSpreadEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2821,8 +2798,7 @@ impl<'mc> BlockDamageAbortEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2830,8 +2806,7 @@ impl<'mc> BlockDamageAbortEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2847,7 +2822,7 @@ impl<'mc> BlockDamageAbortEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2956,8 +2931,7 @@ impl<'mc> BlockFormEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //BlockGrowEvent
-    //crate::event::block::BlockGrowEvent
+    // SUPER CLASS: BlockGrowEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockGrowEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2979,8 +2953,7 @@ impl<'mc> BlockFormEvent<'mc> {
         let real: crate::event::block::BlockGrowEvent = temp_clone.into();
         real.new_state()
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2988,8 +2961,7 @@ impl<'mc> BlockFormEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -3005,7 +2977,7 @@ impl<'mc> BlockFormEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3352,8 +3324,7 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BlockPistonEvent
-    //crate::event::block::BlockPistonEvent
+    // SUPER CLASS: BlockPistonEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockPistonEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -3382,8 +3353,7 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
         let real: crate::event::block::BlockPistonEvent = temp_clone.into();
         real.is_sticky()
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -3391,8 +3361,7 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -3408,7 +3377,7 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4011,8 +3980,7 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //BlockPistonEvent
-    //crate::event::block::BlockPistonEvent
+    // SUPER CLASS: BlockPistonEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockPistonEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4041,8 +4009,7 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
         let real: crate::event::block::BlockPistonEvent = temp_clone.into();
         real.is_sticky()
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4050,8 +4017,7 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4067,7 +4033,7 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4239,8 +4205,7 @@ impl<'mc> BlockFertilizeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4248,8 +4213,7 @@ impl<'mc> BlockFertilizeEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4265,7 +4229,7 @@ impl<'mc> BlockFertilizeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4399,8 +4363,7 @@ impl<'mc> BrewingStartEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //InventoryBlockStartEvent
-    //crate::event::block::InventoryBlockStartEvent
+    // SUPER CLASS: InventoryBlockStartEvent
     pub fn source(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let temp_clone =
             crate::event::block::InventoryBlockStartEvent::from_raw(&self.0, unsafe {
@@ -4409,8 +4372,7 @@ impl<'mc> BrewingStartEvent<'mc> {
         let real: crate::event::block::InventoryBlockStartEvent = temp_clone.into();
         real.source()
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4418,8 +4380,7 @@ impl<'mc> BrewingStartEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4435,7 +4396,7 @@ impl<'mc> BrewingStartEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4555,8 +4516,7 @@ impl<'mc> InventoryBlockStartEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4564,8 +4524,7 @@ impl<'mc> InventoryBlockStartEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4581,7 +4540,7 @@ impl<'mc> InventoryBlockStartEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4726,8 +4685,7 @@ impl<'mc> BlockGrowEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4735,8 +4693,7 @@ impl<'mc> BlockGrowEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4752,7 +4709,7 @@ impl<'mc> BlockGrowEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4856,8 +4813,7 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BlockDispenseEvent
-    //crate::event::block::BlockDispenseEvent
+    // SUPER CLASS: BlockDispenseEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockDispenseEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4921,8 +4877,7 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         crate::event::block::BlockDispenseEvent::handler_list(jni)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4930,8 +4885,7 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -4947,7 +4901,7 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5116,8 +5070,7 @@ impl<'mc> BlockCookEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -5125,8 +5078,7 @@ impl<'mc> BlockCookEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -5142,7 +5094,7 @@ impl<'mc> BlockCookEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5268,8 +5220,7 @@ impl<'mc> BlockPistonEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -5277,8 +5228,7 @@ impl<'mc> BlockPistonEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
@@ -5304,7 +5254,7 @@ impl<'mc> BlockPistonEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5453,8 +5403,7 @@ impl<'mc> BlockFadeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -5462,8 +5411,7 @@ impl<'mc> BlockFadeEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -5479,7 +5427,7 @@ impl<'mc> BlockFadeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5738,8 +5686,7 @@ impl<'mc> BlockPlaceEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -5747,8 +5694,7 @@ impl<'mc> BlockPlaceEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -5764,7 +5710,7 @@ impl<'mc> BlockPlaceEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5928,8 +5874,7 @@ impl<'mc> BlockPhysicsEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -5937,8 +5882,7 @@ impl<'mc> BlockPhysicsEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -5954,7 +5898,7 @@ impl<'mc> BlockPhysicsEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6061,8 +6005,7 @@ impl<'mc> EntityBlockFormEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BlockFormEvent
-    //crate::event::block::BlockFormEvent
+    // SUPER CLASS: BlockFormEvent
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
@@ -6078,8 +6021,7 @@ impl<'mc> EntityBlockFormEvent<'mc> {
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         crate::event::block::BlockFormEvent::handler_list(jni)
     }
-    //BlockGrowEvent
-    //crate::event::block::BlockGrowEvent
+    // SUPER CLASS: BlockGrowEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockGrowEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -6101,8 +6043,7 @@ impl<'mc> EntityBlockFormEvent<'mc> {
         let real: crate::event::block::BlockGrowEvent = temp_clone.into();
         real.new_state()
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -6110,8 +6051,7 @@ impl<'mc> EntityBlockFormEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -6127,7 +6067,7 @@ impl<'mc> EntityBlockFormEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6281,8 +6221,7 @@ impl<'mc> SpongeAbsorbEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -6290,8 +6229,7 @@ impl<'mc> SpongeAbsorbEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -6307,7 +6245,7 @@ impl<'mc> SpongeAbsorbEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6431,8 +6369,7 @@ impl<'mc> BlockExpEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -6440,8 +6377,7 @@ impl<'mc> BlockExpEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -6457,7 +6393,7 @@ impl<'mc> BlockExpEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6671,8 +6607,7 @@ impl<'mc> SignChangeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -6680,8 +6615,7 @@ impl<'mc> SignChangeEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -6697,7 +6631,7 @@ impl<'mc> SignChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6820,8 +6754,7 @@ impl<'mc> LeavesDecayEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -6829,8 +6762,7 @@ impl<'mc> LeavesDecayEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -6846,7 +6778,7 @@ impl<'mc> LeavesDecayEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6998,8 +6930,7 @@ impl<'mc> BlockFromToEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7007,8 +6938,7 @@ impl<'mc> BlockFromToEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7024,7 +6954,7 @@ impl<'mc> BlockFromToEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7184,8 +7114,7 @@ impl<'mc> BlockShearEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7193,8 +7122,7 @@ impl<'mc> BlockShearEntityEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7210,7 +7138,7 @@ impl<'mc> BlockShearEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7372,8 +7300,7 @@ impl<'mc> FluidLevelChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7381,8 +7308,7 @@ impl<'mc> FluidLevelChangeEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7398,7 +7324,7 @@ impl<'mc> FluidLevelChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7549,8 +7475,7 @@ impl<'mc> BlockBurnEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7558,8 +7483,7 @@ impl<'mc> BlockBurnEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7575,7 +7499,7 @@ impl<'mc> BlockBurnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7770,8 +7694,7 @@ impl<'mc> BlockDispenseEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7779,8 +7702,7 @@ impl<'mc> BlockDispenseEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7796,7 +7718,7 @@ impl<'mc> BlockDispenseEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7952,8 +7874,7 @@ impl<'mc> BellRingEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7961,8 +7882,7 @@ impl<'mc> BellRingEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -7978,7 +7898,7 @@ impl<'mc> BellRingEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8167,8 +8087,7 @@ impl<'mc> BlockDamageEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -8176,8 +8095,7 @@ impl<'mc> BlockDamageEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -8193,7 +8111,7 @@ impl<'mc> BlockDamageEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8346,8 +8264,7 @@ impl<'mc> CampfireStartEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //InventoryBlockStartEvent
-    //crate::event::block::InventoryBlockStartEvent
+    // SUPER CLASS: InventoryBlockStartEvent
     pub fn source(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let temp_clone =
             crate::event::block::InventoryBlockStartEvent::from_raw(&self.0, unsafe {
@@ -8356,8 +8273,7 @@ impl<'mc> CampfireStartEvent<'mc> {
         let real: crate::event::block::InventoryBlockStartEvent = temp_clone.into();
         real.source()
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -8365,8 +8281,7 @@ impl<'mc> CampfireStartEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -8382,7 +8297,7 @@ impl<'mc> CampfireStartEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8527,8 +8442,7 @@ impl<'mc> BlockBreakEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //BlockExpEvent
-    //crate::event::block::BlockExpEvent
+    // SUPER CLASS: BlockExpEvent
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
@@ -8558,8 +8472,7 @@ impl<'mc> BlockBreakEvent<'mc> {
         let real: crate::event::block::BlockExpEvent = temp_clone.into();
         real.set_exp_to_drop(arg0)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -8567,8 +8480,7 @@ impl<'mc> BlockBreakEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -8584,7 +8496,7 @@ impl<'mc> BlockBreakEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8722,8 +8634,7 @@ impl<'mc> BlockRedstoneEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -8731,8 +8642,7 @@ impl<'mc> BlockRedstoneEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -8748,7 +8658,7 @@ impl<'mc> BlockRedstoneEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8993,7 +8903,7 @@ impl<'mc> JNIInstantiatable<'mc> for BlockIgniteEventIgniteCauseStruct<'mc> {
 }
 
 impl<'mc> BlockIgniteEventIgniteCauseStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9186,8 +9096,7 @@ impl<'mc> BlockIgniteEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -9195,8 +9104,7 @@ impl<'mc> BlockIgniteEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -9212,7 +9120,7 @@ impl<'mc> BlockIgniteEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9407,8 +9315,7 @@ impl<'mc> NotePlayEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //BlockEvent
-    //crate::event::block::BlockEvent
+    // SUPER CLASS: BlockEvent
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::block::BlockEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -9416,8 +9323,7 @@ impl<'mc> NotePlayEvent<'mc> {
         let real: crate::event::block::BlockEvent = temp_clone.into();
         real.block()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -9433,7 +9339,7 @@ impl<'mc> NotePlayEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9518,8 +9424,7 @@ impl<'mc> BlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
@@ -9545,7 +9450,7 @@ impl<'mc> BlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

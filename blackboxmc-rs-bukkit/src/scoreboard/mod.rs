@@ -207,7 +207,7 @@ impl<'mc> JNIInstantiatable<'mc> for TeamOptionStatusStruct<'mc> {
 }
 
 impl<'mc> TeamOptionStatusStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2727,7 +2727,7 @@ impl<'mc> JNIInstantiatable<'mc> for TeamOptionStruct<'mc> {
 }
 
 impl<'mc> TeamOptionStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

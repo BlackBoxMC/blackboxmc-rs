@@ -215,7 +215,7 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         blackboxmc_java::util::JavaComparator::nulls_last(jni, arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -451,7 +451,7 @@ impl<'mc> HelpTopicComparator<'mc> {
     ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         blackboxmc_java::util::JavaComparator::nulls_last(jni, arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -709,7 +709,7 @@ impl<'mc> HelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -972,8 +972,7 @@ impl<'mc> IndexHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //HelpTopic
-    //crate::help::HelpTopic
+    // SUPER CLASS: HelpTopic
     pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -999,7 +998,7 @@ impl<'mc> IndexHelpTopic<'mc> {
         let real: crate::help::HelpTopic = temp_clone.into();
         real.name()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1088,8 +1087,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //HelpTopic
-    //crate::help::HelpTopic
+    // SUPER CLASS: HelpTopic
     pub fn amend_can_see(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1132,7 +1130,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         let real: crate::help::HelpTopic = temp_clone.into();
         real.name()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

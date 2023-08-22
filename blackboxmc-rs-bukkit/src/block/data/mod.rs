@@ -235,6 +235,7 @@ impl<'mc> Hatchable<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -471,6 +472,7 @@ impl<'mc> Lightable<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -721,6 +723,7 @@ impl<'mc> FaceAttachable<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1118,6 +1121,7 @@ impl<'mc> Ageable<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1355,6 +1359,7 @@ impl<'mc> Openable<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1462,6 +1467,171 @@ impl<'mc> Rail<'mc> {
         })?;
         let real: crate::block::data::Waterlogged = temp_clone.into();
         real.set_waterlogged(arg0)
+    }
+    // SUPER CLASS: BlockData
+    pub fn rotate(
+        &self,
+        arg0: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::block::data::BlockData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.rotate(arg0)
+    }
+    pub fn is_supported_with_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::block::data::BlockData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.material()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::block::data::BlockData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.as_string()
+    }
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::block::data::BlockData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.sound_group()
+    }
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::block::data::BlockData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.light_emission()
+    }
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::block::data::BlockData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_occluding()
+    }
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn is_preferred_tool(
+        &self,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::block::data::BlockData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_preferred_tool(arg0)
+    }
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::block::data::BlockData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.piston_move_reaction()
+    }
+    pub fn is_face_sturdy(
+        &self,
+        arg0: impl Into<crate::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::block::data::BlockData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.is_face_sturdy(arg0, arg1)
+    }
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::block::data::BlockData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.placement_material()
+    }
+    pub fn mirror(
+        &self,
+        arg0: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::block::data::BlockData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.mirror(arg0)
+    }
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::block::data::BlockData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.create_block_state()
+    }
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::block::data::BlockData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.clone()
+    }
+    pub fn matches(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn merge(
+        &self,
+        arg0: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::block::data::BlockData::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::block::data::BlockData = temp_clone.into();
+        real.merge(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2027,6 +2197,7 @@ impl<'mc> Orientable<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2263,6 +2434,7 @@ impl<'mc> Powerable<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2433,7 +2605,7 @@ impl<'mc> JNIInstantiatable<'mc> for FaceAttachableAttachedFaceStruct<'mc> {
 }
 
 impl<'mc> FaceAttachableAttachedFaceStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2678,6 +2850,7 @@ impl<'mc> Levelled<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2961,6 +3134,7 @@ impl<'mc> MultipleFacing<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3207,7 +3381,7 @@ impl<'mc> JNIInstantiatable<'mc> for RailShapeStruct<'mc> {
 }
 
 impl<'mc> RailShapeStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3438,6 +3612,7 @@ impl<'mc> Snowable<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3694,6 +3869,7 @@ impl<'mc> Directional<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4075,6 +4251,7 @@ impl<'mc> Rotatable<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4311,6 +4488,7 @@ impl<'mc> Hangable<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4547,6 +4725,7 @@ impl<'mc> Waterlogged<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4796,6 +4975,7 @@ impl<'mc> AnaloguePowerable<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5044,6 +5224,7 @@ impl<'mc> Brushable<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5282,6 +5463,7 @@ impl<'mc> Attachable<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5529,6 +5711,7 @@ impl<'mc> Bisected<'mc> {
         let real: crate::block::data::BlockData = temp_clone.into();
         real.merge(arg0)
     }
+    // SUPER CLASS: Cloneable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5677,7 +5860,7 @@ impl<'mc> JNIInstantiatable<'mc> for BisectedHalfStruct<'mc> {
 }
 
 impl<'mc> BisectedHalfStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

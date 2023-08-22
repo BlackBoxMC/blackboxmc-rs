@@ -161,8 +161,7 @@ impl<'mc> TextComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BaseComponent
-    //crate::bungee::api::chat::BaseComponent
+    // SUPER CLASS: BaseComponent
     pub fn copy_formatting_with_base_component(
         &self,
         arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
@@ -544,7 +543,7 @@ impl<'mc> TextComponent<'mc> {
         let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
         real.is_reset()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -902,7 +901,7 @@ impl<'mc> JNIInstantiatable<'mc> for HoverEventActionStruct<'mc> {
 }
 
 impl<'mc> HoverEventActionStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1114,7 +1113,7 @@ impl<'mc> HoverEvent<'mc> {
         let res = jni.translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1819,7 +1818,7 @@ impl<'mc> BaseComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1975,8 +1974,7 @@ impl<'mc> SelectorComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BaseComponent
-    //crate::bungee::api::chat::BaseComponent
+    // SUPER CLASS: BaseComponent
     pub fn copy_formatting_with_base_component(
         &self,
         arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
@@ -2358,7 +2356,7 @@ impl<'mc> SelectorComponent<'mc> {
         let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
         real.is_reset()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2593,8 +2591,7 @@ impl<'mc> ScoreComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BaseComponent
-    //crate::bungee::api::chat::BaseComponent
+    // SUPER CLASS: BaseComponent
     pub fn copy_formatting_with_base_component(
         &self,
         arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
@@ -2976,7 +2973,7 @@ impl<'mc> ScoreComponent<'mc> {
         let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
         real.is_reset()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3193,7 +3190,7 @@ impl<'mc> JNIInstantiatable<'mc> for ClickEventActionStruct<'mc> {
 }
 
 impl<'mc> ClickEventActionStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3321,7 +3318,7 @@ impl<'mc> ClickEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3483,7 +3480,7 @@ impl<'mc> ItemTagSerializer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3766,8 +3763,7 @@ impl<'mc> TranslatableComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BaseComponent
-    //crate::bungee::api::chat::BaseComponent
+    // SUPER CLASS: BaseComponent
     pub fn copy_formatting_with_base_component(
         &self,
         arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
@@ -4149,7 +4145,7 @@ impl<'mc> TranslatableComponent<'mc> {
         let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
         real.is_reset()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4357,7 +4353,7 @@ impl<'mc> ItemTag<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4514,8 +4510,7 @@ impl<'mc> KeybindComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //BaseComponent
-    //crate::bungee::api::chat::BaseComponent
+    // SUPER CLASS: BaseComponent
     pub fn copy_formatting_with_base_component(
         &self,
         arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
@@ -4897,7 +4892,7 @@ impl<'mc> KeybindComponent<'mc> {
         let real: crate::bungee::api::chat::BaseComponent = temp_clone.into();
         real.is_reset()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5102,7 +5097,7 @@ impl<'mc> JNIInstantiatable<'mc> for ComponentBuilderFormatRetentionStruct<'mc> 
 }
 
 impl<'mc> ComponentBuilderFormatRetentionStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5650,7 +5645,7 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

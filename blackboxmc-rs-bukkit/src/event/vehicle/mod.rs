@@ -83,8 +83,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //VehicleEvent
-    //crate::event::vehicle::VehicleEvent
+    // SUPER CLASS: VehicleEvent
     pub fn vehicle(
         &self,
     ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
@@ -94,8 +93,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
         let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
         real.vehicle()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -111,7 +109,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -246,8 +244,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //VehicleEvent
-    //crate::event::vehicle::VehicleEvent
+    // SUPER CLASS: VehicleEvent
     pub fn vehicle(
         &self,
     ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
@@ -257,8 +254,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
         let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
         real.vehicle()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -274,7 +270,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -467,10 +463,8 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //VehicleCollisionEvent
-    //crate::event::vehicle::VehicleCollisionEvent
-    //VehicleEvent
-    //crate::event::vehicle::VehicleEvent
+    // SUPER CLASS: VehicleCollisionEvent
+    // SUPER CLASS: VehicleEvent
     pub fn vehicle(
         &self,
     ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
@@ -480,8 +474,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
         real.vehicle()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -497,7 +490,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -638,8 +631,7 @@ impl<'mc> VehicleExitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //VehicleEvent
-    //crate::event::vehicle::VehicleEvent
+    // SUPER CLASS: VehicleEvent
     pub fn vehicle(
         &self,
     ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
@@ -649,8 +641,7 @@ impl<'mc> VehicleExitEvent<'mc> {
         let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
         real.vehicle()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -666,7 +657,7 @@ impl<'mc> VehicleExitEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -858,10 +849,8 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //VehicleCollisionEvent
-    //crate::event::vehicle::VehicleCollisionEvent
-    //VehicleEvent
-    //crate::event::vehicle::VehicleEvent
+    // SUPER CLASS: VehicleCollisionEvent
+    // SUPER CLASS: VehicleEvent
     pub fn vehicle(
         &self,
     ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
@@ -871,8 +860,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
         let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
         real.vehicle()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -888,7 +876,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1006,8 +994,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //VehicleEvent
-    //crate::event::vehicle::VehicleEvent
+    // SUPER CLASS: VehicleEvent
     pub fn vehicle(
         &self,
     ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
@@ -1017,8 +1004,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
         let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
         real.vehicle()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1034,7 +1020,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1172,8 +1158,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //VehicleEvent
-    //crate::event::vehicle::VehicleEvent
+    // SUPER CLASS: VehicleEvent
     pub fn vehicle(
         &self,
     ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
@@ -1183,8 +1168,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
         let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
         real.vehicle()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1200,7 +1184,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1341,8 +1325,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //VehicleEvent
-    //crate::event::vehicle::VehicleEvent
+    // SUPER CLASS: VehicleEvent
     pub fn vehicle(
         &self,
     ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
@@ -1352,8 +1335,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
         let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
         real.vehicle()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1369,7 +1351,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1541,8 +1523,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //VehicleEvent
-    //crate::event::vehicle::VehicleEvent
+    // SUPER CLASS: VehicleEvent
     pub fn vehicle(
         &self,
     ) -> Result<Option<crate::entity::Vehicle<'mc>>, Box<dyn std::error::Error>> {
@@ -1552,8 +1533,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
         let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
         real.vehicle()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1569,7 +1549,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1660,8 +1640,7 @@ impl<'mc> VehicleEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
@@ -1687,7 +1666,7 @@ impl<'mc> VehicleEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

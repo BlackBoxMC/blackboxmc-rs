@@ -57,7 +57,7 @@ impl<'mc> StructureType<'mc> {
         let real: crate::Keyed = temp_clone.into();
         real.key()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -140,7 +140,7 @@ impl<'mc> Structure<'mc> {
         let real: crate::Keyed = temp_clone.into();
         real.key()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

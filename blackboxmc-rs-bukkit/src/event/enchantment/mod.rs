@@ -247,8 +247,7 @@ impl<'mc> EnchantItemEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //InventoryEvent
-    //crate::event::inventory::InventoryEvent
+    // SUPER CLASS: InventoryEvent
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
@@ -282,8 +281,7 @@ impl<'mc> EnchantItemEvent<'mc> {
         let real: crate::event::inventory::InventoryEvent = temp_clone.into();
         real.view()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -299,7 +297,7 @@ impl<'mc> EnchantItemEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -505,8 +503,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //InventoryEvent
-    //crate::event::inventory::InventoryEvent
+    // SUPER CLASS: InventoryEvent
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
@@ -540,8 +537,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         let real: crate::event::inventory::InventoryEvent = temp_clone.into();
         real.view()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -557,7 +553,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

@@ -197,7 +197,7 @@ impl<'mc> JNIInstantiatable<'mc> for HangingBreakEventRemoveCauseStruct<'mc> {
 }
 
 impl<'mc> HangingBreakEventRemoveCauseStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -323,8 +323,7 @@ impl<'mc> HangingBreakEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //HangingEvent
-    //crate::event::hanging::HangingEvent
+    // SUPER CLASS: HangingEvent
     pub fn entity(&self) -> Result<crate::entity::Hanging<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::hanging::HangingEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -332,8 +331,7 @@ impl<'mc> HangingBreakEvent<'mc> {
         let real: crate::event::hanging::HangingEvent = temp_clone.into();
         real.entity()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -349,7 +347,7 @@ impl<'mc> HangingBreakEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -461,8 +459,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //HangingBreakEvent
-    //crate::event::hanging::HangingBreakEvent
+    // SUPER CLASS: HangingBreakEvent
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::hanging::HangingBreakEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -502,8 +499,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
         let real: crate::event::hanging::HangingBreakEvent = temp_clone.into();
         real.cause()
     }
-    //HangingEvent
-    //crate::event::hanging::HangingEvent
+    // SUPER CLASS: HangingEvent
     pub fn entity(&self) -> Result<crate::entity::Hanging<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::hanging::HangingEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -511,8 +507,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
         let real: crate::event::hanging::HangingEvent = temp_clone.into();
         real.entity()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -528,7 +523,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -911,8 +906,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //HangingEvent
-    //crate::event::hanging::HangingEvent
+    // SUPER CLASS: HangingEvent
     pub fn entity(&self) -> Result<crate::entity::Hanging<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::hanging::HangingEvent::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -920,8 +914,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
         let real: crate::event::hanging::HangingEvent = temp_clone.into();
         real.entity()
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -937,7 +930,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1003,8 +996,7 @@ impl<'mc> HangingEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Event
-    //crate::event::Event
+    // SUPER CLASS: Event
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
@@ -1030,7 +1022,7 @@ impl<'mc> HangingEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

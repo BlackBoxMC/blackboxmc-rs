@@ -130,7 +130,7 @@ impl<'mc> DefaultPermissions<'mc> {
         jni.translate_error(res)?;
         Ok(())
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -199,7 +199,7 @@ impl<'mc> CommandPermissions<'mc> {
         let obj = res.l()?;
         crate::permissions::Permission::from_raw(&jni, obj)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -268,7 +268,7 @@ impl<'mc> BroadcastPermissions<'mc> {
         let obj = res.l()?;
         crate::permissions::Permission::from_raw(&jni, obj)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

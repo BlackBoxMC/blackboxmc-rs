@@ -1425,6 +1425,13 @@ def gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_names,libr
                 cl["methods"] = methods
                 parse_methods(library,cl["name"],cl,mod_path,is_trait,is_trait_decl,False,True,parsed_names)
                 method_names += list(map(lambda f: f["name"], cl["methods"]))
+            if "interfaces" in cl:
+                for i in cl["interfaces"]:
+                    gen_dummy_super_class(i,method_names,mod_path,is_trait,is_trait_decl,parsed_names,library)
+            if "superClass" in cl:
+                print(cl["superClass"])
+                gen_dummy_super_class(cl["superClass"],method_names,mod_path,is_trait,is_trait_decl,parsed_names,library)
+
     if on_super_class:
         if "methods" in val:
             methods = list(filter(lambda f: f["name"] not in method_names, val["methods"]))
@@ -1432,29 +1439,29 @@ def gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_names,libr
             parse_methods(library,val["name"],val,mod_path,is_trait,is_trait_decl,False,True,parsed_names)
             method_names += list(map(lambda f: f["name"], val["methods"]))
     if "superClass" in val:
-        file_cache[mod_path].append("//"+val["superClass"]["name"])
-        new_parsed_name = val["superClass"]["packageName"]+"."+val["superClass"]["name"].replace("$", "").replace("-", "_")
-        crate_name = ".".join(filter(lambda f: f.lower() == f, new_parsed_name.split(".")))
+        gen_dummy_super_class(val["superClass"],method_names,mod_path,is_trait,is_trait_decl,parsed_names,library)
+def gen_dummy_super_class(val,method_names,mod_path,is_trait,is_trait_decl,parsed_names,library):
+    file_cache[mod_path].append("// SUPER CLASS: "+val["name"])
+    new_parsed_name = val["packageName"]+"."+val["name"].replace("$", "").replace("-", "_")
+    crate_name = ".".join(filter(lambda f: f.lower() == f, new_parsed_name.split(".")))
 
-        while crate_name not in library_resolves and crate_name != "":
-            parts = crate_name.split(".")
-            parts.pop()
-            crate_name = ".".join(parts)
+    while crate_name not in library_resolves and crate_name != "":
+        parts = crate_name.split(".")
+        parts.pop()
+        crate_name = ".".join(parts)
 
-        if (library_name_format(crate_name,library) == library_name_format("java.util",library)) or (library_name_format(crate_name,library) == library_name_format("java.lang",library)):
-            class_name = "".join(filter(lambda f: f[0].upper() == f[0], new_parsed_name.split(".")))
-            new_parsed_name = new_parsed_name.replace(class_name, "Java"+class_name)
+    if (library_name_format(crate_name,library) == library_name_format("java.util",library)) or (library_name_format(crate_name,library) == library_name_format("java.lang",library)):
+        class_name = "".join(filter(lambda f: f[0].upper() == f[0], new_parsed_name.split(".")))
+        new_parsed_name = new_parsed_name.replace(class_name, "Java"+class_name)
 
-        to_replace =  library_name_format(crate_name,library)
+    to_replace =  library_name_format(crate_name,library)
 
-        new_parsed_name = new_parsed_name.replace(
-            crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "")
+    new_parsed_name = new_parsed_name.replace(
+        crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "")
 
-        if "JavaObject" in new_parsed_name or "JavaEnum" in new_parsed_name:
-            return
-        file_cache[mod_path].append("//"+new_parsed_name)
-        gen_dummy(val["superClass"],method_names,mod_path,is_trait,is_trait_decl,parsed_names+[new_parsed_name],library,True)
-
+    if "JavaObject" in new_parsed_name or "JavaEnum" in new_parsed_name:
+        return
+    gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_names+[new_parsed_name],library,True)
 
 def format_comment(comment):
     final_comment = ""

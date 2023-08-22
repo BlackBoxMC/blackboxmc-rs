@@ -309,7 +309,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerTexturesSkinModelStruct<'mc> {
 }
 
 impl<'mc> PlayerTexturesSkinModelStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

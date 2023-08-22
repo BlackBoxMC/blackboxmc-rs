@@ -163,15 +163,14 @@ self.jni_ref().translate_error(res)?;
 Ok(
 self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?.to_string_lossy().to_string()
 )}
-//Content
-//crate::bungee::api::chat::hover::content::Content
+// SUPER CLASS: Content
 	pub fn assert_action(&self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let temp_clone = crate::bungee::api::chat::hover::content::Content::from_raw(&self.0, unsafe {jni::objects::JObject::from_raw(self.1.clone())})?;
 let real: crate::bungee::api::chat::hover::content::Content = temp_clone.into();
 real.assert_action(arg0)}
-//Object
+// SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -361,15 +360,14 @@ self.jni_ref().translate_error(res)?;
 Ok(
 self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?.to_string_lossy().to_string()
 )}
-//Content
-//crate::bungee::api::chat::hover::content::Content
+// SUPER CLASS: Content
 	pub fn assert_action(&self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let temp_clone = crate::bungee::api::chat::hover::content::Content::from_raw(&self.0, unsafe {jni::objects::JObject::from_raw(self.1.clone())})?;
 let real: crate::bungee::api::chat::hover::content::Content = temp_clone.into();
 real.assert_action(arg0)}
-//Object
+// SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -489,7 +487,7 @@ let res =
 self.jni_ref().translate_error(res)?;
 crate::bungee::api::chat::hover::content::Item::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
 )}
-//Object
+// SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -595,7 +593,7 @@ let res =
 self.jni_ref().translate_error(res)?;
 crate::bungee::api::chat::hover::content::Text::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
 )}
-//Object
+// SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -714,7 +712,7 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.i()?
 )}
-//Object
+// SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -844,15 +842,14 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.l()?
 )}
-//Content
-//crate::bungee::api::chat::hover::content::Content
+// SUPER CLASS: Content
 	pub fn assert_action(&self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let temp_clone = crate::bungee::api::chat::hover::content::Content::from_raw(&self.0, unsafe {jni::objects::JObject::from_raw(self.1.clone())})?;
 let real: crate::bungee::api::chat::hover::content::Content = temp_clone.into();
 real.assert_action(arg0)}
-//Object
+// SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -972,7 +969,7 @@ let res =
 self.jni_ref().translate_error(res)?;
 crate::bungee::api::chat::hover::content::Entity::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
 )}
-//Object
+// SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

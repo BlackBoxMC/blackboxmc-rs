@@ -830,7 +830,7 @@ impl<'mc> JNIInstantiatable<'mc> for AttributeModifierOperationStruct<'mc> {
 }
 
 impl<'mc> AttributeModifierOperationStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1052,7 +1052,7 @@ impl<'mc> AttributeModifier<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

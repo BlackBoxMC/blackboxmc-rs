@@ -133,7 +133,7 @@ impl<'mc> JNIInstantiatable<'mc> for PluginAwarenessFlagsStruct<'mc> {
 }
 
 impl<'mc> PluginAwarenessFlagsStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -782,7 +782,7 @@ impl<'mc> PluginDescriptionFile<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1065,7 +1065,7 @@ impl<'mc> RegisteredServiceProvider<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1240,7 +1240,7 @@ impl<'mc> JNIInstantiatable<'mc> for ServicePriority<'mc> {
 }
 
 impl<'mc> ServicePriority<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2057,7 +2057,34 @@ impl<'mc> PluginBase<'mc> {
         let real: crate::plugin::Plugin = temp_clone.into();
         real.logger()
     }
-    //Object
+    // SUPER CLASS: TabExecutor
+    pub fn on_tab_complete(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<crate::command::Command<'mc>>,
+        arg2: impl Into<String>,
+        arg3: Vec<String>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::TabExecutor::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::TabCompleter = temp_clone.into();
+        real.on_tab_complete(arg0, arg1, arg2, arg3)
+    }
+    pub fn on_command(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<crate::command::Command<'mc>>,
+        arg2: impl Into<String>,
+        arg3: Vec<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::TabExecutor::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::CommandExecutor = temp_clone.into();
+        real.on_command(arg0, arg1, arg2, arg3)
+    }
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2637,8 +2664,7 @@ impl<'mc> TimedRegisteredListener<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //RegisteredListener
-    //crate::plugin::RegisteredListener
+    // SUPER CLASS: RegisteredListener
     pub fn listener(&self) -> Result<crate::event::Listener<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::plugin::RegisteredListener::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2667,7 +2693,7 @@ impl<'mc> TimedRegisteredListener<'mc> {
         let real: crate::plugin::RegisteredListener = temp_clone.into();
         real.priority()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2976,7 +3002,7 @@ impl<'mc> RegisteredListener<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3340,6 +3366,34 @@ impl<'mc> Plugin<'mc> {
         blackboxmc_java::util::logging::JavaLogger::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    // SUPER CLASS: TabCompleter
+    pub fn on_tab_complete(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<crate::command::Command<'mc>>,
+        arg2: impl Into<String>,
+        arg3: Vec<String>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::TabCompleter::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::TabCompleter = temp_clone.into();
+        real.on_tab_complete(arg0, arg1, arg2, arg3)
+    }
+    // SUPER CLASS: CommandExecutor
+    pub fn on_command(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<crate::command::Command<'mc>>,
+        arg2: impl Into<String>,
+        arg3: Vec<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::command::CommandExecutor::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::command::CommandExecutor = temp_clone.into();
+        real.on_command(arg0, arg1, arg2, arg3)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

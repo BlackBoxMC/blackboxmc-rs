@@ -153,10 +153,8 @@ impl<'mc> ReloadCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //BukkitCommand
-    //crate::command::defaults::BukkitCommand
-    //Command
-    //crate::command::Command
+    // SUPER CLASS: BukkitCommand
+    // SUPER CLASS: Command
     pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -389,7 +387,7 @@ impl<'mc> ReloadCommand<'mc> {
         let real: crate::command::Command = temp_clone.into();
         real.set_name(arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -592,10 +590,8 @@ impl<'mc> TimingsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //BukkitCommand
-    //crate::command::defaults::BukkitCommand
-    //Command
-    //crate::command::Command
+    // SUPER CLASS: BukkitCommand
+    // SUPER CLASS: Command
     pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -828,7 +824,7 @@ impl<'mc> TimingsCommand<'mc> {
         let real: crate::command::Command = temp_clone.into();
         real.set_name(arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1043,10 +1039,8 @@ impl<'mc> VersionCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //BukkitCommand
-    //crate::command::defaults::BukkitCommand
-    //Command
-    //crate::command::Command
+    // SUPER CLASS: BukkitCommand
+    // SUPER CLASS: Command
     pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1279,7 +1273,7 @@ impl<'mc> VersionCommand<'mc> {
         let real: crate::command::Command = temp_clone.into();
         real.set_name(arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1435,10 +1429,8 @@ impl<'mc> HelpCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //BukkitCommand
-    //crate::command::defaults::BukkitCommand
-    //Command
-    //crate::command::Command
+    // SUPER CLASS: BukkitCommand
+    // SUPER CLASS: Command
     pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1671,7 +1663,7 @@ impl<'mc> HelpCommand<'mc> {
         let real: crate::command::Command = temp_clone.into();
         real.set_name(arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1838,10 +1830,8 @@ impl<'mc> PluginsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //BukkitCommand
-    //crate::command::defaults::BukkitCommand
-    //Command
-    //crate::command::Command
+    // SUPER CLASS: BukkitCommand
+    // SUPER CLASS: Command
     pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2074,7 +2064,7 @@ impl<'mc> PluginsCommand<'mc> {
         let real: crate::command::Command = temp_clone.into();
         real.set_name(arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

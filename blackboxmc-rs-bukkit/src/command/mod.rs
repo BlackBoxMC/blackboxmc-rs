@@ -119,7 +119,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -449,7 +449,7 @@ impl<'mc> SimpleCommandMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -580,8 +580,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Command
-    //crate::command::Command
+    // SUPER CLASS: Command
     pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -875,7 +874,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let real: crate::command::Command = temp_clone.into();
         real.set_name(arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1738,7 +1737,7 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1872,8 +1871,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Command
-    //crate::command::Command
+    // SUPER CLASS: Command
     pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -2167,7 +2165,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let real: crate::command::Command = temp_clone.into();
         real.set_name(arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2258,7 +2256,7 @@ impl<'mc> PluginCommandYamlParser<'mc> {
         }
         Ok(new_vec)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2404,6 +2402,133 @@ impl<'mc> ProxiedCommandSender<'mc> {
         })?;
         let real: crate::command::CommandSender = temp_clone.into();
         real.name()
+    }
+    // SUPER CLASS: Permissible
+    pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::permissions::Permissible::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::permissions::ServerOperator = temp_clone.into();
+        real.is_op()
+    }
+    pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::permissions::Permissible::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::permissions::ServerOperator = temp_clone.into();
+        real.set_op(arg0)
+    }
+    pub fn is_permission_set_with_permission(
+        &self,
+        arg0: impl Into<crate::permissions::Permission<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/permissions/Permission;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isPermissionSet", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_permission_with_string(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        sig += ")Z";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasPermission", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn add_attachment_with_plugin(
+        &self,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
+        arg1: std::option::Option<impl Into<String>>,
+        arg2: std::option::Option<bool>,
+        arg3: std::option::Option<i32>,
+    ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/plugin/Plugin;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a);
+            args.push(val_4);
+        }
+        sig += ")Lorg/bukkit/permissions/PermissionAttachment;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "addAttachment", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::permissions::PermissionAttachment::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn remove_attachment(
+        &self,
+        arg0: impl Into<crate::permissions::PermissionAttachment<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::permissions::Permissible::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::permissions::Permissible = temp_clone.into();
+        real.remove_attachment(arg0)
+    }
+    pub fn recalculate_permissions(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "recalculatePermissions",
+            sig.as_str(),
+            vec![],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn effective_permissions(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getEffectivePermissions",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2727,6 +2852,21 @@ impl<'mc> CommandSender<'mc> {
         blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    // SUPER CLASS: ServerOperator
+    pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::permissions::ServerOperator::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::permissions::ServerOperator = temp_clone.into();
+        real.is_op()
+    }
+    pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::permissions::ServerOperator::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::permissions::ServerOperator = temp_clone.into();
+        real.set_op(arg0)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -3176,8 +3316,7 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Command
-    //crate::command::Command
+    // SUPER CLASS: Command
     pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let temp_clone = crate::command::Command::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -3402,7 +3541,7 @@ impl<'mc> PluginCommand<'mc> {
         let real: crate::command::Command = temp_clone.into();
         real.set_name(arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3559,6 +3698,133 @@ impl<'mc> BlockCommandSender<'mc> {
         })?;
         let real: crate::command::CommandSender = temp_clone.into();
         real.name()
+    }
+    // SUPER CLASS: Permissible
+    pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::permissions::Permissible::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::permissions::ServerOperator = temp_clone.into();
+        real.is_op()
+    }
+    pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::permissions::Permissible::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::permissions::ServerOperator = temp_clone.into();
+        real.set_op(arg0)
+    }
+    pub fn is_permission_set_with_permission(
+        &self,
+        arg0: impl Into<crate::permissions::Permission<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/permissions/Permission;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isPermissionSet", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_permission_with_string(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        sig += ")Z";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasPermission", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn add_attachment_with_plugin(
+        &self,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
+        arg1: std::option::Option<impl Into<String>>,
+        arg2: std::option::Option<bool>,
+        arg3: std::option::Option<i32>,
+    ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/plugin/Plugin;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a);
+            args.push(val_4);
+        }
+        sig += ")Lorg/bukkit/permissions/PermissionAttachment;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "addAttachment", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::permissions::PermissionAttachment::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn remove_attachment(
+        &self,
+        arg0: impl Into<crate::permissions::PermissionAttachment<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::permissions::Permissible::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::permissions::Permissible = temp_clone.into();
+        real.remove_attachment(arg0)
+    }
+    pub fn recalculate_permissions(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "recalculatePermissions",
+            sig.as_str(),
+            vec![],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn effective_permissions(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getEffectivePermissions",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

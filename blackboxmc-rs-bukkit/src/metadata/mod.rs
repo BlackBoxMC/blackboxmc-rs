@@ -662,7 +662,7 @@ impl<'mc> MetadataStoreBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -843,7 +843,7 @@ impl<'mc> JNIInstantiatable<'mc> for LazyMetadataValueCacheStrategyStruct<'mc> {
 }
 
 impl<'mc> LazyMetadataValueCacheStrategyStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -900,8 +900,7 @@ impl<'mc> LazyMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //MetadataValueAdapter
-    //crate::metadata::MetadataValueAdapter
+    // SUPER CLASS: MetadataValueAdapter
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -967,7 +966,7 @@ impl<'mc> LazyMetadataValue<'mc> {
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_boolean()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1061,10 +1060,8 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //LazyMetadataValue
-    //crate::metadata::LazyMetadataValue
-    //MetadataValueAdapter
-    //crate::metadata::MetadataValueAdapter
+    // SUPER CLASS: LazyMetadataValue
+    // SUPER CLASS: MetadataValueAdapter
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::metadata::MetadataValueAdapter::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -1130,7 +1127,7 @@ impl<'mc> FixedMetadataValue<'mc> {
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.as_boolean()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1289,7 +1286,7 @@ impl<'mc> MetadataValueAdapter<'mc> {
         let real: crate::metadata::MetadataValue = temp_clone.into();
         real.value()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

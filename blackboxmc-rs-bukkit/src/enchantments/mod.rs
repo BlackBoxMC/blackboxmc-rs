@@ -172,8 +172,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //Enchantment
-    //crate::enchantments::Enchantment
+    // SUPER CLASS: Enchantment
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::enchantments::Enchantment::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -245,7 +244,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     ) -> Result<crate::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
         crate::enchantments::Enchantment::get_by_name(jni, arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -401,7 +400,7 @@ impl<'mc> EnchantmentOffer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -709,7 +708,7 @@ impl<'mc> EnchantmentTargetStruct<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1004,7 +1003,7 @@ impl<'mc> Enchantment<'mc> {
         let obj = res.l()?;
         crate::enchantments::Enchantment::from_raw(&jni, obj)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

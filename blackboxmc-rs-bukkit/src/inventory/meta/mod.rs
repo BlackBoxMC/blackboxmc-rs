@@ -175,7 +175,7 @@ impl<'mc> JNIInstantiatable<'mc> for BookMetaGenerationStruct<'mc> {
 }
 
 impl<'mc> BookMetaGenerationStruct<'mc> {
-    //Enum
+    // SUPER CLASS: Enum
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -656,6 +656,29 @@ impl<'mc> BlockDataMeta<'mc> {
         })?;
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.clone()
+    }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1151,6 +1174,29 @@ impl<'mc> ArmorMeta<'mc> {
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
     }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1641,6 +1687,29 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         })?;
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
+    }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2239,6 +2308,29 @@ impl<'mc> SkullMeta<'mc> {
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
     }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2748,6 +2840,29 @@ impl<'mc> CompassMeta<'mc> {
         })?;
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
+    }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -3304,6 +3419,29 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
     }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3824,6 +3962,29 @@ impl<'mc> CrossbowMeta<'mc> {
         })?;
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.clone()
+    }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -4979,6 +5140,29 @@ impl<'mc> Repairable<'mc> {
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
     }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5593,6 +5777,29 @@ impl<'mc> BannerMeta<'mc> {
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.clone()
     }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6108,6 +6315,29 @@ impl<'mc> BundleMeta<'mc> {
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.clone()
     }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6203,6 +6433,409 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let real: crate::inventory::meta::ArmorMeta = temp_clone.into();
         real.trim()
     }
+    // SUPER CLASS: ItemMeta
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
+    }
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.display_name()
+    }
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.as_string()
+    }
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_display_name()
+    }
+    pub fn set_display_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_display_name(arg0)
+    }
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_localized_name()
+    }
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.localized_name()
+    }
+    pub fn set_localized_name(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_localized_name(arg0)
+    }
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_lore()
+    }
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.lore()
+    }
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_lore(arg0)
+    }
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_custom_model_data()
+    }
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_model_data()
+    }
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_custom_model_data(arg0)
+    }
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn has_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_enchant(arg0)
+    }
+    pub fn get_enchant_level(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.get_enchant_level(arg0)
+    }
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg1: i32,
+        arg2: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_enchant(arg0, arg1, arg2)
+    }
+    pub fn remove_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.remove_enchant(arg0)
+    }
+    pub fn has_conflicting_enchant(
+        &self,
+        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_conflicting_enchant(arg0)
+    }
+    pub fn add_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_item_flags(
+        &self,
+        arg0: Vec<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("([Lorg/bukkit/inventory/ItemFlag;)V");
+        let arr = self.jni_ref().new_object_array(
+            arg0.len() as i32,
+            "org/bukkit/inventory/ItemFlag",
+            jni::objects::JObject::null(),
+        );
+        let arr = self.jni_ref().translate_error_no_gen(arr)?;
+        for i in 0..arg0.len() {
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(arg0.get(i).unwrap().jni_object().clone())
+            });
+            self.jni_ref()
+                .set_object_array_element(&arr, i as i32, val_1.l()?)?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(arr);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1.l()?)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn has_item_flag(
+        &self,
+        arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.has_item_flag(arg0)
+    }
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.is_unbreakable()
+    }
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_unbreakable(arg0)
+    }
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn attribute_modifiers(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcom/google/common/collect/Multimap;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(res.l()?))
+    }
+    pub fn add_attribute_modifier(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.add_attribute_modifier(arg0, arg1)
+    }
+    pub fn set_attribute_modifiers(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_attribute_modifier_with_equipment_slot(
+        &self,
+        arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &self,
+        arg0: impl Into<crate::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.custom_tag_container()
+    }
+
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::inventory::meta::ItemMeta::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::inventory::meta::ItemMeta = temp_clone.into();
+        real.set_version(arg0)
+    }
     pub fn set_color(
         &self,
         arg0: impl Into<crate::Color<'mc>>,
@@ -6220,6 +6853,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let real: crate::inventory::meta::LeatherArmorMeta = temp_clone.into();
         real.color()
     }
+    // SUPER CLASS: ItemMeta
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6706,6 +7340,29 @@ impl<'mc> SpawnEggMeta<'mc> {
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
     }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7185,6 +7842,29 @@ impl<'mc> Damageable<'mc> {
         })?;
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
+    }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -7729,6 +8409,29 @@ impl<'mc> FireworkMeta<'mc> {
         })?;
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
+    }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -8375,6 +9078,29 @@ impl<'mc> PotionMeta<'mc> {
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
     }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8854,6 +9580,29 @@ impl<'mc> BlockStateMeta<'mc> {
         })?;
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.clone()
+    }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -9598,6 +10347,29 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
     }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10128,6 +10900,29 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         })?;
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
+    }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -10758,6 +11553,29 @@ impl<'mc> MapMeta<'mc> {
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
     }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10936,7 +11754,7 @@ impl<'mc> BookMetaSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -11413,6 +12231,29 @@ impl<'mc> LeatherArmorMeta<'mc> {
         })?;
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
+    }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -11906,6 +12747,29 @@ impl<'mc> FireworkEffectMeta<'mc> {
         })?;
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
+    }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -12452,6 +13316,29 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         })?;
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
+    }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -13169,6 +14056,29 @@ impl<'mc> BookMeta<'mc> {
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
     }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -13654,6 +14564,29 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         })?;
         let real: crate::inventory::meta::ItemMeta = temp_clone.into();
         real.set_version(arg0)
+    }
+    // SUPER CLASS: Cloneable
+    // SUPER CLASS: ConfigurationSerializable
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.0,
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) },
+        )?;
+        let real: crate::configuration::serialization::ConfigurationSerializable =
+            temp_clone.into();
+        real.serialize()
+    }
+    // SUPER CLASS: PersistentDataHolder
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::persistence::PersistentDataHolder::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::persistence::PersistentDataHolder = temp_clone.into();
+        real.persistent_data_container()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

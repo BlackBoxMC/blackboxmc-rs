@@ -161,7 +161,7 @@ impl<'mc> JavaPluginLoader<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -658,8 +658,7 @@ impl<'mc> JavaPlugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //PluginBase
-    //crate::plugin::PluginBase
+    // SUPER CLASS: PluginBase
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::plugin::PluginBase::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -667,6 +666,7 @@ impl<'mc> JavaPlugin<'mc> {
         let real: crate::plugin::Plugin = temp_clone.into();
         real.name()
     }
+    // SUPER CLASS: TabExecutor
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -684,7 +684,7 @@ impl<'mc> JavaPlugin<'mc> {
         let real: crate::plugin::PluginBase = temp_clone.into();
         real.hash_code()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

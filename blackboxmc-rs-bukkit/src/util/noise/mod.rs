@@ -158,17 +158,15 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         let obj = res.l()?;
         crate::util::noise::SimplexNoiseGenerator::from_raw(&jni, obj)
     }
-    //PerlinNoiseGenerator
-    //crate::util::noise::PerlinNoiseGenerator
-    //NoiseGenerator
-    //crate::util::noise::NoiseGenerator
+    // SUPER CLASS: PerlinNoiseGenerator
+    // SUPER CLASS: NoiseGenerator
     pub fn floor(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         crate::util::noise::NoiseGenerator::floor(jni, arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -340,15 +338,14 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         let obj = res.l()?;
         crate::util::noise::PerlinNoiseGenerator::from_raw(&jni, obj)
     }
-    //NoiseGenerator
-    //crate::util::noise::NoiseGenerator
+    // SUPER CLASS: NoiseGenerator
     pub fn floor(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         crate::util::noise::NoiseGenerator::floor(jni, arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -524,8 +521,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //OctaveGenerator
-    //crate::util::noise::OctaveGenerator
+    // SUPER CLASS: OctaveGenerator
     pub fn set_xscale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let temp_clone = crate::util::noise::OctaveGenerator::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -568,8 +564,8 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         let real: crate::util::noise::OctaveGenerator = temp_clone.into();
         real.zscale()
     }
-    //Object
-    //Object
+    // SUPER CLASS: Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -745,7 +741,7 @@ impl<'mc> OctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -835,8 +831,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::noise::PerlinOctaveGenerator::from_raw(&jni, res)
     }
-    //OctaveGenerator
-    //crate::util::noise::OctaveGenerator
+    // SUPER CLASS: OctaveGenerator
     pub fn set_scale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let temp_clone = crate::util::noise::OctaveGenerator::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -928,7 +923,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1072,7 +1067,7 @@ impl<'mc> NoiseGenerator<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

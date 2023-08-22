@@ -721,9 +721,8 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //Number
-    //crate::lang::JavaNumber
-    //Object
+    // SUPER CLASS: Number
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1198,9 +1197,8 @@ impl<'mc> JavaFloat<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //Number
-    //crate::lang::JavaNumber
-    //Object
+    // SUPER CLASS: Number
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2402,7 +2400,7 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2742,9 +2740,8 @@ impl<'mc> JavaByte<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //Number
-    //crate::lang::JavaNumber
-    //Object
+    // SUPER CLASS: Number
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3455,9 +3452,8 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //Number
-    //crate::lang::JavaNumber
-    //Object
+    // SUPER CLASS: Number
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4547,7 +4543,7 @@ impl<'mc> JavaString<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4861,7 +4857,7 @@ impl<'mc> JavaBoolean<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5320,9 +5316,8 @@ impl<'mc> JavaDouble<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.d()?)
     }
-    //Number
-    //crate::lang::JavaNumber
-    //Object
+    // SUPER CLASS: Number
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5680,9 +5675,8 @@ impl<'mc> JavaShort<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.s()?)
     }
-    //Number
-    //crate::lang::JavaNumber
-    //Object
+    // SUPER CLASS: Number
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

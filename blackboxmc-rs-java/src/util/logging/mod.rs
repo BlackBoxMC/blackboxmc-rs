@@ -52,7 +52,7 @@ impl<'mc> JavaErrorManager<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::logging::JavaErrorManager::from_raw(&jni, res)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -176,8 +176,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //Formatter
-    //crate::util::logging::JavaFormatter
+    // SUPER CLASS: Formatter
     pub fn format_message(
         &self,
         arg0: impl Into<crate::util::logging::JavaLogRecord<'mc>>,
@@ -188,7 +187,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
         let real: crate::util::logging::JavaFormatter = temp_clone.into();
         real.format_message(arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -327,7 +326,7 @@ impl<'mc> JavaFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -447,8 +446,7 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //StreamHandler
-    //crate::util::logging::JavaStreamHandler
+    // SUPER CLASS: StreamHandler
     pub fn is_loggable(
         &self,
         arg0: impl Into<crate::util::logging::JavaLogRecord<'mc>>,
@@ -473,8 +471,7 @@ impl<'mc> JavaSocketHandler<'mc> {
         let real: crate::util::logging::JavaStreamHandler = temp_clone.into();
         real.flush()
     }
-    //Handler
-    //crate::util::logging::JavaHandler
+    // SUPER CLASS: Handler
     pub fn set_filter(
         &self,
         arg0: impl Into<crate::util::logging::JavaFilter<'mc>>,
@@ -558,7 +555,7 @@ impl<'mc> JavaSocketHandler<'mc> {
         let real: crate::util::logging::JavaHandler = temp_clone.into();
         real.level()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -644,8 +641,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //Formatter
-    //crate::util::logging::JavaFormatter
+    // SUPER CLASS: Formatter
     pub fn get_head(
         &self,
         arg0: impl Into<crate::util::logging::JavaHandler<'mc>>,
@@ -676,7 +672,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
         let real: crate::util::logging::JavaFormatter = temp_clone.into();
         real.format_message(arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -933,7 +929,7 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1133,8 +1129,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //Handler
-    //crate::util::logging::JavaHandler
+    // SUPER CLASS: Handler
     pub fn set_filter(
         &self,
         arg0: impl Into<crate::util::logging::JavaFilter<'mc>>,
@@ -1225,7 +1220,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
         let real: crate::util::logging::JavaHandler = temp_clone.into();
         real.level()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1851,7 +1846,7 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1952,8 +1947,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //StreamHandler
-    //crate::util::logging::JavaStreamHandler
+    // SUPER CLASS: StreamHandler
     pub fn is_loggable(
         &self,
         arg0: impl Into<crate::util::logging::JavaLogRecord<'mc>>,
@@ -1978,8 +1972,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
         let real: crate::util::logging::JavaStreamHandler = temp_clone.into();
         real.flush()
     }
-    //Handler
-    //crate::util::logging::JavaHandler
+    // SUPER CLASS: Handler
     pub fn set_filter(
         &self,
         arg0: impl Into<crate::util::logging::JavaFilter<'mc>>,
@@ -2063,7 +2056,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
         let real: crate::util::logging::JavaHandler = temp_clone.into();
         real.level()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2623,7 +2616,7 @@ impl<'mc> JavaLogRecord<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2784,8 +2777,7 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //Handler
-    //crate::util::logging::JavaHandler
+    // SUPER CLASS: Handler
     pub fn set_filter(
         &self,
         arg0: impl Into<crate::util::logging::JavaFilter<'mc>>,
@@ -2869,7 +2861,7 @@ impl<'mc> JavaStreamHandler<'mc> {
         let real: crate::util::logging::JavaHandler = temp_clone.into();
         real.level()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3044,7 +3036,7 @@ impl<'mc> JavaLevel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

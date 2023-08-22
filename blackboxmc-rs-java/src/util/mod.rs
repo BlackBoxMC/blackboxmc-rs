@@ -576,10 +576,11 @@ impl<'mc> JavaArrayList<'mc> {
         let real: crate::util::JavaList = temp_clone.into();
         real.contains_all(arg0)
     }
-    //AbstractList
-    //crate::util::JavaAbstractList
-    //AbstractCollection
-    //crate::util::JavaAbstractCollection
+    // SUPER CLASS: Collection
+    // SUPER CLASS: AbstractList
+    // SUPER CLASS: Collection
+    // SUPER CLASS: AbstractCollection
+    // SUPER CLASS: Iterable
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
@@ -588,7 +589,7 @@ impl<'mc> JavaArrayList<'mc> {
         let real: crate::util::JavaAbstractCollection = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1147,7 +1148,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let obj = res.l()?;
         crate::util::JavaMap::from_raw(&jni, obj)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1476,20 +1477,19 @@ impl<'mc> JavaTreeSet<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //AbstractSet
-    //crate::util::JavaAbstractSet
+    // SUPER CLASS: SortedSet
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractSet::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaSortedSet::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaSet = temp_clone.into();
         real.equals(arg0)
     }
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractSet::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaSortedSet::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaSet = temp_clone.into();
@@ -1607,7 +1607,7 @@ impl<'mc> JavaTreeSet<'mc> {
         &self,
         arg0: impl Into<crate::util::JavaCollection<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractSet::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaSortedSet::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaSet = temp_clone.into();
@@ -1617,7 +1617,7 @@ impl<'mc> JavaTreeSet<'mc> {
         &self,
         arg0: impl Into<crate::util::JavaCollection<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractSet::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaSortedSet::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaSet = temp_clone.into();
@@ -1627,24 +1627,27 @@ impl<'mc> JavaTreeSet<'mc> {
         &self,
         arg0: impl Into<crate::util::JavaCollection<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractSet::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaSortedSet::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaSet = temp_clone.into();
         real.contains_all(arg0)
     }
-    //AbstractCollection
-    //crate::util::JavaAbstractCollection
+    // SUPER CLASS: Collection
     pub fn remove_if(
         &self,
         arg0: impl Into<crate::util::function::JavaPredicate<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
         real.remove_if(arg0)
     }
+    // SUPER CLASS: AbstractSet
+    // SUPER CLASS: Collection
+    // SUPER CLASS: AbstractCollection
+    // SUPER CLASS: Iterable
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
@@ -1653,7 +1656,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let real: crate::util::JavaAbstractCollection = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -2493,11 +2496,12 @@ impl<'mc> JavaVector<'mc> {
         let obj = res.l()?;
         crate::util::JavaList::from_raw(&jni, obj)
     }
-    //AbstractList
-    //crate::util::JavaAbstractList
-    //AbstractCollection
-    //crate::util::JavaAbstractCollection
-    //Object
+    // SUPER CLASS: Collection
+    // SUPER CLASS: AbstractList
+    // SUPER CLASS: Collection
+    // SUPER CLASS: AbstractCollection
+    // SUPER CLASS: Iterable
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4332,8 +4336,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let obj = res.l()?;
         crate::util::JavaMap::from_raw(&jni, obj)
     }
-    //AbstractMap
-    //crate::util::JavaAbstractMap
+    // SUPER CLASS: AbstractMap
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractMap::from_raw(&self.0, unsafe {
@@ -4342,7 +4345,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let real: crate::util::JavaAbstractMap = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4722,6 +4725,7 @@ impl<'mc> JavaSet<'mc> {
         let real: crate::util::JavaCollection = temp_clone.into();
         real.remove_if(arg0)
     }
+    // SUPER CLASS: Iterable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -4780,7 +4784,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaBase64<'mc> {
 }
 
 impl<'mc> JavaBase64<'mc> {
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5030,7 +5034,8 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let real: crate::util::JavaCollection = temp_clone.into();
         real.remove_if(arg0)
     }
-    //Object
+    // SUPER CLASS: Iterable
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5360,6 +5365,17 @@ impl<'mc> JavaSortedSet<'mc> {
         let real: crate::util::JavaSet = temp_clone.into();
         real.contains_all(arg0)
     }
+    // SUPER CLASS: Collection
+    pub fn remove_if(
+        &self,
+        arg0: impl Into<crate::util::function::JavaPredicate<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::JavaCollection = temp_clone.into();
+        real.remove_if(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5497,48 +5513,37 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let real: crate::util::JavaQueue = temp_clone.into();
         real.peek()
     }
-    //AbstractCollection
-    //crate::util::JavaAbstractCollection
+    // SUPER CLASS: Collection
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
         real.equals(arg0)
     }
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
         real.hash_code()
     }
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
         real.is_empty()
     }
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
         real.size()
-    }
-    pub fn iterator(&self) -> Result<crate::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Iterator;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "iterator", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn contains(
         &self,
@@ -5559,7 +5564,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         &self,
         arg0: impl Into<crate::util::function::JavaPredicate<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
@@ -5569,7 +5574,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         &self,
         arg0: impl Into<crate::util::JavaCollection<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
@@ -5579,7 +5584,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         &self,
         arg0: impl Into<crate::util::JavaCollection<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
@@ -5589,12 +5594,14 @@ impl<'mc> JavaAbstractQueue<'mc> {
         &self,
         arg0: impl Into<crate::util::JavaCollection<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
         real.contains_all(arg0)
     }
+    // SUPER CLASS: AbstractCollection
+    // SUPER CLASS: Iterable
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
@@ -5603,7 +5610,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let real: crate::util::JavaAbstractCollection = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -5805,7 +5812,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
     ) -> Result<crate::util::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         crate::util::JavaMapEntry::copy_of(jni, arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6172,6 +6179,7 @@ impl<'mc> JavaQueue<'mc> {
         let real: crate::util::JavaCollection = temp_clone.into();
         real.contains_all(arg0)
     }
+    // SUPER CLASS: Iterable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -6985,9 +6993,8 @@ impl<'mc> JavaHashtable<'mc> {
         let obj = res.l()?;
         crate::util::JavaMap::from_raw(&jni, obj)
     }
-    //Dictionary
-    //crate::util::JavaDictionary
-    //Object
+    // SUPER CLASS: Dictionary
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7298,18 +7305,19 @@ impl<'mc> JavaAbstractSet<'mc> {
         let real: crate::util::JavaSet = temp_clone.into();
         real.contains_all(arg0)
     }
-    //AbstractCollection
-    //crate::util::JavaAbstractCollection
+    // SUPER CLASS: Collection
     pub fn remove_if(
         &self,
         arg0: impl Into<crate::util::function::JavaPredicate<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
         real.remove_if(arg0)
     }
+    // SUPER CLASS: AbstractCollection
+    // SUPER CLASS: Iterable
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
@@ -7318,7 +7326,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let real: crate::util::JavaAbstractCollection = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -7544,7 +7552,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8208,20 +8216,19 @@ impl<'mc> JavaTreeMap<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //AbstractMap
-    //crate::util::JavaAbstractMap
+    // SUPER CLASS: SortedMap
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractMap::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaSortedMap::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaMap = temp_clone.into();
         real.equals(arg0)
     }
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractMap::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaSortedMap::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaMap = temp_clone.into();
@@ -8234,7 +8241,7 @@ impl<'mc> JavaTreeMap<'mc> {
         crate::util::JavaMap::copy_of(jni, arg0)
     }
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractMap::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaSortedMap::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaMap = temp_clone.into();
@@ -8385,7 +8392,7 @@ impl<'mc> JavaTreeMap<'mc> {
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractMap::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaSortedMap::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaMap = temp_clone.into();
@@ -8421,6 +8428,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let obj = res.l()?;
         crate::util::JavaMap::from_raw(&jni, obj)
     }
+    // SUPER CLASS: AbstractMap
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractMap::from_raw(&self.0, unsafe {
@@ -8429,7 +8437,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let real: crate::util::JavaAbstractMap = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -8926,6 +8934,85 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+    // SUPER CLASS: Collection
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::JavaCollection = temp_clone.into();
+        real.equals(arg0)
+    }
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::JavaCollection = temp_clone.into();
+        real.hash_code()
+    }
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::JavaCollection = temp_clone.into();
+        real.clear()
+    }
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::JavaCollection = temp_clone.into();
+        real.is_empty()
+    }
+    pub fn remove_if(
+        &self,
+        arg0: impl Into<crate::util::function::JavaPredicate<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/function/Predicate;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeIf",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn remove_all(
+        &self,
+        arg0: impl Into<crate::util::JavaCollection<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::JavaCollection = temp_clone.into();
+        real.remove_all(arg0)
+    }
+    pub fn retain_all(
+        &self,
+        arg0: impl Into<crate::util::JavaCollection<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::JavaCollection = temp_clone.into();
+        real.retain_all(arg0)
+    }
+    pub fn contains_all(
+        &self,
+        arg0: impl Into<crate::util::JavaCollection<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::JavaCollection = temp_clone.into();
+        real.contains_all(arg0)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9194,7 +9281,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9418,7 +9505,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -9742,8 +9829,19 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let real: crate::util::JavaSet = temp_clone.into();
         real.contains_all(arg0)
     }
-    //HashSet
-    //crate::util::JavaHashSet
+    // SUPER CLASS: Collection
+    pub fn remove_if(
+        &self,
+        arg0: impl Into<crate::util::function::JavaPredicate<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::util::JavaCollection = temp_clone.into();
+        real.remove_if(arg0)
+    }
+    // SUPER CLASS: HashSet
+    // SUPER CLASS: Collection
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaHashSet::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -9751,20 +9849,10 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let real: crate::util::JavaHashSet = temp_clone.into();
         real.clone()
     }
-    //AbstractSet
-    //crate::util::JavaAbstractSet
-    //AbstractCollection
-    //crate::util::JavaAbstractCollection
-    pub fn remove_if(
-        &self,
-        arg0: impl Into<crate::util::function::JavaPredicate<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::util::JavaCollection = temp_clone.into();
-        real.remove_if(arg0)
-    }
+    // SUPER CLASS: AbstractSet
+    // SUPER CLASS: Collection
+    // SUPER CLASS: AbstractCollection
+    // SUPER CLASS: Iterable
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
@@ -9773,7 +9861,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let real: crate::util::JavaAbstractCollection = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -10431,7 +10519,7 @@ impl<'mc> JavaLocale<'mc> {
         let obj = res.l()?;
         crate::util::JavaLocale::from_raw(&jni, obj)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -11093,8 +11181,7 @@ impl<'mc> JavaHashMap<'mc> {
         let obj = res.l()?;
         crate::util::JavaMap::from_raw(&jni, obj)
     }
-    //AbstractMap
-    //crate::util::JavaAbstractMap
+    // SUPER CLASS: AbstractMap
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractMap::from_raw(&self.0, unsafe {
@@ -11103,7 +11190,7 @@ impl<'mc> JavaHashMap<'mc> {
         let real: crate::util::JavaAbstractMap = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -11695,8 +11782,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let obj = res.l()?;
         crate::util::JavaMap::from_raw(&jni, obj)
     }
-    //AbstractMap
-    //crate::util::JavaAbstractMap
+    // SUPER CLASS: AbstractMap
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractMap::from_raw(&self.0, unsafe {
@@ -11705,7 +11791,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let real: crate::util::JavaAbstractMap = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -12302,8 +12388,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let obj = res.l()?;
         crate::util::JavaMap::from_raw(&jni, obj)
     }
-    //HashMap
-    //crate::util::JavaHashMap
+    // SUPER CLASS: HashMap
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaHashMap::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
@@ -12311,8 +12396,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let real: crate::util::JavaHashMap = temp_clone.into();
         real.clone()
     }
-    //AbstractMap
-    //crate::util::JavaAbstractMap
+    // SUPER CLASS: AbstractMap
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractMap::from_raw(&self.0, unsafe {
@@ -12321,7 +12405,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let real: crate::util::JavaAbstractMap = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -12507,8 +12591,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //AbstractList
-    //crate::util::JavaAbstractList
+    // SUPER CLASS: AbstractList
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -12751,18 +12834,19 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let real: crate::util::JavaList = temp_clone.into();
         real.contains_all(arg0)
     }
-    //AbstractCollection
-    //crate::util::JavaAbstractCollection
+    // SUPER CLASS: Collection
     pub fn remove_if(
         &self,
         arg0: impl Into<crate::util::function::JavaPredicate<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
         real.remove_if(arg0)
     }
+    // SUPER CLASS: AbstractCollection
+    // SUPER CLASS: Iterable
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
@@ -12771,7 +12855,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let real: crate::util::JavaAbstractCollection = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -13320,7 +13404,7 @@ impl<'mc> JavaRandom<'mc> {
     ) -> Result<crate::util::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
         crate::util::random::JavaRandomGenerator::of(jni, arg0)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -13859,6 +13943,7 @@ impl<'mc> JavaList<'mc> {
         let real: crate::util::JavaCollection = temp_clone.into();
         real.remove_if(arg0)
     }
+    // SUPER CLASS: Iterable
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -14130,7 +14215,7 @@ impl<'mc> JavaUUID<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -14494,20 +14579,21 @@ impl<'mc> JavaHashSet<'mc> {
         let real: crate::util::JavaSet = temp_clone.into();
         real.contains_all(arg0)
     }
-    //AbstractSet
-    //crate::util::JavaAbstractSet
-    //AbstractCollection
-    //crate::util::JavaAbstractCollection
+    // SUPER CLASS: Collection
     pub fn remove_if(
         &self,
         arg0: impl Into<crate::util::function::JavaPredicate<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
         real.remove_if(arg0)
     }
+    // SUPER CLASS: AbstractSet
+    // SUPER CLASS: Collection
+    // SUPER CLASS: AbstractCollection
+    // SUPER CLASS: Iterable
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
@@ -14516,7 +14602,7 @@ impl<'mc> JavaHashSet<'mc> {
         let real: crate::util::JavaAbstractCollection = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -14983,18 +15069,19 @@ impl<'mc> JavaAbstractList<'mc> {
         let real: crate::util::JavaList = temp_clone.into();
         real.contains_all(arg0)
     }
-    //AbstractCollection
-    //crate::util::JavaAbstractCollection
+    // SUPER CLASS: Collection
     pub fn remove_if(
         &self,
         arg0: impl Into<crate::util::function::JavaPredicate<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
         real.remove_if(arg0)
     }
+    // SUPER CLASS: AbstractCollection
+    // SUPER CLASS: Iterable
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
@@ -15003,7 +15090,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let real: crate::util::JavaAbstractCollection = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -15329,7 +15416,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -16209,22 +16296,24 @@ impl<'mc> JavaLinkedList<'mc> {
         let real: crate::util::JavaList = temp_clone.into();
         real.contains_all(arg0)
     }
-    //AbstractSequentialList
-    //crate::util::JavaAbstractSequentialList
-    //AbstractList
-    //crate::util::JavaAbstractList
-    //AbstractCollection
-    //crate::util::JavaAbstractCollection
+    // SUPER CLASS: Collection
     pub fn remove_if(
         &self,
         arg0: impl Into<crate::util::function::JavaPredicate<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
         real.remove_if(arg0)
     }
+    // SUPER CLASS: Queue
+    // SUPER CLASS: Iterable
+    // SUPER CLASS: AbstractSequentialList
+    // SUPER CLASS: AbstractList
+    // SUPER CLASS: Collection
+    // SUPER CLASS: AbstractCollection
+    // SUPER CLASS: Iterable
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
@@ -16233,7 +16322,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let real: crate::util::JavaAbstractCollection = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -16447,7 +16536,7 @@ impl<'mc> JavaLocaleLanguageRange<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -17339,8 +17428,7 @@ impl<'mc> JavaEnumSet<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //AbstractSet
-    //crate::util::JavaAbstractSet
+    // SUPER CLASS: AbstractSet
     pub fn add(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -17464,18 +17552,19 @@ impl<'mc> JavaEnumSet<'mc> {
         let real: crate::util::JavaSet = temp_clone.into();
         real.contains_all(arg0)
     }
-    //AbstractCollection
-    //crate::util::JavaAbstractCollection
+    // SUPER CLASS: Collection
     pub fn remove_if(
         &self,
         arg0: impl Into<crate::util::function::JavaPredicate<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaCollection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
         real.remove_if(arg0)
     }
+    // SUPER CLASS: AbstractCollection
+    // SUPER CLASS: Iterable
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
@@ -17484,7 +17573,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let real: crate::util::JavaAbstractCollection = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -18009,7 +18098,7 @@ impl<'mc> JavaDate<'mc> {
         let obj = res.l()?;
         crate::util::JavaDate::from_raw(&jni, obj)
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -18529,20 +18618,19 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //AbstractCollection
-    //crate::util::JavaAbstractCollection
+    // SUPER CLASS: Queue
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaQueue::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
         real.equals(arg0)
     }
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaQueue::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
@@ -18552,12 +18640,15 @@ impl<'mc> JavaArrayDeque<'mc> {
         &self,
         arg0: impl Into<crate::util::JavaCollection<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::util::JavaQueue::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::util::JavaCollection = temp_clone.into();
         real.contains_all(arg0)
     }
+    // SUPER CLASS: Iterable
+    // SUPER CLASS: AbstractCollection
+    // SUPER CLASS: Iterable
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let temp_clone = crate::util::JavaAbstractCollection::from_raw(&self.0, unsafe {
@@ -18566,7 +18657,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let real: crate::util::JavaAbstractCollection = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -18993,7 +19084,7 @@ impl<'mc> JavaLocaleBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

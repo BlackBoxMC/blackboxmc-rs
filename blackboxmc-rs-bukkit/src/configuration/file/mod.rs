@@ -163,8 +163,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MemoryConfiguration
-    //crate::configuration::MemoryConfiguration
+    // SUPER CLASS: MemoryConfiguration
     pub fn add_default(
         &self,
         arg0: impl Into<String>,
@@ -227,17 +226,7 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn parent(
-        &self,
-    ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemoryConfiguration::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemoryConfiguration = temp_clone.into();
-        real.parent()
-    }
-    //MemorySection
-    //crate::configuration::MemorySection
+    // SUPER CLASS: ConfigurationSection
     pub fn get_string_with_string(
         &self,
         arg0: impl Into<String>,
@@ -390,14 +379,14 @@ impl<'mc> FileConfiguration<'mc> {
         &self,
     ) -> Result<Option<crate::configuration::ConfigurationSection<'mc>>, Box<dyn std::error::Error>>
     {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.default_section()
     }
     pub fn current_path(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -407,7 +396,7 @@ impl<'mc> FileConfiguration<'mc> {
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -417,7 +406,7 @@ impl<'mc> FileConfiguration<'mc> {
         &self,
         arg0: impl Into<String>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -452,35 +441,35 @@ impl<'mc> FileConfiguration<'mc> {
         })
     }
     pub fn is_string(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.is_string(arg0)
     }
     pub fn is_int(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.is_int(arg0)
     }
     pub fn is_boolean(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.is_boolean(arg0)
     }
     pub fn is_double(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.is_double(arg0)
     }
     pub fn is_long(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -504,7 +493,7 @@ impl<'mc> FileConfiguration<'mc> {
         &self,
         arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -577,7 +566,7 @@ impl<'mc> FileConfiguration<'mc> {
         })
     }
     pub fn is_vector(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -587,7 +576,7 @@ impl<'mc> FileConfiguration<'mc> {
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -597,21 +586,21 @@ impl<'mc> FileConfiguration<'mc> {
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.is_item_stack(arg0)
     }
     pub fn is_color(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.is_color(arg0)
     }
     pub fn is_location(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -748,7 +737,7 @@ impl<'mc> FileConfiguration<'mc> {
         Ok(())
     }
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -926,19 +915,28 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn parent(
+        &self,
+    ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::ConfigurationSection = temp_clone.into();
+        real.parent()
+    }
     pub fn set(
         &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.set(arg0, arg1)
     }
     pub fn is_set(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -947,7 +945,7 @@ impl<'mc> FileConfiguration<'mc> {
     pub fn root(
         &self,
     ) -> Result<Option<crate::configuration::Configuration<'mc>>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -981,6 +979,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+    // SUPER CLASS: MemorySection
     pub fn create_path_with_configuration_section(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::configuration::ConfigurationSection<'mc>>,
@@ -1024,7 +1023,7 @@ impl<'mc> FileConfiguration<'mc> {
         let real: crate::configuration::MemorySection = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1304,11 +1303,9 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //MemoryConfigurationOptions
-    //crate::configuration::MemoryConfigurationOptions
-    //ConfigurationOptions
-    //crate::configuration::ConfigurationOptions
-    //Object
+    // SUPER CLASS: MemoryConfigurationOptions
+    // SUPER CLASS: ConfigurationOptions
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1567,8 +1564,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //FileConfigurationOptions
-    //crate::configuration::file::FileConfigurationOptions
+    // SUPER CLASS: FileConfigurationOptions
     pub fn header(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
@@ -1597,11 +1593,9 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let real: crate::configuration::file::FileConfigurationOptions = temp_clone.into();
         real.footer()
     }
-    //MemoryConfigurationOptions
-    //crate::configuration::MemoryConfigurationOptions
-    //ConfigurationOptions
-    //crate::configuration::ConfigurationOptions
-    //Object
+    // SUPER CLASS: MemoryConfigurationOptions
+    // SUPER CLASS: ConfigurationOptions
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1732,8 +1726,7 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //FileConfiguration
-    //crate::configuration::file::FileConfiguration
+    // SUPER CLASS: FileConfiguration
     pub fn load_with_reader(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -1784,8 +1777,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //MemoryConfiguration
-    //crate::configuration::MemoryConfiguration
+    // SUPER CLASS: MemoryConfiguration
     pub fn add_default(
         &self,
         arg0: impl Into<String>,
@@ -1848,17 +1840,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn parent(
-        &self,
-    ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemoryConfiguration::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemoryConfiguration = temp_clone.into();
-        real.parent()
-    }
-    //MemorySection
-    //crate::configuration::MemorySection
+    // SUPER CLASS: ConfigurationSection
     pub fn get_string_with_string(
         &self,
         arg0: impl Into<String>,
@@ -2011,14 +1993,14 @@ impl<'mc> YamlConfiguration<'mc> {
         &self,
     ) -> Result<Option<crate::configuration::ConfigurationSection<'mc>>, Box<dyn std::error::Error>>
     {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.default_section()
     }
     pub fn current_path(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -2028,7 +2010,7 @@ impl<'mc> YamlConfiguration<'mc> {
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -2038,7 +2020,7 @@ impl<'mc> YamlConfiguration<'mc> {
         &self,
         arg0: impl Into<String>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -2073,35 +2055,35 @@ impl<'mc> YamlConfiguration<'mc> {
         })
     }
     pub fn is_string(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.is_string(arg0)
     }
     pub fn is_int(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.is_int(arg0)
     }
     pub fn is_boolean(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.is_boolean(arg0)
     }
     pub fn is_double(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.is_double(arg0)
     }
     pub fn is_long(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -2125,7 +2107,7 @@ impl<'mc> YamlConfiguration<'mc> {
         &self,
         arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -2198,7 +2180,7 @@ impl<'mc> YamlConfiguration<'mc> {
         })
     }
     pub fn is_vector(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -2208,7 +2190,7 @@ impl<'mc> YamlConfiguration<'mc> {
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -2218,21 +2200,21 @@ impl<'mc> YamlConfiguration<'mc> {
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.is_item_stack(arg0)
     }
     pub fn is_color(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.is_color(arg0)
     }
     pub fn is_location(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -2369,7 +2351,7 @@ impl<'mc> YamlConfiguration<'mc> {
         Ok(())
     }
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -2547,19 +2529,28 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn parent(
+        &self,
+    ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::ConfigurationSection = temp_clone.into();
+        real.parent()
+    }
     pub fn set(
         &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
         real.set(arg0, arg1)
     }
     pub fn is_set(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -2568,7 +2559,7 @@ impl<'mc> YamlConfiguration<'mc> {
     pub fn root(
         &self,
     ) -> Result<Option<crate::configuration::Configuration<'mc>>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+        let temp_clone = crate::configuration::ConfigurationSection::from_raw(&self.0, unsafe {
             jni::objects::JObject::from_raw(self.1.clone())
         })?;
         let real: crate::configuration::ConfigurationSection = temp_clone.into();
@@ -2602,6 +2593,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+    // SUPER CLASS: MemorySection
     pub fn create_path_with_configuration_section(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::configuration::ConfigurationSection<'mc>>,
@@ -2645,7 +2637,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let real: crate::configuration::MemorySection = temp_clone.into();
         real.internal_to_string()
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;

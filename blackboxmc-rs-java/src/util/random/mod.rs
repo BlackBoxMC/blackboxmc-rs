@@ -237,7 +237,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //Object
+    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -577,6 +577,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    // SUPER CLASS: RandomGenerator$StreamableGenerator
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1017,6 +1018,15 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             &self.jni_ref(),
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
+    }
+    // SUPER CLASS: RandomGenerator$JumpableGenerator
+    pub fn jump_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::util::random::JavaRandomGeneratorJumpableGenerator::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::util::random::JavaRandomGeneratorJumpableGenerator = temp_clone.into();
+        real.jump_distance()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
