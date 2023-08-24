@@ -1764,7 +1764,7 @@ impl<'mc> BaseComponent<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
+                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -3674,7 +3674,7 @@ impl<'mc> TranslatableComponent<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
+                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }

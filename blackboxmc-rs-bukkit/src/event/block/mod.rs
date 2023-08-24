@@ -415,7 +415,7 @@ impl<'mc> BlockDropItemEvent<'mc> {
             jni.call_method(
                 &raw_val_4,
                 "add",
-                "(Lorg/bukkit/event/block/crate::event::block::BlockDropItemEvent)V",
+                "(Lorg/bukkit/event/block/crate::event::block::BlockDropItemEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1072,7 +1072,7 @@ impl<'mc> BellResonateEvent<'mc> {
             jni.call_method(
                 &raw_val_2,
                 "add",
-                "(Lorg/bukkit/event/block/crate::event::block::BellResonateEvent)V",
+                "(Lorg/bukkit/event/block/crate::event::block::BellResonateEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1228,7 +1228,7 @@ impl<'mc> BlockExplodeEvent<'mc> {
             jni.call_method(
                 &raw_val_2,
                 "add",
-                "(Lorg/bukkit/event/block/crate::event::block::BlockExplodeEvent)V",
+                "(Lorg/bukkit/event/block/crate::event::block::BlockExplodeEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1983,7 +1983,7 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
             jni.call_method(
                 &raw_val_1,
                 "add",
-                "(Lorg/bukkit/event/block/crate::event::block::BlockMultiPlaceEvent)V",
+                "(Lorg/bukkit/event/block/crate::event::block::BlockMultiPlaceEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -3288,7 +3288,7 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
             jni.call_method(
                 &raw_val_2,
                 "add",
-                "(Lorg/bukkit/event/block/crate::event::block::BlockPistonRetractEvent)V",
+                "(Lorg/bukkit/event/block/crate::event::block::BlockPistonRetractEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -3953,7 +3953,7 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
             jni.call_method(
                 &raw_val_2,
                 "add",
-                "(Lorg/bukkit/event/block/crate::event::block::BlockPistonExtendEvent)V",
+                "(Lorg/bukkit/event/block/crate::event::block::BlockPistonExtendEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -4149,7 +4149,7 @@ impl<'mc> BlockFertilizeEvent<'mc> {
             jni.call_method(
                 &raw_val_3,
                 "add",
-                "(Lorg/bukkit/event/block/crate::event::block::BlockFertilizeEvent)V",
+                "(Lorg/bukkit/event/block/crate::event::block::BlockFertilizeEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -6181,7 +6181,7 @@ impl<'mc> SpongeAbsorbEvent<'mc> {
             jni.call_method(
                 &raw_val_2,
                 "add",
-                "(Lorg/bukkit/event/block/crate::event::block::SpongeAbsorbEvent)V",
+                "(Lorg/bukkit/event/block/crate::event::block::SpongeAbsorbEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }

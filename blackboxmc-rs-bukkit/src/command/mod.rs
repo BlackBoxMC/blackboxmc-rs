@@ -258,7 +258,7 @@ impl<'mc> SimpleCommandMap<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Lorg/bukkit/command/crate::command::Command)V",
+                "(Lorg/bukkit/command/crate::command::Command;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -711,7 +711,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/lang/String)V",
+                "(Ljava/lang/String;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1440,7 +1440,7 @@ impl<'mc> Command<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/lang/String)V",
+                "(Ljava/lang/String;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -2020,7 +2020,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/lang/String)V",
+                "(Ljava/lang/String;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -2956,7 +2956,7 @@ impl<'mc> CommandMap<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Lorg/bukkit/command/crate::command::Command)V",
+                "(Lorg/bukkit/command/crate::command::Command;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -3404,7 +3404,7 @@ impl<'mc> PluginCommand<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/lang/String)V",
+                "(Ljava/lang/String;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }

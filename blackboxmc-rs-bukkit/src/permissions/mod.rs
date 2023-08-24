@@ -923,7 +923,7 @@ impl<'mc> Permission<'mc> {
                 jni.call_method(
                     &raw_val_4,
                     "add",
-                    "(Lorg/bukkit/permissions/crate::permissions::Permission)V",
+                    "(Lorg/bukkit/permissions/crate::permissions::Permission;)Z",
                     vec![jni::objects::JValueGen::from(map_val_0)],
                 )?;
             }

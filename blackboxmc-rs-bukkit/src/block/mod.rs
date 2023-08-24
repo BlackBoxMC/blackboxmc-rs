@@ -11260,7 +11260,7 @@ impl<'mc> Banner<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Lorg/bukkit/block/banner/crate::block::banner::Pattern)V",
+                "(Lorg/bukkit/block/banner/crate::block::banner::Pattern;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }

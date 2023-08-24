@@ -360,7 +360,7 @@ def code_format(ty, prefix, n, var_prefix="val", arg="", is_array=False, options
                             prefix+".call_method("+
                                 "&raw_"+var_prefix+"_"+str(n)+","+
                                 "\"add\","
-                                "\"(L"+t1+")V\","+
+                                "\"(L"+t1+";)Z\","+
                                 "vec![jni::objects::JValueGen::from(map_val_0)]"
                             ")?;"
                         )
@@ -926,7 +926,7 @@ def java_type_from_rust(ty):
             function_signature = "(D)V"
         case _:
             class_name = (ty["package_name"].replace(".","/"))+"/"+ty["type_name_alone"]
-            function_signature = "(Ljava/Lang/Object)V"
+            function_signature = "(Ljava/Lang/Object;)V"
     return {
         "class_name": class_name,
         "function_signature": function_signature

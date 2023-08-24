@@ -13949,7 +13949,7 @@ impl<'mc> PlayerHarvestBlockEvent<'mc> {
                 jni.call_method(
                     &raw_val_4,
                     "add",
-                    "(Lorg/bukkit/event/player/crate::event::player::PlayerHarvestBlockEvent)V",
+                    "(Lorg/bukkit/event/player/crate::event::player::PlayerHarvestBlockEvent;)Z",
                     vec![jni::objects::JValueGen::from(map_val_0)],
                 )?;
             }

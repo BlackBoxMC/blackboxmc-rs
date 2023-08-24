@@ -4988,7 +4988,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
             jni.call_method(
                 &raw_val_1,
                 "add",
-                "(Lorg/bukkit/inventory/crate::inventory::RecipeChoiceExactChoice)V",
+                "(Lorg/bukkit/inventory/crate::inventory::RecipeChoiceExactChoice;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -6733,7 +6733,7 @@ impl<'mc> Merchant<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Lorg/bukkit/inventory/crate::inventory::MerchantRecipe)V",
+                "(Lorg/bukkit/inventory/crate::inventory::MerchantRecipe;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -10836,7 +10836,7 @@ impl<'mc> MerchantRecipe<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Lorg/bukkit/inventory/crate::inventory::ItemStack)V",
+                "(Lorg/bukkit/inventory/crate::inventory::ItemStack;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }

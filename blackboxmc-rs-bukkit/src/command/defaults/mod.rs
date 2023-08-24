@@ -224,7 +224,7 @@ impl<'mc> ReloadCommand<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/lang/String)V",
+                "(Ljava/lang/String;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -661,7 +661,7 @@ impl<'mc> TimingsCommand<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/lang/String)V",
+                "(Ljava/lang/String;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1110,7 +1110,7 @@ impl<'mc> VersionCommand<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/lang/String)V",
+                "(Ljava/lang/String;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1500,7 +1500,7 @@ impl<'mc> HelpCommand<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/lang/String)V",
+                "(Ljava/lang/String;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1901,7 +1901,7 @@ impl<'mc> PluginsCommand<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/lang/String)V",
+                "(Ljava/lang/String;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }

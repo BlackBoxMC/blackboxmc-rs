@@ -423,7 +423,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
             jni.call_method(
                 &raw_val_3,
                 "add",
-                "(Lorg/bukkit/event/entity/crate::event::entity::EntityExplodeEvent)V",
+                "(Lorg/bukkit/event/entity/crate::event::entity::EntityExplodeEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -6900,7 +6900,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
             jni.call_method(
                 &raw_val_3,
                 "add",
-                "(Lorg/bukkit/event/entity/crate::event::entity::PiglinBarterEvent)V",
+                "(Lorg/bukkit/event/entity/crate::event::entity::PiglinBarterEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -7324,7 +7324,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
             jni.call_method(
                 &raw_val_2,
                 "add",
-                "(Lorg/bukkit/event/entity/crate::event::entity::EntityCreatePortalEvent)V",
+                "(Lorg/bukkit/event/entity/crate::event::entity::EntityCreatePortalEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -13550,7 +13550,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
             jni.call_method(
                 &raw_val_2,
                 "add",
-                "(Lorg/bukkit/event/entity/crate::event::entity::PlayerDeathEvent)V",
+                "(Lorg/bukkit/event/entity/crate::event::entity::PlayerDeathEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -13898,7 +13898,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
             jni.call_method(
                 &raw_val_2,
                 "add",
-                "(Lorg/bukkit/event/entity/crate::event::entity::AreaEffectCloudApplyEvent)V",
+                "(Lorg/bukkit/event/entity/crate::event::entity::AreaEffectCloudApplyEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -17257,7 +17257,7 @@ impl<'mc> EntityDeathEvent<'mc> {
             jni.call_method(
                 &raw_val_2,
                 "add",
-                "(Lorg/bukkit/event/entity/crate::event::entity::EntityDeathEvent)V",
+                "(Lorg/bukkit/event/entity/crate::event::entity::EntityDeathEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -19944,7 +19944,7 @@ impl<'mc> EntityTransformEvent<'mc> {
             jni.call_method(
                 &raw_val_2,
                 "add",
-                "(Lorg/bukkit/event/entity/crate::event::entity::EntityTransformEvent)V",
+                "(Lorg/bukkit/event/entity/crate::event::entity::EntityTransformEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }

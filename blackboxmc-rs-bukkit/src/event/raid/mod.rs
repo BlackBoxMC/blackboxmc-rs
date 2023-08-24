@@ -165,7 +165,7 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
             jni.call_method(
                 &raw_val_4,
                 "add",
-                "(Lorg/bukkit/event/raid/crate::event::raid::RaidSpawnWaveEvent)V",
+                "(Lorg/bukkit/event/raid/crate::event::raid::RaidSpawnWaveEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -527,7 +527,7 @@ impl<'mc> RaidFinishEvent<'mc> {
             jni.call_method(
                 &raw_val_3,
                 "add",
-                "(Lorg/bukkit/event/raid/crate::event::raid::RaidFinishEvent)V",
+                "(Lorg/bukkit/event/raid/crate::event::raid::RaidFinishEvent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }

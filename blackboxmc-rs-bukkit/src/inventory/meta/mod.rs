@@ -3559,7 +3559,7 @@ impl<'mc> CrossbowMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Lorg/bukkit/inventory/crate::inventory::ItemStack)V",
+                "(Lorg/bukkit/inventory/crate::inventory::ItemStack;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -4200,7 +4200,7 @@ impl<'mc> ItemMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/lang/String)V",
+                "(Ljava/lang/String;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -5302,7 +5302,7 @@ impl<'mc> BannerMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Lorg/bukkit/block/banner/crate::block::banner::Pattern)V",
+                "(Lorg/bukkit/block/banner/crate::block::banner::Pattern;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -5929,7 +5929,7 @@ impl<'mc> BundleMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Lorg/bukkit/inventory/crate::inventory::ItemStack)V",
+                "(Lorg/bukkit/inventory/crate::inventory::ItemStack;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -10473,7 +10473,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Lorg/bukkit/crate::NamespacedKey)V",
+                "(Lorg/bukkit/crate::NamespacedKey;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -11758,7 +11758,7 @@ impl<'mc> BookMetaSpigot<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Lnet/md_5/bungee/api/chat/blackboxmc_bungee::bungee::api::chat::BaseComponent)V",
+                "(Lnet/md_5/bungee/api/chat/blackboxmc_bungee::bungee::api::chat::BaseComponent;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
