@@ -3344,7 +3344,7 @@ impl<'mc> ItemStack<'mc> {
             sig += "Ljava/lang/Byte;";
             let val_4 = jni::objects::JValueGen::Object(jni.new_object(
                 "java/lang/Byte",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/Lang/Object;)V",
                 vec![a.into()],
             )?);
             args.push(val_4);
@@ -4988,7 +4988,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
             jni.call_method(
                 &raw_val_1,
                 "add",
-                "(Lorg/bukkit/inventory/crate::inventory::RecipeChoiceExactChoice;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -6733,7 +6733,7 @@ impl<'mc> Merchant<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Lorg/bukkit/inventory/crate::inventory::MerchantRecipe;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -10836,7 +10836,7 @@ impl<'mc> MerchantRecipe<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Lorg/bukkit/inventory/crate::inventory::ItemStack;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }

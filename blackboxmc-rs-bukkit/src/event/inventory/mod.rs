@@ -764,7 +764,7 @@ impl<'mc> BrewEvent<'mc> {
             jni.call_method(
                 &raw_val_3,
                 "add",
-                "(Lorg/bukkit/event/inventory/crate::event::inventory::BrewEvent;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }

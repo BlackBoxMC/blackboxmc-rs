@@ -924,7 +924,7 @@ impl<'mc> TabCompleteEvent<'mc> {
             jni.call_method(
                 &raw_val_3,
                 "add",
-                "(Lorg/bukkit/event/server/crate::event::server::TabCompleteEvent;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1050,7 +1050,7 @@ impl<'mc> TabCompleteEvent<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/lang/String;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }

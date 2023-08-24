@@ -827,7 +827,7 @@ impl<'mc> MemorySection<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/lang/String;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -864,7 +864,7 @@ impl<'mc> MemorySection<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/lang/String;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1792,7 +1792,7 @@ impl<'mc> Configuration<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/lang/String;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1828,7 +1828,7 @@ impl<'mc> Configuration<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/lang/String;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -2724,7 +2724,7 @@ impl<'mc> MemoryConfiguration<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/lang/String;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -2760,7 +2760,7 @@ impl<'mc> MemoryConfiguration<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/lang/String;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -3855,7 +3855,7 @@ impl<'mc> ConfigurationSection<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/lang/String;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -3892,7 +3892,7 @@ impl<'mc> ConfigurationSection<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/lang/String;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }

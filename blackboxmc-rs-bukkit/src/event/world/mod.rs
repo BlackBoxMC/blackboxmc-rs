@@ -677,7 +677,7 @@ impl<'mc> PortalCreateEvent<'mc> {
             jni.call_method(
                 &raw_val_1,
                 "add",
-                "(Lorg/bukkit/event/world/crate::event::world::PortalCreateEvent;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1343,7 +1343,7 @@ impl<'mc> LootGenerateEvent<'mc> {
             jni.call_method(
                 &raw_val_6,
                 "add",
-                "(Lorg/bukkit/event/world/crate::event::world::LootGenerateEvent;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -2209,7 +2209,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
             jni.call_method(
                 &raw_val_2,
                 "add",
-                "(Lorg/bukkit/event/world/crate::event::world::EntitiesUnloadEvent;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -2367,7 +2367,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
             jni.call_method(
                 &raw_val_2,
                 "add",
-                "(Lorg/bukkit/event/world/crate::event::world::EntitiesLoadEvent;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -2961,7 +2961,7 @@ impl<'mc> StructureGrowEvent<'mc> {
             jni.call_method(
                 &raw_val_5,
                 "add",
-                "(Lorg/bukkit/event/world/crate::event::world::StructureGrowEvent;)Z",
+                "(Ljava/lang/Object;)Z",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }

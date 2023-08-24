@@ -360,7 +360,7 @@ def code_format(ty, prefix, n, var_prefix="val", arg="", is_array=False, options
                             prefix+".call_method("+
                                 "&raw_"+var_prefix+"_"+str(n)+","+
                                 "\"add\","
-                                "\"(L"+t1+";)Z\","+
+                                "\"(Ljava/lang/Object;)Z\","+
                                 "vec![jni::objects::JValueGen::from(map_val_0)]"
                             ")?;"
                         )
