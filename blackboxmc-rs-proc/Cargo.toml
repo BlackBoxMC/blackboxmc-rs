@@ -1,6 +1,6 @@
 [package]
 name = "blackboxmc_proc"
-version = "0.4.0"
+version = "0.4.1"
 edition = "2021"
 license = "LGPL-2.0-or-later"
 description = "Procedrual macros for the BlackboxMC crates."
@@ -12,7 +12,7 @@ proc-macro2 = "1.0.66"
 quote = "1.0.31"
 syn = { version = "2.0.27", features = ["full"] }
 proc-macro2-diagnostics = "0.10.1"
-rustc_version = "0.4.0"
+rustc_version = "0.4.1"
 
 [lib]
 proc-macro = true
