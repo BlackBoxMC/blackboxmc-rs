@@ -17,7 +17,7 @@ pub unsafe fn new_extendable(
     let obj = self.jni_ref().call_method(
         &self.1,
         "newExtendable",
-        "(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;",
+        "(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Ljava/lang/Object;",
         vec![
             jni::objects::JValueGen::Int(address),
             jni::objects::JValueGen::from(jni::objects::JObject::from(
@@ -29,6 +29,10 @@ pub unsafe fn new_extendable(
             jni::objects::JValueGen::from(jni::objects::JObject::from(
                 self.jni_ref().new_string(lib_name).unwrap(),
             )),
+            #[cfg(target_arch = "wasm32")]
+            jni::objects::JValueGen::Bool(true.into()),
+            #[cfg(not(target_arch = "wasm32"))]
+            jni::objects::JValueGen::Bool(false.into()),
         ],
     );
     let obj = self.jni_ref().translate_error(obj)?;

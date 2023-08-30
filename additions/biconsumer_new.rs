@@ -1,5 +1,6 @@
 // blackboxmc-rs-java/src/util/function/mod.rs#JavaBiConsumer
 
+#[cfg(not(target_arch = "wasm32"))]
 pub fn from_rust_fn<'mc2, A, B, C>(
     env: &'mc2 blackboxmc_general::SharedJNIEnv<'mc>,
     f: A,

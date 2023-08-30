@@ -3207,6 +3207,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaBiConsumer<'mc> {
 }
 
 impl<'mc> JavaBiConsumer<'mc> {
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn from_rust_fn<'mc2, A, B, C>(
         env: &'mc2 blackboxmc_general::SharedJNIEnv<'mc>,
         f: A,

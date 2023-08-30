@@ -59,7 +59,7 @@ dependencies = [
 
 [[package]]
 name = "blackboxmc_bukkit"
-version = "0.4.0"
+version = "0.4.1"
 dependencies = [
  "blackboxmc_bungee",
  "blackboxmc_general",
@@ -71,7 +71,7 @@ dependencies = [
 
 [[package]]
 name = "blackboxmc_bungee"
-version = "0.4.0"
+version = "0.4.1"
 dependencies = [
  "blackboxmc_general",
  "blackboxmc_java",
@@ -82,7 +82,7 @@ dependencies = [
 
 [[package]]
 name = "blackboxmc_general"
-version = "0.4.0"
+version = "0.4.1"
 dependencies = [
  "blackboxmc_proc",
  "color-eyre",
@@ -94,7 +94,7 @@ dependencies = [
 
 [[package]]
 name = "blackboxmc_java"
-version = "0.4.0"
+version = "0.4.1"
 dependencies = [
  "blackboxmc_general",
  "color-eyre",
@@ -105,7 +105,7 @@ dependencies = [
 
 [[package]]
 name = "blackboxmc_proc"
-version = "0.4.0"
+version = "0.4.1"
 dependencies = [
  "proc-macro2",
  "proc-macro2-diagnostics",
