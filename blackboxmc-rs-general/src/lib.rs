@@ -1,3 +1,8 @@
+#[cfg(not(debug_assertions))]
+#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(feature = "allow_release_build"))]
+compile_error!("Compiling a library in release mode is unsupported.");
+
 pub mod macros;
 use jni::{
     descriptors::Desc,
@@ -55,11 +60,11 @@ macro_rules! bad_vector_translation_call {
 
 /// Wrapper struct for [JNIEnv](jni::JNIEnv) that has interior mutability and several other helper functions.
 pub struct SharedJNIEnv<'mc> {
-    jni: RefCell<jni::JNIEnv<'mc>>,
+    jni: RefCell<JNIEnv<'mc>>,
 }
 
 impl<'mc> SharedJNIEnv<'mc> {
-    pub fn new(jni: jni::JNIEnv<'mc>) -> Self {
+    pub fn new(jni: JNIEnv<'mc>) -> Self {
         Self {
             jni: RefCell::new(jni),
         }

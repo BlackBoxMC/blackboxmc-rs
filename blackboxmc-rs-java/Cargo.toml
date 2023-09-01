@@ -7,7 +7,7 @@ description = "BlackboxMC bindings for java.util"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-blackboxmc_general = {version = "0.4.1", path = "../blackboxmc-rs-general"}
+blackboxmc_general = {version = "0.5.0", path = "../blackboxmc-rs-general"}
 color-eyre = "0.6.2"
 eyre = "0.6.8"
 jni = "0.21.1"
