@@ -1451,7 +1451,7 @@ impl<'mc> DragonBattleRespawnPhaseStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::boss::DragonBattleRespawnPhase<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/boss/DragonBattle$RespawnPhase;");
+        let sig = String::from("()[Lorg/bukkit/boss/DragonBattle$RespawnPhase;");
         let cls = jni.find_class("org/bukkit/boss/DragonBattle$RespawnPhase");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);

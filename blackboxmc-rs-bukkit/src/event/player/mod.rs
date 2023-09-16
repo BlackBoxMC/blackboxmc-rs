@@ -386,7 +386,7 @@ impl<'mc> PlayerFishEventStateStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::event::player::PlayerFishEventState<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/event/player/PlayerFishEvent$State;");
+        let sig = String::from("()[Lorg/bukkit/event/player/PlayerFishEvent$State;");
         let cls = jni.find_class("org/bukkit/event/player/PlayerFishEvent$State");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -5904,7 +5904,7 @@ impl<'mc> PlayerSignOpenEventCauseStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::event::player::PlayerSignOpenEventCause<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/event/player/PlayerSignOpenEvent$Cause;");
+        let sig = String::from("()[Lorg/bukkit/event/player/PlayerSignOpenEvent$Cause;");
         let cls = jni.find_class("org/bukkit/event/player/PlayerSignOpenEvent$Cause");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -11941,7 +11941,7 @@ impl<'mc> PlayerLoginEventResultStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::event::player::PlayerLoginEventResult<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/event/player/PlayerLoginEvent$Result;");
+        let sig = String::from("()[Lorg/bukkit/event/player/PlayerLoginEvent$Result;");
         let cls = jni.find_class("org/bukkit/event/player/PlayerLoginEvent$Result");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -12571,7 +12571,7 @@ impl<'mc> PlayerPreLoginEventResultStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::event::player::PlayerPreLoginEventResult<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/event/player/PlayerPreLoginEvent$Result;");
+        let sig = String::from("()[Lorg/bukkit/event/player/PlayerPreLoginEvent$Result;");
         let cls = jni.find_class("org/bukkit/event/player/PlayerPreLoginEvent$Result");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);

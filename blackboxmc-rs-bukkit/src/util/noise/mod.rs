@@ -567,7 +567,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
     pub fn octaves(
         &self,
     ) -> Result<Vec<crate::util::noise::NoiseGenerator<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/util/noise/NoiseGenerator;");
+        let sig = String::from("()[Lorg/bukkit/util/noise/NoiseGenerator;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getOctaves", sig.as_str(), vec![]);
@@ -718,7 +718,7 @@ impl<'mc> OctaveGenerator<'mc> {
     pub fn octaves(
         &self,
     ) -> Result<Vec<crate::util::noise::NoiseGenerator<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/util/noise/NoiseGenerator;");
+        let sig = String::from("()[Lorg/bukkit/util/noise/NoiseGenerator;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getOctaves", sig.as_str(), vec![]);
@@ -918,7 +918,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
     pub fn octaves(
         &self,
     ) -> Result<Vec<crate::util::noise::NoiseGenerator<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/util/noise/NoiseGenerator;");
+        let sig = String::from("()[Lorg/bukkit/util/noise/NoiseGenerator;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getOctaves", sig.as_str(), vec![]);

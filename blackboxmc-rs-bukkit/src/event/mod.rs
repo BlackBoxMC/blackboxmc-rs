@@ -150,7 +150,7 @@ impl<'mc> EventResultStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::event::EventResult<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/Event$Result;");
+        let sig = String::from("()[Lorg/bukkit/event/Event$Result;");
         let cls = jni.find_class("org/bukkit/event/Event$Result");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);

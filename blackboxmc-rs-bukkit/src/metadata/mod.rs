@@ -847,7 +847,7 @@ impl<'mc> LazyMetadataValueCacheStrategyStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::metadata::LazyMetadataValueCacheStrategy<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/metadata/LazyMetadataValue$CacheStrategy;");
+        let sig = String::from("()[Lorg/bukkit/metadata/LazyMetadataValue$CacheStrategy;");
         let cls = jni.find_class("org/bukkit/metadata/LazyMetadataValue$CacheStrategy");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);

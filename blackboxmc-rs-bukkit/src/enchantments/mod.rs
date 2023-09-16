@@ -233,7 +233,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::enchantments::Enchantment<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/enchantments/Enchantment;");
+        let sig = String::from("()[Lorg/bukkit/enchantments/Enchantment;");
         let cls = jni.find_class("org/bukkit/enchantments/Enchantment");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -728,7 +728,7 @@ impl<'mc> EnchantmentTargetStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::enchantments::EnchantmentTarget<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/enchantments/EnchantmentTarget;");
+        let sig = String::from("()[Lorg/bukkit/enchantments/EnchantmentTarget;");
         let cls = jni.find_class("org/bukkit/enchantments/EnchantmentTarget");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -1000,7 +1000,7 @@ impl<'mc> Enchantment<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::enchantments::Enchantment<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/enchantments/Enchantment;");
+        let sig = String::from("()[Lorg/bukkit/enchantments/Enchantment;");
         let cls = jni.find_class("org/bukkit/enchantments/Enchantment");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);

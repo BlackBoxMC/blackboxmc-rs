@@ -136,7 +136,7 @@ impl<'mc> PluginAwarenessFlagsStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::plugin::PluginAwarenessFlags<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/plugin/PluginAwareness$Flags;");
+        let sig = String::from("()[Lorg/bukkit/plugin/PluginAwareness$Flags;");
         let cls = jni.find_class("org/bukkit/plugin/PluginAwareness$Flags");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -1260,7 +1260,7 @@ impl<'mc> ServicePriority<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::plugin::ServicePriority<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/plugin/ServicePriority;");
+        let sig = String::from("()[Lorg/bukkit/plugin/ServicePriority;");
         let cls = jni.find_class("org/bukkit/plugin/ServicePriority");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -1675,7 +1675,7 @@ impl<'mc> PluginManager<'mc> {
     }
 
     pub fn plugins(&self) -> Result<Vec<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
+        let sig = String::from("()[Lorg/bukkit/plugin/Plugin;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getPlugins", sig.as_str(), vec![]);
@@ -1713,7 +1713,7 @@ impl<'mc> PluginManager<'mc> {
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<Vec<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/io/File;)Lorg/bukkit/plugin/Plugin;");
+        let sig = String::from("(Ljava/io/File;)[Lorg/bukkit/plugin/Plugin;");
         let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2870,7 +2870,7 @@ impl<'mc> PluginLoader<'mc> {
         &self,
     ) -> Result<Vec<blackboxmc_java::util::regex::JavaPattern<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Ljava/util/regex/Pattern;");
+        let sig = String::from("()[Ljava/util/regex/Pattern;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPluginFileFilters",

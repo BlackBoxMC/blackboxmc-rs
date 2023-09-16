@@ -2609,7 +2609,7 @@ impl<'mc> FaceAttachableAttachedFaceStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::FaceAttachableAttachedFace<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/block/data/FaceAttachable$AttachedFace;");
+        let sig = String::from("()[Lorg/bukkit/block/data/FaceAttachable$AttachedFace;");
         let cls = jni.find_class("org/bukkit/block/data/FaceAttachable$AttachedFace");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -3402,7 +3402,7 @@ impl<'mc> RailShapeStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::RailShape<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/data/Rail$Shape;");
+        let sig = String::from("()[Lorg/bukkit/block/data/Rail$Shape;");
         let cls = jni.find_class("org/bukkit/block/data/Rail$Shape");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -5898,7 +5898,7 @@ impl<'mc> BisectedHalfStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::BisectedHalf<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/data/Bisected$Half;");
+        let sig = String::from("()[Lorg/bukkit/block/data/Bisected$Half;");
         let cls = jni.find_class("org/bukkit/block/data/Bisected$Half");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);

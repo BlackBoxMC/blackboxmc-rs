@@ -791,7 +791,7 @@ impl<'mc> HorseInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -836,7 +836,7 @@ impl<'mc> HorseInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -1279,7 +1279,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -1324,7 +1324,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -1811,7 +1811,7 @@ impl<'mc> JukeboxInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -1856,7 +1856,7 @@ impl<'mc> JukeboxInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -2800,7 +2800,7 @@ impl<'mc> InventoryViewPropertyStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::inventory::InventoryViewProperty<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/InventoryView$Property;");
+        let sig = String::from("()[Lorg/bukkit/inventory/InventoryView$Property;");
         let cls = jni.find_class("org/bukkit/inventory/InventoryView$Property");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -4610,7 +4610,7 @@ impl<'mc> Inventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -4657,7 +4657,7 @@ impl<'mc> Inventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -5283,7 +5283,7 @@ impl<'mc> LecternInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -5328,7 +5328,7 @@ impl<'mc> LecternInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -5780,7 +5780,7 @@ impl<'mc> BrewerInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -5825,7 +5825,7 @@ impl<'mc> BrewerInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -7431,7 +7431,7 @@ impl<'mc> EntityEquipment<'mc> {
     pub fn armor_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getArmorContents",
@@ -7841,7 +7841,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -7886,7 +7886,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -8676,7 +8676,7 @@ impl<'mc> AnvilInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -8721,7 +8721,7 @@ impl<'mc> AnvilInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -9697,7 +9697,7 @@ impl<'mc> EnchantingInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -9742,7 +9742,7 @@ impl<'mc> EnchantingInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -10253,7 +10253,7 @@ impl<'mc> CraftingInventory<'mc> {
     pub fn matrix(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMatrix", sig.as_str(), vec![]);
@@ -10383,7 +10383,7 @@ impl<'mc> CraftingInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -10428,7 +10428,7 @@ impl<'mc> CraftingInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -11254,7 +11254,7 @@ impl<'mc> MerchantInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -11299,7 +11299,7 @@ impl<'mc> MerchantInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -11726,7 +11726,7 @@ impl<'mc> LlamaInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -11771,7 +11771,7 @@ impl<'mc> LlamaInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -12777,7 +12777,7 @@ impl<'mc> SmithingInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -12822,7 +12822,7 @@ impl<'mc> SmithingInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -13396,7 +13396,7 @@ impl<'mc> PlayerInventory<'mc> {
     pub fn armor_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getArmorContents",
@@ -13446,7 +13446,7 @@ impl<'mc> PlayerInventory<'mc> {
     pub fn extra_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getExtraContents",
@@ -13572,7 +13572,7 @@ impl<'mc> PlayerInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -13617,7 +13617,7 @@ impl<'mc> PlayerInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -14098,7 +14098,7 @@ impl<'mc> FurnaceInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -14143,7 +14143,7 @@ impl<'mc> FurnaceInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -14552,7 +14552,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -14597,7 +14597,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",
@@ -14977,7 +14977,7 @@ impl<'mc> BeaconInventory<'mc> {
     pub fn contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getContents", sig.as_str(), vec![]);
@@ -15022,7 +15022,7 @@ impl<'mc> BeaconInventory<'mc> {
     pub fn storage_contents(
         &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let sig = String::from("()[Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStorageContents",

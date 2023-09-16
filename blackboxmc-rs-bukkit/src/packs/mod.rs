@@ -163,7 +163,7 @@ impl<'mc> DataPackCompatibilityStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::packs::DataPackCompatibility<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/packs/DataPack$Compatibility;");
+        let sig = String::from("()[Lorg/bukkit/packs/DataPack$Compatibility;");
         let cls = jni.find_class("org/bukkit/packs/DataPack$Compatibility");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -670,7 +670,7 @@ impl<'mc> DataPackSourceStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::packs::DataPackSource<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/packs/DataPack$Source;");
+        let sig = String::from("()[Lorg/bukkit/packs/DataPack$Source;");
         let cls = jni.find_class("org/bukkit/packs/DataPack$Source");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);

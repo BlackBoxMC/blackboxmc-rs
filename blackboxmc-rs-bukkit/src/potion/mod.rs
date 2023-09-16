@@ -172,7 +172,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::potion::PotionEffectType<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/potion/PotionEffectType;");
+        let sig = String::from("()[Lorg/bukkit/potion/PotionEffectType;");
         let cls = jni.find_class("org/bukkit/potion/PotionEffectType");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -1223,7 +1223,7 @@ impl<'mc> PotionEffectType<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::potion::PotionEffectType<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/potion/PotionEffectType;");
+        let sig = String::from("()[Lorg/bukkit/potion/PotionEffectType;");
         let cls = jni.find_class("org/bukkit/potion/PotionEffectType");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);

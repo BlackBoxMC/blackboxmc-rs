@@ -3920,7 +3920,7 @@ impl<'mc> JavaString<'mc> {
     }
 
     pub fn bytes(&self) -> Result<Vec<i8>, Box<dyn std::error::Error>> {
-        let sig = String::from("()B");
+        let sig = String::from("()[B");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getBytes", sig.as_str(), vec![]);
@@ -4327,7 +4327,7 @@ impl<'mc> JavaString<'mc> {
     }
 
     pub fn to_char_array(&self) -> Result<Vec<u16>, Box<dyn std::error::Error>> {
-        let sig = String::from("()C");
+        let sig = String::from("()[C");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toCharArray", sig.as_str(), vec![]);

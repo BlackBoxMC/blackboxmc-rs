@@ -210,7 +210,7 @@ impl<'mc> TeamOptionStatusStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::scoreboard::TeamOptionStatus<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/scoreboard/Team$OptionStatus;");
+        let sig = String::from("()[Lorg/bukkit/scoreboard/Team$OptionStatus;");
         let cls = jni.find_class("org/bukkit/scoreboard/Team$OptionStatus");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -274,7 +274,7 @@ impl<'mc> Criteria<'mc> {
     pub fn switch_tableorgbukkitstatistic(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<i32>, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
+        let sig = String::from("()[I");
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -2775,7 +2775,7 @@ impl<'mc> TeamOptionStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::scoreboard::TeamOption<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/scoreboard/Team$Option;");
+        let sig = String::from("()[Lorg/bukkit/scoreboard/Team$Option;");
         let cls = jni.find_class("org/bukkit/scoreboard/Team$Option");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);

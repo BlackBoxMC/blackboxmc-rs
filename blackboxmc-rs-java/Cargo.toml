@@ -1,13 +1,13 @@
 [package]
 name = "blackboxmc_java"
-version = "0.5.0"
+version = "0.5.1"
 edition = "2021"
 license = "LGPL-2.0-or-later"
 description = "BlackboxMC bindings for java.util"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-blackboxmc_general = {version = "0.5.0", path = "../blackboxmc-rs-general"}
+blackboxmc_general = {version = "0.5.1", path = "../blackboxmc-rs-general"}
 color-eyre = "0.6.2"
 eyre = "0.6.8"
 jni = "0.21.1"

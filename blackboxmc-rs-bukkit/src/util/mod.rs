@@ -937,7 +937,7 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
     #[deprecated]
 
     pub fn lines(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
+        let sig = String::from("()[Ljava/lang/String;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLines", sig.as_str(), vec![]);
@@ -3327,7 +3327,7 @@ impl<'mc> ChatPaginator<'mc> {
         arg0: impl Into<String>,
         arg1: i32,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;I)Ljava/lang/String;");
+        let sig = String::from("(Ljava/lang/String;I)[Ljava/lang/String;");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             jni.new_string(arg0.into())?,
         ));

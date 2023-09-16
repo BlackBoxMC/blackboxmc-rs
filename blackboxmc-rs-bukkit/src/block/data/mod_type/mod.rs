@@ -2536,7 +2536,7 @@ impl<'mc> BigDripleafTiltStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::mod_type::BigDripleafTilt<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/block/data/type/BigDripleaf$Tilt;");
+        let sig = String::from("()[Lorg/bukkit/block/data/type/BigDripleaf$Tilt;");
         let cls = jni.find_class("org/bukkit/block/data/type/BigDripleaf$Tilt");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -2845,7 +2845,7 @@ impl<'mc> WallHeightStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::mod_type::WallHeight<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/block/data/type/Wall$Height;");
+        let sig = String::from("()[Lorg/bukkit/block/data/type/Wall$Height;");
         let cls = jni.find_class("org/bukkit/block/data/type/Wall$Height");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -3352,7 +3352,7 @@ impl<'mc> JigsawOrientationStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::mod_type::JigsawOrientation<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/block/data/type/Jigsaw$Orientation;");
+        let sig = String::from("()[Lorg/bukkit/block/data/type/Jigsaw$Orientation;");
         let cls = jni.find_class("org/bukkit/block/data/type/Jigsaw$Orientation");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -4246,7 +4246,7 @@ impl<'mc> SculkSensorPhaseStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::mod_type::SculkSensorPhase<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/block/data/type/SculkSensor$Phase;");
+        let sig = String::from("()[Lorg/bukkit/block/data/type/SculkSensor$Phase;");
         let cls = jni.find_class("org/bukkit/block/data/type/SculkSensor$Phase");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -7904,7 +7904,7 @@ impl<'mc> ComparatorModeStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::mod_type::ComparatorMode<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/block/data/type/Comparator$Mode;");
+        let sig = String::from("()[Lorg/bukkit/block/data/type/Comparator$Mode;");
         let cls = jni.find_class("org/bukkit/block/data/type/Comparator$Mode");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -8149,7 +8149,7 @@ impl<'mc> BellAttachmentStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::mod_type::BellAttachment<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/block/data/type/Bell$Attachment;");
+        let sig = String::from("()[Lorg/bukkit/block/data/type/Bell$Attachment;");
         let cls = jni.find_class("org/bukkit/block/data/type/Bell$Attachment");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -8629,7 +8629,7 @@ impl<'mc> DoorHingeStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::mod_type::DoorHinge<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/data/type/Door$Hinge;");
+        let sig = String::from("()[Lorg/bukkit/block/data/type/Door$Hinge;");
         let cls = jni.find_class("org/bukkit/block/data/type/Door$Hinge");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -9350,7 +9350,7 @@ impl<'mc> ChestTypeStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::mod_type::ChestType<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/data/type/Chest$Type;");
+        let sig = String::from("()[Lorg/bukkit/block/data/type/Chest$Type;");
         let cls = jni.find_class("org/bukkit/block/data/type/Chest$Type");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -14308,7 +14308,7 @@ impl<'mc> SlabTypeStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::mod_type::SlabType<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/data/type/Slab$Type;");
+        let sig = String::from("()[Lorg/bukkit/block/data/type/Slab$Type;");
         let cls = jni.find_class("org/bukkit/block/data/type/Slab$Type");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -15275,7 +15275,7 @@ impl<'mc> StairsShapeStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::mod_type::StairsShape<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/block/data/type/Stairs$Shape;");
+        let sig = String::from("()[Lorg/bukkit/block/data/type/Stairs$Shape;");
         let cls = jni.find_class("org/bukkit/block/data/type/Stairs$Shape");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -16003,7 +16003,7 @@ impl<'mc> SwitchFaceStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::mod_type::SwitchFace<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/block/data/type/Switch$Face;");
+        let sig = String::from("()[Lorg/bukkit/block/data/type/Switch$Face;");
         let cls = jni.find_class("org/bukkit/block/data/type/Switch$Face");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -17427,7 +17427,7 @@ impl<'mc> BedPartStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::mod_type::BedPart<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/data/type/Bed$Part;");
+        let sig = String::from("()[Lorg/bukkit/block/data/type/Bed$Part;");
         let cls = jni.find_class("org/bukkit/block/data/type/Bed$Part");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -20400,7 +20400,7 @@ impl<'mc> BambooLeavesStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::block::data::mod_type::BambooLeaves<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/block/data/type/Bamboo$Leaves;");
+        let sig = String::from("()[Lorg/bukkit/block/data/type/Bamboo$Leaves;");
         let cls = jni.find_class("org/bukkit/block/data/type/Bamboo$Leaves");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);

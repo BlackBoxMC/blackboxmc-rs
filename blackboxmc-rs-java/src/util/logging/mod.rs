@@ -1382,7 +1382,7 @@ impl<'mc> JavaLogger<'mc> {
     pub fn handlers(
         &self,
     ) -> Result<Vec<crate::util::logging::JavaHandler<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/logging/Handler;");
+        let sig = String::from("()[Ljava/util/logging/Handler;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
@@ -2638,7 +2638,7 @@ impl<'mc> JavaLogRecord<'mc> {
     pub fn parameters(
         &self,
     ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Object;");
+        let sig = String::from("()[Ljava/lang/Object;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getParameters", sig.as_str(), vec![]);

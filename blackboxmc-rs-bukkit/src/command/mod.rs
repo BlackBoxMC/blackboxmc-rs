@@ -1832,7 +1832,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
     pub fn commands(
         &self,
     ) -> Result<Vec<crate::command::Command<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/command/Command;");
+        let sig = String::from("()[Lorg/bukkit/command/Command;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getCommands", sig.as_str(), vec![]);

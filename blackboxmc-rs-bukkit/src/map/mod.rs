@@ -323,7 +323,7 @@ impl<'mc> MapViewScaleStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::map::MapViewScale<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/map/MapView$Scale;");
+        let sig = String::from("()[Lorg/bukkit/map/MapView$Scale;");
         let cls = jni.find_class("org/bukkit/map/MapView$Scale");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -1156,7 +1156,7 @@ impl<'mc> MapCursorTypeStruct<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::map::MapCursorType<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/map/MapCursor$Type;");
+        let sig = String::from("()[Lorg/bukkit/map/MapCursor$Type;");
         let cls = jni.find_class("org/bukkit/map/MapCursor$Type");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -2483,7 +2483,7 @@ impl<'mc> MapPalette<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<Vec<i8>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/awt/Image;)B");
+        let sig = String::from("(Ljava/awt/Image;)[B");
         let val_1 = jni::objects::JValueGen::Object(arg0);
         let cls = jni.find_class("byte");
         let cls = jni.translate_error_with_class(cls)?;

@@ -102,7 +102,7 @@ impl<'mc> JavaPluginLoader<'mc> {
         &self,
     ) -> Result<Vec<blackboxmc_java::util::regex::JavaPattern<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Ljava/util/regex/Pattern;");
+        let sig = String::from("()[Ljava/util/regex/Pattern;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPluginFileFilters",

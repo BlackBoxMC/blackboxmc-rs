@@ -790,7 +790,7 @@ impl<'mc> TNTPrimeEventPrimeCauseStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::event::block::TNTPrimeEventPrimeCause<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/event/block/TNTPrimeEvent$PrimeCause;");
+        let sig = String::from("()[Lorg/bukkit/event/block/TNTPrimeEvent$PrimeCause;");
         let cls = jni.find_class("org/bukkit/event/block/TNTPrimeEvent$PrimeCause");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
@@ -6557,7 +6557,7 @@ impl<'mc> SignChangeEvent<'mc> {
     #[deprecated]
 
     pub fn lines(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
+        let sig = String::from("()[Ljava/lang/String;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLines", sig.as_str(), vec![]);

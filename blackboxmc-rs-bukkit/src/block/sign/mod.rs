@@ -192,7 +192,7 @@ impl<'mc> SignSide<'mc> {
     #[deprecated]
 
     pub fn lines(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
+        let sig = String::from("()[Ljava/lang/String;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLines", sig.as_str(), vec![]);

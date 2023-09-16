@@ -342,7 +342,7 @@ impl<'mc> ChatColor<'mc> {
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::bungee::api::ChatColor<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lnet/md_5/bungee/api/ChatColor;");
+        let sig = String::from("()[Lnet/md_5/bungee/api/ChatColor;");
         let cls = jni.find_class("net/md_5/bungee/api/ChatColor");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);

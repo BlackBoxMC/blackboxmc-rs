@@ -495,7 +495,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     pub fn offers(
         &self,
     ) -> Result<Vec<crate::enchantments::EnchantmentOffer<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/enchantments/EnchantmentOffer;");
+        let sig = String::from("()[Lorg/bukkit/enchantments/EnchantmentOffer;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getOffers", sig.as_str(), vec![]);
@@ -523,7 +523,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     }
 
     pub fn exp_level_costs_offered(&self) -> Result<Vec<i32>, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
+        let sig = String::from("()[I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getExpLevelCostsOffered",

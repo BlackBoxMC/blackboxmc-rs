@@ -844,7 +844,7 @@ impl<'mc> ComponentSerializer<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
     ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/BaseComponent;");
+        let sig = String::from("(Ljava/lang/String;)[Lnet/md_5/bungee/api/chat/BaseComponent;");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             jni.new_string(arg0.into())?,
         ));

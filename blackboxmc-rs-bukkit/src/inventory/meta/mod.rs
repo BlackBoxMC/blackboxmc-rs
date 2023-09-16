@@ -179,7 +179,7 @@ impl<'mc> BookMetaGenerationStruct<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::inventory::meta::BookMetaGeneration<'mc>>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("()Lorg/bukkit/inventory/meta/BookMeta$Generation;");
+        let sig = String::from("()[Lorg/bukkit/inventory/meta/BookMeta$Generation;");
         let cls = jni.find_class("org/bukkit/inventory/meta/BookMeta$Generation");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
