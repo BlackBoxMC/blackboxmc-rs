@@ -15,7 +15,7 @@ file_cache = {}
 # rust's reserved words; we use this to rename any functions
 reserved_words = ["as", "break", "const", "continue", "else", "enum", "extern", "false", "fn", "for", "if", "impl", "in", "let", "loop", "match",
                   "move", "mut", "pub", "ref", "return", "self", "Self", "static", "struct", "super", "trait", "true", "type", "unsafe", "use", "where", "while",
-                  "abstract", "become", "box", "do", "final", "macro", "override", "priv", "tyof", "unsized", "virtual", "yield"]
+                  "abstract", "become", "box", "do", "final", "macro", "override", "priv", "tyof", "unsized", "virtual", "yield","async","args"]
 
 library_resolves = {
     "net.md_5": "blackboxmc-rs-bungee",
@@ -33,6 +33,9 @@ excluded_classes = [
     "java.lang.annotation",
     "java.lang.Number",
     "java.lang.invoke",
+
+    "java.io",
+    "org.yaml",
 
     "java.util.concurrent",                     # i want to lessen my workload and binding this is going to be pointless since your only option of multithreading is through BukkitRunnables.
     "java.util.stream",                         # unneeded when java's iterator is bound.
@@ -78,19 +81,19 @@ omitted_classes = []
 enums = []
 
 def library_name_no_extra_paths(libname):
-    return re.sub("\/src\/(.*)","",libname)
+    return re.sub("/src/(.*)","",libname)
 
 def library_name_format(crate_name,library):
     l1 = library_resolves[crate_name]
     l2 = library_resolves[library]
-    st1 = re.sub("\/src\/(.*)","::\\1",l1.replace("-","_").replace("_rs_","_"))
-    st2 = re.sub("\/src\/(.*)","",l2.replace("-","_").replace("_rs_","_"))
+    st1 = re.sub("/src/(.*)","::\\1",l1.replace("-","_").replace("_rs_","_"))
+    st2 = re.sub("/src/(.*)","",l2.replace("-","_").replace("_rs_","_"))
     if st2.replace("::","") in st1:
         st1 = st1.replace(st2,"crate")
     return st1
 
 def library_name_format_to_crate(libname):
-    reg = re.search("\/src\/(.*)",libname)
+    reg = re.search("/src/(.*)",libname)
     if reg is not None:
         return "crate::"+reg.group(1)
     else:
@@ -235,7 +238,7 @@ def code_format(ty, prefix, n, var_prefix="val", arg="", is_array=False, options
 
     do_option = n >= options_start_at and options_start_at != -1
 
-    let = java_letter_from_rust(ty["type_name_original"],is_array)
+    let = java_letter_from_rust(ty["qualifiedName"],is_array)
     if do_option:
         res.append("if let Some(a) = "+arg+" {")
         if not no_sig:
@@ -247,14 +250,14 @@ def code_format(ty, prefix, n, var_prefix="val", arg="", is_array=False, options
             res.append("sig += \""+let+"\";")
 
     
-    class_name = ty["type_name_original"].replace(".","/").replace("Java","")
+    class_name = ty["qualifiedName"].replace(".","/").replace("Java","")
 
     if is_array:
         res.append("let arr = ")
         new_new_arg = new_arg
         match(ty["type_name_alone"].replace("Java","")):
             case "bool" | "i8" | "char" | "f64" | "f32" | "i32" | "i64" | "i16" | "u16":
-                res.append(prefix+".new_"+ty["type_name_original"]+"_array("+new_arg+".len() as i32);")
+                res.append(prefix+".new_"+ty["qualifiedName"]+"_array("+new_arg+".len() as i32);")
                 res.append("let mut vec = Vec::new();")
                 new_new_arg = "*"+new_arg+".get(i).unwrap()"
             case _:
@@ -283,14 +286,14 @@ def code_format(ty, prefix, n, var_prefix="val", arg="", is_array=False, options
     else:
         match(ty["type_name_alone"].replace("Java","")):
             case "bool" | "i8" | "char" | "f64" | "f32" | "i32" | "i64" | "i16" | "u16":
-                if is_array and "." not in ty["type_name_original"]:
-                    if "boolean" in ty["type_name_original"]:
+                if is_array and "." not in ty["qualifiedName"]:
+                    if "boolean" in ty["qualifiedName"]:
                         res.append("let "+var_prefix+"_"+str(n)+" = "+new_arg+" as u8;")
                     else:
                         res.append("let "+var_prefix+"_"+str(n)+" = "+new_arg+";")
                 else:
                     v = java_type_from_rust(ty)
-                    match(ty["type_name_original"]):
+                    match(ty["qualifiedName"]):
                         case "boolean":
                             res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+new_arg+".into());")
                         case "byte":
@@ -322,7 +325,7 @@ def code_format(ty, prefix, n, var_prefix="val", arg="", is_array=False, options
                     a += ".into()"
                 res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object("+a+");")
             case "Vec":
-                match ty["type_name_original"]:
+                match ty["qualifiedName"]:
                     # TODO: convert this to use the new java.util bindings instad.
                     case "java.util.List":
                         c = [
@@ -344,7 +347,7 @@ def code_format(ty, prefix, n, var_prefix="val", arg="", is_array=False, options
                             "type_name_lhand": "v",
                             "is_array": ty["is_array"],
                             "is_interface": ty["is_interface"],
-                            "type_name_original": t1,
+                            "qualifiedName": t1,
                             "type_name_alone": generics[0]["type_name_resolved"],
                             "generics": generics,
                             "package_name": ty["package_name"],
@@ -372,10 +375,10 @@ def code_format(ty, prefix, n, var_prefix="val", arg="", is_array=False, options
                         res += c
 
                     case _:
-                        print("Unhandled map ty (arg):\t\t"+ty["type_name_original"])
+                        print("Unhandled map ty (arg):\t\t"+ty["qualifiedName"])
                         return None
             case _:
-                print("Untranslated argument:\t\t"+ty["type_name_alone"],"\t\t",ty["type_name_original"])
+                print("Untranslated argument:\t\t"+ty["type_name_alone"],"\t\t",ty["qualifiedName"])
                 return None
 
     if is_array:
@@ -383,7 +386,7 @@ def code_format(ty, prefix, n, var_prefix="val", arg="", is_array=False, options
             case "bool" | "i8" | "char" | "f64" | "f32" | "i32" | "i64" | "i16" | "u16":
                 res.append("vec.push("+var_prefix+"_"+str(n)+")")
                 res.append("}")
-                res.append(prefix+".set_"+ty["type_name_original"]+"_array_region(&arr, 0, &vec)?;")
+                res.append(prefix+".set_"+ty["qualifiedName"]+"_array_region(&arr, 0, &vec)?;")
             case _:
                 res.append(prefix+".set_object_array_element(&arr, i as i32, "+var_prefix+"_"+str(n)+".l()?)?;")
                 res.append("}")
@@ -411,7 +414,7 @@ def return_format_one_liner(val, var_name):
         case "f32": return var_name+".f()?"
         case "f64": return var_name+".d()?"
 
-def return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait, options_start_at, is_constructor, nullable, library):
+def return_format(return_group, prefix, static, method, obj_call, val, types, is_trait, options_start_at, is_constructor, nullable, library):
     if return_group["is_array"]:
         end_line = ".unwrap()"
     else:
@@ -422,7 +425,7 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
     else:
         arr = "vec!["+",".join(types)+"]"
     if static:
-        code.append("let cls = jni.find_class(\""+return_group["type_name_original"].replace(".","/").replace("Java","")+"\"); let cls = jni.translate_error_with_class(cls)?;")
+        code.append("let cls = jni.find_class(\""+val["qualifiedName"].replace(".","/").replace("Java","")+"\"); let cls = jni.translate_error_with_class(cls)?;")
         if is_constructor:
             code.append("let res = "+prefix+".new_object(cls,")
         else:
@@ -477,13 +480,13 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
         else:
             skip_primitives = False
 
-    class_name = return_group["type_name_original"].replace(".","/").replace("Java","")
+    class_name = return_group["qualifiedName"].replace(".","/").replace("Java","")
 
     if return_group["is_array"]:
         code.append("let arr = ")
         match(return_group["type_name_alone"].replace("Java","")):
             case "bool" | "i8" | "char" | "f64" | "f32" | "i32" | "i64" | "i16" | "u16":
-                proper = return_group["type_name_original"][0].upper() + "".join(return_group["type_name_original"][1:])
+                proper = return_group["qualifiedName"][0].upper() + "".join(return_group["qualifiedName"][1:])
                 code.append("Into::<jni::objects::J"+proper+"Array>::into(res.l()?);")
                 code.append("""
                     if arr.is_null() {
@@ -611,7 +614,7 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
             code.append("let mut new_vec = Vec::new();")
             normally = ""
             gen = return_group["generics"][0]["type_name_resolved"]
-            match return_group["type_name_original"]:
+            match return_group["qualifiedName"]:
                 case "java.util.Collection":
                     code.append("let col = blackboxmc_java::util::JavaCollection::from_raw(&"+
                                                 prefix+",res.l()?)?;"+
@@ -620,7 +623,7 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                     code.append("let list = blackboxmc_java::util::JavaList::from_raw(&"+val_1+", res.l()?)?;"+
                                 "let iter = list.iterator()?;")
                 case _:
-                    print("Unhandled map ty (return):\t\t"+return_group["type_name_original"])
+                    print("Unhandled map ty (return):\t\t"+return_group["qualifiedName"])
                     return None
             code.append("while iter.has_next()? {"+
                 "            let obj = iter.next()?;")
@@ -672,7 +675,7 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
             code.append(return_group["type_name_resolved"]+"::from_raw(&"+
                                                 prefix+","+
                                                 val_2)
-            #if return_group["type_name_original"] in enums:
+            #if return_group["qualifiedName"] in enums:
             #    code.append(", "+return_group["type_name_resolved"]+"::from_string(variant_str).ok_or(eyre::eyre!(\"String gaven for variant was invalid\"))"+end_line)
             if nullable:
                 if not return_group["is_array"]:
@@ -689,14 +692,14 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
 
     return "\n".join(code)
 
-def java_call_signature_format(types, return_ty, is_constructor=False):
+def java_call_signature_format(types, return_group, is_constructor=False):
     results = []
     for ty in types:
-        results.append(java_letter_from_rust(ty["type_name_original"],ty["is_array"]))
+        results.append(java_letter_from_rust(ty["qualifiedName"],ty["is_array"]))
     if is_constructor:
         return "("+"".join(results)+")V"
     else:
-        return "("+"".join(results)+")"+java_letter_from_rust(return_ty,False)
+        return "("+"".join(results)+")"+java_letter_from_rust(return_group["type_name_resolved"],return_group["is_array"])
 
 def correct_question_mark(argname, ty, method, i, returning, library, is_constructor):
     gen = re.search("^(.*?)<(.*?)>$", ty)
@@ -762,13 +765,13 @@ def java_type_to_rust_primitive(ty):
 def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor=False, skip_vec=False):
     if method is not None and not is_constructor:
         if returning:
-            if "genericReturnType" not in method["method"]:
+            if "returnType" not in method["method"]:
                 parameter_ty = method["method"]["name"]
             else:
-                parameter_ty = method["method"]["genericReturnType"]
+                parameter_ty = method["method"]["returnType"]["name"]
         else:
-            if i <= len(method["method"]["genericParameterTypes"]):
-                parameter_ty = method["method"]["genericParameterTypes"][i]
+            if i <= len(method["method"]["parameters"]):
+                parameter_ty = method["method"]["parameters"][i]["name"]
             else:
                 parameter_ty = ""
     else:
@@ -793,7 +796,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
     if ty.replace("com.destroystokyo.paper","org.bukkit") in interface_names:
         is_interface = True
 
-    type_name_original = ty.replace("Java","")
+    qualifiedName = ty.replace("Java","")
     skip_primitives = False
     if "lang" in library:
         if is_constructor:
@@ -852,8 +855,12 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                     to_replace =  library_name_format(crate_name,library)
 
                     type_name_resolved = ty.replace(
-                        crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "")
+                        crate_name, to_replace).replace("-", "_").replace("$", "")
+                    
+                    lower_part = "::".join(filter(lambda f: f.lower() == f,type_name_resolved.split(".")))
+                    upper_part = "".join(filter(lambda f: f.lower() != f,type_name_resolved.split(".")))
 
+                    type_name_resolved = lower_part+"::"+upper_part
                     if "JavaObject" in type_name_resolved:
                         type_name_resolved = "jni::objects::JObject"
     if type_alone == "":
@@ -879,7 +886,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
             options_start_at = -1
     else:
         options_start_at = -1
-    package_name = ".".join(filter(lambda f: f.islower(), type_name_original.split(".")))
+    package_name = ".".join(filter(lambda f: f.islower(), qualifiedName.split(".")))
 
     if(in_excluded_classes(ty)):
         return None
@@ -890,7 +897,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
         "is_array": is_array,
         "is_interface": is_interface,
         "package_name": package_name,
-        "type_name_original": type_name_original,
+        "qualifiedName": qualifiedName,
         "type_name_alone": type_alone,
         "generics": generics,
         "options_start_at": options_start_at,
@@ -898,7 +905,6 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
     }
 
 def java_type_from_rust(ty):
-    #print(ty)
     match(ty["type_name_alone"]):
         case "bool":
             class_name = "boolean"
@@ -1068,10 +1074,19 @@ def gen_jni_instantiatable(name,full_name,is_enum,variants):
     """
     return st
 def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructor,dummy,parsed_names):
+    packageName = ".".join(list(filter(lambda f: f.lower() == f,val["qualifiedName"].split("."))))
+
     if is_constructor:
         methods = val["constructors"]
     else:
         methods = val["methods"]
+        interfaces = list(map(lambda f: f["qualifiedName"],val["interfaces"]))
+        for inte in interfaces:
+            if inte in libraries[library]:
+                interface = libraries[library][inte]
+                methods += interface["methods"]
+            
+        
     og_name = name
     impl_signature = []
     extern_signature = []
@@ -1084,9 +1099,9 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
     methods_ = {}
     for method in methods:
         if "modifiers" in method:
-            if(method["modifiers"]&1 != 1): # skip private methods
+            if("public" not in method["modifiers"]): # skip private methods
                 continue
-            if(method["modifiers"]&1024 == 1): # skip abstract methods
+            if("abstract" in method["modifiers"]): # skip abstract methods
                 continue
 
         if is_constructor:
@@ -1135,10 +1150,10 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
             for m in methods__:
                 breaking = False
                 if "modifiers" in m:
-                    if(m["modifiers"]&1 != 1): # skip protected/private methods
+                    if("public" not in m["modifiers"]): # skip protected/private methods
                         continue
                 if len(m["parameters"]) >= 1:
-                    method_first_arg = camel_case_to_snake_case(m["parameters"][0][1])
+                    method_first_arg = camel_case_to_snake_case(m["parameters"][0]["name"])
                 if last_method is None:
                     options_start_at = len(m["parameters"])+1
                     m["options_start_at"] = options_start_at
@@ -1151,7 +1166,7 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
                         break
                     # for each paramater in this function
                     for i in range(0, len(last_method["parameters"])):
-                        if last_method["parameters"][i][1] != m["parameters"][i][1]:
+                        if last_method["parameters"][i]["name"] != m["parameters"][i]["name"]:
                             can_use_options = False
                             break
 
@@ -1180,17 +1195,14 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
             for group_name in method_map:
                 methods = method_map[group_name]
                 if group_name != "":
-                    #if len(methods) > 1:
-                    new_name = name+"_with_"+group_name.replace("$","").replace("[]","s")
-                    #else:
-                    #    new_name = name 
+                    if len(methods) > 1:
+                        new_name = name+"_with_"+group_name.replace("$","").replace("[]","s")
+                    else:
+                        new_name = name 
                 else:
                     new_name = name 
                 new_methods[new_name] = {}
                 new_methods[new_name]["method"] = methods[len(methods)-1]
-                if "@Deprecated" in new_methods[new_name]["method"]["annotations"]:
-                    if "@Deprecated" in methods[0]["annotations"]:
-                        new_methods[new_name]["method"]["annotations"].remove("@Deprecated")
                 new_methods[new_name]["original_name"] = k
         else:
             new_methods[name] = {}
@@ -1201,7 +1213,7 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
     for k in new_methods:
         method = new_methods[k]
 
-        static = method["method"]["modifiers"]&8 or is_constructor
+        static = "static" in method["method"]["modifiers"] or is_constructor
         types = method["method"]["parameters"]
 
         name = k
@@ -1233,7 +1245,7 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
                 "type_name_lhand": "",
                 "is_array": False,
                 "is_interface": False,
-                "type_name_original": "",
+                "qualifiedName": "",
                 "type_name_alone": "",
                 "generics": [],
                 "package_name": "",
@@ -1246,7 +1258,7 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
                 "type_name_lhand": "",
                 "is_array": False,
                 "is_interface": False,
-                "type_name_original": "",
+                "qualifiedName": "",
                 "type_name_alone": "",
                 "generics": [],
                 "package_name": "",
@@ -1257,7 +1269,8 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
         i = 0
         # make the function signature
         for ty in types:
-            group = java_type_to_rust(ty[0], ty[1],method, i, is_constructor, library)
+            
+            group = java_type_to_rust(ty["name"], ty["type"]["qualifiedName"],method, i, is_constructor, library)
 
             if group is None:
                 should_continue = False
@@ -1287,9 +1300,9 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
         types = []
 
         if is_constructor:
-            return_group = java_type_to_rust("", method["method"]["name"], method, i, True, library, True)
+            return_group = java_type_to_rust("", method["method"]["qualifiedName"], method, i, True, library, True)
         else:
-            return_group = java_type_to_rust("", method["method"]["returnType"], method, i,True, library, False)
+            return_group = java_type_to_rust("", method["method"]["returnType"]["qualifiedName"], method, i,True, library, False)
 
         if return_group is None:
             continue
@@ -1302,9 +1315,9 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
                     code.append("let args = Vec::new();")
                 code.append("let mut sig = String::from(\"(\");")
             else:
-                code.append("let sig = String::from(\""+java_call_signature_format(func_signature, return_group["type_name_original"],is_constructor)+"\");")
+                code.append("let sig = String::from(\""+java_call_signature_format(func_signature, return_group,is_constructor)+"\");")
         for ty in func_signature:
-            if(ty["type_name_lhand"] == "") or in_excluded_classes(ty["type_name_original"]) or dummy:
+            if(ty["type_name_lhand"] == "") or in_excluded_classes(ty["qualifiedName"]) or dummy:
                 n += 1
                 continue
             else:
@@ -1323,7 +1336,7 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
         if not dummy:
             if options_start_at != -1:
                 if not is_constructor:
-                    code.append("sig += \")"+java_letter_from_rust(return_group["type_name_original"],return_group["is_array"])+"\";")
+                    code.append("sig += \")"+java_letter_from_rust(return_group["qualifiedName"],return_group["is_array"])+"\";")
                 else:
                     code.append("sig += \")V\";")
         if(not should_continue):
@@ -1334,7 +1347,7 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
         if("?" in return_group["type_name_resolved"]):
             continue
 
-        if in_excluded_classes(return_group["type_name_original"]):
+        if in_excluded_classes(return_group["qualifiedName"]):
             continue
 
         if return_group["type_name_alone"] in omitted_classes:
@@ -1356,11 +1369,9 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
         else:
             comment_raw = ""
         if "annotations" in method["method"]:
-            i = parse_annotations(method["method"]["annotations"],comment_raw)
-            impl_signature_canidate = i[0]
-            nullable = i[1]
-            if i[2] is not None:
-                method["method"]["comment"] = i[2]
+            (impl_signature_canidate,nullable,new_comment) = parse_annotations(method["method"]["annotations"],comment_raw)
+            if new_comment is not None:
+                method["method"]["comment"] = new_comment
 
 
         func_signature_resolved = ""
@@ -1390,17 +1401,17 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
         func_signature_resolved_raw_names_only = ",".join(list(map(lambda f: "*"+f+".as_ref().unwrap()", filter(lambda f: f != "&self",func_signature_resolved_parts_names_only))))
 
         # execute the function.
-        m = return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait,options_start_at, is_constructor,nullable,library)
+        m = return_format(return_group, prefix, static, method, obj_call, val, types, is_trait,options_start_at, is_constructor,nullable,library)
         if m is None:
             continue
 
         if dummy:
             if name == "of" and "$" in og_name:
                 continue
-            val_group = java_type_to_rust("", val["packageName"]+"."+val["name"], None, 0, True, library, False)
+            val_group = java_type_to_rust("", val["qualifiedName"], None, 0, True, library, False)
             if val_group is None:
                 continue
-            if in_excluded_classes(val_group["type_name_original"]):
+            if in_excluded_classes(val_group["qualifiedName"]):
                 continue
             if val_group["type_name_alone"] in omitted_classes:
                 continue
@@ -1491,9 +1502,8 @@ def gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_names,libr
             if "interfaces" in cl:
                 for i in cl["interfaces"]:
                     gen_dummy_super_class(i,method_names,mod_path,is_trait,is_trait_decl,parsed_names,library)
-            if "superClass" in cl:
-                print(cl["superClass"])
-                gen_dummy_super_class(cl["superClass"],method_names,mod_path,is_trait,is_trait_decl,parsed_names,library)
+            if "superclass" in cl:
+                gen_dummy_super_class(cl["superclass"],method_names,mod_path,is_trait,is_trait_decl,parsed_names,library)
 
     if on_super_class:
         if "methods" in val:
@@ -1501,11 +1511,17 @@ def gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_names,libr
             val["methods"] = methods
             parse_methods(library,val["name"],val,mod_path,is_trait,is_trait_decl,False,True,parsed_names)
             method_names += list(map(lambda f: f["name"], val["methods"]))
-    if "superClass" in val:
-        gen_dummy_super_class(val["superClass"],method_names,mod_path,is_trait,is_trait_decl,parsed_names,library)
+    if "superclass" in val:
+        gen_dummy_super_class(val["superclass"],method_names,mod_path,is_trait,is_trait_decl,parsed_names,library)
 def gen_dummy_super_class(val,method_names,mod_path,is_trait,is_trait_decl,parsed_names,library):
     file_cache[mod_path].append("// SUPER CLASS: "+val["name"])
-    new_parsed_name = val["packageName"]+"."+val["name"].replace("$", "").replace("-", "_")
+
+    packageName = ".".join(list(filter(lambda f: f.lower() == f,val["qualifiedName"].split("."))))
+    new_parsed_name = packageName+"."+val["name"].replace("$", "").replace("-", "_")
+
+    if in_excluded_classes(new_parsed_name):
+        return
+    
     crate_name = ".".join(filter(lambda f: f.lower() == f, new_parsed_name.split(".")))
 
     while crate_name not in library_resolves and crate_name != "":
@@ -1542,20 +1558,20 @@ def format_comment(comment):
 
 def parse_classes(library, val, classes):
     if "modifiers" in val:
-        modifiers = int(val["modifiers"])
-        if (modifiers&1 != 1):
+        modifiers = val["modifiers"]
+        if ("public" not in modifiers):
             omitted_classes.append(val["name"])
             return
-
-    dir = val["packageName"].replace(".", os.sep)
+    packageName = ".".join(list(filter(lambda f: f.lower() == f,val["qualifiedName"].split("."))))
+    dir = packageName.replace(".", os.sep)
     mod_path = dir+os.sep+"mod.rs"
-    name = val["name"].replace("$", "").replace("-", "_")
+    name = val["name"].replace(".", "").replace("-", "_")
 
     if name == "Result" or name == "Option":
         name = "Spigot"+name
         val["name"] = name
 
-    full_name = val["packageName"]+"."+val["name"]
+    full_name = packageName+"."+val["name"]
     if library.startswith("java"):
         name = "Java"+name
     if in_excluded_classes(full_name):
@@ -1576,16 +1592,33 @@ def parse_classes(library, val, classes):
     if (name == ""):
         return
 
-    if "comment" in val:
+    if "docString" in val:
         file_cache[mod_path].append(format_comment(val["comment"]))
 
-    if "values" in val:
-        if(len(val["values"]) >= 1):
-            val["isEnum"] = True
+    if "superclass" in val:
+        if "qualifiedName" in val["superclass"]:
+            if val["superclass"]["qualifiedName"] == "java.lang.Enum":
+                val["isEnum"] = True
+            else:
+                val["isEnum"] = False
+        else:
+            val["isEnum"] = False
+    else:
+        val["isEnum"] = False
+
+    if "modifiers" in val:
+        if "interface" in val["modifiers"]:
+            val["isInterface"] = True
+        else:
+            val["isInterface"] = False
+    else:
+        val["isInterface"] = False
+        
     if val["isEnum"]:  # enum generation
-        if(len(val["values"]) < 1):
-            if "fields" in val:
-                val["values"] += list(filter(lambda f: not "$" in f, val["fields"]))
+        if "values" not in val:
+            val["values"] = []
+        
+        val["values"] += list(map(lambda f: f["name"],filter(lambda f: not "$" in f, val["fields"])))
         file_cache[mod_path].append(
             "pub enum "+name+"<'mc> {")
 
@@ -1683,13 +1716,8 @@ def parse_classes(library, val, classes):
         for ex in extern:
             file_cache[mod_path].append(ex)
 
-        if has_to_string:
-            file_cache[mod_path].append(gen_to_string_func(name,has_to_string_is_static))
-
     elif val["isInterface"]: # interface generation
-        file_cache[mod_path].append(
-            "///\n/// This is a representation of an abstract class."
-        )
+     
         file_cache[mod_path].append(
             "#[repr(C)]\npub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
         )
@@ -1719,10 +1747,6 @@ def parse_classes(library, val, classes):
 
         if has_to_string:
             file_cache[mod_path].append(gen_to_string_func(name,has_to_string_is_static))
-
-        #if "interfaces" in val:
-        #    for inter in val["interfaces"]:
-        #        print(inter["name"])
     else:  # struct generation
         file_cache[mod_path].append(
             "#[repr(C)]\npub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
@@ -1762,8 +1786,8 @@ def parse_classes(library, val, classes):
         if "interfaces" in val:
             for inter in val["interfaces"]:
                 parse_into_impl(inter,name,mod_path)
-        if "superClass" in val:
-            super_class = val["superClass"]
+        if "superclass" in val:
+            super_class = val["superclass"]
             parse_into_impl(super_class,name,mod_path)
     
     
@@ -1773,30 +1797,33 @@ def parse_classes(library, val, classes):
     #    pub struct """+name+"""Class;
     #    impl blackboxmc_general::JNIProvidesClassName for """+name+"""Class {
     #        fn class_name(&self) -> &str {
-    #            \""""+val["packageName"].replace(".","/")+"/"+val["name"]+"""\"
+    #            \""""+packageName.replace(".","/")+"/"+val["name"]+"""\"
     #        }
     #    }
     #""")
 
 
 def parse_into_impl(val,name,mod_path):
-    if val["packageName"].startswith("java"):
-        if not val["packageName"].startswith("java.util"):
+    packageName = ".".join(list(filter(lambda f: f.lower() == f,val["qualifiedName"].split("."))))
+
+    if packageName.startswith("java"):
+        if not packageName.startswith("java.util"):
             return
-    val_resolved = java_type_to_rust("", val["packageName"]+"."+val["name"], None, 0, True, library, False)
+    
+    val_resolved = java_type_to_rust("", val["qualifiedName"], None, 0, True, library, False)
 
     if val_resolved is None:
         return
-    if in_excluded_classes(val_resolved["type_name_original"]):
+    if in_excluded_classes(val_resolved["qualifiedName"]):
         return
     if val_resolved["type_name_alone"] in omitted_classes:
         return
 
     # we want to check if the generics are the same.
     if ".".join(val_resolved["package_name"].split(".")[0:2]) in libraries:
-        temp_lib = libraries[".".join(val_resolved["package_name"].split(".")[0:2])]
-        temp_pkg = temp_lib[val_resolved["package_name"]]
-        tyalone = "".join(filter(lambda f: f[0].isupper(), val_resolved["type_name_original"].split(".")))
+        temp_pkg = libraries[".".join(val_resolved["package_name"].split(".")[0:2])]
+
+        tyalone = "".join(filter(lambda f: f[0].isupper(), val_resolved["qualifiedName"].split(".")))
         if tyalone in temp_pkg:
             temp_cls = temp_pkg[tyalone]
 
@@ -1812,7 +1839,7 @@ def parse_into_impl(val,name,mod_path):
     file_cache[mod_path].append("   }\n"+
                             "}")
 
-dep_comment_regex = "<div class=\"deprecation-comment\">(.*?)<\/div>"
+dep_comment_regex = "<div class=\"deprecation-comment\">(.*?)</div>"
 
 def add_deprecated(arr,comment):
     if "deprecation-comment" in comment:
@@ -1832,7 +1859,7 @@ def add_deprecated(arr,comment):
     else:
         arr.append("#[deprecated]")
     comment = re.sub(dep_comment_regex,"",comment)
-    comment = re.sub("<span class=\"deprecated-label\">(.*?)<\/span>","",comment)
+    comment = re.sub("<span class=\"deprecated-label\">(.*?)</span>","",comment)
     return comment
 
 def parse_annotations(annotations,comment):
@@ -1840,40 +1867,33 @@ def parse_annotations(annotations,comment):
     nullable = False
     new_comment = None
     for annotation in annotations:
-        if(len(annotation) >= 3):
-            match(annotation):
-                case "@Deprecated":
-                    new_comment = add_deprecated(strings,comment)
-                case "@Experimental":
-                    nop = 0
-                case "@Nullable":
-                    nullable = True
-        elif(len(annotation) == 2):
-            match(annotation[0]):
-                case "forRemoval":
-                    new_comment = add_deprecated(strings,comment)
+        match(annotation["typeName"]):
+            case "Deprecated":
+                new_comment = add_deprecated(strings,comment)
+            case "Experimental":
+                nop = 0
+            case "Nullable":
+                nullable = True
     return (strings,nullable,new_comment)
 # what we first want to do is collect any interfaces.
-for library in libraries:
-    packages = libraries[library]
-    for package in packages:
-        classes = packages[package]
-        for clas in classes:
-            if "isInterface" in classes[clas]:
-                if classes[clas]["isInterface"]:
-                    interface_names.append(classes[clas]["packageName"]+"."+classes[clas]["name"])
-            if "isEnum" in classes[clas]:
-                if classes[clas]["isEnum"]:
-                    enums.append(classes[clas]["packageName"]+"."+classes[clas]["name"])
-            if "classes" in classes[clas]:
-                for cla in classes[clas]["classes"]:
-                    if "isInterface" in cla:
-                        if cla["isInterface"]:
-                            interface_names.append(cla["packageName"]+"."+cla["name"])
-                    if "isEnum" in cla:
-                        if cla["isEnum"]:
-                            enums.append(cla["packageName"]+"."+cla["name"])
-
+for package in libraries:
+    classes = libraries[package]
+    
+    for clas in classes:
+        if "isInterface" in clas:
+            if clas["isInterface"]:
+                interface_names.append(clas["packageName"]+"."+clas["name"])
+        if "isEnum" in clas:
+            if clas["isEnum"]:
+                enums.append(clas["packageName"]+"."+clas["name"])
+        if "classes" in clas:
+            for cla in clas["classes"]:
+                if "isInterface" in cla:
+                    if cla["isInterface"]:
+                        interface_names.append(cla["packageName"]+"."+cla["name"])
+                if "isEnum" in cla:
+                    if cla["isEnum"]:
+                        enums.append(cla["packageName"]+"."+cla["name"])
 
 for library in libraries:
     packages = libraries[library]
@@ -1907,13 +1927,16 @@ for library in libraries:
     path = library.replace(".", os.sep)
     pathlib.Path(crate_dir+os.sep +
                 path).mkdir(parents=True, exist_ok=True)
-    print(path)
-
-    for package in packages:
-        classes = packages[package]
+    
+    p = {}
+    for pkg in packages:
+        p[pkg["qualifiedName"]] = pkg
+    packages = p
+    libraries[library] = packages
+    for clas in packages:
         added = []
-        for clas in classes:
-            parse_classes(library, classes[clas], classes)
+        clas = packages[clas]
+        parse_classes(library, clas, classes)
 
     for k in file_cache:
         val = file_cache[k]
@@ -1956,6 +1979,8 @@ for library in libraries:
 
 # inject any manually written code.
 for filename in os.listdir("additions"):
+    if not filename.endswith(".rs"):
+        continue
     with open(os.path.join("additions", filename), "r") as f:
         lines = f.readlines()
         opening_line = lines[0]
@@ -1968,8 +1993,8 @@ for filename in os.listdir("additions"):
             append_to_struct = parts[1].replace("\n","").replace("\r","")
         else:
             append_to_struct = None
-        filename2 = "./"+re.sub("[^A-Za-z/\-\.]", "", opening_line.replace("//","")).replace("/",os.sep)
-        parent_dir = filename2.replace(os.sep+"mod.rs", "");
+        filename2 = opening_line.replace("// ","")
+        parent_dir = filename2.replace(os.sep+"mod.rs", "")
         if not os.path.exists(parent_dir):
             os.makedirs(parent_dir)
         with open(filename2, "a+") as f2:

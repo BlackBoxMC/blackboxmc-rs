@@ -14,9 +14,7 @@ pub extern "system" fn __on__BlockBreakEvent(env: JNIEnv<'_>, obj: JObject<'_>) 
         event.set_cancelled(true)?;
 
         let player = event.player()?;
-        if let Some(player) = player {
-            println!("{}", player.inventory()?.item_in_main_hand()?.get_type()?);
-        };
+        println!("{}", player.inventory()?.item()?.get_type()?);
         Ok(())
     }();
     if let Err(err) = res {

@@ -2,6 +2,171 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+pub enum Mirror<'mc> {
+    None { inner: MirrorStruct<'mc> },
+    LeftRight { inner: MirrorStruct<'mc> },
+    FrontBack { inner: MirrorStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for Mirror<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Mirror::None { .. } => f.write_str("NONE"),
+            Mirror::LeftRight { .. } => f.write_str("LEFT_RIGHT"),
+            Mirror::FrontBack { .. } => f.write_str("FRONT_BACK"),
+        }
+    }
+}
+
+impl<'mc> Mirror<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Mirror<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/structure/Mirror");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/structure/Mirror;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "NONE" => Ok(Mirror::None {
+                inner: MirrorStruct::from_raw(env, obj)?,
+            }),
+            "LEFT_RIGHT" => Ok(Mirror::LeftRight {
+                inner: MirrorStruct::from_raw(env, obj)?,
+            }),
+            "FRONT_BACK" => Ok(Mirror::FrontBack {
+                inner: MirrorStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct MirrorStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Mirror<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::None { inner } => inner.0.clone(),
+            Self::LeftRight { inner } => inner.0.clone(),
+            Self::FrontBack { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::LeftRight { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::FrontBack { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for Mirror<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Mirror from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/structure/Mirror")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Mirror object, got {}",
+                name
+            )
+            .into())
+        } else {
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "NONE" => Ok(Mirror::None {
+                    inner: MirrorStruct::from_raw(env, obj)?,
+                }),
+                "LEFT_RIGHT" => Ok(Mirror::LeftRight {
+                    inner: MirrorStruct::from_raw(env, obj)?,
+                }),
+                "FRONT_BACK" => Ok(Mirror::FrontBack {
+                    inner: MirrorStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
+        }
+    }
+}
+
+impl<'mc> JNIRaw<'mc> for MirrorStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for MirrorStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate MirrorStruct from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/structure/Mirror")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a MirrorStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> MirrorStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::block::structure::Mirror<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcrate::block::structure::Mirror;");
+        let cls = jni.find_class("org/bukkit/block/structure/Mirror");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::block::structure::Mirror::from_raw(&jni, obj)
+    }
+    // SUPER CLASS: Enum
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
 pub enum StructureRotation<'mc> {
     None { inner: StructureRotationStruct<'mc> },
     Clockwise90 { inner: StructureRotationStruct<'mc> },
@@ -168,6 +333,19 @@ impl<'mc> JNIInstantiatable<'mc> for StructureRotationStruct<'mc> {
 }
 
 impl<'mc> StructureRotationStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::block::structure::StructureRotation<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcrate::block::structure::StructureRotation;");
+        let cls = jni.find_class("org/bukkit/block/structure/StructureRotation");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::block::structure::StructureRotation::from_raw(&jni, obj)
+    }
+    // SUPER CLASS: Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -328,158 +506,19 @@ impl<'mc> JNIInstantiatable<'mc> for UsageModeStruct<'mc> {
 }
 
 impl<'mc> UsageModeStruct<'mc> {
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-pub enum Mirror<'mc> {
-    None { inner: MirrorStruct<'mc> },
-    LeftRight { inner: MirrorStruct<'mc> },
-    FrontBack { inner: MirrorStruct<'mc> },
-}
-impl<'mc> std::fmt::Display for Mirror<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Mirror::None { .. } => f.write_str("NONE"),
-            Mirror::LeftRight { .. } => f.write_str("LEFT_RIGHT"),
-            Mirror::FrontBack { .. } => f.write_str("FRONT_BACK"),
-        }
-    }
-}
-
-impl<'mc> Mirror<'mc> {
-    pub fn value_of(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<Mirror<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
-        let cls = env.find_class("org/bukkit/block/structure/Mirror");
-        let cls = env.translate_error_with_class(cls)?;
-        let res = env.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/structure/Mirror;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = env.translate_error(res)?;
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::block::structure::UsageMode<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcrate::block::structure::UsageMode;");
+        let cls = jni.find_class("org/bukkit/block/structure/UsageMode");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = env.translate_error(variant)?;
-        let variant_str = env
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        match variant_str.as_str() {
-            "NONE" => Ok(Mirror::None {
-                inner: MirrorStruct::from_raw(env, obj)?,
-            }),
-            "LEFT_RIGHT" => Ok(Mirror::LeftRight {
-                inner: MirrorStruct::from_raw(env, obj)?,
-            }),
-            "FRONT_BACK" => Ok(Mirror::FrontBack {
-                inner: MirrorStruct::from_raw(env, obj)?,
-            }),
+        crate::block::structure::UsageMode::from_raw(&jni, obj)
+    }
+    // SUPER CLASS: Enum
 
-            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-        }
-    }
-}
-
-#[repr(C)]
-pub struct MirrorStruct<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for Mirror<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {
-            Self::None { inner } => inner.0.clone(),
-            Self::LeftRight { inner } => inner.0.clone(),
-            Self::FrontBack { inner } => inner.0.clone(),
-        }
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {
-            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::LeftRight { inner } => unsafe {
-                jni::objects::JObject::from_raw(inner.1.clone())
-            },
-            Self::FrontBack { inner } => unsafe {
-                jni::objects::JObject::from_raw(inner.1.clone())
-            },
-        }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for Mirror<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate Mirror from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/structure/Mirror")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a Mirror object, got {}",
-                name
-            )
-            .into())
-        } else {
-            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-            let variant = env.translate_error(variant)?;
-            let variant_str = env
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            match variant_str.as_str() {
-                "NONE" => Ok(Mirror::None {
-                    inner: MirrorStruct::from_raw(env, obj)?,
-                }),
-                "LEFT_RIGHT" => Ok(Mirror::LeftRight {
-                    inner: MirrorStruct::from_raw(env, obj)?,
-                }),
-                "FRONT_BACK" => Ok(Mirror::FrontBack {
-                    inner: MirrorStruct::from_raw(env, obj)?,
-                }),
-                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-            }
-        }
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for MirrorStruct<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for MirrorStruct<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate MirrorStruct from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/structure/Mirror")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a MirrorStruct object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> MirrorStruct<'mc> {
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)

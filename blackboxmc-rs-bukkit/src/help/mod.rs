@@ -2,474 +2,6 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// Used to impose a custom total ordering on help topics.
-/// <p>All topics are listed in alphabetic order, but topics that start with a slash come after topics that don't.</p>
-#[repr(C)]
-pub struct HelpTopicComparator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-#[repr(C)]
-pub struct HelpTopicComparatorTopicNameComparator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for HelpTopicComparatorTopicNameComparator<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for HelpTopicComparatorTopicNameComparator<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate HelpTopicComparatorTopicNameComparator from null object."
-            )
-            .into());
-        }
-        let (valid, name) = env.validate_name(
-            &obj,
-            "org/bukkit/help/HelpTopicComparator$TopicNameComparator",
-        )?;
-        if !valid {
-            Err(eyre::eyre!(
-                    "Invalid argument passed. Expected a HelpTopicComparatorTopicNameComparator object, got {}",
-                    name
-                )
-                .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
-    pub fn compare_with_object(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-        arg1: jni::objects::JObject<'mc>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/lang/Object;";
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        args.push(val_1);
-        sig += "Ljava/lang/Object;";
-        let val_2 = jni::objects::JValueGen::Object(arg1);
-        args.push(val_2);
-        sig += ")I";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "compare", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    pub fn equals(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = HelpTopicComparatorTopicNameComparator::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: blackboxmc_java::util::JavaComparator = temp_clone.into();
-        real.equals(arg0)
-    }
-    pub fn reverse_order(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        blackboxmc_java::util::JavaComparator::reverse_order(jni)
-    }
-    pub fn comparing_with_function(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::util::function::JavaFunction<'mc>>,
-        arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaComparator<'mc>>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/util/function/Function;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/util/Comparator;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/Comparator;";
-        let cls = jni.find_class("java/util/Comparator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "comparing", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        blackboxmc_java::util::JavaComparator::from_raw(&jni, obj)
-    }
-    pub fn then_comparing_with_function(
-        &self,
-        arg0: impl Into<blackboxmc_java::util::function::JavaFunction<'mc>>,
-        arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaComparator<'mc>>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/util/function/Function;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/util/Comparator;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/Comparator;";
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "thenComparing", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaComparator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn comparing_int(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::util::function::JavaToIntFunction<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        blackboxmc_java::util::JavaComparator::comparing_int(jni, arg0)
-    }
-    pub fn comparing_long(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::util::function::JavaToLongFunction<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        blackboxmc_java::util::JavaComparator::comparing_long(jni, arg0)
-    }
-    pub fn comparing_double(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::util::function::JavaToDoubleFunction<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        blackboxmc_java::util::JavaComparator::comparing_double(jni, arg0)
-    }
-    pub fn reversed(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = HelpTopicComparatorTopicNameComparator::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: blackboxmc_java::util::JavaComparator = temp_clone.into();
-        real.reversed()
-    }
-    pub fn then_comparing_int(
-        &self,
-        arg0: impl Into<blackboxmc_java::util::function::JavaToIntFunction<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = HelpTopicComparatorTopicNameComparator::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: blackboxmc_java::util::JavaComparator = temp_clone.into();
-        real.then_comparing_int(arg0)
-    }
-    pub fn then_comparing_long(
-        &self,
-        arg0: impl Into<blackboxmc_java::util::function::JavaToLongFunction<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = HelpTopicComparatorTopicNameComparator::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: blackboxmc_java::util::JavaComparator = temp_clone.into();
-        real.then_comparing_long(arg0)
-    }
-    pub fn then_comparing_double(
-        &self,
-        arg0: impl Into<blackboxmc_java::util::function::JavaToDoubleFunction<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = HelpTopicComparatorTopicNameComparator::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: blackboxmc_java::util::JavaComparator = temp_clone.into();
-        real.then_comparing_double(arg0)
-    }
-    pub fn natural_order(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        blackboxmc_java::util::JavaComparator::natural_order(jni)
-    }
-    pub fn nulls_first(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::util::JavaComparator<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        blackboxmc_java::util::JavaComparator::nulls_first(jni, arg0)
-    }
-    pub fn nulls_last(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::util::JavaComparator<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        blackboxmc_java::util::JavaComparator::nulls_last(jni, arg0)
-    }
-    // SUPER CLASS: Object
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<blackboxmc_java::util::JavaComparator<'mc>>
-    for HelpTopicComparatorTopicNameComparator<'mc>
-{
-    fn into(self) -> blackboxmc_java::util::JavaComparator<'mc> {
-        blackboxmc_java::util::JavaComparator::from_raw(&self.jni_ref(), self.1).expect("Error converting HelpTopicComparatorTopicNameComparator into blackboxmc_java::util::JavaComparator")
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for HelpTopicComparator<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for HelpTopicComparator<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate HelpTopicComparator from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/help/HelpTopicComparator")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a HelpTopicComparator object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> HelpTopicComparator<'mc> {
-    pub fn topic_name_comparator_instance(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::help::HelpTopicComparatorTopicNameComparator<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/help/HelpTopicComparator$TopicNameComparator;");
-        let cls = jni.find_class("org/bukkit/help/HelpTopicComparator$TopicNameComparator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "topicNameComparatorInstance", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::help::HelpTopicComparatorTopicNameComparator::from_raw(&jni, obj)
-    }
-
-    pub fn help_topic_comparator_instance(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::help::HelpTopicComparator<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/help/HelpTopicComparator;");
-        let cls = jni.find_class("org/bukkit/help/HelpTopicComparator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "helpTopicComparatorInstance", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::help::HelpTopicComparator::from_raw(&jni, obj)
-    }
-
-    pub fn compare_with_object(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-        arg1: jni::objects::JObject<'mc>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/lang/Object;";
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        args.push(val_1);
-        sig += "Ljava/lang/Object;";
-        let val_2 = jni::objects::JValueGen::Object(arg1);
-        args.push(val_2);
-        sig += ")I";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "compare", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    pub fn equals(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = HelpTopicComparator::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: blackboxmc_java::util::JavaComparator = temp_clone.into();
-        real.equals(arg0)
-    }
-    pub fn reverse_order(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        blackboxmc_java::util::JavaComparator::reverse_order(jni)
-    }
-    pub fn comparing_with_function(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::util::function::JavaFunction<'mc>>,
-        arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaComparator<'mc>>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/util/function/Function;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/util/Comparator;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/Comparator;";
-        let cls = jni.find_class("java/util/Comparator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "comparing", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        blackboxmc_java::util::JavaComparator::from_raw(&jni, obj)
-    }
-    pub fn then_comparing_with_function(
-        &self,
-        arg0: impl Into<blackboxmc_java::util::function::JavaFunction<'mc>>,
-        arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaComparator<'mc>>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/util/function/Function;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/util/Comparator;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/Comparator;";
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "thenComparing", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaComparator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn comparing_int(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::util::function::JavaToIntFunction<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        blackboxmc_java::util::JavaComparator::comparing_int(jni, arg0)
-    }
-    pub fn comparing_long(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::util::function::JavaToLongFunction<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        blackboxmc_java::util::JavaComparator::comparing_long(jni, arg0)
-    }
-    pub fn comparing_double(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::util::function::JavaToDoubleFunction<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        blackboxmc_java::util::JavaComparator::comparing_double(jni, arg0)
-    }
-    pub fn reversed(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = HelpTopicComparator::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: blackboxmc_java::util::JavaComparator = temp_clone.into();
-        real.reversed()
-    }
-    pub fn then_comparing_int(
-        &self,
-        arg0: impl Into<blackboxmc_java::util::function::JavaToIntFunction<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = HelpTopicComparator::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: blackboxmc_java::util::JavaComparator = temp_clone.into();
-        real.then_comparing_int(arg0)
-    }
-    pub fn then_comparing_long(
-        &self,
-        arg0: impl Into<blackboxmc_java::util::function::JavaToLongFunction<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = HelpTopicComparator::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: blackboxmc_java::util::JavaComparator = temp_clone.into();
-        real.then_comparing_long(arg0)
-    }
-    pub fn then_comparing_double(
-        &self,
-        arg0: impl Into<blackboxmc_java::util::function::JavaToDoubleFunction<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = HelpTopicComparator::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: blackboxmc_java::util::JavaComparator = temp_clone.into();
-        real.then_comparing_double(arg0)
-    }
-    pub fn natural_order(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        blackboxmc_java::util::JavaComparator::natural_order(jni)
-    }
-    pub fn nulls_first(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::util::JavaComparator<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        blackboxmc_java::util::JavaComparator::nulls_first(jni, arg0)
-    }
-    pub fn nulls_last(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::util::JavaComparator<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        blackboxmc_java::util::JavaComparator::nulls_last(jni, arg0)
-    }
-    // SUPER CLASS: Object
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<blackboxmc_java::util::JavaComparator<'mc>> for HelpTopicComparator<'mc> {
-    fn into(self) -> blackboxmc_java::util::JavaComparator<'mc> {
-        blackboxmc_java::util::JavaComparator::from_raw(&self.jni_ref(), self.1).expect(
-            "Error converting HelpTopicComparator into blackboxmc_java::util::JavaComparator",
-        )
-    }
-}
-/// A HelpTopicFactory is used to create custom <a title="class in org.bukkit.help" href="HelpTopic.html"><code>HelpTopic</code></a> objects from commands that inherit from a common base class or have executors that inherit from a common base class. You can use a custom HelpTopic to change the way all the commands in your plugin display in the help. If your plugin implements a complex permissions system, a custom help topic may also be appropriate.
-/// <p>To automatically bind your plugin's commands to your custom HelpTopic implementation, first make sure all your commands or executors derive from a custom base class (it doesn't have to do anything). Next implement a custom HelpTopicFactory that accepts your custom command base class and instantiates an instance of your custom HelpTopic from it. Finally, register your HelpTopicFactory against your command base class using the <a href="HelpMap.html#registerHelpTopicFactory(java.lang.Class,org.bukkit.help.HelpTopicFactory)"><code>HelpMap.registerHelpTopicFactory(Class, HelpTopicFactory)</code></a> method.</p>
-/// <p>As the help system iterates over all registered commands to make help topics, it first checks to see if there is a HelpTopicFactory registered for the command's base class. If so, the factory is used to make a help topic rather than a generic help topic. If no factory is found for the command's base class and the command derives from <a title="class in org.bukkit.command" href="../command/PluginCommand.html"><code>PluginCommand</code></a>, then the type of the command's executor is inspected looking for a registered HelpTopicFactory. Finally, if no factory is found, a generic help topic is created for the command.</p>
-///
-/// This is a representation of an abstract class.
 #[repr(C)]
 pub struct HelpTopicFactory<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -518,14 +50,13 @@ impl<'mc> HelpTopicFactory<'mc> {
         let obj = unsafe { plugin.new_extendable(address, "HelpTopicFactory", name, lib_name) }?;
         Self::from_raw(env, obj)
     }
-
     pub fn create_topic(
         &self,
-        arg0: impl Into<crate::command::Command<'mc>>,
-    ) -> Result<crate::help::HelpTopic<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/Command;)Lorg/bukkit/help/HelpTopic;");
+        command: impl Into<crate::command::Command<'mc>>,
+    ) -> Result<Option<crate::help::HelpTopic<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/Command;)Lcrate::help::HelpTopic;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+            jni::objects::JObject::from_raw(command.into().jni_object().clone())
         });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -534,9 +65,13 @@ impl<'mc> HelpTopicFactory<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::help::HelpTopic::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::help::HelpTopic::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -544,9 +79,185 @@ impl<'mc> HelpTopicFactory<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// HelpTopic implementations are displayed to the user when the user uses the /help command.
-/// <p>Custom implementations of this class can work at two levels. A simple implementation only needs to set the value of <code>name</code>, <code> shortText</code>, and <code>fullText</code> in the constructor. This base class will take care of the rest.</p>
-/// <p>Complex implementations can be created by overriding the behavior of all the methods in this class.</p>
+#[repr(C)]
+pub struct HelpTopicComparator<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for HelpTopicComparator<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for HelpTopicComparator<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate HelpTopicComparator from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/help/HelpTopicComparator")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a HelpTopicComparator object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> HelpTopicComparator<'mc> {
+    pub fn topic_name_comparator_instance(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::help::HelpTopicComparatorTopicNameComparator<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lcrate::help::HelpTopicComparatorTopicNameComparator;");
+        let cls = jni.find_class("org/bukkit/help/HelpTopicComparator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "topicNameComparatorInstance", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::help::HelpTopicComparatorTopicNameComparator::from_raw(&jni, obj)
+    }
+    pub fn help_topic_comparator_instance(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::help::HelpTopicComparator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcrate::help::HelpTopicComparator;");
+        let cls = jni.find_class("org/bukkit/help/HelpTopicComparator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "helpTopicComparatorInstance", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::help::HelpTopicComparator::from_raw(&jni, obj)
+    }
+    pub fn compare(
+        &self,
+        lhs: impl Into<crate::help::HelpTopic<'mc>>,
+        rhs: impl Into<crate::help::HelpTopic<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/help/HelpTopic;Lorg/bukkit/help/HelpTopic;)Li32;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(lhs.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(rhs.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compare",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    // SUPER CLASS: Object
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<blackboxmc_java::util::JavaComparator<'mc>> for HelpTopicComparator<'mc> {
+    fn into(self) -> blackboxmc_java::util::JavaComparator<'mc> {
+        blackboxmc_java::util::JavaComparator::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting HelpTopicComparator into blackboxmc_java::util::JavaComparator",
+        )
+    }
+}
+#[repr(C)]
+pub struct HelpTopicComparatorTopicNameComparator<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for HelpTopicComparatorTopicNameComparator<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for HelpTopicComparatorTopicNameComparator<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate HelpTopicComparatorTopicNameComparator from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/help/HelpTopicComparator/TopicNameComparator",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a HelpTopicComparatorTopicNameComparator object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
+    pub fn compare(
+        &self,
+        lhs: impl Into<String>,
+        rhs: impl Into<String>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;Ljava/lang/String;)Li32;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(lhs.into())?,
+        ));
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(rhs.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compare",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    // SUPER CLASS: Object
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<blackboxmc_java::util::JavaComparator<'mc>>
+    for HelpTopicComparatorTopicNameComparator<'mc>
+{
+    fn into(self) -> blackboxmc_java::util::JavaComparator<'mc> {
+        blackboxmc_java::util::JavaComparator::from_raw(&self.jni_ref(), self.1).expect("Error converting HelpTopicComparatorTopicNameComparator into blackboxmc_java::util::JavaComparator")
+    }
+}
 #[repr(C)]
 pub struct HelpTopic<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -603,29 +314,13 @@ impl<'mc> HelpTopic<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::help::HelpTopic::from_raw(&jni, res)
     }
-
-    pub fn can_see(
+    pub fn amend_can_see(
         &self,
-        arg0: impl Into<crate::command::CommandSender<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandSender;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "canSee",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn amend_can_see(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
+        amended_permission: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)L();");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
+            self.jni_ref().new_string(amended_permission.into())?,
         ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -636,9 +331,20 @@ impl<'mc> HelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()LString;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
+        let sig = String::from("()LString;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getShortText", sig.as_str(), vec![]);
@@ -649,14 +355,13 @@ impl<'mc> HelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-
     pub fn get_full_text(
         &self,
-        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        for_who: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandSender;)Ljava/lang/String;");
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;)LString;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+            jni::objects::JObject::from_raw(for_who.into().jni_object().clone())
         });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -671,18 +376,17 @@ impl<'mc> HelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-
     pub fn amend_topic(
         &self,
-        arg0: impl Into<String>,
-        arg1: impl Into<String>,
+        amended_short_text: impl Into<String>,
+        amended_full_text: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Ljava/lang/String;)V");
+        let sig = String::from("(Ljava/lang/String;Ljava/lang/String;)L();");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
+            self.jni_ref().new_string(amended_short_text.into())?,
         ));
         let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
+            self.jni_ref().new_string(amended_full_text.into())?,
         ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -696,19 +400,6 @@ impl<'mc> HelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -716,170 +407,6 @@ impl<'mc> HelpTopic<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// The HelpMap tracks all help topics registered in a Bukkit server. When the server starts up or is reloaded, help is processed and topics are added in the following order:
-/// <ol>
-/// <li>General topics are loaded from the help.yml</li>
-/// <li>Plugins load and optionally call <code>addTopic()</code></li>
-/// <li>Registered plugin commands are processed by <a title="interface in org.bukkit.help" href="HelpTopicFactory.html"><code>HelpTopicFactory</code></a> objects to create topics</li>
-/// <li>Topic contents are amended as directed in help.yml</li>
-/// </ol>
-///
-/// This is a representation of an abstract class.
-#[repr(C)]
-pub struct HelpMap<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for HelpMap<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for HelpMap<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate HelpMap from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/help/HelpMap")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a HelpMap object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> HelpMap<'mc> {
-    pub fn get_help_topic(
-        &self,
-        arg0: impl Into<String>,
-    ) -> Result<crate::help::HelpTopic<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/help/HelpTopic;");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getHelpTopic",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::help::HelpTopic::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn help_topics(
-        &self,
-    ) -> Result<Vec<crate::help::HelpTopic<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Collection;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHelpTopics", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        let mut new_vec = Vec::new();
-        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
-        let iter = col.iterator()?;
-        while iter.has_next()? {
-            let obj = iter.next()?;
-            new_vec.push(crate::help::HelpTopic::from_raw(&self.jni_ref(), obj)?);
-        }
-        Ok(new_vec)
-    }
-
-    pub fn add_topic(
-        &self,
-        arg0: impl Into<crate::help::HelpTopic<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/help/HelpTopic;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addTopic",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn register_help_topic_factory(
-        &self,
-        arg0: jni::objects::JClass<'mc>,
-        arg1: impl Into<crate::help::HelpTopicFactory<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Class;Lorg/bukkit/help/HelpTopicFactory;)V");
-        let val_1 = jni::objects::JValueGen::Object(arg0.into());
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "registerHelpTopicFactory",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn ignored_plugins(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/List;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getIgnoredPlugins",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let mut new_vec = Vec::new();
-        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let iter = list.iterator()?;
-        while iter.has_next()? {
-            let obj = iter.next()?;
-            new_vec.push(
-                self.jni_ref()
-                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
-                    .to_string_lossy()
-                    .to_string(),
-            );
-        }
-        Ok(new_vec)
-    }
-
-    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "clear", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-/// This help topic generates a list of other help topics. This class is useful for adding your own index help topics. To enforce a particular order, use a sorted collection.
-/// <p>If a preamble is provided to the constructor, that text will be displayed before the first item in the index.</p>
 #[repr(C)]
 pub struct IndexHelpTopic<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -920,11 +447,11 @@ impl<'mc> JNIInstantiatable<'mc> for IndexHelpTopic<'mc> {
 impl<'mc> IndexHelpTopic<'mc> {
     pub fn can_see(
         &self,
-        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        sender: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandSender;)Z");
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;)Lbool;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
         });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -935,11 +462,13 @@ impl<'mc> IndexHelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-
-    pub fn amend_can_see(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
+    pub fn amend_can_see(
+        &self,
+        amended_permission: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)L();");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
+            self.jni_ref().new_string(amended_permission.into())?,
         ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -950,14 +479,13 @@ impl<'mc> IndexHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-
     pub fn get_full_text(
         &self,
-        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        sender: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandSender;)Ljava/lang/String;");
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;)LString;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
         });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -973,32 +501,6 @@ impl<'mc> IndexHelpTopic<'mc> {
             .to_string())
     }
     // SUPER CLASS: HelpTopic
-    pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::help::HelpTopic = temp_clone.into();
-        real.short_text()
-    }
-    pub fn amend_topic(
-        &self,
-        arg0: impl Into<String>,
-        arg1: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::help::HelpTopic = temp_clone.into();
-        real.amend_topic(arg0, arg1)
-    }
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::help::HelpTopic = temp_clone.into();
-        real.name()
-    }
-    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1011,7 +513,6 @@ impl<'mc> Into<crate::help::HelpTopic<'mc>> for IndexHelpTopic<'mc> {
             .expect("Error converting IndexHelpTopic into crate::help::HelpTopic")
     }
 }
-/// Lacking an alternative, the help system will create instances of GenericCommandHelpTopic for each command in the server's CommandMap. You can use this class as a base class for custom help topics, or as an example for how to write your own.
 #[repr(C)]
 pub struct GenericCommandHelpTopic<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1053,11 +554,11 @@ impl<'mc> JNIInstantiatable<'mc> for GenericCommandHelpTopic<'mc> {
 impl<'mc> GenericCommandHelpTopic<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::command::Command<'mc>>,
+        command: impl Into<crate::command::Command<'mc>>,
     ) -> Result<crate::help::GenericCommandHelpTopic<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/command/Command;)V");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+            jni::objects::JObject::from_raw(command.into().jni_object().clone())
         });
         let cls = jni.find_class("org/bukkit/help/GenericCommandHelpTopic");
         let cls = jni.translate_error_with_class(cls)?;
@@ -1069,14 +570,13 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::help::GenericCommandHelpTopic::from_raw(&jni, res)
     }
-
     pub fn can_see(
         &self,
-        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        sender: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandSender;)Z");
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;)Lbool;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
         });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1088,49 +588,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         Ok(res.z()?)
     }
     // SUPER CLASS: HelpTopic
-    pub fn amend_can_see(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::help::HelpTopic = temp_clone.into();
-        real.amend_can_see(arg0)
-    }
-    pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::help::HelpTopic = temp_clone.into();
-        real.short_text()
-    }
-    pub fn get_full_text(
-        &self,
-        arg0: impl Into<crate::command::CommandSender<'mc>>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::help::HelpTopic = temp_clone.into();
-        real.get_full_text(arg0)
-    }
-    pub fn amend_topic(
-        &self,
-        arg0: impl Into<String>,
-        arg1: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::help::HelpTopic = temp_clone.into();
-        real.amend_topic(arg0, arg1)
-    }
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::help::HelpTopic = temp_clone.into();
-        real.name()
-    }
-    // SUPER CLASS: Object
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1141,5 +598,154 @@ impl<'mc> Into<crate::help::HelpTopic<'mc>> for GenericCommandHelpTopic<'mc> {
     fn into(self) -> crate::help::HelpTopic<'mc> {
         crate::help::HelpTopic::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting GenericCommandHelpTopic into crate::help::HelpTopic")
+    }
+}
+#[repr(C)]
+pub struct HelpMap<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for HelpMap<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for HelpMap<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate HelpMap from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/help/HelpMap")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a HelpMap object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> HelpMap<'mc> {
+    pub fn get_help_topic(
+        &self,
+        topic_name: impl Into<String>,
+    ) -> Result<Option<crate::help::HelpTopic<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Lcrate::help::HelpTopic;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(topic_name.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getHelpTopic",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::help::HelpTopic::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    pub fn help_topics(
+        &self,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()LVec;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHelpTopics", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(obj);
+        }
+        Ok(new_vec)
+    }
+    pub fn add_topic(
+        &self,
+        topic: impl Into<crate::help::HelpTopic<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/help/HelpTopic;)L();");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(topic.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addTopic",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()L();");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "clear", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn register_help_topic_factory(
+        &self,
+        command_class: jni::objects::JClass<'mc>,
+        factory: impl Into<crate::help::HelpTopicFactory<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Class;Lorg/bukkit/help/HelpTopicFactory;)L();");
+        let val_1 = jni::objects::JValueGen::Object(command_class.into());
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(factory.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "registerHelpTopicFactory",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn ignored_plugins(
+        &self,
+    ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()LVec;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getIgnoredPlugins",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(obj);
+        }
+        Ok(new_vec)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }

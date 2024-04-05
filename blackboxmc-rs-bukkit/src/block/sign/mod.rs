@@ -135,14 +135,24 @@ impl<'mc> JNIInstantiatable<'mc> for SideStruct<'mc> {
 }
 
 impl<'mc> SideStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::block::sign::Side<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcrate::block::sign::Side;");
+        let cls = jni.find_class("org/bukkit/block/sign/Side");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::block::sign::Side::from_raw(&jni, obj)
+    }
+    // SUPER CLASS: Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-/// Represents a side of a sign.
-///
-/// This is a representation of an abstract class.
 #[repr(C)]
 pub struct SignSide<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -179,44 +189,21 @@ impl<'mc> JNIInstantiatable<'mc> for SignSide<'mc> {
 }
 
 impl<'mc> SignSide<'mc> {
-    #[deprecated]
-
-    pub fn is_glowing_text(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isGlowingText", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    #[deprecated]
-
-    pub fn lines(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let sig = String::from("()[Ljava/lang/String;");
+    pub fn lines(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()LString;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLines", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        let arr = Into::<jni::objects::JObjectArray>::into(res.l()?);
-        let len = self.jni_ref().get_array_length(&arr)?;
-        let mut vec = Vec::new();
-        for i in 0..len {
-            let res = self.jni_ref().get_object_array_element(&arr, i)?;
-            vec.push({
-                self.jni_ref()
-                    .get_string(unsafe { &jni::objects::JString::from_raw(*res) })
-                    .unwrap()
-                    .to_string_lossy()
-                    .to_string()
-            });
-        }
-        Ok(vec)
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
-    #[deprecated]
-    /// Gets the line of text at the specified index on this side of the sign.<p>For example, getLine(0) will return the first line of text.</p>
-    pub fn get_line(&self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("(I)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Int(arg0);
+    pub fn get_line(&self, index: i32) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("(I)LString;");
+        let val_1 = jni::objects::JValueGen::Int(index);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLine",
@@ -230,16 +217,15 @@ impl<'mc> SignSide<'mc> {
             .to_string_lossy()
             .to_string())
     }
-
     pub fn set_line(
         &self,
-        arg0: i32,
-        arg1: impl Into<String>,
+        index: i32,
+        line: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(ILjava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0);
+        let sig = String::from("(ILjava/lang/String;)L();");
+        let val_1 = jni::objects::JValueGen::Int(index);
         let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
+            self.jni_ref().new_string(line.into())?,
         ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -253,11 +239,17 @@ impl<'mc> SignSide<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated]
-    /// Sets whether this side of the sign has glowing text.
-    pub fn set_glowing_text(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn is_glowing_text(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lbool;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isGlowingText", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    pub fn set_glowing_text(&self, glowing: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)L();");
+        let val_1 = jni::objects::JValueGen::Bool(glowing.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setGlowingText",
@@ -267,22 +259,38 @@ impl<'mc> SignSide<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn color(&self) -> Result<Option<crate::DyeColor<'mc>>, Box<dyn std::error::Error>> {
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Lorg/bukkit/DyeColor;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getColor", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::DyeColor::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })?))
+    }
     pub fn set_color(
         &self,
-        arg0: impl Into<crate::DyeColor<'mc>>,
+        color: impl Into<crate::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = SignSide::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::material::Colorable = temp_clone.into();
-        real.set_color(arg0)
-    }
-    pub fn color(&self) -> Result<Option<crate::DyeColor<'mc>>, Box<dyn std::error::Error>> {
-        let temp_clone = SignSide::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::material::Colorable = temp_clone.into();
-        real.color()
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/DyeColor;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(color.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "setColor", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

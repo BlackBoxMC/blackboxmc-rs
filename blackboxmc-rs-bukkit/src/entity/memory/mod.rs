@@ -2,7 +2,6 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// Represents a key used for accessing memory values of a <a title="interface in org.bukkit.entity" href="../LivingEntity.html"><code>LivingEntity</code></a>.
 #[repr(C)]
 pub struct MemoryKey<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -39,13 +38,33 @@ impl<'mc> JNIInstantiatable<'mc> for MemoryKey<'mc> {
 }
 
 impl<'mc> MemoryKey<'mc> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Lorg/bukkit/NamespacedKey;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getKey", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn memory_class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljni::objects::JClass;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMemoryClass", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
+    }
     pub fn get_by_key(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::NamespacedKey<'mc>>,
-    ) -> Result<crate::entity::memory::MemoryKey<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/entity/memory/MemoryKey;");
+        namespaced_key: impl Into<crate::NamespacedKey<'mc>>,
+    ) -> Result<Option<crate::entity::memory::MemoryKey<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/NamespacedKey;)Lcrate::entity::memory::MemoryKey;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+            jni::objects::JObject::from_raw(namespaced_key.into().jni_object().clone())
         });
         let cls = jni.find_class("org/bukkit/entity/memory/MemoryKey");
         let cls = jni.translate_error_with_class(cls)?;
@@ -56,40 +75,22 @@ impl<'mc> MemoryKey<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
         let obj = res.l()?;
-        crate::entity::memory::MemoryKey::from_raw(&jni, obj)
+        Ok(Some(crate::entity::memory::MemoryKey::from_raw(&jni, obj)?))
     }
-
-    pub fn memory_class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMemoryClass", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Set;");
-        let cls = jni.find_class("java/util/Set");
+        let sig = String::from("()Lblackboxmc_java::util::Set;");
+        let cls = jni.find_class("org/bukkit/entity/memory/MemoryKey");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         blackboxmc_java::util::JavaSet::from_raw(&jni, obj)
-    }
-
-    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/NamespacedKey;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getKey", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     // SUPER CLASS: Object
 

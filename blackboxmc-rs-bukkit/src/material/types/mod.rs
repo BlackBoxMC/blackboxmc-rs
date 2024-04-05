@@ -288,6 +288,99 @@ impl<'mc> JNIInstantiatable<'mc> for MushroomBlockTextureStruct<'mc> {
 }
 
 impl<'mc> MushroomBlockTextureStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::material::types::MushroomBlockTexture<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcrate::material::types::MushroomBlockTexture;");
+        let cls = jni.find_class("org/bukkit/material/types/MushroomBlockTexture");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::material::types::MushroomBlockTexture::from_raw(&jni, obj)
+    }
+    #[deprecated]
+
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let sig = String::from("()Li8;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.b()?)
+    }
+    pub fn cap_face(
+        &self,
+    ) -> Result<Option<crate::block::BlockFace<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lcrate::block::BlockFace;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getCapFace", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::block::BlockFace::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    #[deprecated]
+
+    pub fn get_by_data(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        data: i8,
+    ) -> Result<Option<crate::material::types::MushroomBlockTexture<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("(B)Lcrate::material::types::MushroomBlockTexture;");
+        let val_1 = jni::objects::JValueGen::Byte(data);
+        let cls = jni.find_class("org/bukkit/material/types/MushroomBlockTexture");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "getByData",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        let obj = res.l()?;
+        Ok(Some(
+            crate::material::types::MushroomBlockTexture::from_raw(&jni, obj)?,
+        ))
+    }
+    pub fn get_cap_by_face(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        face: impl Into<crate::block::BlockFace<'mc>>,
+    ) -> Result<Option<crate::material::types::MushroomBlockTexture<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from(
+            "(Lorg/bukkit/block/BlockFace;)Lcrate::material::types::MushroomBlockTexture;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(face.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/material/types/MushroomBlockTexture");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "getCapByFace",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        let obj = res.l()?;
+        Ok(Some(
+            crate::material::types::MushroomBlockTexture::from_raw(&jni, obj)?,
+        ))
+    }
+    // SUPER CLASS: Enum
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
