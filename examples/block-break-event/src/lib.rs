@@ -1,5 +1,6 @@
 use std::error::Error;
 
+use blackboxmc_bukkit::inventory::PlayerInventory;
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::SharedJNIEnv;
 use jni::{objects::JObject, JNIEnv};
@@ -14,7 +15,8 @@ pub extern "system" fn __on__BlockBreakEvent(env: JNIEnv<'_>, obj: JObject<'_>) 
         event.set_cancelled(true)?;
 
         let player = event.player()?;
-        println!("{}", player.inventory()?.item()?.get_type()?);
+        let inv: PlayerInventory = player.inventory()?;
+        println!("{}", inv.item_in_main_hand()?.get_type()?);
         Ok(())
     }();
     if let Err(err) = res {

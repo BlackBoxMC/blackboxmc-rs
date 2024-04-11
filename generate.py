@@ -702,6 +702,7 @@ def java_call_signature_format(types, return_group, is_constructor=False):
         return "("+"".join(results)+")"+java_letter_from_rust(return_group["type_name_resolved"],return_group["is_array"])
 
 def correct_question_mark(argname, ty, method, i, returning, library, is_constructor):
+    print(ty)
     gen = re.search("^(.*?)<(.*?)>$", ty)
     if gen is not None:
         name = gen.group(2)
@@ -777,6 +778,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
     else:
         parameter_ty = ""
 
+    print(method)
     type_name_resolved = "jni::objects::JObject"
     is_array = False
     is_interface = False
@@ -1075,22 +1077,30 @@ def gen_jni_instantiatable(name,full_name,is_enum,variants):
     return st
 def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructor,dummy,parsed_names):
     packageName = ".".join(list(filter(lambda f: f.lower() == f,val["qualifiedName"].split("."))))
-
+    
     if is_constructor:
         methods = val["constructors"]
     else:
         methods = val["methods"]
+        method_names = list(map(lambda f: f["name"],methods))
+
         interfaces = list(map(lambda f: f["qualifiedName"],val["interfaces"]))
         for inte in interfaces:
             if inte in libraries[library]:
+
                 interface = libraries[library][inte]
-                methods += interface["methods"]
             
-        
+                for int in interface["methods"]:
+                    
+                    if int["name"] in method_names:
+                        if "Override" in str(int["annotations"]):
+                            methods = list(filter(lambda f: f["name"] != int["name"],methods))
+                methods += interface["methods"]
+          
     og_name = name
     impl_signature = []
     extern_signature = []
-    methods = list(filter(lambda f: f["name"] != "valueOf",methods))
+    methods = filter(lambda f: f["name"] != "valueOf",methods)
 
     has_to_string = False
     has_to_string_is_static = False
@@ -1120,7 +1130,6 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
         if mname in reserved_words:
             mname = "get_"+mname
 
-
         names[og_mname] = mname
         if mname in methods_:
             methods_[mname].append(method)
@@ -1129,12 +1138,16 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
 
     new_methods = {}
     for k in names:
-
         name = names[k]
         method = methods_[name]
-        # are there more then one method with this name?
-        if len(methods_[name]) > 1:
 
+        if len(method) > 1:
+            m = list(filter(lambda f: "Override" in str(f),methods_[name]))
+            if len(m) >= 1:
+                method = m
+
+        # are there more then one method with this name?
+        if len(method) > 1:
             # ok time for some surgery then!
 
             can_use_options = True
@@ -1145,13 +1158,11 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
             method_map = {}
             method_buildup = []
             options_start_at = 0
-            methods__ = sorted(methods_[name], key = lambda key : len(key["parameters"]))
+            methods__ = sorted(method, key = lambda key : len(key["parameters"]))
             n = 0
             for m in methods__:
                 breaking = False
-                if "modifiers" in m:
-                    if("public" not in m["modifiers"]): # skip protected/private methods
-                        continue
+              
                 if len(m["parameters"]) >= 1:
                     method_first_arg = camel_case_to_snake_case(m["parameters"][0]["name"])
                 if last_method is None:
@@ -1208,6 +1219,7 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
             new_methods[name] = {}
             new_methods[name]["method"] = method[0]
             new_methods[name]["original_name"] = k
+
 
     dummy_temp_disable = False
     for k in new_methods:
@@ -1496,7 +1508,7 @@ def gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_names,libr
         for cl in val["interfaces"]:
             if "methods" in cl:
                 methods = list(filter(lambda f: f["name"] not in method_names, cl["methods"]))
-                cl["methods"] = methods
+                cl["methods"] += methods
                 parse_methods(library,cl["name"],cl,mod_path,is_trait,is_trait_decl,False,True,parsed_names)
                 method_names += list(map(lambda f: f["name"], cl["methods"]))
             if "interfaces" in cl:
@@ -1508,7 +1520,7 @@ def gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_names,libr
     if on_super_class:
         if "methods" in val:
             methods = list(filter(lambda f: f["name"] not in method_names, val["methods"]))
-            val["methods"] = methods
+            val["methods"] += methods
             parse_methods(library,val["name"],val,mod_path,is_trait,is_trait_decl,False,True,parsed_names)
             method_names += list(map(lambda f: f["name"], val["methods"]))
     if "superclass" in val:
