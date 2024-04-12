@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [workspace]
-members = ["blackboxmc-rs-general", "blackboxmc-rs-proc", "blackboxmc-rs-bukkit", "blackboxmc-rs-bungee", "blackboxmc-rs-java", "examples/mc-classic-mode", "examples/block-break-event"]
+members = ["blackboxmc-rs-general", "blackboxmc-rs-proc", "blackboxmc-rs-bukkit", "blackboxmc-rs-bungee", "blackboxmc-rs-java", "examples/name-printer", "examples/block-break-event"]
 
 [dependencies]
 eyre = "0.6.8"

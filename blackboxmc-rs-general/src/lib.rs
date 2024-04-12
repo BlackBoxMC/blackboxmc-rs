@@ -58,6 +58,89 @@ macro_rules! bad_vector_translation_call {
     }};
 }
 
+/*
+Z	boolean
+B	byte
+C	char
+S	short
+I	int
+J	long
+F	float
+D	double
+L fully-qualified-class ;	fully-qualified-class
+[ type	type[]
+( arg-types ) ret-type	method type
+*/
+
+pub enum Parameter {
+    Boolean,
+    Byte,
+    Char,
+    Short,
+    Int,
+    Long,
+    Float,
+    Double,
+    Class(String),
+    Array(Box<Parameter>),
+}
+
+pub struct ParameterListBuilder {
+    parameters: Vec<Parameter>,
+    return_type: Option<Parameter>
+}
+
+impl ParameterListBuilder {
+    pub fn new() -> Self {
+        Self {parameters: Vec::new(),return_type: None}
+    }
+    pub fn boolean(&mut self) -> &mut Self {
+        self.parameters.push(Parameter::Boolean);
+        self
+    }
+    pub fn byte(&mut self) -> &mut Self {
+        self.parameters.push(Parameter::Byte);
+        self
+    }
+    pub fn char(&mut self) -> &mut Self {
+        self.parameters.push(Parameter::Char);
+        self
+    }
+    pub fn short(&mut self) -> &mut Self {
+        self.parameters.push(Parameter::Short);
+        self
+    }
+    pub fn int(&mut self) -> &mut Self {
+        self.parameters.push(Parameter::Int);
+        self
+    }
+    pub fn long(&mut self) -> &mut Self {
+        self.parameters.push(Parameter::Long);
+        self
+    }
+    pub fn float(&mut self) -> &mut Self {
+        self.parameters.push(Parameter::Float);
+        self
+    }
+    pub fn double(&mut self) -> &mut Self {
+        self.parameters.push(Parameter::Double);
+        self
+    }
+    pub fn class(&mut self, val: String) -> &mut Self {
+        self.parameters.push(Parameter::Class(val));
+        self
+    }
+    pub fn array(&mut self, val: Parameter) -> &mut Self {
+        self.parameters.push(Parameter::Array(Box::new(val)));
+        self
+    }
+  
+    fn build(&mut self, ret_type: Option<Parameter>) -> String {
+        self.return_type = ret_type;
+        todo!()
+    }
+}
+
 /// Wrapper struct for [JNIEnv](jni::JNIEnv) that has interior mutability and several other helper functions.
 pub struct SharedJNIEnv<'mc> {
     jni: RefCell<JNIEnv<'mc>>,

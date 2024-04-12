@@ -1,5 +1,3 @@
-**The repo currently contains breaking changes due to some bugs in the Python script + changes in the script that generates the .json file. The end result will be a version 2.0 which WILL contain breaking changes, just not intentionally.**
-
 # blackbox-rs
 
 blackbox-rs is a Rust crate that is to be paired with [BlackBox](https://github.com/BlackboxMC/Blackbox), which allows you to create Bukkit compatible plugins using compiled langauges such as Rust.

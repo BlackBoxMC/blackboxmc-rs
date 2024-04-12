@@ -7,9 +7,9 @@ use blackboxmc_bukkit::{
 use blackboxmc_general::SharedJNIEnv;
 use jni::{objects::JObject, sys::jint, JNIEnv};
 
-pub struct HungerThread {}
+pub struct NamePrinter {}
 
-impl HungerThread {
+impl NamePrinter {
     pub fn new<'mc>(
         env: &'mc SharedJNIEnv<'mc>,
         plugin: &'mc Plugin<'mc>,
@@ -19,33 +19,40 @@ impl HungerThread {
             plugin,
             0,
             format!("lib{}", std::env!("CARGO_CRATE_NAME")),
-            "HungerThread".to_string(),
+            "NamePrinter".to_string(),
         )
     }
     pub fn run(plug: &mut Plugin) -> Result<(), Box<dyn Error>> {
         let server = plug.server()?;
+        println!("srever");
+
         let players = server.online_players()?;
+        println!("players");
+
         for player in players {
-            println!("{}", player.name()?);
+            println!("{:?}", player.name()?);
         }
         Ok(())
     }
 }
 
 #[no_mangle]
-pub extern "system" fn __extends__BukkitRunnable__HungerThread__run<'mc>(
+pub extern "system" fn __extends__BukkitRunnable__NamePrinter__run<'mc>(
     env: JNIEnv<'mc>,
     _address: jint,
     plugin: JObject<'mc>,
     _objs: JObject<'mc>,
 ) {
+    println!("executing...?");
     let e = SharedJNIEnv::new(env);
     let mut plug = Plugin::from_raw(&e, plugin).unwrap();
-    HungerThread::run(&mut plug).unwrap();
+    NamePrinter::run(&mut plug).unwrap();
+    println!("executed");
 }
 
 #[no_mangle]
 pub extern "system" fn __on__PluginEnableEvent(env: JNIEnv<'_>, obj: JObject<'_>) {
+    println!("plugin enable?");
     color_eyre::install().expect("Java exception");
     let e = SharedJNIEnv::new(env);
     let ev1 = PluginEnableEvent::from_raw(&e, unsafe { JObject::from_raw(obj.clone()) })
@@ -56,7 +63,7 @@ pub extern "system" fn __on__PluginEnableEvent(env: JNIEnv<'_>, obj: JObject<'_>
     let plug2 = ev2.plugin().expect("Java exception");
     // New runnable
     println!("run task timer");
-    let runnable = HungerThread::new(&e, &plug1).expect("Java exception");
+    let runnable = NamePrinter::new(&e, &plug1).expect("Java exception");
     runnable
         .run_task_timer(plug2, 0, 20)
         .expect("Java exception");

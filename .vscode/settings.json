@@ -1,7 +1,7 @@
 {
     "rust-analyzer.linkedProjects": [
         "./Cargo.toml",
-        "./proc/Cargo.toml",
+        "./blackboxmc-rs-proc/Cargo.toml",
         "./examples/block-break-event/Cargo.toml",
         "./examples/mc-classic-mode/Cargo.toml",
     ],
