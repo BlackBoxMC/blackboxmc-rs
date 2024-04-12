@@ -12,6 +12,7 @@ libraries = json.loads(f.read())
 
 # files to write to disk
 file_cache = {}
+prelude_cache = []
 
 # rust's reserved words; we use this to rename any functions
 reserved_words = ["as", "break", "const", "continue", "else", "enum", "extern", "false", "fn", "for", "if", "impl", "in", "let", "loop", "match",
@@ -72,7 +73,9 @@ excluded_classes = [
                         "java.util.logging.LogManager",
 
     # tempoerary
-    "java.util.JavaSortedMap", "java.util.JavaSortedSet"
+    "java.util.JavaSortedMap", "java.util.JavaSortedSet",
+    "org.bukkit.plugin.RegisteredServiceProvider",
+
 ]
 
 interface_names = []
@@ -473,10 +476,7 @@ def return_format(return_group, prefix, static, method, obj_call, val, types, is
         else:
             val_2 = "obj"
     else:
-        if is_trait:
-            val_1 = "self.jni_ref()"
-        else:
-            val_1 = "self.0"
+        val_1 = "self.jni_ref()"
         if return_group["is_array"]:
             val_2 = "unsafe { jni::objects::JObject::from_raw(*res) }"
         else:
@@ -986,14 +986,10 @@ def java_letter_from_rust(ty,is_array):
         return res
 
 def gen_to_string_func(name, static):
-    if static:
-        call = "Self::internal_to_string(&self.0)"
-    else:
-        call = "self.to_string()"
     return """
         impl<'mc> std::string::ToString for """+name+"""<'mc> {
             fn to_string(&self) -> String {
-                match &self.internal_to_string() {
+                match """+name+"""Trait::internal_to_string(self) {
                     Ok(a) => a.clone(),
                     Err(err) => format!(
                         "Error calling """+name+""".toString: {}",
@@ -1007,7 +1003,7 @@ def gen_to_string_func(name, static):
 def gen_instance_of_func(mod_path):
     impl_signature = []
     impl_signature.append("""
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
+    fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
@@ -1047,6 +1043,7 @@ def gen_jniraw_impl(name, is_enum, mod_path, full_name, variants):
 
     if is_enum:
         gen_jniraw_impl(name+"Struct",False,mod_path,full_name,variants)
+
 
 def gen_jni_instantiatable(name,full_name,is_enum,variants):
     st = """impl<'mc> JNIInstantiatable<'mc> for """+name+"""<'mc> {
@@ -1090,6 +1087,7 @@ def gen_jni_instantiatable(name,full_name,is_enum,variants):
     }
     """
     return st
+    
 def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructor,dummy,parsed_names):
     packageName = ".".join(list(filter(lambda f: f.lower() == f,val["qualifiedName"].split("."))))
     
@@ -1097,19 +1095,7 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
         methods = val["constructors"]
     else:
         methods = val["methods"]
-        if not dummy:
-            method_names = list(map(lambda f: f["name"],methods))
-
-            interfaces = list(map(lambda f: f["qualifiedName"],val["interfaces"]))
-            for inte in interfaces:
-                if inte in libraries[library]:
-                    interface = libraries[library][inte]
-                    for int in interface["methods"]:
-                        if int["name"] in method_names:
-                            if "Override" in str(int["annotations"]):
-                                methods = list(filter(lambda f: f["name"] != int["name"],methods))
-                    methods += interface["methods"]
-        
+      
     og_name = name
     impl_signature = []
     extern_signature = []
@@ -1225,7 +1211,7 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
             for group_name in method_map:
                 methods = method_map[group_name]
                 if group_name != "":
-                    if len(methods) >= 2:
+                    if len(methods) > 1:
                         new_name = name+"_with_"+group_name.replace("$","").replace("[]","s")
                     else:
                         new_name = name 
@@ -1243,7 +1229,6 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
                     if new_new_name not in keys:
                         new_methods[new_new_name] = copy.deepcopy(new_methods[key])
                         new_methods.__delitem__(key)
-           
         else:
             new_methods[name] = {}
             new_methods[name]["method"] = method[0]
@@ -1463,9 +1448,9 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
                 # we do an unsafe clone here but justify it because it's only to execute the method. said unsafe clone
                 # will go out of scope after this method is done.
                 if parsed_name == "jni::objects::JObject":
-                    code.append("let temp_clone = unsafe {jni::objects::JObject::from_raw(self.1.clone())};")
+                    code.append("let temp_clone = unsafe {jni::objects::JObject::from_raw(self.jni_object().clone())};")
                 else:
-                    code.append("let temp_clone = "+val_group["type_name_resolved"]+"::from_raw(&self.0, unsafe {jni::objects::JObject::from_raw(self.1.clone())})?;")
+                    code.append("let temp_clone = "+val_group["type_name_resolved"]+"::from_raw(&self.jni_ref(), unsafe {jni::objects::JObject::from_raw(self.jni_object().clone())})?;")
                 code.append("let real: "+val_group["type_name_resolved"]+" = temp_clone.into();")
                 code.append("real."+name+"("+func_signature_resolved_names_only+")")
         else:
@@ -1489,7 +1474,7 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
         if name.startswith("internal_"):
             impl_signature.append("#[doc(hidden)]")
         impl_signature.append(
-            "\tpub fn "+name+generic_letters_str+"("+func_signature_resolved+") "
+            "\tfn "+name+generic_letters_str+"("+func_signature_resolved+") "
         )
 
         if nullable:
@@ -1519,17 +1504,17 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
     for impl in impl_signature:
         file_cache[mod_path].append(impl)
 
-    if not is_constructor:
-        if not dummy:
-            method_names = list(map(lambda k: new_methods[k]["original_name"],new_methods))
-            gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_names,library,False)
+    #if not is_constructor:
+    #    if not dummy:
+    #        method_names = list(map(lambda k: new_methods[k]["original_name"],new_methods))
+    #        gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_names,library,False)
 
     return {
         "has_to_string": has_to_string,
         "has_to_string_is_static": has_to_string_is_static,
         "extern_signature": extern_signature,
     }
-
+"""
 def gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_names,library,on_super_class):
     v = copy.deepcopy(val)
 
@@ -1579,7 +1564,7 @@ def gen_dummy_super_class(val,method_names,mod_path,is_trait,is_trait_decl,parse
         return
     gen_dummy(val,method_names,mod_path,is_trait,is_trait_decl,parsed_names+[new_parsed_name],library,True)
     method_names += list(map(lambda f: f["name"], val["methods"]))
-
+"""
 def format_comment(comment):
     final_comment = ""
     parts = comment.replace("<br>"," \n \n").replace("<p>","").replace("</p>","").split("\n")
@@ -1594,13 +1579,23 @@ def format_comment(comment):
         final_comment = final_comment[0:len(final_comment)-1]
     return final_comment
 
-def parse_classes(library, val, classes):
+def parse_classes(library, val, classes, root=False):
     if "modifiers" in val:
         modifiers = val["modifiers"]
         if ("public" not in modifiers):
             omitted_classes.append(val["name"])
             return
     packageName = ".".join(list(filter(lambda f: f.lower() == f,val["qualifiedName"].split("."))))
+    crateparts = packageName.split(".")[2:]
+    c = []
+    for part in crateparts:
+        if part in reserved_words:
+            c.append("mod_"+part)
+        else:
+            c.append(part)  
+    crateName = "::".join(c)
+    if crateName != "":
+        crateName += "::"
     dir = packageName.replace(".", os.sep)
     mod_path = dir+os.sep+"mod.rs"
     name = val["name"].replace(".", "").replace("-", "_")
@@ -1625,8 +1620,9 @@ def parse_classes(library, val, classes):
         parsed_classes[mod_path] = [full_name]
 
     if mod_path not in file_cache:
-        file_cache[mod_path] = ["#![allow(deprecated)]\nuse blackboxmc_general::JNIRaw;\nuse blackboxmc_general::JNIInstantiatable;\nuse color_eyre::eyre::Result;"]
-
+        file_cache[mod_path] = ["#![allow(deprecated)]\nuse blackboxmc_general::JNIRaw;\nuse blackboxmc_general::JNIInstantiatable;\nuse color_eyre::eyre::Result;/*"+mod_path+"*/\n"]
+        if len(mod_path.split("/")) == 3:
+            file_cache[mod_path] += ["pub mod prelude;"]
     if (name == ""):
         return
 
@@ -1696,9 +1692,13 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("   }")
         file_cache[mod_path].append("}")
 
+        prelude_cache.append("pub use crate::"+crateName+name+"Trait as _;")
+
         file_cache[mod_path].append("""
-        impl<'mc> """+name+"""<'mc> {
-            pub fn value_of(
+        impl<'mc> """+name+"""Trait<'mc> for """+name+"""<'mc> {}
+        
+        pub trait """+name+"""Trait<'mc>: blackboxmc_general::JNIRaw<'mc> + blackboxmc_general::JNIInstantiatable<'mc>  {
+            fn value_of(
                 env: &blackboxmc_general::SharedJNIEnv<'mc>,
                 arg0: impl Into<String>,
             ) -> Result<"""+name+"""<'mc>, Box<dyn std::error::Error>> {
@@ -1766,8 +1766,9 @@ def parse_classes(library, val, classes):
 
         gen_jniraw_impl(name, False, mod_path, full_name, None)
 
-        file_cache[mod_path].append(
-            "impl<'mc> "+name+"<'mc> {")
+        prelude_cache.append("pub use crate::"+crateName+name+"Trait as _;")
+        file_cache[mod_path].append("impl<'mc> "+name+"Trait<'mc> for "+name+"<'mc> {}")
+        file_cache[mod_path].append("pub trait "+name+"Trait<'mc>: blackboxmc_general::JNIRaw<'mc> + blackboxmc_general::JNIInstantiatable<'mc> {")
 
         has_to_string = False
         has_to_string_is_static = False
@@ -1800,7 +1801,9 @@ def parse_classes(library, val, classes):
 
         gen_jniraw_impl(name, False, mod_path, full_name, None)
 
-        file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
+        prelude_cache.append("pub use crate::"+crateName+name+"Trait as _;")
+        file_cache[mod_path].append("impl<'mc> "+name+"Trait<'mc> for "+name+"<'mc> {}")
+        file_cache[mod_path].append("pub trait "+name+"Trait<'mc>: blackboxmc_general::JNIRaw<'mc> + blackboxmc_general::JNIInstantiatable<'mc> {")
 
         if "constructors" in val:
             grp = parse_methods(library, name,val,mod_path,False,False,True,False,[name])
@@ -1875,12 +1878,15 @@ def parse_into_impl(val,name,mod_path):
     file_cache[mod_path].append("impl<'mc> Into<"+val_resolved["type_name_resolved"]+"<'mc>> for "+name+"<'mc>{\n")
     file_cache[mod_path].append("fn into(self) -> "+val_resolved["type_name_resolved"]+"<'mc> {\n")
     if val_resolved["type_name_resolved"] == "jni::objects::JObject":
-        file_cache[mod_path].append("self.1")
+        file_cache[mod_path].append("self.jni_object()")
     else:
-        file_cache[mod_path].append(val_resolved["type_name_resolved"]+"::from_raw(&self.jni_ref(), self.1).expect(\"Error converting "+name+" into "+val_resolved["type_name_resolved"]+"\")\n")
+        file_cache[mod_path].append(val_resolved["type_name_resolved"]+"::from_raw(&self.jni_ref(), self.jni_object()).expect(\"Error converting "+name+" into "+val_resolved["type_name_resolved"]+"\")\n")
     file_cache[mod_path].append("   }\n"+
                             "}")
-
+    
+    if val_resolved["type_name_resolved"].startswith("crate"):
+        file_cache[mod_path].append("impl<'mc> "+val_resolved["type_name_resolved"]+"Trait<'mc> for "+name+"<'mc> {}")
+        
 dep_comment_regex = "<div class=\"deprecation-comment\">(.*?)</div>"
 
 def add_deprecated(arr,comment):
@@ -1978,7 +1984,7 @@ for library in libraries:
     for clas in packages:
         added = []
         clas = packages[clas]
-        parse_classes(library, clas, classes)
+        parse_classes(library, clas, classes, True)
 
     for k in file_cache:
         val = file_cache[k]
@@ -1990,10 +1996,12 @@ for library in libraries:
         with open(crate_dir+os.sep+k, "w") as file:
             file.truncate(0)
             for v in val:
-                file.write(v+"\n")
+                if v is not None:
+                    file.write(v+"\n")
             file.close()
 
     file_cache = {}
+
 
     # move everything in org/bukkit into root
     parts = library.split(".")
@@ -2002,12 +2010,19 @@ for library in libraries:
     shutil.rmtree(crate_dir + os.sep + parts[0])
 
     mod_rs = crate_dir+os.sep+"lib.rs"
+    prelude_rs = crate_dir+os.sep+"prelude.rs"
 
     if mod_rs not in file_cache:
         file_cache[mod_rs] = []
 
     with open(mod_rs, "a+") as file:
         for v in file_cache[mod_rs]:
+            file.write(v+"\n")
+        
+        file.close()
+
+    with open(prelude_rs, "a+") as file:
+        for v in prelude_cache:
             file.write(v+"\n")
         file.close()
 

@@ -1,1494 +1,1299 @@
 #![allow(deprecated)]
-use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
-#[repr(C)]
-pub struct VehicleEnterEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+use blackboxmc_general::JNIInstantiatable;
+use color_eyre::eyre::Result;/*org/bukkit/event/vehicle/mod.rs*/
 
-impl<'mc> JNIRaw<'mc> for VehicleEnterEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
+#[repr(C)]
+pub struct VehicleEnterEvent<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+
+    impl<'mc> JNIRaw<'mc> for VehicleEnterEvent<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
 }
 impl<'mc> JNIInstantiatable<'mc> for VehicleEnterEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate VehicleEnterEvent from null object.").into(),
-            );
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate VehicleEnterEvent from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleEnterEvent")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a VehicleEnterEvent object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    Ok(Self(env.clone(), obj))
+            }
         }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleEnterEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a VehicleEnterEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
     }
-}
+    
+impl<'mc> VehicleEnterEventTrait<'mc> for VehicleEnterEvent<'mc> {}
+pub trait VehicleEnterEventTrait<'mc>: blackboxmc_general::JNIRaw<'mc> + blackboxmc_general::JNIInstantiatable<'mc> {
 
-impl<'mc> VehicleEnterEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        vehicle: impl Into<crate::entity::Vehicle<'mc>>,
-        entered: impl Into<crate::entity::Entity<'mc>>,
-    ) -> Result<crate::event::vehicle::VehicleEnterEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(entered.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleEnterEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::vehicle::VehicleEnterEvent::from_raw(&jni, res)
-    }
-    /// Gets the Entity that entered the vehicle.
-    pub fn entered(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/Entity;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getEntered", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+	fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,vehicle: impl Into<crate::entity::Vehicle<'mc>>,entered: impl Into<crate::entity::Entity<'mc>>) 
+-> Result<crate::event::vehicle::VehicleEnterEvent<'mc>, Box<dyn std::error::Error>>
 
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
+{let sig = String::from("(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;)V");
+let val_1 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())});
+let val_2 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(entered.into().jni_object().clone())});
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleEnterEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.new_object(cls,
+sig.as_str(),vec![jni::objects::JValueGen::from(val_1),jni::objects::JValueGen::from(val_2)]);
+let res = 
+jni.translate_error_no_gen(res)?;
+crate::event::vehicle::VehicleEnterEvent::from_raw(&jni,res
+)}
+/// Gets the Entity that entered the vehicle.
+	fn entered(&self) 
+-> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>>
 
-    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCancelled",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+{let sig = String::from("()Lorg/bukkit/entity/Entity;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getEntered",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::entity::Entity::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
 
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+	fn is_cancelled(&self) 
+-> Result<bool, Box<dyn std::error::Error>>
 
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleEnterEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.vehicle.VehicleEvent ( ['getEntered', 'isCancelled', 'setCancelled', 'getHandlers', 'getHandlerList'])
-    /// Get the vehicle.
-    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
-        real.vehicle()
-    }
+{let sig = String::from("()Z");
+let res = self.jni_ref().call_method(&self.jni_object(),"isCancelled",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+Ok(
+res.z()?
+)}
 
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+	fn set_cancelled(&self,cancel: bool) 
+-> Result<(), Box<dyn std::error::Error>>
+
+{let sig = String::from("(Z)V");
+let val_1 = jni::objects::JValueGen::Bool(cancel.into());
+let res = self.jni_ref().call_method(&self.jni_object(),"setCancelled",sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(
+()
+)}
+
+	fn handlers(&self) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getHandlers",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::event::HandlerList::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
+
+	fn handler_list(jni: &blackboxmc_general::SharedJNIEnv<'mc>) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleEnterEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.call_static_method(cls,"getHandlerList",
+sig.as_str(),vec![]);
+let res = 
+jni.translate_error(res)?;
+let obj = res.l()?;
+crate::event::HandlerList::from_raw(&jni,obj
+)}
+
+    fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
+    
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleEnterEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting VehicleEnterEvent into crate::event::Cancellable")
-    }
-}
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleEnterEvent<'mc> {
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting VehicleEnterEvent into crate::event::vehicle::VehicleEvent")
-    }
-}
-#[repr(C)]
-pub struct VehicleExitEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleEnterEvent<'mc>{
 
-impl<'mc> JNIRaw<'mc> for VehicleExitEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
+fn into(self) -> crate::event::Cancellable<'mc> {
+
+crate::event::Cancellable::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleEnterEvent into crate::event::Cancellable")
+
+   }
+}
+impl<'mc> crate::event::CancellableTrait<'mc> for VehicleEnterEvent<'mc> {}
+impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleEnterEvent<'mc>{
+
+fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
+
+crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleEnterEvent into crate::event::vehicle::VehicleEvent")
+
+   }
+}
+impl<'mc> crate::event::vehicle::VehicleEventTrait<'mc> for VehicleEnterEvent<'mc> {}
+#[repr(C)]
+pub struct VehicleExitEvent<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+
+    impl<'mc> JNIRaw<'mc> for VehicleExitEvent<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
 }
 impl<'mc> JNIInstantiatable<'mc> for VehicleExitEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate VehicleExitEvent from null object.").into(),
-            );
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate VehicleExitEvent from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleExitEvent")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a VehicleExitEvent object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    Ok(Self(env.clone(), obj))
+            }
         }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleExitEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a VehicleExitEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
     }
-}
+    
+impl<'mc> VehicleExitEventTrait<'mc> for VehicleExitEvent<'mc> {}
+pub trait VehicleExitEventTrait<'mc>: blackboxmc_general::JNIRaw<'mc> + blackboxmc_general::JNIInstantiatable<'mc> {
 
-impl<'mc> VehicleExitEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        vehicle: impl Into<crate::entity::Vehicle<'mc>>,
-        exited: impl Into<crate::entity::LivingEntity<'mc>>,
-    ) -> Result<crate::event::vehicle::VehicleExitEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/LivingEntity;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(exited.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleExitEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::vehicle::VehicleExitEvent::from_raw(&jni, res)
-    }
-    /// Get the living entity that exited the vehicle.
-    pub fn exited(&self) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/LivingEntity;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getExited", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::entity::LivingEntity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+	fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,vehicle: impl Into<crate::entity::Vehicle<'mc>>,exited: impl Into<crate::entity::LivingEntity<'mc>>) 
+-> Result<crate::event::vehicle::VehicleExitEvent<'mc>, Box<dyn std::error::Error>>
 
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
+{let sig = String::from("(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/LivingEntity;)V");
+let val_1 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())});
+let val_2 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(exited.into().jni_object().clone())});
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleExitEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.new_object(cls,
+sig.as_str(),vec![jni::objects::JValueGen::from(val_1),jni::objects::JValueGen::from(val_2)]);
+let res = 
+jni.translate_error_no_gen(res)?;
+crate::event::vehicle::VehicleExitEvent::from_raw(&jni,res
+)}
+/// Get the living entity that exited the vehicle.
+	fn exited(&self) 
+-> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>>
 
-    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCancelled",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+{let sig = String::from("()Lorg/bukkit/entity/LivingEntity;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getExited",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::entity::LivingEntity::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
 
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+	fn is_cancelled(&self) 
+-> Result<bool, Box<dyn std::error::Error>>
 
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleExitEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.vehicle.VehicleEvent ( ['getExited', 'isCancelled', 'setCancelled', 'getHandlers', 'getHandlerList'])
-    /// Get the vehicle.
-    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
-        real.vehicle()
-    }
+{let sig = String::from("()Z");
+let res = self.jni_ref().call_method(&self.jni_object(),"isCancelled",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+Ok(
+res.z()?
+)}
 
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+	fn set_cancelled(&self,cancel: bool) 
+-> Result<(), Box<dyn std::error::Error>>
+
+{let sig = String::from("(Z)V");
+let val_1 = jni::objects::JValueGen::Bool(cancel.into());
+let res = self.jni_ref().call_method(&self.jni_object(),"setCancelled",sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(
+()
+)}
+
+	fn handlers(&self) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getHandlers",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::event::HandlerList::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
+
+	fn handler_list(jni: &blackboxmc_general::SharedJNIEnv<'mc>) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleExitEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.call_static_method(cls,"getHandlerList",
+sig.as_str(),vec![]);
+let res = 
+jni.translate_error(res)?;
+let obj = res.l()?;
+crate::event::HandlerList::from_raw(&jni,obj
+)}
+
+    fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
+    
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleExitEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting VehicleExitEvent into crate::event::Cancellable")
-    }
-}
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleExitEvent<'mc> {
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting VehicleExitEvent into crate::event::vehicle::VehicleEvent")
-    }
-}
-#[repr(C)]
-pub struct VehicleUpdateEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleExitEvent<'mc>{
 
-impl<'mc> JNIRaw<'mc> for VehicleUpdateEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
+fn into(self) -> crate::event::Cancellable<'mc> {
+
+crate::event::Cancellable::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleExitEvent into crate::event::Cancellable")
+
+   }
+}
+impl<'mc> crate::event::CancellableTrait<'mc> for VehicleExitEvent<'mc> {}
+impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleExitEvent<'mc>{
+
+fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
+
+crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleExitEvent into crate::event::vehicle::VehicleEvent")
+
+   }
+}
+impl<'mc> crate::event::vehicle::VehicleEventTrait<'mc> for VehicleExitEvent<'mc> {}
+#[repr(C)]
+pub struct VehicleUpdateEvent<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+
+    impl<'mc> JNIRaw<'mc> for VehicleUpdateEvent<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
 }
 impl<'mc> JNIInstantiatable<'mc> for VehicleUpdateEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate VehicleUpdateEvent from null object.").into(),
-            );
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate VehicleUpdateEvent from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleUpdateEvent")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a VehicleUpdateEvent object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    Ok(Self(env.clone(), obj))
+            }
         }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleUpdateEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a VehicleUpdateEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
     }
-}
+    
+impl<'mc> VehicleUpdateEventTrait<'mc> for VehicleUpdateEvent<'mc> {}
+pub trait VehicleUpdateEventTrait<'mc>: blackboxmc_general::JNIRaw<'mc> + blackboxmc_general::JNIInstantiatable<'mc> {
 
-impl<'mc> VehicleUpdateEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        vehicle: impl Into<crate::entity::Vehicle<'mc>>,
-    ) -> Result<crate::event::vehicle::VehicleUpdateEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/entity/Vehicle;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleUpdateEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::vehicle::VehicleUpdateEvent::from_raw(&jni, res)
-    }
+	fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,vehicle: impl Into<crate::entity::Vehicle<'mc>>) 
+-> Result<crate::event::vehicle::VehicleUpdateEvent<'mc>, Box<dyn std::error::Error>>
 
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+{let sig = String::from("(Lorg/bukkit/entity/Vehicle;)V");
+let val_1 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())});
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleUpdateEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.new_object(cls,
+sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
+let res = 
+jni.translate_error_no_gen(res)?;
+crate::event::vehicle::VehicleUpdateEvent::from_raw(&jni,res
+)}
 
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleUpdateEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.vehicle.VehicleEvent ( ['getHandlers', 'getHandlerList'])
-    /// Get the vehicle.
-    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
-        real.vehicle()
-    }
+	fn handlers(&self) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
 
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getHandlers",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::event::HandlerList::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
+
+	fn handler_list(jni: &blackboxmc_general::SharedJNIEnv<'mc>) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleUpdateEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.call_static_method(cls,"getHandlerList",
+sig.as_str(),vec![]);
+let res = 
+jni.translate_error(res)?;
+let obj = res.l()?;
+crate::event::HandlerList::from_raw(&jni,obj
+)}
+
+    fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
+    
 }
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleUpdateEvent<'mc> {
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting VehicleUpdateEvent into crate::event::vehicle::VehicleEvent")
-    }
-}
-#[repr(C)]
-pub struct VehicleCreateEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleUpdateEvent<'mc>{
 
-impl<'mc> JNIRaw<'mc> for VehicleCreateEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
+fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
+
+crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleUpdateEvent into crate::event::vehicle::VehicleEvent")
+
+   }
+}
+impl<'mc> crate::event::vehicle::VehicleEventTrait<'mc> for VehicleUpdateEvent<'mc> {}
+#[repr(C)]
+pub struct VehicleCreateEvent<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+
+    impl<'mc> JNIRaw<'mc> for VehicleCreateEvent<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
 }
 impl<'mc> JNIInstantiatable<'mc> for VehicleCreateEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate VehicleCreateEvent from null object.").into(),
-            );
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate VehicleCreateEvent from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleCreateEvent")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a VehicleCreateEvent object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    Ok(Self(env.clone(), obj))
+            }
         }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleCreateEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a VehicleCreateEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
     }
-}
+    
+impl<'mc> VehicleCreateEventTrait<'mc> for VehicleCreateEvent<'mc> {}
+pub trait VehicleCreateEventTrait<'mc>: blackboxmc_general::JNIRaw<'mc> + blackboxmc_general::JNIInstantiatable<'mc> {
 
-impl<'mc> VehicleCreateEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        vehicle: impl Into<crate::entity::Vehicle<'mc>>,
-    ) -> Result<crate::event::vehicle::VehicleCreateEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/entity/Vehicle;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleCreateEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::vehicle::VehicleCreateEvent::from_raw(&jni, res)
-    }
+	fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,vehicle: impl Into<crate::entity::Vehicle<'mc>>) 
+-> Result<crate::event::vehicle::VehicleCreateEvent<'mc>, Box<dyn std::error::Error>>
 
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
+{let sig = String::from("(Lorg/bukkit/entity/Vehicle;)V");
+let val_1 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())});
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleCreateEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.new_object(cls,
+sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
+let res = 
+jni.translate_error_no_gen(res)?;
+crate::event::vehicle::VehicleCreateEvent::from_raw(&jni,res
+)}
 
-    pub fn set_cancelled(&self, cancelled: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(cancelled.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCancelled",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+	fn is_cancelled(&self) 
+-> Result<bool, Box<dyn std::error::Error>>
 
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+{let sig = String::from("()Z");
+let res = self.jni_ref().call_method(&self.jni_object(),"isCancelled",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+Ok(
+res.z()?
+)}
 
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleCreateEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.vehicle.VehicleEvent ( ['isCancelled', 'setCancelled', 'getHandlers', 'getHandlerList'])
-    /// Get the vehicle.
-    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
-        real.vehicle()
-    }
+	fn set_cancelled(&self,cancelled: bool) 
+-> Result<(), Box<dyn std::error::Error>>
 
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+{let sig = String::from("(Z)V");
+let val_1 = jni::objects::JValueGen::Bool(cancelled.into());
+let res = self.jni_ref().call_method(&self.jni_object(),"setCancelled",sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(
+()
+)}
+
+	fn handlers(&self) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getHandlers",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::event::HandlerList::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
+
+	fn handler_list(jni: &blackboxmc_general::SharedJNIEnv<'mc>) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleCreateEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.call_static_method(cls,"getHandlerList",
+sig.as_str(),vec![]);
+let res = 
+jni.translate_error(res)?;
+let obj = res.l()?;
+crate::event::HandlerList::from_raw(&jni,obj
+)}
+
+    fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
+    
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleCreateEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting VehicleCreateEvent into crate::event::Cancellable")
-    }
-}
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleCreateEvent<'mc> {
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting VehicleCreateEvent into crate::event::vehicle::VehicleEvent")
-    }
-}
-#[repr(C)]
-pub struct VehicleBlockCollisionEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleCreateEvent<'mc>{
 
-impl<'mc> JNIRaw<'mc> for VehicleBlockCollisionEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
+fn into(self) -> crate::event::Cancellable<'mc> {
+
+crate::event::Cancellable::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleCreateEvent into crate::event::Cancellable")
+
+   }
+}
+impl<'mc> crate::event::CancellableTrait<'mc> for VehicleCreateEvent<'mc> {}
+impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleCreateEvent<'mc>{
+
+fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
+
+crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleCreateEvent into crate::event::vehicle::VehicleEvent")
+
+   }
+}
+impl<'mc> crate::event::vehicle::VehicleEventTrait<'mc> for VehicleCreateEvent<'mc> {}
+#[repr(C)]
+pub struct VehicleBlockCollisionEvent<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+
+    impl<'mc> JNIRaw<'mc> for VehicleBlockCollisionEvent<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
 }
 impl<'mc> JNIInstantiatable<'mc> for VehicleBlockCollisionEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate VehicleBlockCollisionEvent from null object."
-            )
-            .into());
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate VehicleBlockCollisionEvent from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleBlockCollisionEvent")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a VehicleBlockCollisionEvent object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    Ok(Self(env.clone(), obj))
+            }
         }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleBlockCollisionEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a VehicleBlockCollisionEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
     }
-}
+    
+impl<'mc> VehicleBlockCollisionEventTrait<'mc> for VehicleBlockCollisionEvent<'mc> {}
+pub trait VehicleBlockCollisionEventTrait<'mc>: blackboxmc_general::JNIRaw<'mc> + blackboxmc_general::JNIInstantiatable<'mc> {
 
-impl<'mc> VehicleBlockCollisionEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        vehicle: impl Into<crate::entity::Vehicle<'mc>>,
-        block: impl Into<crate::block::Block<'mc>>,
-    ) -> Result<crate::event::vehicle::VehicleBlockCollisionEvent<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/block/Block;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(block.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleBlockCollisionEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::vehicle::VehicleBlockCollisionEvent::from_raw(&jni, res)
-    }
-    /// Gets the block the vehicle collided with
-    pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/Block;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getBlock", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::Block::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+	fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,vehicle: impl Into<crate::entity::Vehicle<'mc>>,block: impl Into<crate::block::Block<'mc>>) 
+-> Result<crate::event::vehicle::VehicleBlockCollisionEvent<'mc>, Box<dyn std::error::Error>>
 
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+{let sig = String::from("(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/block/Block;)V");
+let val_1 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())});
+let val_2 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(block.into().jni_object().clone())});
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleBlockCollisionEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.new_object(cls,
+sig.as_str(),vec![jni::objects::JValueGen::from(val_1),jni::objects::JValueGen::from(val_2)]);
+let res = 
+jni.translate_error_no_gen(res)?;
+crate::event::vehicle::VehicleBlockCollisionEvent::from_raw(&jni,res
+)}
+/// Gets the block the vehicle collided with
+	fn block(&self) 
+-> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>>
 
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleBlockCollisionEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.vehicle.VehicleCollisionEvent ( ['getBlock', 'getHandlers', 'getHandlerList'])
+{let sig = String::from("()Lorg/bukkit/block/Block;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getBlock",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::block::Block::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
 
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+	fn handlers(&self) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getHandlers",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::event::HandlerList::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
+
+	fn handler_list(jni: &blackboxmc_general::SharedJNIEnv<'mc>) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleBlockCollisionEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.call_static_method(cls,"getHandlerList",
+sig.as_str(),vec![]);
+let res = 
+jni.translate_error(res)?;
+let obj = res.l()?;
+crate::event::HandlerList::from_raw(&jni,obj
+)}
+
+    fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
+    
 }
-impl<'mc> Into<crate::event::vehicle::VehicleCollisionEvent<'mc>>
-    for VehicleBlockCollisionEvent<'mc>
-{
-    fn into(self) -> crate::event::vehicle::VehicleCollisionEvent<'mc> {
-        crate::event::vehicle::VehicleCollisionEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting VehicleBlockCollisionEvent into crate::event::vehicle::VehicleCollisionEvent")
-    }
-}
-#[repr(C)]
-pub struct VehicleEntityCollisionEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+impl<'mc> Into<crate::event::vehicle::VehicleCollisionEvent<'mc>> for VehicleBlockCollisionEvent<'mc>{
 
-impl<'mc> JNIRaw<'mc> for VehicleEntityCollisionEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
+fn into(self) -> crate::event::vehicle::VehicleCollisionEvent<'mc> {
+
+crate::event::vehicle::VehicleCollisionEvent::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleBlockCollisionEvent into crate::event::vehicle::VehicleCollisionEvent")
+
+   }
+}
+impl<'mc> crate::event::vehicle::VehicleCollisionEventTrait<'mc> for VehicleBlockCollisionEvent<'mc> {}
+#[repr(C)]
+pub struct VehicleEntityCollisionEvent<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+
+    impl<'mc> JNIRaw<'mc> for VehicleEntityCollisionEvent<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
 }
 impl<'mc> JNIInstantiatable<'mc> for VehicleEntityCollisionEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate VehicleEntityCollisionEvent from null object."
-            )
-            .into());
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate VehicleEntityCollisionEvent from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleEntityCollisionEvent")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a VehicleEntityCollisionEvent object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    Ok(Self(env.clone(), obj))
+            }
         }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleEntityCollisionEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a VehicleEntityCollisionEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
     }
-}
+    
+impl<'mc> VehicleEntityCollisionEventTrait<'mc> for VehicleEntityCollisionEvent<'mc> {}
+pub trait VehicleEntityCollisionEventTrait<'mc>: blackboxmc_general::JNIRaw<'mc> + blackboxmc_general::JNIInstantiatable<'mc> {
 
-impl<'mc> VehicleEntityCollisionEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        vehicle: impl Into<crate::entity::Vehicle<'mc>>,
-        entity: impl Into<crate::entity::Entity<'mc>>,
-    ) -> Result<crate::event::vehicle::VehicleEntityCollisionEvent<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(entity.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleEntityCollisionEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::vehicle::VehicleEntityCollisionEvent::from_raw(&jni, res)
-    }
+	fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,vehicle: impl Into<crate::entity::Vehicle<'mc>>,entity: impl Into<crate::entity::Entity<'mc>>) 
+-> Result<crate::event::vehicle::VehicleEntityCollisionEvent<'mc>, Box<dyn std::error::Error>>
 
-    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/Entity;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getEntity", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+{let sig = String::from("(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;)V");
+let val_1 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())});
+let val_2 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(entity.into().jni_object().clone())});
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleEntityCollisionEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.new_object(cls,
+sig.as_str(),vec![jni::objects::JValueGen::from(val_1),jni::objects::JValueGen::from(val_2)]);
+let res = 
+jni.translate_error_no_gen(res)?;
+crate::event::vehicle::VehicleEntityCollisionEvent::from_raw(&jni,res
+)}
 
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
+	fn entity(&self) 
+-> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>>
 
-    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCancelled",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+{let sig = String::from("()Lorg/bukkit/entity/Entity;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getEntity",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::entity::Entity::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
 
-    pub fn is_pickup_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isPickupCancelled",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
+	fn is_cancelled(&self) 
+-> Result<bool, Box<dyn std::error::Error>>
 
-    pub fn set_pickup_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setPickupCancelled",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+{let sig = String::from("()Z");
+let res = self.jni_ref().call_method(&self.jni_object(),"isCancelled",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+Ok(
+res.z()?
+)}
 
-    pub fn is_collision_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isCollisionCancelled",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
+	fn set_cancelled(&self,cancel: bool) 
+-> Result<(), Box<dyn std::error::Error>>
 
-    pub fn set_collision_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCollisionCancelled",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+{let sig = String::from("(Z)V");
+let val_1 = jni::objects::JValueGen::Bool(cancel.into());
+let res = self.jni_ref().call_method(&self.jni_object(),"setCancelled",sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(
+()
+)}
 
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+	fn is_pickup_cancelled(&self) 
+-> Result<bool, Box<dyn std::error::Error>>
 
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleEntityCollisionEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.vehicle.VehicleCollisionEvent ( ['getEntity', 'isCancelled', 'setCancelled', 'isPickupCancelled', 'setPickupCancelled', 'isCollisionCancelled', 'setCollisionCancelled', 'getHandlers', 'getHandlerList'])
+{let sig = String::from("()Z");
+let res = self.jni_ref().call_method(&self.jni_object(),"isPickupCancelled",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+Ok(
+res.z()?
+)}
 
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+	fn set_pickup_cancelled(&self,cancel: bool) 
+-> Result<(), Box<dyn std::error::Error>>
+
+{let sig = String::from("(Z)V");
+let val_1 = jni::objects::JValueGen::Bool(cancel.into());
+let res = self.jni_ref().call_method(&self.jni_object(),"setPickupCancelled",sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(
+()
+)}
+
+	fn is_collision_cancelled(&self) 
+-> Result<bool, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Z");
+let res = self.jni_ref().call_method(&self.jni_object(),"isCollisionCancelled",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+Ok(
+res.z()?
+)}
+
+	fn set_collision_cancelled(&self,cancel: bool) 
+-> Result<(), Box<dyn std::error::Error>>
+
+{let sig = String::from("(Z)V");
+let val_1 = jni::objects::JValueGen::Bool(cancel.into());
+let res = self.jni_ref().call_method(&self.jni_object(),"setCollisionCancelled",sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(
+()
+)}
+
+	fn handlers(&self) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getHandlers",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::event::HandlerList::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
+
+	fn handler_list(jni: &blackboxmc_general::SharedJNIEnv<'mc>) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleEntityCollisionEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.call_static_method(cls,"getHandlerList",
+sig.as_str(),vec![]);
+let res = 
+jni.translate_error(res)?;
+let obj = res.l()?;
+crate::event::HandlerList::from_raw(&jni,obj
+)}
+
+    fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
+    
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleEntityCollisionEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting VehicleEntityCollisionEvent into crate::event::Cancellable")
-    }
-}
-impl<'mc> Into<crate::event::vehicle::VehicleCollisionEvent<'mc>>
-    for VehicleEntityCollisionEvent<'mc>
-{
-    fn into(self) -> crate::event::vehicle::VehicleCollisionEvent<'mc> {
-        crate::event::vehicle::VehicleCollisionEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting VehicleEntityCollisionEvent into crate::event::vehicle::VehicleCollisionEvent")
-    }
-}
-#[repr(C)]
-pub struct VehicleEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleEntityCollisionEvent<'mc>{
 
-impl<'mc> JNIRaw<'mc> for VehicleEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
+fn into(self) -> crate::event::Cancellable<'mc> {
+
+crate::event::Cancellable::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleEntityCollisionEvent into crate::event::Cancellable")
+
+   }
+}
+impl<'mc> crate::event::CancellableTrait<'mc> for VehicleEntityCollisionEvent<'mc> {}
+impl<'mc> Into<crate::event::vehicle::VehicleCollisionEvent<'mc>> for VehicleEntityCollisionEvent<'mc>{
+
+fn into(self) -> crate::event::vehicle::VehicleCollisionEvent<'mc> {
+
+crate::event::vehicle::VehicleCollisionEvent::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleEntityCollisionEvent into crate::event::vehicle::VehicleCollisionEvent")
+
+   }
+}
+impl<'mc> crate::event::vehicle::VehicleCollisionEventTrait<'mc> for VehicleEntityCollisionEvent<'mc> {}
+#[repr(C)]
+pub struct VehicleEvent<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+
+    impl<'mc> JNIRaw<'mc> for VehicleEvent<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
 }
 impl<'mc> JNIInstantiatable<'mc> for VehicleEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate VehicleEvent from null object.").into());
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate VehicleEvent from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleEvent")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a VehicleEvent object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    Ok(Self(env.clone(), obj))
+            }
         }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a VehicleEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
     }
-}
+    
+impl<'mc> VehicleEventTrait<'mc> for VehicleEvent<'mc> {}
+pub trait VehicleEventTrait<'mc>: blackboxmc_general::JNIRaw<'mc> + blackboxmc_general::JNIInstantiatable<'mc> {
 
-impl<'mc> VehicleEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        vehicle: impl Into<crate::entity::Vehicle<'mc>>,
-    ) -> Result<crate::event::vehicle::VehicleEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/entity/Vehicle;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::vehicle::VehicleEvent::from_raw(&jni, res)
-    }
-    /// Get the vehicle.
-    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/Vehicle;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getVehicle", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Vehicle::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    // SUPER CLASS: org.bukkit.event.Event ( ['getVehicle'])
-    /// Convenience method for providing a user-friendly identifier. By
-    /// default, it is the event's class's {@linkplain Class#getSimpleName()
-    /// simple name}.
-    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::Event::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::Event = temp_clone.into();
-        real.event_name()
-    }
-    /// Any custom event that should not by synchronized with other events must
-    /// use the specific constructor. These are the caveats of using an
-    /// asynchronous event:
-    /// <ul>
-    /// <li>The event is never fired from inside code triggered by a
-    /// synchronous event. Attempting to do so results in an {@link
-    /// java.lang.IllegalStateException}.
-    /// <li>However, asynchronous event handlers may fire synchronous or
-    /// asynchronous events
-    /// <li>The event may be fired multiple times simultaneously and in any
-    /// order.
-    /// <li>Any newly registered or unregistered handler is ignored after an
-    /// event starts execution.
-    /// <li>The handlers for this event may block for any length of time.
-    /// <li>Some implementations may selectively declare a specific event use
-    /// as asynchronous. This behavior should be clearly defined.
-    /// <li>Asynchronous calls are not calculated in the plugin timing system.
-    /// </ul>
-    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isAsynchronous", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
+	fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,vehicle: impl Into<crate::entity::Vehicle<'mc>>) 
+-> Result<crate::event::vehicle::VehicleEvent<'mc>, Box<dyn std::error::Error>>
 
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+{let sig = String::from("(Lorg/bukkit/entity/Vehicle;)V");
+let val_1 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())});
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.new_object(cls,
+sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
+let res = 
+jni.translate_error_no_gen(res)?;
+crate::event::vehicle::VehicleEvent::from_raw(&jni,res
+)}
+/// Get the vehicle.
+	fn vehicle(&self) 
+-> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/entity/Vehicle;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getVehicle",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::entity::Vehicle::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
+
+    fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
+    
 }
-impl<'mc> Into<crate::event::Event<'mc>> for VehicleEvent<'mc> {
-    fn into(self) -> crate::event::Event<'mc> {
-        crate::event::Event::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting VehicleEvent into crate::event::Event")
-    }
-}
-#[repr(C)]
-pub struct VehicleCollisionEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+impl<'mc> Into<crate::event::Event<'mc>> for VehicleEvent<'mc>{
 
-impl<'mc> JNIRaw<'mc> for VehicleCollisionEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
+fn into(self) -> crate::event::Event<'mc> {
+
+crate::event::Event::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleEvent into crate::event::Event")
+
+   }
+}
+impl<'mc> crate::event::EventTrait<'mc> for VehicleEvent<'mc> {}
+#[repr(C)]
+pub struct VehicleCollisionEvent<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+
+    impl<'mc> JNIRaw<'mc> for VehicleCollisionEvent<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
 }
 impl<'mc> JNIInstantiatable<'mc> for VehicleCollisionEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate VehicleCollisionEvent from null object."
-            )
-            .into());
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate VehicleCollisionEvent from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleCollisionEvent")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a VehicleCollisionEvent object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    Ok(Self(env.clone(), obj))
+            }
         }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleCollisionEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a VehicleCollisionEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
     }
-}
+    
+impl<'mc> VehicleCollisionEventTrait<'mc> for VehicleCollisionEvent<'mc> {}
+pub trait VehicleCollisionEventTrait<'mc>: blackboxmc_general::JNIRaw<'mc> + blackboxmc_general::JNIInstantiatable<'mc> {
 
-impl<'mc> VehicleCollisionEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        vehicle: impl Into<crate::entity::Vehicle<'mc>>,
-    ) -> Result<crate::event::vehicle::VehicleCollisionEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/entity/Vehicle;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleCollisionEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::vehicle::VehicleCollisionEvent::from_raw(&jni, res)
-    }
-    // SUPER CLASS: org.bukkit.event.vehicle.VehicleEvent ( [])
-    /// Get the vehicle.
-    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
-        real.vehicle()
-    }
+	fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,vehicle: impl Into<crate::entity::Vehicle<'mc>>) 
+-> Result<crate::event::vehicle::VehicleCollisionEvent<'mc>, Box<dyn std::error::Error>>
 
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+{let sig = String::from("(Lorg/bukkit/entity/Vehicle;)V");
+let val_1 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())});
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleCollisionEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.new_object(cls,
+sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
+let res = 
+jni.translate_error_no_gen(res)?;
+crate::event::vehicle::VehicleCollisionEvent::from_raw(&jni,res
+)}
+
+    fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
+    
 }
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleCollisionEvent<'mc> {
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).expect(
-            "Error converting VehicleCollisionEvent into crate::event::vehicle::VehicleEvent",
-        )
-    }
-}
-#[repr(C)]
-pub struct VehicleDestroyEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleCollisionEvent<'mc>{
 
-impl<'mc> JNIRaw<'mc> for VehicleDestroyEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
+fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
+
+crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleCollisionEvent into crate::event::vehicle::VehicleEvent")
+
+   }
+}
+impl<'mc> crate::event::vehicle::VehicleEventTrait<'mc> for VehicleCollisionEvent<'mc> {}
+#[repr(C)]
+pub struct VehicleDestroyEvent<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+
+    impl<'mc> JNIRaw<'mc> for VehicleDestroyEvent<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
 }
 impl<'mc> JNIInstantiatable<'mc> for VehicleDestroyEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate VehicleDestroyEvent from null object.").into(),
-            );
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate VehicleDestroyEvent from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleDestroyEvent")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a VehicleDestroyEvent object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    Ok(Self(env.clone(), obj))
+            }
         }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleDestroyEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a VehicleDestroyEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
     }
-}
+    
+impl<'mc> VehicleDestroyEventTrait<'mc> for VehicleDestroyEvent<'mc> {}
+pub trait VehicleDestroyEventTrait<'mc>: blackboxmc_general::JNIRaw<'mc> + blackboxmc_general::JNIInstantiatable<'mc> {
 
-impl<'mc> VehicleDestroyEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        vehicle: impl Into<crate::entity::Vehicle<'mc>>,
-        attacker: impl Into<crate::entity::Entity<'mc>>,
-    ) -> Result<crate::event::vehicle::VehicleDestroyEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(attacker.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleDestroyEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::vehicle::VehicleDestroyEvent::from_raw(&jni, res)
-    }
-    /// Gets the Entity that has destroyed the vehicle, potentially null
-    pub fn attacker(
-        &self,
-    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/Entity;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getAttacker", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::entity::Entity::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
+	fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,vehicle: impl Into<crate::entity::Vehicle<'mc>>,attacker: impl Into<crate::entity::Entity<'mc>>) 
+-> Result<crate::event::vehicle::VehicleDestroyEvent<'mc>, Box<dyn std::error::Error>>
 
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
+{let sig = String::from("(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;)V");
+let val_1 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())});
+let val_2 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(attacker.into().jni_object().clone())});
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleDestroyEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.new_object(cls,
+sig.as_str(),vec![jni::objects::JValueGen::from(val_1),jni::objects::JValueGen::from(val_2)]);
+let res = 
+jni.translate_error_no_gen(res)?;
+crate::event::vehicle::VehicleDestroyEvent::from_raw(&jni,res
+)}
+/// Gets the Entity that has destroyed the vehicle, potentially null
+	fn attacker(&self) 
+-> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>>
 
-    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCancelled",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+{let sig = String::from("()Lorg/bukkit/entity/Entity;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getAttacker",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {return Ok(None);}
+Ok(
+Some(
+crate::entity::Entity::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)?
+)
+)}
 
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+	fn is_cancelled(&self) 
+-> Result<bool, Box<dyn std::error::Error>>
 
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleDestroyEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.vehicle.VehicleEvent ( ['getAttacker', 'isCancelled', 'setCancelled', 'getHandlers', 'getHandlerList'])
-    /// Get the vehicle.
-    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
-        real.vehicle()
-    }
+{let sig = String::from("()Z");
+let res = self.jni_ref().call_method(&self.jni_object(),"isCancelled",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+Ok(
+res.z()?
+)}
 
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+	fn set_cancelled(&self,cancel: bool) 
+-> Result<(), Box<dyn std::error::Error>>
+
+{let sig = String::from("(Z)V");
+let val_1 = jni::objects::JValueGen::Bool(cancel.into());
+let res = self.jni_ref().call_method(&self.jni_object(),"setCancelled",sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(
+()
+)}
+
+	fn handlers(&self) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getHandlers",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::event::HandlerList::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
+
+	fn handler_list(jni: &blackboxmc_general::SharedJNIEnv<'mc>) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleDestroyEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.call_static_method(cls,"getHandlerList",
+sig.as_str(),vec![]);
+let res = 
+jni.translate_error(res)?;
+let obj = res.l()?;
+crate::event::HandlerList::from_raw(&jni,obj
+)}
+
+    fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
+    
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleDestroyEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting VehicleDestroyEvent into crate::event::Cancellable")
-    }
-}
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleDestroyEvent<'mc> {
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting VehicleDestroyEvent into crate::event::vehicle::VehicleEvent")
-    }
-}
-#[repr(C)]
-pub struct VehicleMoveEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleDestroyEvent<'mc>{
 
-impl<'mc> JNIRaw<'mc> for VehicleMoveEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
+fn into(self) -> crate::event::Cancellable<'mc> {
+
+crate::event::Cancellable::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleDestroyEvent into crate::event::Cancellable")
+
+   }
+}
+impl<'mc> crate::event::CancellableTrait<'mc> for VehicleDestroyEvent<'mc> {}
+impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleDestroyEvent<'mc>{
+
+fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
+
+crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleDestroyEvent into crate::event::vehicle::VehicleEvent")
+
+   }
+}
+impl<'mc> crate::event::vehicle::VehicleEventTrait<'mc> for VehicleDestroyEvent<'mc> {}
+#[repr(C)]
+pub struct VehicleMoveEvent<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+
+    impl<'mc> JNIRaw<'mc> for VehicleMoveEvent<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
 }
 impl<'mc> JNIInstantiatable<'mc> for VehicleMoveEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate VehicleMoveEvent from null object.").into(),
-            );
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate VehicleMoveEvent from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleMoveEvent")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a VehicleMoveEvent object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    Ok(Self(env.clone(), obj))
+            }
         }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleMoveEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a VehicleMoveEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
     }
-}
+    
+impl<'mc> VehicleMoveEventTrait<'mc> for VehicleMoveEvent<'mc> {}
+pub trait VehicleMoveEventTrait<'mc>: blackboxmc_general::JNIRaw<'mc> + blackboxmc_general::JNIInstantiatable<'mc> {
 
-impl<'mc> VehicleMoveEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        vehicle: impl Into<crate::entity::Vehicle<'mc>>,
-        from: impl Into<crate::Location<'mc>>,
-        to: impl Into<crate::Location<'mc>>,
-    ) -> Result<crate::event::vehicle::VehicleMoveEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/Location;Lorg/bukkit/Location;)V",
-        );
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(from.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(to.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleMoveEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::vehicle::VehicleMoveEvent::from_raw(&jni, res)
-    }
-    /// Get the previous position.
-    pub fn from(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Location;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getFrom", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Location::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Get the next position.
-    pub fn to(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Location;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getTo", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Location::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+	fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,vehicle: impl Into<crate::entity::Vehicle<'mc>>,from: impl Into<crate::Location<'mc>>,to: impl Into<crate::Location<'mc>>) 
+-> Result<crate::event::vehicle::VehicleMoveEvent<'mc>, Box<dyn std::error::Error>>
 
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+{let sig = String::from("(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/Location;Lorg/bukkit/Location;)V");
+let val_1 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())});
+let val_2 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(from.into().jni_object().clone())});
+let val_3 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(to.into().jni_object().clone())});
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleMoveEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.new_object(cls,
+sig.as_str(),vec![jni::objects::JValueGen::from(val_1),jni::objects::JValueGen::from(val_2),jni::objects::JValueGen::from(val_3)]);
+let res = 
+jni.translate_error_no_gen(res)?;
+crate::event::vehicle::VehicleMoveEvent::from_raw(&jni,res
+)}
+/// Get the previous position.
+	fn from(&self) 
+-> Result<crate::Location<'mc>, Box<dyn std::error::Error>>
 
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleMoveEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.vehicle.VehicleEvent ( ['getFrom', 'getTo', 'getHandlers', 'getHandlerList'])
-    /// Get the vehicle.
-    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
-        real.vehicle()
-    }
+{let sig = String::from("()Lorg/bukkit/Location;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getFrom",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::Location::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
+/// Get the next position.
+	fn to(&self) 
+-> Result<crate::Location<'mc>, Box<dyn std::error::Error>>
 
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+{let sig = String::from("()Lorg/bukkit/Location;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getTo",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::Location::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
+
+	fn handlers(&self) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getHandlers",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::event::HandlerList::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
+
+	fn handler_list(jni: &blackboxmc_general::SharedJNIEnv<'mc>) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleMoveEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.call_static_method(cls,"getHandlerList",
+sig.as_str(),vec![]);
+let res = 
+jni.translate_error(res)?;
+let obj = res.l()?;
+crate::event::HandlerList::from_raw(&jni,obj
+)}
+
+    fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
+    
 }
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleMoveEvent<'mc> {
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting VehicleMoveEvent into crate::event::vehicle::VehicleEvent")
-    }
-}
-#[repr(C)]
-pub struct VehicleDamageEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleMoveEvent<'mc>{
 
-impl<'mc> JNIRaw<'mc> for VehicleDamageEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
+fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
+
+crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleMoveEvent into crate::event::vehicle::VehicleEvent")
+
+   }
+}
+impl<'mc> crate::event::vehicle::VehicleEventTrait<'mc> for VehicleMoveEvent<'mc> {}
+#[repr(C)]
+pub struct VehicleDamageEvent<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+
+    impl<'mc> JNIRaw<'mc> for VehicleDamageEvent<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        
+self.0.clone()
+}
+fn jni_object(&self) -> jni::objects::JObject<'mc> {
+unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+}
 }
 impl<'mc> JNIInstantiatable<'mc> for VehicleDamageEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate VehicleDamageEvent from null object.").into(),
-            );
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate VehicleDamageEvent from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleDamageEvent")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a VehicleDamageEvent object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    Ok(Self(env.clone(), obj))
+            }
         }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/vehicle/VehicleDamageEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a VehicleDamageEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
     }
-}
+    
+impl<'mc> VehicleDamageEventTrait<'mc> for VehicleDamageEvent<'mc> {}
+pub trait VehicleDamageEventTrait<'mc>: blackboxmc_general::JNIRaw<'mc> + blackboxmc_general::JNIInstantiatable<'mc> {
 
-impl<'mc> VehicleDamageEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        vehicle: impl Into<crate::entity::Vehicle<'mc>>,
-        attacker: impl Into<crate::entity::Entity<'mc>>,
-        damage: f64,
-    ) -> Result<crate::event::vehicle::VehicleDamageEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;D)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(attacker.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Double(damage);
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleDamageEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::vehicle::VehicleDamageEvent::from_raw(&jni, res)
-    }
-    /// Gets the Entity that is attacking the vehicle
-    pub fn attacker(
-        &self,
-    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/Entity;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getAttacker", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::entity::Entity::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-    /// Gets the damage done to the vehicle
-    pub fn damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getDamage", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Sets the damage done to the vehicle
-    pub fn set_damage(&self, damage: f64) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(D)V");
-        let val_1 = jni::objects::JValueGen::Double(damage);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setDamage",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+	fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,vehicle: impl Into<crate::entity::Vehicle<'mc>>,attacker: impl Into<crate::entity::Entity<'mc>>,damage: f64) 
+-> Result<crate::event::vehicle::VehicleDamageEvent<'mc>, Box<dyn std::error::Error>>
 
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
+{let sig = String::from("(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;D)V");
+let val_1 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(vehicle.into().jni_object().clone())});
+let val_2 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(attacker.into().jni_object().clone())});
+let val_3 = jni::objects::JValueGen::Double(damage);
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleDamageEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.new_object(cls,
+sig.as_str(),vec![jni::objects::JValueGen::from(val_1),jni::objects::JValueGen::from(val_2),jni::objects::JValueGen::from(val_3)]);
+let res = 
+jni.translate_error_no_gen(res)?;
+crate::event::vehicle::VehicleDamageEvent::from_raw(&jni,res
+)}
+/// Gets the Entity that is attacking the vehicle
+	fn attacker(&self) 
+-> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>>
 
-    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCancelled",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+{let sig = String::from("()Lorg/bukkit/entity/Entity;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getAttacker",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {return Ok(None);}
+Ok(
+Some(
+crate::entity::Entity::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)?
+)
+)}
+/// Gets the damage done to the vehicle
+	fn damage(&self) 
+-> Result<f64, Box<dyn std::error::Error>>
 
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+{let sig = String::from("()D");
+let res = self.jni_ref().call_method(&self.jni_object(),"getDamage",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+Ok(
+res.d()?
+)}
+/// Sets the damage done to the vehicle
+	fn set_damage(&self,damage: f64) 
+-> Result<(), Box<dyn std::error::Error>>
 
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleDamageEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.vehicle.VehicleEvent ( ['getAttacker', 'getDamage', 'setDamage', 'isCancelled', 'setCancelled', 'getHandlers', 'getHandlerList'])
-    /// Get the vehicle.
-    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::vehicle::VehicleEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::vehicle::VehicleEvent = temp_clone.into();
-        real.vehicle()
-    }
+{let sig = String::from("(D)V");
+let val_1 = jni::objects::JValueGen::Double(damage);
+let res = self.jni_ref().call_method(&self.jni_object(),"setDamage",sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(
+()
+)}
 
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+	fn is_cancelled(&self) 
+-> Result<bool, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Z");
+let res = self.jni_ref().call_method(&self.jni_object(),"isCancelled",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+Ok(
+res.z()?
+)}
+
+	fn set_cancelled(&self,cancel: bool) 
+-> Result<(), Box<dyn std::error::Error>>
+
+{let sig = String::from("(Z)V");
+let val_1 = jni::objects::JValueGen::Bool(cancel.into());
+let res = self.jni_ref().call_method(&self.jni_object(),"setCancelled",sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(
+()
+)}
+
+	fn handlers(&self) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let res = self.jni_ref().call_method(&self.jni_object(),"getHandlers",sig.as_str(),vec![]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::event::HandlerList::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
+
+	fn handler_list(jni: &blackboxmc_general::SharedJNIEnv<'mc>) 
+-> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+let cls = jni.find_class("org/bukkit/event/vehicle/VehicleDamageEvent"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.call_static_method(cls,"getHandlerList",
+sig.as_str(),vec![]);
+let res = 
+jni.translate_error(res)?;
+let obj = res.l()?;
+crate::event::HandlerList::from_raw(&jni,obj
+)}
+
+    fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error>  {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
+    
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleDamageEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting VehicleDamageEvent into crate::event::Cancellable")
-    }
+impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleDamageEvent<'mc>{
+
+fn into(self) -> crate::event::Cancellable<'mc> {
+
+crate::event::Cancellable::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleDamageEvent into crate::event::Cancellable")
+
+   }
 }
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleDamageEvent<'mc> {
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting VehicleDamageEvent into crate::event::vehicle::VehicleEvent")
-    }
+impl<'mc> crate::event::CancellableTrait<'mc> for VehicleDamageEvent<'mc> {}
+impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleDamageEvent<'mc>{
+
+fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
+
+crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.jni_object()).expect("Error converting VehicleDamageEvent into crate::event::vehicle::VehicleEvent")
+
+   }
 }
+impl<'mc> crate::event::vehicle::VehicleEventTrait<'mc> for VehicleDamageEvent<'mc> {}

@@ -1,3 +1,5 @@
+use blackboxmc_bukkit::prelude::*;
+
 use std::error::Error;
 
 use blackboxmc_bukkit::inventory::PlayerInventory;

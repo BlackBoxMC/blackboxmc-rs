@@ -1,3 +1,4 @@
+use blackboxmc_bukkit::prelude::*;
 use blackboxmc_general::JNIInstantiatable;
 use std::error::Error;
 
