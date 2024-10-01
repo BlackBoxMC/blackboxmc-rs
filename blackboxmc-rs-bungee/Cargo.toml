@@ -1,6 +1,6 @@
 [package]
 name = "blackboxmc_bungee"
-version = "0.5.1"
+version = "0.5.21"
 edition = "2021"
 license = "LGPL-2.0-or-later"
 description = "BlackboxMC bindings for net.md_5.bungee"
