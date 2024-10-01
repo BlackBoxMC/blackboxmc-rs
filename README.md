@@ -1,6 +1,10 @@
 # blackbox-rs
 
-blackbox-rs is a Rust crate that is to be paired with [BlackBox](https://github.com/BlackboxMC/Blackbox), which allows you to create Bukkit compatible plugins using compiled langauges such as Rust.
+blackbox-rs is a series of Rust crates that is to be paired with [BlackBox](https://github.com/BlackboxMC/Blackbox), which allows you to create Bukkit compatible plugins using compiled langauges such as Rust.
+
+# Versioning
+
+Four of the crates are frozen at `0.4.0` due to no longer needing updates. The only one that gets updates is `blackboxmc-rs-bukkit`, which uses semantic versioning but places the patch version at the equivalant Minecraft version. For example, `1.2.21` is version 1.2 of the plugin, with compatibility for 1.21.
 
 # Contributing
 

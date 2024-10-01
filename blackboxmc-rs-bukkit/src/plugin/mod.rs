@@ -3665,7 +3665,7 @@ impl<'mc> ServicesManager<'mc> {
     pub fn get_registrations(
         &self,
         service: jni::objects::JClass<'mc>,
-    ) -> Result<Vec<crate::plugin::RegisteredServiceProvider<T, 'mc>>, Box<dyn std::error::Error>>
+    ) -> Result<Vec<crate::plugin::RegisteredServiceProvider<'mc>>, Box<dyn std::error::Error>>
     {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -3682,7 +3682,7 @@ impl<'mc> ServicesManager<'mc> {
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
-            new_vec.push(crate::plugin::RegisteredServiceProvider::<T>::from_raw(
+            new_vec.push(crate::plugin::RegisteredServiceProvider::from_raw(
                 &self.jni_ref(),
                 obj,
             )?);
