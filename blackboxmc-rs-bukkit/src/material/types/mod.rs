@@ -2,64 +2,10 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-pub enum MushroomBlockTexture<'mc> {
-    AllPores {
-        inner: MushroomBlockTextureStruct<'mc>,
-    },
-    CapNorthWest {
-        inner: MushroomBlockTextureStruct<'mc>,
-    },
-    CapNorth {
-        inner: MushroomBlockTextureStruct<'mc>,
-    },
-    CapNorthEast {
-        inner: MushroomBlockTextureStruct<'mc>,
-    },
-    CapWest {
-        inner: MushroomBlockTextureStruct<'mc>,
-    },
-    CapTop {
-        inner: MushroomBlockTextureStruct<'mc>,
-    },
-    CapEast {
-        inner: MushroomBlockTextureStruct<'mc>,
-    },
-    CapSouthWest {
-        inner: MushroomBlockTextureStruct<'mc>,
-    },
-    CapSouth {
-        inner: MushroomBlockTextureStruct<'mc>,
-    },
-    CapSouthEast {
-        inner: MushroomBlockTextureStruct<'mc>,
-    },
-    StemSides {
-        inner: MushroomBlockTextureStruct<'mc>,
-    },
-    AllCap {
-        inner: MushroomBlockTextureStruct<'mc>,
-    },
-    AllStem {
-        inner: MushroomBlockTextureStruct<'mc>,
-    },
-}
+pub enum MushroomBlockTexture<'mc> {}
 impl<'mc> std::fmt::Display for MushroomBlockTexture<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            MushroomBlockTexture::AllPores { .. } => f.write_str("ALL_PORES"),
-            MushroomBlockTexture::CapNorthWest { .. } => f.write_str("CAP_NORTH_WEST"),
-            MushroomBlockTexture::CapNorth { .. } => f.write_str("CAP_NORTH"),
-            MushroomBlockTexture::CapNorthEast { .. } => f.write_str("CAP_NORTH_EAST"),
-            MushroomBlockTexture::CapWest { .. } => f.write_str("CAP_WEST"),
-            MushroomBlockTexture::CapTop { .. } => f.write_str("CAP_TOP"),
-            MushroomBlockTexture::CapEast { .. } => f.write_str("CAP_EAST"),
-            MushroomBlockTexture::CapSouthWest { .. } => f.write_str("CAP_SOUTH_WEST"),
-            MushroomBlockTexture::CapSouth { .. } => f.write_str("CAP_SOUTH"),
-            MushroomBlockTexture::CapSouthEast { .. } => f.write_str("CAP_SOUTH_EAST"),
-            MushroomBlockTexture::StemSides { .. } => f.write_str("STEM_SIDES"),
-            MushroomBlockTexture::AllCap { .. } => f.write_str("ALL_CAP"),
-            MushroomBlockTexture::AllStem { .. } => f.write_str("ALL_STEM"),
-        }
+        match self {}
     }
 }
 
@@ -86,46 +32,6 @@ impl<'mc> MushroomBlockTexture<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
-            "ALL_PORES" => Ok(MushroomBlockTexture::AllPores {
-                inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-            }),
-            "CAP_NORTH_WEST" => Ok(MushroomBlockTexture::CapNorthWest {
-                inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-            }),
-            "CAP_NORTH" => Ok(MushroomBlockTexture::CapNorth {
-                inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-            }),
-            "CAP_NORTH_EAST" => Ok(MushroomBlockTexture::CapNorthEast {
-                inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-            }),
-            "CAP_WEST" => Ok(MushroomBlockTexture::CapWest {
-                inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-            }),
-            "CAP_TOP" => Ok(MushroomBlockTexture::CapTop {
-                inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-            }),
-            "CAP_EAST" => Ok(MushroomBlockTexture::CapEast {
-                inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-            }),
-            "CAP_SOUTH_WEST" => Ok(MushroomBlockTexture::CapSouthWest {
-                inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-            }),
-            "CAP_SOUTH" => Ok(MushroomBlockTexture::CapSouth {
-                inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-            }),
-            "CAP_SOUTH_EAST" => Ok(MushroomBlockTexture::CapSouthEast {
-                inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-            }),
-            "STEM_SIDES" => Ok(MushroomBlockTexture::StemSides {
-                inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-            }),
-            "ALL_CAP" => Ok(MushroomBlockTexture::AllCap {
-                inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-            }),
-            "ALL_STEM" => Ok(MushroomBlockTexture::AllStem {
-                inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-            }),
-
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -139,48 +45,10 @@ pub struct MushroomBlockTextureStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for MushroomBlockTexture<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {
-            Self::AllPores { inner } => inner.0.clone(),
-            Self::CapNorthWest { inner } => inner.0.clone(),
-            Self::CapNorth { inner } => inner.0.clone(),
-            Self::CapNorthEast { inner } => inner.0.clone(),
-            Self::CapWest { inner } => inner.0.clone(),
-            Self::CapTop { inner } => inner.0.clone(),
-            Self::CapEast { inner } => inner.0.clone(),
-            Self::CapSouthWest { inner } => inner.0.clone(),
-            Self::CapSouth { inner } => inner.0.clone(),
-            Self::CapSouthEast { inner } => inner.0.clone(),
-            Self::StemSides { inner } => inner.0.clone(),
-            Self::AllCap { inner } => inner.0.clone(),
-            Self::AllStem { inner } => inner.0.clone(),
-        }
+        match self {}
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {
-            Self::AllPores { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::CapNorthWest { inner } => unsafe {
-                jni::objects::JObject::from_raw(inner.1.clone())
-            },
-            Self::CapNorth { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::CapNorthEast { inner } => unsafe {
-                jni::objects::JObject::from_raw(inner.1.clone())
-            },
-            Self::CapWest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::CapTop { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::CapEast { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::CapSouthWest { inner } => unsafe {
-                jni::objects::JObject::from_raw(inner.1.clone())
-            },
-            Self::CapSouth { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::CapSouthEast { inner } => unsafe {
-                jni::objects::JObject::from_raw(inner.1.clone())
-            },
-            Self::StemSides { inner } => unsafe {
-                jni::objects::JObject::from_raw(inner.1.clone())
-            },
-            Self::AllCap { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::AllStem { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-        }
+        match self {}
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for MushroomBlockTexture<'mc> {
@@ -209,45 +77,6 @@ impl<'mc> JNIInstantiatable<'mc> for MushroomBlockTexture<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
-                "ALL_PORES" => Ok(MushroomBlockTexture::AllPores {
-                    inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-                }),
-                "CAP_NORTH_WEST" => Ok(MushroomBlockTexture::CapNorthWest {
-                    inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-                }),
-                "CAP_NORTH" => Ok(MushroomBlockTexture::CapNorth {
-                    inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-                }),
-                "CAP_NORTH_EAST" => Ok(MushroomBlockTexture::CapNorthEast {
-                    inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-                }),
-                "CAP_WEST" => Ok(MushroomBlockTexture::CapWest {
-                    inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-                }),
-                "CAP_TOP" => Ok(MushroomBlockTexture::CapTop {
-                    inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-                }),
-                "CAP_EAST" => Ok(MushroomBlockTexture::CapEast {
-                    inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-                }),
-                "CAP_SOUTH_WEST" => Ok(MushroomBlockTexture::CapSouthWest {
-                    inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-                }),
-                "CAP_SOUTH" => Ok(MushroomBlockTexture::CapSouth {
-                    inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-                }),
-                "CAP_SOUTH_EAST" => Ok(MushroomBlockTexture::CapSouthEast {
-                    inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-                }),
-                "STEM_SIDES" => Ok(MushroomBlockTexture::StemSides {
-                    inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-                }),
-                "ALL_CAP" => Ok(MushroomBlockTexture::AllCap {
-                    inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-                }),
-                "ALL_STEM" => Ok(MushroomBlockTexture::AllStem {
-                    inner: MushroomBlockTextureStruct::from_raw(env, obj)?,
-                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }

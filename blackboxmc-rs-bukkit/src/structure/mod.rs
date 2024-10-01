@@ -469,12 +469,14 @@ impl<'mc> Structure<'mc> {
     pub fn persistent_data_container(
         &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPersistentDataContainer",
             sig.as_str(),
-            vec![],
+            args,
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {

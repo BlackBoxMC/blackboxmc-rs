@@ -3,6 +3,132 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
+pub struct BlockPopulator<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for BlockPopulator<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for BlockPopulator<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate BlockPopulator from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/generator/BlockPopulator")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BlockPopulator object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> BlockPopulator<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "BlockPopulator", name, lib_name) }?;
+        Self::from_raw(env, obj)
+    }
+
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::generator::BlockPopulator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let cls = jni.find_class("org/bukkit/generator/BlockPopulator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), vec![]);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::generator::BlockPopulator::from_raw(&jni, res)
+    }
+    /// Populates an area of blocks at or around the given chunk.
+    ///
+    /// Notes:
+    ///
+    /// This method should <b>never</b> attempt to get the Chunk at the passed
+    /// coordinates, as doing so may cause an infinite loop
+    ///
+    /// This method should <b>never</b> modify a {@link LimitedRegion} at a later
+    /// point of time.
+    ///
+    /// This method <b>must</b> be completely thread safe and able to handle
+    /// multiple concurrent callers.
+    ///
+    /// No physics are applied, whether or not it is set to true in
+    /// {@link org.bukkit.block.BlockState#update(boolean, boolean)}
+    ///
+    /// <b>Only</b> use the {@link org.bukkit.block.BlockState} returned by
+    /// {@link LimitedRegion},
+    /// <b>never</b> use methods from a {@link World} to modify the chunk.
+    pub fn populate(
+        &self,
+        world_info: impl Into<crate::generator::WorldInfo<'mc>>,
+        random: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
+        chunk_x: i32,
+        chunk_z: std::option::Option<i32>,
+        limited_region: std::option::Option<impl Into<crate::generator::LimitedRegion<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/generator/WorldInfo;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(world_info.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/util/Random;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(random.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += "I";
+        let val_3 = jni::objects::JValueGen::Int(chunk_x);
+        args.push(val_3);
+        if let Some(a) = chunk_z {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a);
+            args.push(val_4);
+        }
+        if let Some(a) = limited_region {
+            sig += "Lorg/bukkit/generator/LimitedRegion;";
+            let val_5 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_5);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "populate", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
 pub struct ChunkGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -804,6 +930,114 @@ impl<'mc> ChunkGenerator<'mc> {
     }
 }
 #[repr(C)]
+pub struct ChunkGeneratorBiomeGrid<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for ChunkGeneratorBiomeGrid<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ChunkGeneratorBiomeGrid<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate ChunkGeneratorBiomeGrid from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/generator/ChunkGenerator/BiomeGrid")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ChunkGeneratorBiomeGrid object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
+    /// Get biome at x, z within chunk being generated
+    pub fn get_biome(
+        &self,
+        x: i32,
+        y: i32,
+        z: std::option::Option<i32>,
+    ) -> Result<crate::block::Biome<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(x);
+        args.push(val_1);
+        sig += "I";
+        let val_2 = jni::objects::JValueGen::Int(y);
+        args.push(val_2);
+        if let Some(a) = z {
+            sig += "I";
+            let val_3 = jni::objects::JValueGen::Int(a);
+            args.push(val_3);
+        }
+        sig += ")Lorg/bukkit/block/Biome;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getBiome", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::Biome::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Set biome at x, z within chunk being generated
+    pub fn set_biome(
+        &self,
+        x: i32,
+        y: i32,
+        z: i32,
+        bio: std::option::Option<impl Into<crate::block::Biome<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(x);
+        args.push(val_1);
+        sig += "I";
+        let val_2 = jni::objects::JValueGen::Int(y);
+        args.push(val_2);
+        sig += "I";
+        let val_3 = jni::objects::JValueGen::Int(z);
+        args.push(val_3);
+        if let Some(a) = bio {
+            sig += "Lorg/bukkit/block/Biome;";
+            let val_4 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_4);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "setBiome", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
 pub struct ChunkGeneratorChunkData<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1074,6 +1308,344 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct BiomeParameterPoint<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for BiomeParameterPoint<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for BiomeParameterPoint<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate BiomeParameterPoint from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/generator/BiomeParameterPoint")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BiomeParameterPoint object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> BiomeParameterPoint<'mc> {
+    /// Gets the temperature of the biome at this point that is suggested by the
+    /// NoiseGenerator.
+    pub fn temperature(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getTemperature", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the maximum temperature that is possible.
+    pub fn max_temperature(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxTemperature",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the minimum temperature that is possible.
+    pub fn min_temperature(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMinTemperature",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the humidity of the biome at this point that is suggested by the
+    /// NoiseGenerator.
+    pub fn humidity(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHumidity", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the maximum humidity that is possible.
+    pub fn max_humidity(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxHumidity", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the minimum humidity that is possible.
+    pub fn min_humidity(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMinHumidity", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the continentalness of the biome at this point that is suggested by
+    /// the NoiseGenerator.
+    pub fn continentalness(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getContinentalness",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the maximum continentalness that is possible.
+    pub fn max_continentalness(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxContinentalness",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the minimum continentalness that is possible.
+    pub fn min_continentalness(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMinContinentalness",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the erosion of the biome at this point that is suggested by the
+    /// NoiseGenerator.
+    pub fn erosion(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getErosion", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the maximum erosion that is possible.
+    pub fn max_erosion(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxErosion", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the minimum erosion that is possible.
+    pub fn min_erosion(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMinErosion", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the depth of the biome at this point that is suggested by the
+    /// NoiseGenerator.
+    pub fn depth(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getDepth", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the maximum depth that is possible.
+    pub fn max_depth(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxDepth", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the minimum depth that is possible.
+    pub fn min_depth(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMinDepth", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the weirdness of the biome at this point that is suggested by the
+    /// NoiseGenerator.
+    pub fn weirdness(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getWeirdness", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the maximum weirdness that is possible.
+    pub fn max_weirdness(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxWeirdness", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    /// Gets the minimum weirdness that is possible.
+    pub fn min_weirdness(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMinWeirdness", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct BiomeProvider<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for BiomeProvider<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for BiomeProvider<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate BiomeProvider from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/generator/BiomeProvider")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BiomeProvider object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> BiomeProvider<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "BiomeProvider", name, lib_name) }?;
+        Self::from_raw(env, obj)
+    }
+
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::generator::BiomeProvider<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let cls = jni.find_class("org/bukkit/generator/BiomeProvider");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), vec![]);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::generator::BiomeProvider::from_raw(&jni, res)
+    }
+    /// Return the Biome which should be present at the provided location.
+    ///
+    /// Notes:
+    ///
+    /// This method <b>must</b> be completely thread safe and able to handle
+    /// multiple concurrent callers.
+    ///
+    /// This method should only return biomes which are present in the list
+    /// returned by {@link #getBiomes(WorldInfo)}
+    ///
+    /// This method should <b>never</b> return {@link Biome#CUSTOM}.
+    /// Only this method is called if both this and
+    /// {@link #getBiome(WorldInfo, int, int, int)} are overridden.
+    pub fn get_biome(
+        &self,
+        world_info: impl Into<crate::generator::WorldInfo<'mc>>,
+        x: i32,
+        y: i32,
+        z: i32,
+        biome_parameter_point: impl Into<crate::generator::BiomeParameterPoint<'mc>>,
+    ) -> Result<crate::block::Biome<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/generator/WorldInfo;IIILorg/bukkit/generator/BiomeParameterPoint;)Lorg/bukkit/block/Biome;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(world_info.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Int(x);
+        let val_3 = jni::objects::JValueGen::Int(y);
+        let val_4 = jni::objects::JValueGen::Int(z);
+        let val_5 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(biome_parameter_point.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getBiome",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+                jni::objects::JValueGen::from(val_5),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::Biome::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1491,10 +2063,12 @@ impl<'mc> LimitedRegion<'mc> {
     }
     /// Get a list of all entities in this RegionAccessor
     pub fn entities(&self) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/List;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getEntities", sig.as_str(), vec![]);
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Ljava/util/List;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getEntities", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
@@ -1509,13 +2083,12 @@ impl<'mc> LimitedRegion<'mc> {
     pub fn living_entities(
         &self,
     ) -> Result<Vec<crate::entity::LivingEntity<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/List;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLivingEntities",
-            sig.as_str(),
-            vec![],
-        );
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Ljava/util/List;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLivingEntities", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
@@ -1532,13 +2105,17 @@ impl<'mc> LimitedRegion<'mc> {
         &self,
         cls: jni::objects::JClass<'mc>,
     ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Class;)Ljava/util/Collection;");
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/Class;";
         let val_1 = jni::objects::JValueGen::Object(cls.into());
+        args.push(val_1);
+        sig += ")Ljava/util/Collection;";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEntitiesByClass",
             sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
+            args,
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
@@ -1556,13 +2133,17 @@ impl<'mc> LimitedRegion<'mc> {
         &self,
         classes: jni::objects::JClass<'mc>,
     ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Class;)Ljava/util/Collection;");
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/Class;";
         let val_1 = jni::objects::JValueGen::Object(classes.into());
+        args.push(val_1);
+        sig += ")Ljava/util/Collection;";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEntitiesByClasses",
             sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
+            args,
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
@@ -1712,117 +2293,6 @@ impl<'mc> Into<crate::RegionAccessor<'mc>> for LimitedRegion<'mc> {
     }
 }
 #[repr(C)]
-pub struct BiomeProvider<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for BiomeProvider<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for BiomeProvider<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate BiomeProvider from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/generator/BiomeProvider")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a BiomeProvider object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> BiomeProvider<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "BiomeProvider", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::generator::BiomeProvider<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let cls = jni.find_class("org/bukkit/generator/BiomeProvider");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), vec![]);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::generator::BiomeProvider::from_raw(&jni, res)
-    }
-    /// Return the Biome which should be present at the provided location.
-    ///
-    /// Notes:
-    ///
-    /// This method <b>must</b> be completely thread safe and able to handle
-    /// multiple concurrent callers.
-    ///
-    /// This method should only return biomes which are present in the list
-    /// returned by {@link #getBiomes(WorldInfo)}
-    ///
-    /// This method should <b>never</b> return {@link Biome#CUSTOM}.
-    /// Only this method is called if both this and
-    /// {@link #getBiome(WorldInfo, int, int, int)} are overridden.
-    pub fn get_biome(
-        &self,
-        world_info: impl Into<crate::generator::WorldInfo<'mc>>,
-        x: i32,
-        y: i32,
-        z: i32,
-        biome_parameter_point: impl Into<crate::generator::BiomeParameterPoint<'mc>>,
-    ) -> Result<crate::block::Biome<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/generator/WorldInfo;IIILorg/bukkit/generator/BiomeParameterPoint;)Lorg/bukkit/block/Biome;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(world_info.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Int(x);
-        let val_3 = jni::objects::JValueGen::Int(y);
-        let val_4 = jni::objects::JValueGen::Int(z);
-        let val_5 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(biome_parameter_point.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getBiome",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-                jni::objects::JValueGen::from(val_5),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::Biome::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
 pub struct WorldInfo<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1923,467 +2393,6 @@ impl<'mc> WorldInfo<'mc> {
                 .call_method(&self.jni_object(), "getMaxHeight", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct ChunkGeneratorBiomeGrid<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for ChunkGeneratorBiomeGrid<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for ChunkGeneratorBiomeGrid<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate ChunkGeneratorBiomeGrid from null object."
-            )
-            .into());
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/generator/ChunkGenerator/BiomeGrid")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a ChunkGeneratorBiomeGrid object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
-    /// Get biome at x, z within chunk being generated
-    pub fn get_biome(
-        &self,
-        x: i32,
-        y: i32,
-        z: std::option::Option<i32>,
-    ) -> Result<crate::block::Biome<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(x);
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(y);
-        args.push(val_2);
-        if let Some(a) = z {
-            sig += "I";
-            let val_3 = jni::objects::JValueGen::Int(a);
-            args.push(val_3);
-        }
-        sig += ")Lorg/bukkit/block/Biome;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getBiome", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::Biome::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Set biome at x, z within chunk being generated
-    pub fn set_biome(
-        &self,
-        x: i32,
-        y: i32,
-        z: i32,
-        bio: std::option::Option<impl Into<crate::block::Biome<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(x);
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(y);
-        args.push(val_2);
-        sig += "I";
-        let val_3 = jni::objects::JValueGen::Int(z);
-        args.push(val_3);
-        if let Some(a) = bio {
-            sig += "Lorg/bukkit/block/Biome;";
-            let val_4 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_4);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "setBiome", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct BlockPopulator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for BlockPopulator<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for BlockPopulator<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate BlockPopulator from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/generator/BlockPopulator")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a BlockPopulator object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> BlockPopulator<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "BlockPopulator", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::generator::BlockPopulator<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let cls = jni.find_class("org/bukkit/generator/BlockPopulator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), vec![]);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::generator::BlockPopulator::from_raw(&jni, res)
-    }
-    /// Populates an area of blocks at or around the given chunk.
-    ///
-    /// Notes:
-    ///
-    /// This method should <b>never</b> attempt to get the Chunk at the passed
-    /// coordinates, as doing so may cause an infinite loop
-    ///
-    /// This method should <b>never</b> modify a {@link LimitedRegion} at a later
-    /// point of time.
-    ///
-    /// This method <b>must</b> be completely thread safe and able to handle
-    /// multiple concurrent callers.
-    ///
-    /// No physics are applied, whether or not it is set to true in
-    /// {@link org.bukkit.block.BlockState#update(boolean, boolean)}
-    ///
-    /// <b>Only</b> use the {@link org.bukkit.block.BlockState} returned by
-    /// {@link LimitedRegion},
-    /// <b>never</b> use methods from a {@link World} to modify the chunk.
-    pub fn populate(
-        &self,
-        world_info: impl Into<crate::generator::WorldInfo<'mc>>,
-        random: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
-        chunk_x: i32,
-        chunk_z: std::option::Option<i32>,
-        limited_region: std::option::Option<impl Into<crate::generator::LimitedRegion<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/generator/WorldInfo;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(world_info.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Ljava/util/Random;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(random.into().jni_object().clone())
-        });
-        args.push(val_2);
-        sig += "I";
-        let val_3 = jni::objects::JValueGen::Int(chunk_x);
-        args.push(val_3);
-        if let Some(a) = chunk_z {
-            sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a);
-            args.push(val_4);
-        }
-        if let Some(a) = limited_region {
-            sig += "Lorg/bukkit/generator/LimitedRegion;";
-            let val_5 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_5);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "populate", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct BiomeParameterPoint<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for BiomeParameterPoint<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for BiomeParameterPoint<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate BiomeParameterPoint from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/generator/BiomeParameterPoint")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a BiomeParameterPoint object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> BiomeParameterPoint<'mc> {
-    /// Gets the temperature of the biome at this point that is suggested by the
-    /// NoiseGenerator.
-    pub fn temperature(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getTemperature", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the maximum temperature that is possible.
-    pub fn max_temperature(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getMaxTemperature",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the minimum temperature that is possible.
-    pub fn min_temperature(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getMinTemperature",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the humidity of the biome at this point that is suggested by the
-    /// NoiseGenerator.
-    pub fn humidity(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHumidity", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the maximum humidity that is possible.
-    pub fn max_humidity(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMaxHumidity", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the minimum humidity that is possible.
-    pub fn min_humidity(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMinHumidity", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the continentalness of the biome at this point that is suggested by
-    /// the NoiseGenerator.
-    pub fn continentalness(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getContinentalness",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the maximum continentalness that is possible.
-    pub fn max_continentalness(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getMaxContinentalness",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the minimum continentalness that is possible.
-    pub fn min_continentalness(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getMinContinentalness",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the erosion of the biome at this point that is suggested by the
-    /// NoiseGenerator.
-    pub fn erosion(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getErosion", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the maximum erosion that is possible.
-    pub fn max_erosion(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMaxErosion", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the minimum erosion that is possible.
-    pub fn min_erosion(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMinErosion", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the depth of the biome at this point that is suggested by the
-    /// NoiseGenerator.
-    pub fn depth(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getDepth", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the maximum depth that is possible.
-    pub fn max_depth(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMaxDepth", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the minimum depth that is possible.
-    pub fn min_depth(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMinDepth", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the weirdness of the biome at this point that is suggested by the
-    /// NoiseGenerator.
-    pub fn weirdness(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getWeirdness", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the maximum weirdness that is possible.
-    pub fn max_weirdness(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMaxWeirdness", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    /// Gets the minimum weirdness that is possible.
-    pub fn min_weirdness(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMinWeirdness", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

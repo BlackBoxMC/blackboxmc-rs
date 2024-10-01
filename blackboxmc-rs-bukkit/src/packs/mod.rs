@@ -166,190 +166,6 @@ impl<'mc> DataPackManager<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum DataPackSource<'mc> {
-    Default { inner: DataPackSourceStruct<'mc> },
-    BuiltIn { inner: DataPackSourceStruct<'mc> },
-    Feature { inner: DataPackSourceStruct<'mc> },
-    World { inner: DataPackSourceStruct<'mc> },
-    Server { inner: DataPackSourceStruct<'mc> },
-}
-impl<'mc> std::fmt::Display for DataPackSource<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            DataPackSource::Default { .. } => f.write_str("DEFAULT"),
-            DataPackSource::BuiltIn { .. } => f.write_str("BUILT_IN"),
-            DataPackSource::Feature { .. } => f.write_str("FEATURE"),
-            DataPackSource::World { .. } => f.write_str("WORLD"),
-            DataPackSource::Server { .. } => f.write_str("SERVER"),
-        }
-    }
-}
-
-impl<'mc> DataPackSource<'mc> {
-    pub fn value_of(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<DataPackSource<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
-        let cls = env.find_class("org/bukkit/packs/DataPack/Source");
-        let cls = env.translate_error_with_class(cls)?;
-        let res = env.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/packs/DataPack/Source;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = env.translate_error(res)?;
-        let obj = res.l()?;
-        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = env.translate_error(variant)?;
-        let variant_str = env
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        match variant_str.as_str() {
-            "DEFAULT" => Ok(DataPackSource::Default {
-                inner: DataPackSourceStruct::from_raw(env, obj)?,
-            }),
-            "BUILT_IN" => Ok(DataPackSource::BuiltIn {
-                inner: DataPackSourceStruct::from_raw(env, obj)?,
-            }),
-            "FEATURE" => Ok(DataPackSource::Feature {
-                inner: DataPackSourceStruct::from_raw(env, obj)?,
-            }),
-            "WORLD" => Ok(DataPackSource::World {
-                inner: DataPackSourceStruct::from_raw(env, obj)?,
-            }),
-            "SERVER" => Ok(DataPackSource::Server {
-                inner: DataPackSourceStruct::from_raw(env, obj)?,
-            }),
-
-            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-        }
-    }
-}
-
-#[repr(C)]
-pub struct DataPackSourceStruct<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for DataPackSource<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {
-            Self::Default { inner } => inner.0.clone(),
-            Self::BuiltIn { inner } => inner.0.clone(),
-            Self::Feature { inner } => inner.0.clone(),
-            Self::World { inner } => inner.0.clone(),
-            Self::Server { inner } => inner.0.clone(),
-        }
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {
-            Self::Default { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::BuiltIn { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::Feature { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::World { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::Server { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-        }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for DataPackSource<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate DataPackSource from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/packs/DataPack/Source")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a DataPackSource object, got {}",
-                name
-            )
-            .into())
-        } else {
-            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-            let variant = env.translate_error(variant)?;
-            let variant_str = env
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            match variant_str.as_str() {
-                "DEFAULT" => Ok(DataPackSource::Default {
-                    inner: DataPackSourceStruct::from_raw(env, obj)?,
-                }),
-                "BUILT_IN" => Ok(DataPackSource::BuiltIn {
-                    inner: DataPackSourceStruct::from_raw(env, obj)?,
-                }),
-                "FEATURE" => Ok(DataPackSource::Feature {
-                    inner: DataPackSourceStruct::from_raw(env, obj)?,
-                }),
-                "WORLD" => Ok(DataPackSource::World {
-                    inner: DataPackSourceStruct::from_raw(env, obj)?,
-                }),
-                "SERVER" => Ok(DataPackSource::Server {
-                    inner: DataPackSourceStruct::from_raw(env, obj)?,
-                }),
-                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-            }
-        }
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for DataPackSourceStruct<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for DataPackSourceStruct<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate DataPackSourceStruct from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/packs/DataPack/Source")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a DataPackSourceStruct object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> DataPackSourceStruct<'mc> {
-    pub fn values(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::packs::DataPackSource<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/packs/DataPack/Source;");
-        let cls = jni.find_class("org/bukkit/packs/DataPack/Source");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::packs::DataPackSource::from_raw(&jni, obj)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
 #[repr(C)]
 pub struct ResourcePack<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -452,180 +268,6 @@ impl<'mc> ResourcePack<'mc> {
                 .call_method(&self.jni_object(), "isRequired", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-pub enum DataPackCompatibility<'mc> {
-    New {
-        inner: DataPackCompatibilityStruct<'mc>,
-    },
-    Old {
-        inner: DataPackCompatibilityStruct<'mc>,
-    },
-    Compatible {
-        inner: DataPackCompatibilityStruct<'mc>,
-    },
-}
-impl<'mc> std::fmt::Display for DataPackCompatibility<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            DataPackCompatibility::New { .. } => f.write_str("NEW"),
-            DataPackCompatibility::Old { .. } => f.write_str("OLD"),
-            DataPackCompatibility::Compatible { .. } => f.write_str("COMPATIBLE"),
-        }
-    }
-}
-
-impl<'mc> DataPackCompatibility<'mc> {
-    pub fn value_of(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<DataPackCompatibility<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
-        let cls = env.find_class("org/bukkit/packs/DataPack/Compatibility");
-        let cls = env.translate_error_with_class(cls)?;
-        let res = env.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/packs/DataPack/Compatibility;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = env.translate_error(res)?;
-        let obj = res.l()?;
-        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = env.translate_error(variant)?;
-        let variant_str = env
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        match variant_str.as_str() {
-            "NEW" => Ok(DataPackCompatibility::New {
-                inner: DataPackCompatibilityStruct::from_raw(env, obj)?,
-            }),
-            "OLD" => Ok(DataPackCompatibility::Old {
-                inner: DataPackCompatibilityStruct::from_raw(env, obj)?,
-            }),
-            "COMPATIBLE" => Ok(DataPackCompatibility::Compatible {
-                inner: DataPackCompatibilityStruct::from_raw(env, obj)?,
-            }),
-
-            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-        }
-    }
-}
-
-#[repr(C)]
-pub struct DataPackCompatibilityStruct<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for DataPackCompatibility<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {
-            Self::New { inner } => inner.0.clone(),
-            Self::Old { inner } => inner.0.clone(),
-            Self::Compatible { inner } => inner.0.clone(),
-        }
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {
-            Self::New { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::Old { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::Compatible { inner } => unsafe {
-                jni::objects::JObject::from_raw(inner.1.clone())
-            },
-        }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for DataPackCompatibility<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate DataPackCompatibility from null object."
-            )
-            .into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/packs/DataPack/Compatibility")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a DataPackCompatibility object, got {}",
-                name
-            )
-            .into())
-        } else {
-            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-            let variant = env.translate_error(variant)?;
-            let variant_str = env
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            match variant_str.as_str() {
-                "NEW" => Ok(DataPackCompatibility::New {
-                    inner: DataPackCompatibilityStruct::from_raw(env, obj)?,
-                }),
-                "OLD" => Ok(DataPackCompatibility::Old {
-                    inner: DataPackCompatibilityStruct::from_raw(env, obj)?,
-                }),
-                "COMPATIBLE" => Ok(DataPackCompatibility::Compatible {
-                    inner: DataPackCompatibilityStruct::from_raw(env, obj)?,
-                }),
-                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-            }
-        }
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for DataPackCompatibilityStruct<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for DataPackCompatibilityStruct<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate DataPackCompatibilityStruct from null object."
-            )
-            .into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/packs/DataPack/Compatibility")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a DataPackCompatibilityStruct object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> DataPackCompatibilityStruct<'mc> {
-    pub fn values(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::packs::DataPackCompatibility<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/packs/DataPack/Compatibility;");
-        let cls = jni.find_class("org/bukkit/packs/DataPack/Compatibility");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::packs::DataPackCompatibility::from_raw(&jni, obj)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -824,5 +466,265 @@ impl<'mc> Into<crate::Keyed<'mc>> for DataPack<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting DataPack into crate::Keyed")
+    }
+}
+pub enum DataPackCompatibility<'mc> {}
+impl<'mc> std::fmt::Display for DataPackCompatibility<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {}
+    }
+}
+
+impl<'mc> DataPackCompatibility<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<DataPackCompatibility<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/packs/DataPack/Compatibility");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/packs/DataPack/Compatibility;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct DataPackCompatibilityStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for DataPackCompatibility<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {}
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {}
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for DataPackCompatibility<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate DataPackCompatibility from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/packs/DataPack/Compatibility")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a DataPackCompatibility object, got {}",
+                name
+            )
+            .into())
+        } else {
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
+        }
+    }
+}
+
+impl<'mc> JNIRaw<'mc> for DataPackCompatibilityStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for DataPackCompatibilityStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate DataPackCompatibilityStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/packs/DataPack/Compatibility")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a DataPackCompatibilityStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> DataPackCompatibilityStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::packs::DataPackCompatibility<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/packs/DataPack/Compatibility;");
+        let cls = jni.find_class("org/bukkit/packs/DataPack/Compatibility");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::packs::DataPackCompatibility::from_raw(&jni, obj)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+pub enum DataPackSource<'mc> {}
+impl<'mc> std::fmt::Display for DataPackSource<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {}
+    }
+}
+
+impl<'mc> DataPackSource<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<DataPackSource<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/packs/DataPack/Source");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/packs/DataPack/Source;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct DataPackSourceStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for DataPackSource<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {}
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {}
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for DataPackSource<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate DataPackSource from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/packs/DataPack/Source")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a DataPackSource object, got {}",
+                name
+            )
+            .into())
+        } else {
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
+        }
+    }
+}
+
+impl<'mc> JNIRaw<'mc> for DataPackSourceStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for DataPackSourceStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate DataPackSourceStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/packs/DataPack/Source")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a DataPackSourceStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> DataPackSourceStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::packs::DataPackSource<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/packs/DataPack/Source;");
+        let cls = jni.find_class("org/bukkit/packs/DataPack/Source");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::packs::DataPackSource::from_raw(&jni, obj)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }

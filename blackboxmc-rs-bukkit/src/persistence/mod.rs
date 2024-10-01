@@ -3,826 +3,6 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
-pub struct PersistentDataType<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for PersistentDataType<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PersistentDataType<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate PersistentDataType from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/persistence/PersistentDataType")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PersistentDataType object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> PersistentDataType<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "PersistentDataType", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-    /// Returns the primitive data type of this tag.
-    pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPrimitiveType",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-    /// Returns the complex object type the primitive value resembles.
-    pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getComplexType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-    /// Returns the primitive data that resembles the complex object passed to
-    /// this method.
-    pub fn to_primitive(
-        &self,
-        complex: jni::objects::JObject<'mc>,
-        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(LC;Lorg/bukkit/persistence/PersistentDataAdapterContext;)LP;");
-        let val_1 = jni::objects::JValueGen::Object(complex);
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(context.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toPrimitive",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    /// Creates a complex object based of the passed primitive value
-    pub fn from_primitive(
-        &self,
-        primitive: jni::objects::JObject<'mc>,
-        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(LP;Lorg/bukkit/persistence/PersistentDataAdapterContext;)LC;");
-        let val_1 = jni::objects::JValueGen::Object(primitive);
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(context.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "fromPrimitive",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct ListPersistentDataType<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for ListPersistentDataType<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for ListPersistentDataType<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate ListPersistentDataType from null object."
-            )
-            .into());
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/persistence/ListPersistentDataType")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a ListPersistentDataType object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> ListPersistentDataType<'mc> {
-    /// Provides the persistent data type of the elements found in the list.
-    pub fn element_type(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/PersistentDataType;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "elementType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns the primitive data type of this tag.
-    pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPrimitiveType",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-    /// Returns the complex object type the primitive value resembles.
-    pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getComplexType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-    /// Returns the primitive data that resembles the complex object passed to
-    /// this method.
-    pub fn to_primitive(
-        &self,
-        complex: jni::objects::JObject<'mc>,
-        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(LC;Lorg/bukkit/persistence/PersistentDataAdapterContext;)LP;");
-        let val_1 = jni::objects::JValueGen::Object(complex);
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(context.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toPrimitive",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    /// Creates a complex object based of the passed primitive value
-    pub fn from_primitive(
-        &self,
-        primitive: jni::objects::JObject<'mc>,
-        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(LP;Lorg/bukkit/persistence/PersistentDataAdapterContext;)LC;");
-        let val_1 = jni::objects::JValueGen::Object(primitive);
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(context.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "fromPrimitive",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::persistence::PersistentDataType<'mc>> for ListPersistentDataType<'mc> {
-    fn into(self) -> crate::persistence::PersistentDataType<'mc> {
-        crate::persistence::PersistentDataType::from_raw(&self.jni_ref(), self.1).expect(
-            "Error converting ListPersistentDataType into crate::persistence::PersistentDataType",
-        )
-    }
-}
-#[repr(C)]
-pub struct PersistentDataTypeBooleanPersistentDataType<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for PersistentDataTypeBooleanPersistentDataType<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PersistentDataTypeBooleanPersistentDataType<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                    "Tried to instantiate PersistentDataTypeBooleanPersistentDataType from null object.")
-                .into());
-        }
-        let (valid, name) = env.validate_name(
-            &obj,
-            "org/bukkit/persistence/PersistentDataType/BooleanPersistentDataType",
-        )?;
-        if !valid {
-            Err(eyre::eyre!(
-                    "Invalid argument passed. Expected a PersistentDataTypeBooleanPersistentDataType object, got {}",
-                    name
-                )
-                .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<
-        crate::persistence::PersistentDataTypeBooleanPersistentDataType<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let sig = String::from("()V");
-        let cls =
-            jni.find_class("org/bukkit/persistence/PersistentDataType/BooleanPersistentDataType");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), vec![]);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::persistence::PersistentDataTypeBooleanPersistentDataType::from_raw(&jni, res)
-    }
-
-    pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPrimitiveType",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getComplexType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn to_primitive(
-        &self,
-        complex: bool,
-        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
-    ) -> Result<i8, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Boolean;Lorg/bukkit/persistence/PersistentDataAdapterContext;)Ljava/lang/Byte;");
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "java/lang/Boolean",
-            "(Ljava/Lang/Object;)V",
-            vec![complex.into()],
-        )?);
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(context.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toPrimitive",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.b()?)
-    }
-
-    pub fn from_primitive(
-        &self,
-        primitive: i8,
-        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Byte;Lorg/bukkit/persistence/PersistentDataAdapterContext;)Ljava/lang/Boolean;");
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "java/lang/Byte",
-            "(Ljava/Lang/Object;)V",
-            vec![primitive.into()],
-        )?);
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(context.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "fromPrimitive",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::persistence::PersistentDataType<'mc>>
-    for PersistentDataTypeBooleanPersistentDataType<'mc>
-{
-    fn into(self) -> crate::persistence::PersistentDataType<'mc> {
-        crate::persistence::PersistentDataType::from_raw(&self.jni_ref(), self.1).expect("Error converting PersistentDataTypeBooleanPersistentDataType into crate::persistence::PersistentDataType")
-    }
-}
-#[repr(C)]
-pub struct ListPersistentDataTypeProvider<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for ListPersistentDataTypeProvider<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for ListPersistentDataTypeProvider<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate ListPersistentDataTypeProvider from null object."
-            )
-            .into());
-        }
-        let (valid, name) = env.validate_name(
-            &obj,
-            "org/bukkit/persistence/ListPersistentDataTypeProvider",
-        )?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a ListPersistentDataTypeProvider object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> ListPersistentDataTypeProvider<'mc> {
-    /// Provides a shared {@link ListPersistentDataType} that is capable of
-    /// storing lists of bytes.
-    pub fn bytes(
-        &self,
-    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "bytes", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Provides a shared {@link ListPersistentDataType} that is capable of
-    /// storing lists of shorts.
-    pub fn shorts(
-        &self,
-    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "shorts", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Provides a shared {@link ListPersistentDataType} that is capable of
-    /// storing lists of integers.
-    pub fn integers(
-        &self,
-    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "integers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Provides a shared {@link ListPersistentDataType} that is capable of
-    /// storing lists of longs.
-    pub fn longs(
-        &self,
-    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "longs", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Provides a shared {@link ListPersistentDataType} that is capable of
-    /// storing lists of floats.
-    pub fn floats(
-        &self,
-    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "floats", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Provides a shared {@link ListPersistentDataType} that is capable of
-    /// storing lists of doubles.
-    pub fn doubles(
-        &self,
-    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "doubles", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Provides a shared {@link ListPersistentDataType} that is capable of
-    /// storing lists of booleans.
-    pub fn booleans(
-        &self,
-    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "booleans", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Provides a shared {@link ListPersistentDataType} that is capable of
-    /// storing lists of strings.
-    pub fn strings(
-        &self,
-    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "strings", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Provides a shared {@link ListPersistentDataType} that is capable of
-    /// storing lists of byte arrays.
-    pub fn byte_arrays(
-        &self,
-    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "byteArrays", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Provides a shared {@link ListPersistentDataType} that is capable of
-    /// storing lists of int arrays.
-    pub fn integer_arrays(
-        &self,
-    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "integerArrays", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Provides a shared {@link ListPersistentDataType} that is capable of
-    /// storing lists of long arrays.
-    pub fn long_arrays(
-        &self,
-    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "longArrays", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Provides a shared {@link ListPersistentDataType} that is capable of
-    /// persistent data containers..
-    pub fn data_containers(
-        &self,
-    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "dataContainers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Constructs a new list persistent data type given any persistent data type
-    /// for its elements.
-    pub fn list_type_from(
-        &self,
-        element_type: impl Into<crate::persistence::PersistentDataType<'mc>>,
-    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/persistence/PersistentDataType;)Lorg/bukkit/persistence/ListPersistentDataType;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(element_type.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "listTypeFrom",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct PersistentDataTypePrimitivePersistentDataType<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for PersistentDataTypePrimitivePersistentDataType<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PersistentDataTypePrimitivePersistentDataType<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                    "Tried to instantiate PersistentDataTypePrimitivePersistentDataType from null object.")
-                .into());
-        }
-        let (valid, name) = env.validate_name(
-            &obj,
-            "org/bukkit/persistence/PersistentDataType/PrimitivePersistentDataType",
-        )?;
-        if !valid {
-            Err(eyre::eyre!(
-                    "Invalid argument passed. Expected a PersistentDataTypePrimitivePersistentDataType object, got {}",
-                    name
-                )
-                .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
-    pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPrimitiveType",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getComplexType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn to_primitive(
-        &self,
-        complex: jni::objects::JObject<'mc>,
-        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(LP;Lorg/bukkit/persistence/PersistentDataAdapterContext;)LP;");
-        let val_1 = jni::objects::JValueGen::Object(complex);
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(context.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toPrimitive",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-
-    pub fn from_primitive(
-        &self,
-        primitive: jni::objects::JObject<'mc>,
-        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(LP;Lorg/bukkit/persistence/PersistentDataAdapterContext;)LP;");
-        let val_1 = jni::objects::JValueGen::Object(primitive);
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(context.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "fromPrimitive",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::persistence::PersistentDataType<'mc>>
-    for PersistentDataTypePrimitivePersistentDataType<'mc>
-{
-    fn into(self) -> crate::persistence::PersistentDataType<'mc> {
-        crate::persistence::PersistentDataType::from_raw(&self.jni_ref(), self.1).expect("Error converting PersistentDataTypePrimitivePersistentDataType into crate::persistence::PersistentDataType")
-    }
-}
-#[repr(C)]
-pub struct PersistentDataHolder<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for PersistentDataHolder<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PersistentDataHolder<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate PersistentDataHolder from null object.").into(),
-            );
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/persistence/PersistentDataHolder")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PersistentDataHolder object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> PersistentDataHolder<'mc> {
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
 pub struct PersistentDataContainer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1092,6 +272,828 @@ impl<'mc> PersistentDataContainer<'mc> {
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct ListPersistentDataType<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for ListPersistentDataType<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ListPersistentDataType<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate ListPersistentDataType from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/persistence/ListPersistentDataType")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ListPersistentDataType object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> ListPersistentDataType<'mc> {
+    /// Provides the persistent data type of the elements found in the list.
+    pub fn element_type(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/persistence/PersistentDataType;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "elementType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::PersistentDataType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Returns the primitive data type of this tag.
+    pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Class;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPrimitiveType",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
+    }
+    /// Returns the complex object type the primitive value resembles.
+    pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Class;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getComplexType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
+    }
+    /// Returns the primitive data that resembles the complex object passed to
+    /// this method.
+    pub fn to_primitive(
+        &self,
+        complex: jni::objects::JObject<'mc>,
+        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(LC;Lorg/bukkit/persistence/PersistentDataAdapterContext;)LP;");
+        let val_1 = jni::objects::JValueGen::Object(complex);
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(context.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toPrimitive",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    /// Creates a complex object based of the passed primitive value
+    pub fn from_primitive(
+        &self,
+        primitive: jni::objects::JObject<'mc>,
+        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(LP;Lorg/bukkit/persistence/PersistentDataAdapterContext;)LC;");
+        let val_1 = jni::objects::JValueGen::Object(primitive);
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(context.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "fromPrimitive",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::persistence::PersistentDataType<'mc>> for ListPersistentDataType<'mc> {
+    fn into(self) -> crate::persistence::PersistentDataType<'mc> {
+        crate::persistence::PersistentDataType::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting ListPersistentDataType into crate::persistence::PersistentDataType",
+        )
+    }
+}
+#[repr(C)]
+pub struct PersistentDataHolder<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PersistentDataHolder<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PersistentDataHolder<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PersistentDataHolder from null object.").into(),
+            );
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/persistence/PersistentDataHolder")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PersistentDataHolder object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> PersistentDataHolder<'mc> {
+    /// Returns a custom tag container capable of storing tags on the object.
+    /// Note that the tags stored on this container are all stored under their
+    /// own custom namespace therefore modifying default tags using this
+    /// {@link PersistentDataHolder} is impossible.
+    pub fn persistent_data_container(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPersistentDataContainer",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct ListPersistentDataTypeProvider<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for ListPersistentDataTypeProvider<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ListPersistentDataTypeProvider<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate ListPersistentDataTypeProvider from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/persistence/ListPersistentDataTypeProvider",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ListPersistentDataTypeProvider object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> ListPersistentDataTypeProvider<'mc> {
+    /// Provides a shared {@link ListPersistentDataType} that is capable of
+    /// storing lists of bytes.
+    pub fn bytes(
+        &self,
+    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "bytes", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Provides a shared {@link ListPersistentDataType} that is capable of
+    /// storing lists of shorts.
+    pub fn shorts(
+        &self,
+    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "shorts", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Provides a shared {@link ListPersistentDataType} that is capable of
+    /// storing lists of integers.
+    pub fn integers(
+        &self,
+    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "integers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Provides a shared {@link ListPersistentDataType} that is capable of
+    /// storing lists of longs.
+    pub fn longs(
+        &self,
+    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "longs", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Provides a shared {@link ListPersistentDataType} that is capable of
+    /// storing lists of floats.
+    pub fn floats(
+        &self,
+    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "floats", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Provides a shared {@link ListPersistentDataType} that is capable of
+    /// storing lists of doubles.
+    pub fn doubles(
+        &self,
+    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "doubles", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Provides a shared {@link ListPersistentDataType} that is capable of
+    /// storing lists of booleans.
+    pub fn booleans(
+        &self,
+    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "booleans", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Provides a shared {@link ListPersistentDataType} that is capable of
+    /// storing lists of strings.
+    pub fn strings(
+        &self,
+    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "strings", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Provides a shared {@link ListPersistentDataType} that is capable of
+    /// storing lists of byte arrays.
+    pub fn byte_arrays(
+        &self,
+    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "byteArrays", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Provides a shared {@link ListPersistentDataType} that is capable of
+    /// storing lists of int arrays.
+    pub fn integer_arrays(
+        &self,
+    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "integerArrays", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Provides a shared {@link ListPersistentDataType} that is capable of
+    /// storing lists of long arrays.
+    pub fn long_arrays(
+        &self,
+    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "longArrays", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Provides a shared {@link ListPersistentDataType} that is capable of
+    /// persistent data containers..
+    pub fn data_containers(
+        &self,
+    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/persistence/ListPersistentDataType;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "dataContainers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Constructs a new list persistent data type given any persistent data type
+    /// for its elements.
+    pub fn list_type_from(
+        &self,
+        element_type: impl Into<crate::persistence::PersistentDataType<'mc>>,
+    ) -> Result<crate::persistence::ListPersistentDataType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/persistence/PersistentDataType;)Lorg/bukkit/persistence/ListPersistentDataType;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(element_type.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "listTypeFrom",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::ListPersistentDataType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct PersistentDataType<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PersistentDataType<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PersistentDataType<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PersistentDataType from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/persistence/PersistentDataType")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PersistentDataType object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> PersistentDataType<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "PersistentDataType", name, lib_name) }?;
+        Self::from_raw(env, obj)
+    }
+    /// Returns the primitive data type of this tag.
+    pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Class;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPrimitiveType",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
+    }
+    /// Returns the complex object type the primitive value resembles.
+    pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Class;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getComplexType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
+    }
+    /// Returns the primitive data that resembles the complex object passed to
+    /// this method.
+    pub fn to_primitive(
+        &self,
+        complex: jni::objects::JObject<'mc>,
+        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(LC;Lorg/bukkit/persistence/PersistentDataAdapterContext;)LP;");
+        let val_1 = jni::objects::JValueGen::Object(complex);
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(context.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toPrimitive",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    /// Creates a complex object based of the passed primitive value
+    pub fn from_primitive(
+        &self,
+        primitive: jni::objects::JObject<'mc>,
+        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(LP;Lorg/bukkit/persistence/PersistentDataAdapterContext;)LC;");
+        let val_1 = jni::objects::JValueGen::Object(primitive);
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(context.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "fromPrimitive",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct PersistentDataTypePrimitivePersistentDataType<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PersistentDataTypePrimitivePersistentDataType<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PersistentDataTypePrimitivePersistentDataType<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                    "Tried to instantiate PersistentDataTypePrimitivePersistentDataType from null object.")
+                .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/persistence/PersistentDataType/PrimitivePersistentDataType",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a PersistentDataTypePrimitivePersistentDataType object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
+    pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Class;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPrimitiveType",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
+    }
+
+    pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Class;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getComplexType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
+    }
+
+    pub fn to_primitive(
+        &self,
+        complex: jni::objects::JObject<'mc>,
+        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(LP;Lorg/bukkit/persistence/PersistentDataAdapterContext;)LP;");
+        let val_1 = jni::objects::JValueGen::Object(complex);
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(context.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toPrimitive",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+
+    pub fn from_primitive(
+        &self,
+        primitive: jni::objects::JObject<'mc>,
+        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(LP;Lorg/bukkit/persistence/PersistentDataAdapterContext;)LP;");
+        let val_1 = jni::objects::JValueGen::Object(primitive);
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(context.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "fromPrimitive",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::persistence::PersistentDataType<'mc>>
+    for PersistentDataTypePrimitivePersistentDataType<'mc>
+{
+    fn into(self) -> crate::persistence::PersistentDataType<'mc> {
+        crate::persistence::PersistentDataType::from_raw(&self.jni_ref(), self.1).expect("Error converting PersistentDataTypePrimitivePersistentDataType into crate::persistence::PersistentDataType")
+    }
+}
+#[repr(C)]
+pub struct PersistentDataTypeBooleanPersistentDataType<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PersistentDataTypeBooleanPersistentDataType<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PersistentDataTypeBooleanPersistentDataType<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                    "Tried to instantiate PersistentDataTypeBooleanPersistentDataType from null object.")
+                .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/persistence/PersistentDataType/BooleanPersistentDataType",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a PersistentDataTypeBooleanPersistentDataType object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        crate::persistence::PersistentDataTypeBooleanPersistentDataType<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()V");
+        let cls =
+            jni.find_class("org/bukkit/persistence/PersistentDataType/BooleanPersistentDataType");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), vec![]);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::persistence::PersistentDataTypeBooleanPersistentDataType::from_raw(&jni, res)
+    }
+
+    pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Class;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPrimitiveType",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
+    }
+
+    pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Class;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getComplexType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
+    }
+
+    pub fn to_primitive(
+        &self,
+        complex: bool,
+        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
+    ) -> Result<i8, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Boolean;Lorg/bukkit/persistence/PersistentDataAdapterContext;)Ljava/lang/Byte;");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Ljava/Lang/Object;)V",
+            vec![complex.into()],
+        )?);
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(context.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toPrimitive",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.b()?)
+    }
+
+    pub fn from_primitive(
+        &self,
+        primitive: i8,
+        context: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Byte;Lorg/bukkit/persistence/PersistentDataAdapterContext;)Ljava/lang/Boolean;");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Byte",
+            "(Ljava/Lang/Object;)V",
+            vec![primitive.into()],
+        )?);
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(context.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "fromPrimitive",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::persistence::PersistentDataType<'mc>>
+    for PersistentDataTypeBooleanPersistentDataType<'mc>
+{
+    fn into(self) -> crate::persistence::PersistentDataType<'mc> {
+        crate::persistence::PersistentDataType::from_raw(&self.jni_ref(), self.1).expect("Error converting PersistentDataTypeBooleanPersistentDataType into crate::persistence::PersistentDataType")
     }
 }
 #[repr(C)]

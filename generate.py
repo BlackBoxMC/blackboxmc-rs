@@ -770,7 +770,6 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                 if "generics" in method["method"]:
                     generics_ = method["method"]["generics"]
                 else:
-                    print("1","genreics" in method["method"])
                     generics_ = []
             else:
                 generics_ = method["method"]["returnType"]["generics"]
@@ -779,13 +778,10 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                 if "generics" in method["method"]["parameters"][i]:
                     generics_ = method["method"]["parameters"][i]["generics"]
                 else:
-                    print("2",i,"generics" in method["method"]["parameters"][i])
                     generics_ = []
             else:
-                print("3",i)
                 generics_ = []
     else:
-        print("4",method is not None, not is_constructor)
         generics_ = []
 
     for gen in generics_:
@@ -1638,7 +1634,11 @@ def parse_classes(library, val, classes):
             if val["superclass"]["qualifiedName"] == "java.lang.Enum":
                 val["isEnum"] = True
             else:
-                val["isEnum"] = False
+                meth = list(filter(lambda f: f["name"] == "values",val["methods"]))
+                if len(meth) >= 1 and len(val["fields"]) >= 1:
+                    val["isEnum"] = True
+                else:
+                    val["isEnum"] = False
         else:
             val["isEnum"] = False
     else:
@@ -1655,10 +1655,9 @@ def parse_classes(library, val, classes):
     if val["isEnum"]:  # enum generation
         if "values" not in val:
             val["values"] = []
-        
-        
 
-        val["values"] += list(map(lambda f: f["name"],filter(lambda f: not "$" in f, val["fields"])))
+        val["values"] += list(map(lambda f: f["name"],val["fields"]))
+        print(val["fields"])
         
         file_cache[mod_path].append(
             "pub enum "+name+"<'mc> {")
@@ -1683,6 +1682,7 @@ def parse_classes(library, val, classes):
             val_proper = val_proper[0].upper() + val_proper[1:]
             if val_proper.lower() in reserved_words:
                 val_proper = "Variant"+val_proper
+            print(v)
             variants.append((v,val_proper))
 
         # DISPLAY IMPL

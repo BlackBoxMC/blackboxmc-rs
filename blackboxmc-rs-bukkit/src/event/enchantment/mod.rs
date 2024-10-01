@@ -119,6 +119,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    #[deprecated]
     /// Get a list of offered experience level costs of the enchantment.
     pub fn exp_level_costs_offered(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");

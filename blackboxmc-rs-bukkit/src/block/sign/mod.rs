@@ -2,16 +2,10 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-pub enum Side<'mc> {
-    Front { inner: SideStruct<'mc> },
-    Back { inner: SideStruct<'mc> },
-}
+pub enum Side<'mc> {}
 impl<'mc> std::fmt::Display for Side<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Side::Front { .. } => f.write_str("FRONT"),
-            Side::Back { .. } => f.write_str("BACK"),
-        }
+        match self {}
     }
 }
 
@@ -38,13 +32,6 @@ impl<'mc> Side<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
-            "FRONT" => Ok(Side::Front {
-                inner: SideStruct::from_raw(env, obj)?,
-            }),
-            "BACK" => Ok(Side::Back {
-                inner: SideStruct::from_raw(env, obj)?,
-            }),
-
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -58,16 +45,10 @@ pub struct SideStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for Side<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {
-            Self::Front { inner } => inner.0.clone(),
-            Self::Back { inner } => inner.0.clone(),
-        }
+        match self {}
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {
-            Self::Front { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::Back { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-        }
+        match self {}
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for Side<'mc> {
@@ -93,12 +74,6 @@ impl<'mc> JNIInstantiatable<'mc> for Side<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
-                "FRONT" => Ok(Side::Front {
-                    inner: SideStruct::from_raw(env, obj)?,
-                }),
-                "BACK" => Ok(Side::Back {
-                    inner: SideStruct::from_raw(env, obj)?,
-                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }

@@ -3,6 +3,95 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
+pub struct BukkitTask<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for BukkitTask<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for BukkitTask<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate BukkitTask from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scheduler/BukkitTask")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BukkitTask object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> BukkitTask<'mc> {
+    /// Returns the taskId for the task.
+    pub fn task_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getTaskId", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Returns the Plugin that owns this task.
+    pub fn owner(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getOwner", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Returns true if the Task is a sync task.
+    pub fn is_sync(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSync", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Returns true if this task has been cancelled.
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Will attempt to cancel this task.
+    pub fn cancel(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "cancel", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
 pub struct BukkitScheduler<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -438,157 +527,6 @@ impl<'mc> BukkitScheduler<'mc> {
     }
 }
 #[repr(C)]
-pub struct BukkitTask<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for BukkitTask<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for BukkitTask<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate BukkitTask from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/scheduler/BukkitTask")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a BukkitTask object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> BukkitTask<'mc> {
-    /// Returns the taskId for the task.
-    pub fn task_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getTaskId", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// Returns the Plugin that owns this task.
-    pub fn owner(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getOwner", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns true if the Task is a sync task.
-    pub fn is_sync(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isSync", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Returns true if this task has been cancelled.
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Will attempt to cancel this task.
-    pub fn cancel(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "cancel", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct BukkitWorker<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for BukkitWorker<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for BukkitWorker<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate BukkitWorker from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/scheduler/BukkitWorker")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a BukkitWorker object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> BukkitWorker<'mc> {
-    /// Returns the taskId for the task being executed by this worker.
-    pub fn task_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getTaskId", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// Returns the Plugin that owns this task.
-    pub fn owner(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getOwner", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
 pub struct BukkitRunnable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -831,6 +769,68 @@ impl<'mc> BukkitRunnable<'mc> {
             .call_method(&self.jni_object(), "getTaskId", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct BukkitWorker<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for BukkitWorker<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for BukkitWorker<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate BukkitWorker from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scheduler/BukkitWorker")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BukkitWorker object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> BukkitWorker<'mc> {
+    /// Returns the taskId for the task being executed by this worker.
+    pub fn task_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getTaskId", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Returns the Plugin that owns this task.
+    pub fn owner(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getOwner", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

@@ -2,168 +2,6 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-pub enum PlayerTexturesSkinModel<'mc> {
-    Classic {
-        inner: PlayerTexturesSkinModelStruct<'mc>,
-    },
-    Slim {
-        inner: PlayerTexturesSkinModelStruct<'mc>,
-    },
-}
-impl<'mc> std::fmt::Display for PlayerTexturesSkinModel<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PlayerTexturesSkinModel::Classic { .. } => f.write_str("CLASSIC"),
-            PlayerTexturesSkinModel::Slim { .. } => f.write_str("SLIM"),
-        }
-    }
-}
-
-impl<'mc> PlayerTexturesSkinModel<'mc> {
-    pub fn value_of(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<PlayerTexturesSkinModel<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
-        let cls = env.find_class("org/bukkit/profile/PlayerTextures/SkinModel");
-        let cls = env.translate_error_with_class(cls)?;
-        let res = env.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/profile/PlayerTextures/SkinModel;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = env.translate_error(res)?;
-        let obj = res.l()?;
-        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = env.translate_error(variant)?;
-        let variant_str = env
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        match variant_str.as_str() {
-            "CLASSIC" => Ok(PlayerTexturesSkinModel::Classic {
-                inner: PlayerTexturesSkinModelStruct::from_raw(env, obj)?,
-            }),
-            "SLIM" => Ok(PlayerTexturesSkinModel::Slim {
-                inner: PlayerTexturesSkinModelStruct::from_raw(env, obj)?,
-            }),
-
-            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-        }
-    }
-}
-
-#[repr(C)]
-pub struct PlayerTexturesSkinModelStruct<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for PlayerTexturesSkinModel<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {
-            Self::Classic { inner } => inner.0.clone(),
-            Self::Slim { inner } => inner.0.clone(),
-        }
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {
-            Self::Classic { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-            Self::Slim { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
-        }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PlayerTexturesSkinModel<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate PlayerTexturesSkinModel from null object."
-            )
-            .into());
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/profile/PlayerTextures/SkinModel")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PlayerTexturesSkinModel object, got {}",
-                name
-            )
-            .into())
-        } else {
-            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-            let variant = env.translate_error(variant)?;
-            let variant_str = env
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            match variant_str.as_str() {
-                "CLASSIC" => Ok(PlayerTexturesSkinModel::Classic {
-                    inner: PlayerTexturesSkinModelStruct::from_raw(env, obj)?,
-                }),
-                "SLIM" => Ok(PlayerTexturesSkinModel::Slim {
-                    inner: PlayerTexturesSkinModelStruct::from_raw(env, obj)?,
-                }),
-                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-            }
-        }
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for PlayerTexturesSkinModelStruct<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PlayerTexturesSkinModelStruct<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate PlayerTexturesSkinModelStruct from null object."
-            )
-            .into());
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/profile/PlayerTextures/SkinModel")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PlayerTexturesSkinModelStruct object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> PlayerTexturesSkinModelStruct<'mc> {
-    pub fn values(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::profile::PlayerTexturesSkinModel<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/profile/PlayerTextures/SkinModel;");
-        let cls = jni.find_class("org/bukkit/profile/PlayerTextures/SkinModel");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::profile::PlayerTexturesSkinModel::from_raw(&jni, obj)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
 #[repr(C)]
 pub struct PlayerTextures<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -337,6 +175,139 @@ impl<'mc> PlayerTextures<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
+pub enum PlayerTexturesSkinModel<'mc> {}
+impl<'mc> std::fmt::Display for PlayerTexturesSkinModel<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {}
+    }
+}
+
+impl<'mc> PlayerTexturesSkinModel<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PlayerTexturesSkinModel<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/profile/PlayerTextures/SkinModel");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/profile/PlayerTextures/SkinModel;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct PlayerTexturesSkinModelStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PlayerTexturesSkinModel<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {}
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {}
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PlayerTexturesSkinModel<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PlayerTexturesSkinModel from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/profile/PlayerTextures/SkinModel")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PlayerTexturesSkinModel object, got {}",
+                name
+            )
+            .into())
+        } else {
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
+        }
+    }
+}
+
+impl<'mc> JNIRaw<'mc> for PlayerTexturesSkinModelStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PlayerTexturesSkinModelStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PlayerTexturesSkinModelStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/profile/PlayerTextures/SkinModel")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PlayerTexturesSkinModelStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> PlayerTexturesSkinModelStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::profile::PlayerTexturesSkinModel<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/profile/PlayerTextures/SkinModel;");
+        let cls = jni.find_class("org/bukkit/profile/PlayerTextures/SkinModel");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::profile::PlayerTexturesSkinModel::from_raw(&jni, obj)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
 #[repr(C)]
 pub struct PlayerProfile<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -468,10 +439,12 @@ impl<'mc> PlayerProfile<'mc> {
     pub fn serialize(
         &self,
     ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Ljava/util/Map;";
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
+            .call_method(&self.jni_object(), "serialize", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
