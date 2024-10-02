@@ -3,1089 +3,6 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
-pub struct ItemMeta<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for ItemMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for ItemMeta<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate ItemMeta from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/inventory/meta/ItemMeta")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a ItemMeta object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> ItemMeta<'mc> {
-    /// Checks for existence of a display name.
-    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "hasDisplayName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Gets the display name that is set.
-    ///
-    /// Plugins should check that hasDisplayName() returns <code>true</code>
-    /// before calling this method.
-    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getDisplayName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// Sets the display name.
-    pub fn set_display_name(
-        &self,
-        name: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(name.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setDisplayName",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Checks for existence of an item name.
-    ///
-    /// Item name differs from display name in that it is cannot be edited by an
-    /// anvil, is not styled with italics, and does not show labels.
-    pub fn has_item_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "hasItemName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Gets the item name that is set.
-    ///
-    /// Item name differs from display name in that it is cannot be edited by an
-    /// anvil, is not styled with italics, and does not show labels.
-    ///
-    /// Plugins should check that hasItemName() returns <code>true</code> before
-    /// calling this method.
-    pub fn item_name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getItemName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// Sets the item name.
-    ///
-    /// Item name differs from display name in that it is cannot be edited by an
-    /// anvil, is not styled with italics, and does not show labels.
-    pub fn set_item_name(&self, name: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(name.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItemName",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    #[deprecated]
-    /// Checks for existence of a localized name.
-    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "hasLocalizedName",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    #[deprecated]
-    /// Gets the localized display name that is set.Plugins should check that hasLocalizedName() returns <code>true</code> before calling this method.
-    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocalizedName",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    #[deprecated]
-    /// Sets the localized name.
-    pub fn set_localized_name(
-        &self,
-        name: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(name.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLocalizedName",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Checks for existence of lore.
-    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hasLore", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Gets the lore that is set.
-    ///
-    /// Plugins should check if hasLore() returns <code>true</code> before
-    /// calling this method.
-    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/List;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        let mut new_vec = Vec::new();
-        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let iter = list.iterator()?;
-        while iter.has_next()? {
-            let obj = iter.next()?;
-            new_vec.push(
-                self.jni_ref()
-                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
-                    .to_string_lossy()
-                    .to_string(),
-            );
-        }
-        Ok(Some(new_vec))
-    }
-    /// Sets the lore for this item.
-    /// Removes lore when given null.
-    pub fn set_lore(
-        &self,
-        lore: Vec<jni::objects::JObject<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in lore {
-            let map_val_0 = jni::objects::JValueGen::Object(v);
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/Object;)Z",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Checks for existence of custom model data.
-    ///
-    /// CustomModelData is an integer that may be associated client side with a
-    /// custom item model.
-    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "hasCustomModelData",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Gets the custom model data that is set.
-    ///
-    /// CustomModelData is an integer that may be associated client side with a
-    /// custom item model.
-    ///
-    /// Plugins should check that hasCustomModelData() returns <code>true</code>
-    /// before calling this method.
-    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getCustomModelData",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// Sets the custom model data.
-    ///
-    /// CustomModelData is an integer that may be associated client side with a
-    /// custom item model.
-    pub fn set_custom_model_data(&self, data: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Integer;)V");
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "java/lang/Integer",
-            "(Ljava/Lang/Object;)V",
-            vec![data.into()],
-        )?);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCustomModelData",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Checks for the existence of any enchantments.
-    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Checks for existence of the specified enchantment.
-    pub fn has_enchant(
-        &self,
-        ench: impl Into<crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(ench.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "hasEnchant",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Checks for the level of the specified enchantment.
-    pub fn get_enchant_level(
-        &self,
-        ench: impl Into<crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(ench.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// Returns a copy the enchantments in this ItemMeta.
-    ///
-    /// Returns an empty map if none.
-    pub fn enchants(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Adds the specified enchantment to this item meta.
-    pub fn add_enchant(
-        &self,
-        ench: impl Into<crate::enchantments::Enchantment<'mc>>,
-        level: i32,
-        ignore_level_restriction: bool,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;IZ)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(ench.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Int(level);
-        let val_3 = jni::objects::JValueGen::Bool(ignore_level_restriction.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addEnchant",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Removes the specified enchantment from this item meta.
-    pub fn remove_enchant(
-        &self,
-        ench: impl Into<crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(ench.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeEnchant",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Removes all enchantments from this item meta.
-    pub fn remove_enchantments(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeEnchantments",
-            sig.as_str(),
-            vec![],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Checks if the specified enchantment conflicts with any enchantments in
-    /// this ItemMeta.
-    pub fn has_conflicting_enchant(
-        &self,
-        ench: impl Into<crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(ench.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "hasConflictingEnchant",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Set itemflags which should be ignored when rendering a ItemStack in the Client. This Method does silently ignore double set itemFlags.
-    pub fn add_item_flags(
-        &self,
-        item_flags: impl Into<crate::inventory::ItemFlag<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(item_flags.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItemFlags",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Remove specific set of itemFlags. This tells the Client it should render it again. This Method does silently ignore double removed itemFlags.
-    pub fn remove_item_flags(
-        &self,
-        item_flags: impl Into<crate::inventory::ItemFlag<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(item_flags.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeItemFlags",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Get current set itemFlags. The collection returned is unmodifiable.
-    pub fn item_flags(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Set;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Check if the specified flag is present on this item.
-    pub fn has_item_flag(
-        &self,
-        flag: impl Into<crate::inventory::ItemFlag<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(flag.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "hasItemFlag",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Gets if this item has hide_tooltip set. An item with this set will not
-    /// show any tooltip whatsoever.
-    pub fn is_hide_tooltip(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isHideTooltip", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Sets if this item has hide_tooltip set. An item with this set will not
-    /// show any tooltip whatsoever.
-    pub fn set_hide_tooltip(&self, hide_tooltip: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(hide_tooltip.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setHideTooltip",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Return if the unbreakable tag is true. An unbreakable item will not lose
-    /// durability.
-    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isUnbreakable", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Sets the unbreakable tag. An unbreakable item will not lose durability.
-    pub fn set_unbreakable(&self, unbreakable: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(unbreakable.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setUnbreakable",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets if an enchantment_glint_override is set.
-    pub fn has_enchantment_glint_override(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "hasEnchantmentGlintOverride",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Sets the enchantment_glint_override. If true, the item will glint, even
-    /// without enchantments; if false, the item will not glint, even with
-    /// enchantments.
-    /// Plugins should check {@link #hasEnchantmentGlintOverride()} before
-    /// calling this method.
-    pub fn enchantment_glint_override(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Boolean;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantmentGlintOverride",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Sets the enchantment_glint_override. If true, the item will glint, even
-    /// without enchantments; if false, the item will not glint, even with
-    /// enchantments. If null, the override will be cleared.
-    pub fn set_enchantment_glint_override(
-        &self,
-        val_override: bool,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Boolean;)V");
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "java/lang/Boolean",
-            "(Ljava/Lang/Object;)V",
-            vec![val_override.into()],
-        )?);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setEnchantmentGlintOverride",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Checks if this item is fire_resistant. If true, it will not burn in fire
-    /// or lava.
-    pub fn is_fire_resistant(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isFireResistant", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Sets if this item is fire_resistant. If true, it will not burn in fire
-    /// or lava.
-    pub fn set_fire_resistant(
-        &self,
-        fire_resistant: bool,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(fire_resistant.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFireResistant",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets if the max_stack_size is set.
-    pub fn has_max_stack_size(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "hasMaxStackSize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Gets the max_stack_size. This is the maximum amount which an item will
-    /// stack.
-    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMaxStackSize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// Sets the max_stack_size. This is the maximum amount which an item will
-    /// stack.
-    pub fn set_max_stack_size(&self, max: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Integer;)V");
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "java/lang/Integer",
-            "(Ljava/Lang/Object;)V",
-            vec![max.into()],
-        )?);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setMaxStackSize",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets if the rarity is set.
-    pub fn has_rarity(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hasRarity", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Gets the item rarity.
-    /// Plugins should check {@link #hasRarity()} before calling this method.
-    pub fn rarity(&self) -> Result<crate::inventory::ItemRarity<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemRarity;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getRarity", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::ItemRarity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Sets the item rarity.
-    pub fn set_rarity(
-        &self,
-        rarity: impl Into<crate::inventory::ItemRarity<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/ItemRarity;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(rarity.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setRarity",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Checks if the food is set.
-    pub fn has_food(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hasFood", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Gets the food set on this item, or creates an empty food instance.
-    ///
-    /// The returned component is a snapshot of its current state and does not
-    /// reflect a live view of what is on an item. After changing any value on
-    /// this component, it must be set with {@link #setFood(FoodComponent)} to
-    /// apply the changes.
-    pub fn food(
-        &self,
-    ) -> Result<crate::inventory::meta::components::FoodComponent<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/inventory/meta/components/FoodComponent;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getFood", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::meta::components::FoodComponent::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Sets the item food.
-    pub fn set_food(
-        &self,
-        food: impl Into<crate::inventory::meta::components::FoodComponent<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/meta/components/FoodComponent;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(food.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFood",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Checks if the tool is set.
-    pub fn has_tool(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hasTool", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Gets the tool set on this item, or creates an empty tool instance.
-    ///
-    /// The returned component is a snapshot of its current state and does not
-    /// reflect a live view of what is on an item. After changing any value on
-    /// this component, it must be set with {@link #setTool(ToolComponent)} to
-    /// apply the changes.
-    pub fn tool(
-        &self,
-    ) -> Result<crate::inventory::meta::components::ToolComponent<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/inventory/meta/components/ToolComponent;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getTool", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::meta::components::ToolComponent::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Sets the item tool.
-    pub fn set_tool(
-        &self,
-        tool: impl Into<crate::inventory::meta::components::ToolComponent<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/meta/components/ToolComponent;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(tool.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setTool",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Checks for the existence of any AttributeModifiers.
-    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "hasAttributeModifiers",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Return an immutable copy of all {@link AttributeModifier}s
-    /// for a given {@link Attribute}
-    pub fn get_attribute_modifiers(
-        &self,
-        attribute: impl Into<crate::attribute::Attribute<'mc>>,
-    ) -> Result<Option<Vec<crate::attribute::AttributeModifier<'mc>>>, Box<dyn std::error::Error>>
-    {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/attribute/Attribute;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(attribute.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += ")Ljava/util/Collection;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAttributeModifiers",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        let mut new_vec = Vec::new();
-        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
-        let iter = col.iterator()?;
-        while iter.has_next()? {
-            let obj = iter.next()?;
-            new_vec.push(crate::attribute::AttributeModifier::from_raw(
-                &self.jni_ref(),
-                obj,
-            )?);
-        }
-        Ok(Some(new_vec))
-    }
-    /// Add an Attribute and it's Modifier.
-    /// AttributeModifiers can now support {@link EquipmentSlot}s.
-    /// If not set, the {@link AttributeModifier} will be active in ALL slots.
-    ///
-    /// Two {@link AttributeModifier}s that have the same {@link java.util.UUID}
-    /// cannot exist on the same Attribute.
-    pub fn add_attribute_modifier(
-        &self,
-        attribute: impl Into<crate::attribute::Attribute<'mc>>,
-        modifier: impl Into<crate::attribute::AttributeModifier<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
-        );
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(attribute.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(modifier.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAttributeModifier",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Set all {@link Attribute}s and their {@link AttributeModifier}s.
-    /// To clear all currently set Attributes and AttributeModifiers use
-    /// null or an empty Multimap.
-    /// If not null nor empty, this will filter all entries that are not-null
-    /// and add them to the ItemStack.
-    pub fn set_attribute_modifiers(
-        &self,
-        attribute_modifiers: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
-        let val_1 = jni::objects::JValueGen::Object(attribute_modifiers);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setAttributeModifiers",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Remove a specific {@link Attribute} and {@link AttributeModifier}.
-    /// AttributeModifiers are matched according to their {@link java.util.UUID}.
-    pub fn remove_attribute_modifier(
-        &self,
-        attribute: impl Into<crate::attribute::Attribute<'mc>>,
-        modifier: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/attribute/Attribute;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(attribute.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = modifier {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        sig += ")Z";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAttributeModifier",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Get this ItemMeta as an NBT string. If this ItemMeta does not have any
-    /// NBT, then {@code "{}"} will be returned.
-    ///
-    /// This string should <strong>NEVER</strong> be relied upon as a serializable value. If
-    /// serialization is desired, the {@link ConfigurationSerializable} API should be used
-    /// instead.
-    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getAsString", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// Get this ItemMeta as a component-compliant string. If this ItemMeta does
-    /// not contain any components, then {@code "[]"} will be returned.
-    ///
-    /// The result of this method should yield a string representing the components
-    /// altered by this ItemMeta instance. When passed to {@link ItemFactory#createItemStack(String)}
-    /// with a prepended item type, it will create an ItemStack that has an ItemMeta
-    /// matching this ItemMeta instance exactly. Note that this method returns <strong>
-    /// ONLY</strong> the components and cannot be passed to createItemStack() alone.
-    /// An example may look something like this:
-    /// <pre>
-    /// ItemStack itemStack = // ... an item stack obtained from somewhere
-    /// ItemMeta itemMeta = itemStack.getItemMeta();
-    /// String components = itemMeta.getAsComponentString(); // example: "[minecraft:damage=53]"
-    /// String itemTypeKey = itemStack.getType().getKey().toString(); // example: "minecraft:diamond_sword"
-    /// String itemAsString = itemTypeKey + components; // results in: "minecraft:diamond_sword[minecraft:damage=53]"
-    /// ItemStack recreatedItemStack = Bukkit.getItemFactory().createItemStack(itemAsString);
-    /// assert itemStack.isSimilar(recreatedItemStack); // Should be true*
-    /// </pre>
-    ///
-    /// *Components not represented or explicitly overridden by this ItemMeta instance
-    /// will not be included in the resulting string and therefore may result in ItemStacks
-    /// that do not match <em>exactly</em>. For example, if {@link #setDisplayName(String)}
-    /// is not set, then the custom name component will not be included. Or if this ItemMeta
-    /// is a PotionMeta, it will not include any components related to lodestone compasses,
-    /// banners, or books, etc., only components modifiable by a PotionMeta instance.
-    ///
-    /// This string should <strong>NEVER</strong> be relied upon as a serializable value. If
-    /// serialization is desired, the {@link ConfigurationSerializable} API should be used
-    /// instead.
-    pub fn as_component_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsComponentString",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    #[deprecated]
-    /// Returns a public custom tag container capable of storing tags on the item. Those tags will be sent to the client with all of their content, so the client is capable of reading them. This will result in the player seeing a NBT Tag notification on the item. These tags can also be modified by the client once in creative mode
-    pub fn custom_tag_container(
-        &self,
-    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getCustomTagContainer",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::meta::tags::CustomItemTagContainer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Internal use only! Do not use under any circumstances!
-    pub fn set_version(&self, version: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(version);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setVersion",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn clone(
-        &self,
-    ) -> Result<crate::inventory::meta::ItemMeta<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/meta/ItemMeta;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "clone", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
-    for ItemMeta<'mc>
-{
-    fn into(self) -> crate::configuration::serialization::ConfigurationSerializable<'mc> {
-        crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting ItemMeta into crate::configuration::serialization::ConfigurationSerializable")
-    }
-}
-impl<'mc> Into<crate::persistence::PersistentDataHolder<'mc>> for ItemMeta<'mc> {
-    fn into(self) -> crate::persistence::PersistentDataHolder<'mc> {
-        crate::persistence::PersistentDataHolder::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting ItemMeta into crate::persistence::PersistentDataHolder")
-    }
-}
-#[repr(C)]
 pub struct KnowledgeBookMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1962,6 +879,68 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2186,43 +1165,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -3083,6 +2025,68 @@ impl<'mc> FireworkEffectMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3307,43 +2311,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -3676,10 +2643,39 @@ impl<'mc> Into<crate::inventory::meta::WritableBookMeta<'mc>> for BookMeta<'mc> 
             .expect("Error converting BookMeta into crate::inventory::meta::WritableBookMeta")
     }
 }
-pub enum BookMetaGeneration<'mc> {}
+pub enum BookMetaGeneration<'mc> {
+    Original {
+        inner: BookMetaGenerationStruct<'mc>,
+    },
+    CopyOfOriginal {
+        inner: BookMetaGenerationStruct<'mc>,
+    },
+    CopyOfCopy {
+        inner: BookMetaGenerationStruct<'mc>,
+    },
+    Tattered {
+        inner: BookMetaGenerationStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for BookMetaGeneration<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            BookMetaGeneration::Original { .. } => f.write_str("ORIGINAL"),
+            BookMetaGeneration::CopyOfOriginal { .. } => f.write_str("COPY_OF_ORIGINAL"),
+            BookMetaGeneration::CopyOfCopy { .. } => f.write_str("COPY_OF_COPY"),
+            BookMetaGeneration::Tattered { .. } => f.write_str("TATTERED"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for BookMetaGeneration<'mc> {
+    type Target = BookMetaGenerationStruct<'mc>;
+    fn deref(&self) -> &<BookMetaGeneration<'mc> as std::ops::Deref>::Target {
+        match self {
+            BookMetaGeneration::Original { inner } => inner,
+            BookMetaGeneration::CopyOfOriginal { inner } => inner,
+            BookMetaGeneration::CopyOfCopy { inner } => inner,
+            BookMetaGeneration::Tattered { inner } => inner,
+        }
     }
 }
 
@@ -3706,6 +2702,19 @@ impl<'mc> BookMetaGeneration<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "ORIGINAL" => Ok(BookMetaGeneration::Original {
+                inner: BookMetaGenerationStruct::from_raw(env, obj)?,
+            }),
+            "COPY_OF_ORIGINAL" => Ok(BookMetaGeneration::CopyOfOriginal {
+                inner: BookMetaGenerationStruct::from_raw(env, obj)?,
+            }),
+            "COPY_OF_COPY" => Ok(BookMetaGeneration::CopyOfCopy {
+                inner: BookMetaGenerationStruct::from_raw(env, obj)?,
+            }),
+            "TATTERED" => Ok(BookMetaGeneration::Tattered {
+                inner: BookMetaGenerationStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -3719,10 +2728,24 @@ pub struct BookMetaGenerationStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for BookMetaGeneration<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Original { inner } => inner.0.clone(),
+            Self::CopyOfOriginal { inner } => inner.0.clone(),
+            Self::CopyOfCopy { inner } => inner.0.clone(),
+            Self::Tattered { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Original { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::CopyOfOriginal { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CopyOfCopy { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Tattered { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for BookMetaGeneration<'mc> {
@@ -3751,6 +2774,18 @@ impl<'mc> JNIInstantiatable<'mc> for BookMetaGeneration<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "ORIGINAL" => Ok(BookMetaGeneration::Original {
+                    inner: BookMetaGenerationStruct::from_raw(env, obj)?,
+                }),
+                "COPY_OF_ORIGINAL" => Ok(BookMetaGeneration::CopyOfOriginal {
+                    inner: BookMetaGenerationStruct::from_raw(env, obj)?,
+                }),
+                "COPY_OF_COPY" => Ok(BookMetaGeneration::CopyOfCopy {
+                    inner: BookMetaGenerationStruct::from_raw(env, obj)?,
+                }),
+                "TATTERED" => Ok(BookMetaGeneration::Tattered {
+                    inner: BookMetaGenerationStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -4737,6 +3772,68 @@ impl<'mc> BannerMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4972,43 +4069,6 @@ impl<'mc> BannerMeta<'mc> {
             .call_method(&self.jni_object(), "clone", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -5908,6 +4968,68 @@ impl<'mc> SpawnEggMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6132,43 +5254,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -7031,6 +6116,68 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7255,43 +6402,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -8239,6 +7349,68 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8463,43 +7635,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -9426,6 +8561,68 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9650,43 +8847,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -10569,6 +9729,68 @@ impl<'mc> CrossbowMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10804,43 +10026,6 @@ impl<'mc> CrossbowMeta<'mc> {
             .call_method(&self.jni_object(), "clone", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -11729,6 +10914,68 @@ impl<'mc> CompassMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11953,43 +11200,6 @@ impl<'mc> CompassMeta<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -12872,6 +12082,68 @@ impl<'mc> Damageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -13096,43 +12368,6 @@ impl<'mc> Damageable<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -13979,6 +13214,68 @@ impl<'mc> BlockStateMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -14214,43 +13511,6 @@ impl<'mc> BlockStateMeta<'mc> {
             .call_method(&self.jni_object(), "clone", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -15099,6 +14359,68 @@ impl<'mc> Repairable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -15323,43 +14645,6 @@ impl<'mc> Repairable<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -16212,6 +15497,68 @@ impl<'mc> BlockDataMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16447,43 +15794,6 @@ impl<'mc> BlockDataMeta<'mc> {
             .call_method(&self.jni_object(), "clone", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -17423,6 +16733,68 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -17647,43 +17019,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -18532,6 +17867,68 @@ impl<'mc> LeatherArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18756,43 +18153,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -19774,6 +19134,68 @@ impl<'mc> SkullMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -19998,43 +19420,6 @@ impl<'mc> SkullMeta<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    /// Creates a Map representation of this class.
-    ///
-    /// This class must provide a method to restore this class, as defined in
-    /// the {@link ConfigurationSerializable} interface javadocs.
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a custom tag container capable of storing tags on the object.
-    /// Note that the tags stored on this container are all stored under their
-    /// own custom namespace therefore modifying default tags using this
-    /// {@link PersistentDataHolder} is impossible.
-    pub fn persistent_data_container(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/persistence/PersistentDataContainer;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPersistentDataContainer",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -21113,6 +20498,68 @@ impl<'mc> PotionMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -21338,6 +20785,1107 @@ impl<'mc> PotionMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for PotionMeta<'mc> {
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+        crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting PotionMeta into crate::inventory::meta::ItemMeta")
+    }
+}
+#[repr(C)]
+pub struct ItemMeta<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for ItemMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ItemMeta<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate ItemMeta from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/inventory/meta/ItemMeta")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ItemMeta object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> ItemMeta<'mc> {
+    /// Checks for existence of a display name.
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasDisplayName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the display name that is set.
+    ///
+    /// Plugins should check that hasDisplayName() returns <code>true</code>
+    /// before calling this method.
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDisplayName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Sets the display name.
+    pub fn set_display_name(
+        &self,
+        name: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(name.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setDisplayName",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks for existence of an item name.
+    ///
+    /// Item name differs from display name in that it is cannot be edited by an
+    /// anvil, is not styled with italics, and does not show labels.
+    pub fn has_item_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasItemName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the item name that is set.
+    ///
+    /// Item name differs from display name in that it is cannot be edited by an
+    /// anvil, is not styled with italics, and does not show labels.
+    ///
+    /// Plugins should check that hasItemName() returns <code>true</code> before
+    /// calling this method.
+    pub fn item_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Sets the item name.
+    ///
+    /// Item name differs from display name in that it is cannot be edited by an
+    /// anvil, is not styled with italics, and does not show labels.
+    pub fn set_item_name(&self, name: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(name.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItemName",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    #[deprecated]
+    /// Checks for existence of a localized name.
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasLocalizedName",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    #[deprecated]
+    /// Gets the localized display name that is set.Plugins should check that hasLocalizedName() returns <code>true</code> before calling this method.
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocalizedName",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    #[deprecated]
+    /// Sets the localized name.
+    pub fn set_localized_name(
+        &self,
+        name: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(name.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLocalizedName",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks for existence of lore.
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hasLore", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the lore that is set.
+    ///
+    /// Plugins should check if hasLore() returns <code>true</code> before
+    /// calling this method.
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(Some(new_vec))
+    }
+    /// Sets the lore for this item.
+    /// Removes lore when given null.
+    pub fn set_lore(
+        &self,
+        lore: Vec<jni::objects::JObject<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/List;)V");
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in lore {
+            let map_val_0 = jni::objects::JValueGen::Object(v);
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Ljava/lang/Object;)Z",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLore",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks for existence of custom model data.
+    ///
+    /// CustomModelData is an integer that may be associated client side with a
+    /// custom item model.
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasCustomModelData",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the custom model data that is set.
+    ///
+    /// CustomModelData is an integer that may be associated client side with a
+    /// custom item model.
+    ///
+    /// Plugins should check that hasCustomModelData() returns <code>true</code>
+    /// before calling this method.
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCustomModelData",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Sets the custom model data.
+    ///
+    /// CustomModelData is an integer that may be associated client side with a
+    /// custom item model.
+    pub fn set_custom_model_data(&self, data: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(Ljava/Lang/Object;)V",
+            vec![data.into()],
+        )?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCustomModelData",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks for the existence of any enchantments.
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Checks for existence of the specified enchantment.
+    pub fn has_enchant(
+        &self,
+        ench: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(ench.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasEnchant",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Checks for the level of the specified enchantment.
+    pub fn get_enchant_level(
+        &self,
+        ench: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(ench.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getEnchantLevel",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Returns a copy the enchantments in this ItemMeta.
+    ///
+    /// Returns an empty map if none.
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Adds the specified enchantment to this item meta.
+    pub fn add_enchant(
+        &self,
+        ench: impl Into<crate::enchantments::Enchantment<'mc>>,
+        level: i32,
+        ignore_level_restriction: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;IZ)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(ench.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Int(level);
+        let val_3 = jni::objects::JValueGen::Bool(ignore_level_restriction.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addEnchant",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Removes the specified enchantment from this item meta.
+    pub fn remove_enchant(
+        &self,
+        ench: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(ench.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeEnchant",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Removes all enchantments from this item meta.
+    pub fn remove_enchantments(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeEnchantments",
+            sig.as_str(),
+            vec![],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks if the specified enchantment conflicts with any enchantments in
+    /// this ItemMeta.
+    pub fn has_conflicting_enchant(
+        &self,
+        ench: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(ench.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Set itemflags which should be ignored when rendering a ItemStack in the Client. This Method does silently ignore double set itemFlags.
+    pub fn add_item_flags(
+        &self,
+        item_flags: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(item_flags.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Remove specific set of itemFlags. This tells the Client it should render it again. This Method does silently ignore double removed itemFlags.
+    pub fn remove_item_flags(
+        &self,
+        item_flags: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(item_flags.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Get current set itemFlags. The collection returned is unmodifiable.
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Check if the specified flag is present on this item.
+    pub fn has_item_flag(
+        &self,
+        flag: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(flag.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasItemFlag",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets if this item has hide_tooltip set. An item with this set will not
+    /// show any tooltip whatsoever.
+    pub fn is_hide_tooltip(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isHideTooltip", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets if this item has hide_tooltip set. An item with this set will not
+    /// show any tooltip whatsoever.
+    pub fn set_hide_tooltip(&self, hide_tooltip: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(hide_tooltip.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setHideTooltip",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Return if the unbreakable tag is true. An unbreakable item will not lose
+    /// durability.
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isUnbreakable", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the unbreakable tag. An unbreakable item will not lose durability.
+    pub fn set_unbreakable(&self, unbreakable: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(unbreakable.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setUnbreakable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets if an enchantment_glint_override is set.
+    pub fn has_enchantment_glint_override(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasEnchantmentGlintOverride",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the enchantment_glint_override. If true, the item will glint, even
+    /// without enchantments; if false, the item will not glint, even with
+    /// enchantments.
+    /// Plugins should check {@link #hasEnchantmentGlintOverride()} before
+    /// calling this method.
+    pub fn enchantment_glint_override(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Boolean;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getEnchantmentGlintOverride",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the enchantment_glint_override. If true, the item will glint, even
+    /// without enchantments; if false, the item will not glint, even with
+    /// enchantments. If null, the override will be cleared.
+    pub fn set_enchantment_glint_override(
+        &self,
+        val_override: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Ljava/Lang/Object;)V",
+            vec![val_override.into()],
+        )?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setEnchantmentGlintOverride",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks if this item is fire_resistant. If true, it will not burn in fire
+    /// or lava.
+    pub fn is_fire_resistant(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isFireResistant", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets if this item is fire_resistant. If true, it will not burn in fire
+    /// or lava.
+    pub fn set_fire_resistant(
+        &self,
+        fire_resistant: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(fire_resistant.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireResistant",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets if the max_stack_size is set.
+    pub fn has_max_stack_size(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasMaxStackSize", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the max_stack_size. This is the maximum amount which an item will
+    /// stack.
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxStackSize", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Sets the max_stack_size. This is the maximum amount which an item will
+    /// stack.
+    pub fn set_max_stack_size(&self, max: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(Ljava/Lang/Object;)V",
+            vec![max.into()],
+        )?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setMaxStackSize",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets if the rarity is set.
+    pub fn has_rarity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hasRarity", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the item rarity.
+    /// Plugins should check {@link #hasRarity()} before calling this method.
+    pub fn rarity(&self) -> Result<crate::inventory::ItemRarity<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemRarity;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getRarity", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemRarity::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the item rarity.
+    pub fn set_rarity(
+        &self,
+        rarity: impl Into<crate::inventory::ItemRarity<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemRarity;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(rarity.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setRarity",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks if the food is set.
+    pub fn has_food(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hasFood", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the food set on this item, or creates an empty food instance.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with {@link #setFood(FoodComponent)} to
+    /// apply the changes.
+    pub fn food(
+        &self,
+    ) -> Result<crate::inventory::meta::components::FoodComponent<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/FoodComponent;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getFood", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::meta::components::FoodComponent::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the item food.
+    pub fn set_food(
+        &self,
+        food: impl Into<crate::inventory::meta::components::FoodComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/meta/components/FoodComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(food.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFood",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks if the tool is set.
+    pub fn has_tool(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hasTool", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the tool set on this item, or creates an empty tool instance.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with {@link #setTool(ToolComponent)} to
+    /// apply the changes.
+    pub fn tool(
+        &self,
+    ) -> Result<crate::inventory::meta::components::ToolComponent<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/ToolComponent;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getTool", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::meta::components::ToolComponent::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the item tool.
+    pub fn set_tool(
+        &self,
+        tool: impl Into<crate::inventory::meta::components::ToolComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/meta/components/ToolComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(tool.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setTool",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks for the existence of any AttributeModifiers.
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Return an immutable copy of all {@link AttributeModifier}s
+    /// for a given {@link Attribute}
+    pub fn get_attribute_modifiers(
+        &self,
+        attribute: impl Into<crate::attribute::Attribute<'mc>>,
+    ) -> Result<Option<Vec<crate::attribute::AttributeModifier<'mc>>>, Box<dyn std::error::Error>>
+    {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(attribute.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Ljava/util/Collection;";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        let mut new_vec = Vec::new();
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::attribute::AttributeModifier::from_raw(
+                &self.jni_ref(),
+                obj,
+            )?);
+        }
+        Ok(Some(new_vec))
+    }
+    /// Add an Attribute and it's Modifier.
+    /// AttributeModifiers can now support {@link EquipmentSlot}s.
+    /// If not set, the {@link AttributeModifier} will be active in ALL slots.
+    ///
+    /// Two {@link AttributeModifier}s that have the same {@link java.util.UUID}
+    /// cannot exist on the same Attribute.
+    pub fn add_attribute_modifier(
+        &self,
+        attribute: impl Into<crate::attribute::Attribute<'mc>>,
+        modifier: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(attribute.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(modifier.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addAttributeModifier",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Set all {@link Attribute}s and their {@link AttributeModifier}s.
+    /// To clear all currently set Attributes and AttributeModifiers use
+    /// null or an empty Multimap.
+    /// If not null nor empty, this will filter all entries that are not-null
+    /// and add them to the ItemStack.
+    pub fn set_attribute_modifiers(
+        &self,
+        attribute_modifiers: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(attribute_modifiers);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Remove a specific {@link Attribute} and {@link AttributeModifier}.
+    /// AttributeModifiers are matched according to their {@link java.util.UUID}.
+    pub fn remove_attribute_modifier(
+        &self,
+        attribute: impl Into<crate::attribute::Attribute<'mc>>,
+        modifier: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(attribute.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = modifier {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Get this ItemMeta as an NBT string. If this ItemMeta does not have any
+    /// NBT, then {@code "{}"} will be returned.
+    ///
+    /// This string should <strong>NEVER</strong> be relied upon as a serializable value. If
+    /// serialization is desired, the {@link ConfigurationSerializable} API should be used
+    /// instead.
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getAsString", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Get this ItemMeta as a component-compliant string. If this ItemMeta does
+    /// not contain any components, then {@code "[]"} will be returned.
+    ///
+    /// The result of this method should yield a string representing the components
+    /// altered by this ItemMeta instance. When passed to {@link ItemFactory#createItemStack(String)}
+    /// with a prepended item type, it will create an ItemStack that has an ItemMeta
+    /// matching this ItemMeta instance exactly. Note that this method returns <strong>
+    /// ONLY</strong> the components and cannot be passed to createItemStack() alone.
+    /// An example may look something like this:
+    /// <pre>
+    /// ItemStack itemStack = // ... an item stack obtained from somewhere
+    /// ItemMeta itemMeta = itemStack.getItemMeta();
+    /// String components = itemMeta.getAsComponentString(); // example: "[minecraft:damage=53]"
+    /// String itemTypeKey = itemStack.getType().getKey().toString(); // example: "minecraft:diamond_sword"
+    /// String itemAsString = itemTypeKey + components; // results in: "minecraft:diamond_sword[minecraft:damage=53]"
+    /// ItemStack recreatedItemStack = Bukkit.getItemFactory().createItemStack(itemAsString);
+    /// assert itemStack.isSimilar(recreatedItemStack); // Should be true*
+    /// </pre>
+    ///
+    /// *Components not represented or explicitly overridden by this ItemMeta instance
+    /// will not be included in the resulting string and therefore may result in ItemStacks
+    /// that do not match <em>exactly</em>. For example, if {@link #setDisplayName(String)}
+    /// is not set, then the custom name component will not be included. Or if this ItemMeta
+    /// is a PotionMeta, it will not include any components related to lodestone compasses,
+    /// banners, or books, etc., only components modifiable by a PotionMeta instance.
+    ///
+    /// This string should <strong>NEVER</strong> be relied upon as a serializable value. If
+    /// serialization is desired, the {@link ConfigurationSerializable} API should be used
+    /// instead.
+    pub fn as_component_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsComponentString",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    #[deprecated]
+    /// Returns a public custom tag container capable of storing tags on the item. Those tags will be sent to the client with all of their content, so the client is capable of reading them. This will result in the player seeing a NBT Tag notification on the item. These tags can also be modified by the client once in creative mode
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCustomTagContainer",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::meta::tags::CustomItemTagContainer::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Internal use only! Do not use under any circumstances!
+    pub fn set_version(&self, version: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(version);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setVersion",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn clone(
+        &self,
+    ) -> Result<crate::inventory::meta::ItemMeta<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/ItemMeta;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "clone", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     /// Creates a Map representation of this class.
     ///
     /// This class must provide a method to restore this class, as defined in
@@ -21381,10 +21929,17 @@ impl<'mc> PotionMeta<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for PotionMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
-        crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting PotionMeta into crate::inventory::meta::ItemMeta")
+impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
+    for ItemMeta<'mc>
+{
+    fn into(self) -> crate::configuration::serialization::ConfigurationSerializable<'mc> {
+        crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting ItemMeta into crate::configuration::serialization::ConfigurationSerializable")
+    }
+}
+impl<'mc> Into<crate::persistence::PersistentDataHolder<'mc>> for ItemMeta<'mc> {
+    fn into(self) -> crate::persistence::PersistentDataHolder<'mc> {
+        crate::persistence::PersistentDataHolder::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting ItemMeta into crate::persistence::PersistentDataHolder")
     }
 }
 #[repr(C)]
@@ -22245,6 +22800,68 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setTool",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -23463,6 +24080,68 @@ impl<'mc> WritableBookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -24571,6 +25250,68 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setTool",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -25698,6 +26439,68 @@ impl<'mc> ArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -25970,6 +26773,1283 @@ impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for ArmorMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting ArmorMeta into crate::inventory::meta::ItemMeta")
+    }
+}
+#[repr(C)]
+pub struct ShieldMeta<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for ShieldMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ShieldMeta<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate ShieldMeta from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/inventory/meta/ShieldMeta")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ShieldMeta object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> ShieldMeta<'mc> {
+    /// Gets the base color for this shield.
+    pub fn base_color(&self) -> Result<Option<crate::DyeColor<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/DyeColor;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getBaseColor", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::DyeColor::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })?))
+    }
+    /// Sets the base color for this shield.
+    ///
+    /// <b>Note:</b> If the shield contains a
+    /// {@link org.bukkit.block.banner.Pattern}, then a null base color will
+    /// retain the pattern but default the base color to {@link DyeColor#WHITE}.
+    pub fn set_base_color(
+        &self,
+        color: impl Into<crate::DyeColor<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/DyeColor;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(color.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setBaseColor",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Returns a list of patterns on this banner
+    pub fn patterns(
+        &self,
+    ) -> Result<Vec<crate::block::banner::Pattern<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPatterns", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::block::banner::Pattern::from_raw(
+                &self.jni_ref(),
+                obj,
+            )?);
+        }
+        Ok(new_vec)
+    }
+    /// Sets the patterns used on this banner
+    pub fn set_patterns(
+        &self,
+        patterns: Vec<jni::objects::JObject<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/List;)V");
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in patterns {
+            let map_val_0 = jni::objects::JValueGen::Object(v);
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Ljava/lang/Object;)Z",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPatterns",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Adds a new pattern on top of the existing
+    /// patterns
+    pub fn add_pattern(
+        &self,
+        pattern: impl Into<crate::block::banner::Pattern<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/banner/Pattern;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(pattern.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addPattern",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Returns the pattern at the specified index
+    pub fn get_pattern(
+        &self,
+        i: i32,
+    ) -> Result<crate::block::banner::Pattern<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(I)Lorg/bukkit/block/banner/Pattern;");
+        let val_1 = jni::objects::JValueGen::Int(i);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPattern",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::banner::Pattern::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Removes the pattern at the specified index
+    pub fn remove_pattern(
+        &self,
+        i: i32,
+    ) -> Result<crate::block::banner::Pattern<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(I)Lorg/bukkit/block/banner/Pattern;");
+        let val_1 = jni::objects::JValueGen::Int(i);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removePattern",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::banner::Pattern::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the pattern at the specified index
+    pub fn set_pattern(
+        &self,
+        i: i32,
+        pattern: impl Into<crate::block::banner::Pattern<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(ILorg/bukkit/block/banner/Pattern;)V");
+        let val_1 = jni::objects::JValueGen::Int(i);
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(pattern.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPattern",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Returns the number of patterns on this
+    /// banner
+    pub fn number_of_patterns(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "numberOfPatterns",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Checks for existence of a display name.
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasDisplayName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the display name that is set.
+    ///
+    /// Plugins should check that hasDisplayName() returns <code>true</code>
+    /// before calling this method.
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDisplayName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Sets the display name.
+    pub fn set_display_name(
+        &self,
+        name: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(name.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setDisplayName",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks for existence of an item name.
+    ///
+    /// Item name differs from display name in that it is cannot be edited by an
+    /// anvil, is not styled with italics, and does not show labels.
+    pub fn has_item_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasItemName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the item name that is set.
+    ///
+    /// Item name differs from display name in that it is cannot be edited by an
+    /// anvil, is not styled with italics, and does not show labels.
+    ///
+    /// Plugins should check that hasItemName() returns <code>true</code> before
+    /// calling this method.
+    pub fn item_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Sets the item name.
+    ///
+    /// Item name differs from display name in that it is cannot be edited by an
+    /// anvil, is not styled with italics, and does not show labels.
+    pub fn set_item_name(&self, name: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(name.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItemName",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    #[deprecated]
+    /// Checks for existence of a localized name.
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasLocalizedName",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    #[deprecated]
+    /// Gets the localized display name that is set.Plugins should check that hasLocalizedName() returns <code>true</code> before calling this method.
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocalizedName",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    #[deprecated]
+    /// Sets the localized name.
+    pub fn set_localized_name(
+        &self,
+        name: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(name.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLocalizedName",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks for existence of lore.
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hasLore", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the lore that is set.
+    ///
+    /// Plugins should check if hasLore() returns <code>true</code> before
+    /// calling this method.
+    pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(Some(new_vec))
+    }
+    /// Sets the lore for this item.
+    /// Removes lore when given null.
+    pub fn set_lore(
+        &self,
+        lore: Vec<jni::objects::JObject<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/List;)V");
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in lore {
+            let map_val_0 = jni::objects::JValueGen::Object(v);
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Ljava/lang/Object;)Z",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLore",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks for existence of custom model data.
+    ///
+    /// CustomModelData is an integer that may be associated client side with a
+    /// custom item model.
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasCustomModelData",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the custom model data that is set.
+    ///
+    /// CustomModelData is an integer that may be associated client side with a
+    /// custom item model.
+    ///
+    /// Plugins should check that hasCustomModelData() returns <code>true</code>
+    /// before calling this method.
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCustomModelData",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Sets the custom model data.
+    ///
+    /// CustomModelData is an integer that may be associated client side with a
+    /// custom item model.
+    pub fn set_custom_model_data(&self, data: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(Ljava/Lang/Object;)V",
+            vec![data.into()],
+        )?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCustomModelData",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks for the existence of any enchantments.
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Checks for existence of the specified enchantment.
+    pub fn has_enchant(
+        &self,
+        ench: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(ench.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasEnchant",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Checks for the level of the specified enchantment.
+    pub fn get_enchant_level(
+        &self,
+        ench: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(ench.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getEnchantLevel",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Returns a copy the enchantments in this ItemMeta.
+    ///
+    /// Returns an empty map if none.
+    pub fn enchants(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEnchants", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Adds the specified enchantment to this item meta.
+    pub fn add_enchant(
+        &self,
+        ench: impl Into<crate::enchantments::Enchantment<'mc>>,
+        level: i32,
+        ignore_level_restriction: bool,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;IZ)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(ench.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Int(level);
+        let val_3 = jni::objects::JValueGen::Bool(ignore_level_restriction.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addEnchant",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Removes the specified enchantment from this item meta.
+    pub fn remove_enchant(
+        &self,
+        ench: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(ench.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeEnchant",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Removes all enchantments from this item meta.
+    pub fn remove_enchantments(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeEnchantments",
+            sig.as_str(),
+            vec![],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks if the specified enchantment conflicts with any enchantments in
+    /// this ItemMeta.
+    pub fn has_conflicting_enchant(
+        &self,
+        ench: impl Into<crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(ench.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Set itemflags which should be ignored when rendering a ItemStack in the Client. This Method does silently ignore double set itemFlags.
+    pub fn add_item_flags(
+        &self,
+        item_flags: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(item_flags.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Remove specific set of itemFlags. This tells the Client it should render it again. This Method does silently ignore double removed itemFlags.
+    pub fn remove_item_flags(
+        &self,
+        item_flags: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(item_flags.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeItemFlags",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Get current set itemFlags. The collection returned is unmodifiable.
+    pub fn item_flags(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemFlags", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Check if the specified flag is present on this item.
+    pub fn has_item_flag(
+        &self,
+        flag: impl Into<crate::inventory::ItemFlag<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(flag.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasItemFlag",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets if this item has hide_tooltip set. An item with this set will not
+    /// show any tooltip whatsoever.
+    pub fn is_hide_tooltip(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isHideTooltip", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets if this item has hide_tooltip set. An item with this set will not
+    /// show any tooltip whatsoever.
+    pub fn set_hide_tooltip(&self, hide_tooltip: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(hide_tooltip.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setHideTooltip",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Return if the unbreakable tag is true. An unbreakable item will not lose
+    /// durability.
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isUnbreakable", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the unbreakable tag. An unbreakable item will not lose durability.
+    pub fn set_unbreakable(&self, unbreakable: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(unbreakable.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setUnbreakable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets if an enchantment_glint_override is set.
+    pub fn has_enchantment_glint_override(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasEnchantmentGlintOverride",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the enchantment_glint_override. If true, the item will glint, even
+    /// without enchantments; if false, the item will not glint, even with
+    /// enchantments.
+    /// Plugins should check {@link #hasEnchantmentGlintOverride()} before
+    /// calling this method.
+    pub fn enchantment_glint_override(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Boolean;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getEnchantmentGlintOverride",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the enchantment_glint_override. If true, the item will glint, even
+    /// without enchantments; if false, the item will not glint, even with
+    /// enchantments. If null, the override will be cleared.
+    pub fn set_enchantment_glint_override(
+        &self,
+        val_override: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Ljava/Lang/Object;)V",
+            vec![val_override.into()],
+        )?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setEnchantmentGlintOverride",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks if this item is fire_resistant. If true, it will not burn in fire
+    /// or lava.
+    pub fn is_fire_resistant(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isFireResistant", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets if this item is fire_resistant. If true, it will not burn in fire
+    /// or lava.
+    pub fn set_fire_resistant(
+        &self,
+        fire_resistant: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(fire_resistant.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFireResistant",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets if the max_stack_size is set.
+    pub fn has_max_stack_size(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasMaxStackSize", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the max_stack_size. This is the maximum amount which an item will
+    /// stack.
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxStackSize", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Sets the max_stack_size. This is the maximum amount which an item will
+    /// stack.
+    pub fn set_max_stack_size(&self, max: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(Ljava/Lang/Object;)V",
+            vec![max.into()],
+        )?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setMaxStackSize",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets if the rarity is set.
+    pub fn has_rarity(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hasRarity", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the item rarity.
+    /// Plugins should check {@link #hasRarity()} before calling this method.
+    pub fn rarity(&self) -> Result<crate::inventory::ItemRarity<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemRarity;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getRarity", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemRarity::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the item rarity.
+    pub fn set_rarity(
+        &self,
+        rarity: impl Into<crate::inventory::ItemRarity<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemRarity;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(rarity.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setRarity",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks if the food is set.
+    pub fn has_food(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hasFood", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the food set on this item, or creates an empty food instance.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with {@link #setFood(FoodComponent)} to
+    /// apply the changes.
+    pub fn food(
+        &self,
+    ) -> Result<crate::inventory::meta::components::FoodComponent<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/FoodComponent;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getFood", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::meta::components::FoodComponent::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the item food.
+    pub fn set_food(
+        &self,
+        food: impl Into<crate::inventory::meta::components::FoodComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/meta/components/FoodComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(food.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFood",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks if the tool is set.
+    pub fn has_tool(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hasTool", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the tool set on this item, or creates an empty tool instance.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with {@link #setTool(ToolComponent)} to
+    /// apply the changes.
+    pub fn tool(
+        &self,
+    ) -> Result<crate::inventory::meta::components::ToolComponent<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/ToolComponent;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getTool", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::meta::components::ToolComponent::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the item tool.
+    pub fn set_tool(
+        &self,
+        tool: impl Into<crate::inventory::meta::components::ToolComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/meta/components/ToolComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(tool.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setTool",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Checks for the existence of any AttributeModifiers.
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasAttributeModifiers",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Return an immutable copy of all {@link AttributeModifier}s
+    /// for a given {@link Attribute}
+    pub fn get_attribute_modifiers(
+        &self,
+        attribute: impl Into<crate::attribute::Attribute<'mc>>,
+    ) -> Result<Option<Vec<crate::attribute::AttributeModifier<'mc>>>, Box<dyn std::error::Error>>
+    {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(attribute.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Ljava/util/Collection;";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttributeModifiers",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        let mut new_vec = Vec::new();
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::attribute::AttributeModifier::from_raw(
+                &self.jni_ref(),
+                obj,
+            )?);
+        }
+        Ok(Some(new_vec))
+    }
+    /// Add an Attribute and it's Modifier.
+    /// AttributeModifiers can now support {@link EquipmentSlot}s.
+    /// If not set, the {@link AttributeModifier} will be active in ALL slots.
+    ///
+    /// Two {@link AttributeModifier}s that have the same {@link java.util.UUID}
+    /// cannot exist on the same Attribute.
+    pub fn add_attribute_modifier(
+        &self,
+        attribute: impl Into<crate::attribute::Attribute<'mc>>,
+        modifier: impl Into<crate::attribute::AttributeModifier<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(attribute.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(modifier.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addAttributeModifier",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Set all {@link Attribute}s and their {@link AttributeModifier}s.
+    /// To clear all currently set Attributes and AttributeModifiers use
+    /// null or an empty Multimap.
+    /// If not null nor empty, this will filter all entries that are not-null
+    /// and add them to the ItemStack.
+    pub fn set_attribute_modifiers(
+        &self,
+        attribute_modifiers: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
+        let val_1 = jni::objects::JValueGen::Object(attribute_modifiers);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAttributeModifiers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Remove a specific {@link Attribute} and {@link AttributeModifier}.
+    /// AttributeModifiers are matched according to their {@link java.util.UUID}.
+    pub fn remove_attribute_modifier(
+        &self,
+        attribute: impl Into<crate::attribute::Attribute<'mc>>,
+        modifier: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/attribute/Attribute;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(attribute.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = modifier {
+            sig += "Lorg/bukkit/attribute/AttributeModifier;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Get this ItemMeta as an NBT string. If this ItemMeta does not have any
+    /// NBT, then {@code "{}"} will be returned.
+    ///
+    /// This string should <strong>NEVER</strong> be relied upon as a serializable value. If
+    /// serialization is desired, the {@link ConfigurationSerializable} API should be used
+    /// instead.
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getAsString", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Get this ItemMeta as a component-compliant string. If this ItemMeta does
+    /// not contain any components, then {@code "[]"} will be returned.
+    ///
+    /// The result of this method should yield a string representing the components
+    /// altered by this ItemMeta instance. When passed to {@link ItemFactory#createItemStack(String)}
+    /// with a prepended item type, it will create an ItemStack that has an ItemMeta
+    /// matching this ItemMeta instance exactly. Note that this method returns <strong>
+    /// ONLY</strong> the components and cannot be passed to createItemStack() alone.
+    /// An example may look something like this:
+    /// <pre>
+    /// ItemStack itemStack = // ... an item stack obtained from somewhere
+    /// ItemMeta itemMeta = itemStack.getItemMeta();
+    /// String components = itemMeta.getAsComponentString(); // example: "[minecraft:damage=53]"
+    /// String itemTypeKey = itemStack.getType().getKey().toString(); // example: "minecraft:diamond_sword"
+    /// String itemAsString = itemTypeKey + components; // results in: "minecraft:diamond_sword[minecraft:damage=53]"
+    /// ItemStack recreatedItemStack = Bukkit.getItemFactory().createItemStack(itemAsString);
+    /// assert itemStack.isSimilar(recreatedItemStack); // Should be true*
+    /// </pre>
+    ///
+    /// *Components not represented or explicitly overridden by this ItemMeta instance
+    /// will not be included in the resulting string and therefore may result in ItemStacks
+    /// that do not match <em>exactly</em>. For example, if {@link #setDisplayName(String)}
+    /// is not set, then the custom name component will not be included. Or if this ItemMeta
+    /// is a PotionMeta, it will not include any components related to lodestone compasses,
+    /// banners, or books, etc., only components modifiable by a PotionMeta instance.
+    ///
+    /// This string should <strong>NEVER</strong> be relied upon as a serializable value. If
+    /// serialization is desired, the {@link ConfigurationSerializable} API should be used
+    /// instead.
+    pub fn as_component_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsComponentString",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    #[deprecated]
+    /// Returns a public custom tag container capable of storing tags on the item. Those tags will be sent to the client with all of their content, so the client is capable of reading them. This will result in the player seeing a NBT Tag notification on the item. These tags can also be modified by the client once in creative mode
+    pub fn custom_tag_container(
+        &self,
+    ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCustomTagContainer",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::meta::tags::CustomItemTagContainer::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Internal use only! Do not use under any circumstances!
+    pub fn set_version(&self, version: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(version);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setVersion",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn clone(
+        &self,
+    ) -> Result<crate::inventory::meta::ItemMeta<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/ItemMeta;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "clone", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::inventory::meta::BannerMeta<'mc>> for ShieldMeta<'mc> {
+    fn into(self) -> crate::inventory::meta::BannerMeta<'mc> {
+        crate::inventory::meta::BannerMeta::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting ShieldMeta into crate::inventory::meta::BannerMeta")
     }
 }
 #[repr(C)]
@@ -26888,6 +28968,75 @@ impl<'mc> ColorableArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            args,
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let args = Vec::new();
@@ -27127,12 +29276,10 @@ impl<'mc> ColorableArmorMeta<'mc> {
     pub fn serialize(
         &self,
     ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Ljava/util/Map;";
+        let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), args);
+            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -28139,6 +30286,75 @@ impl<'mc> OminousBottleMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            args,
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let args = Vec::new();
@@ -28385,12 +30601,10 @@ impl<'mc> OminousBottleMeta<'mc> {
     pub fn serialize(
         &self,
     ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Ljava/util/Map;";
+        let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), args);
+            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -28539,7 +30753,19 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    /// Get whether this firework has power set by component.
+    pub fn has_power(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hasPower", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
     /// Gets the approximate height the firework will fly.
+    ///
+    /// Plugins should check that hasPower() returns <code>true</code>
+    /// before calling this method.
     pub fn power(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -29407,6 +31633,75 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            args,
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let args = Vec::new();
@@ -29653,12 +31948,10 @@ impl<'mc> FireworkMeta<'mc> {
     pub fn serialize(
         &self,
     ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Ljava/util/Map;";
+        let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), args);
+            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -30776,6 +33069,75 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the jukebox playable is set.
+    pub fn has_jukebox_playable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Z";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasJukeboxPlayable",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the jukebox playable component set on this item.
+    ///
+    /// The returned component is a snapshot of its current state and does not
+    /// reflect a live view of what is on an item. After changing any value on
+    /// this component, it must be set with
+    /// {@link #setJukeboxPlayable(org.bukkit.inventory.meta.components.JukeboxComponent)}
+    /// to apply the changes.
+    pub fn jukebox_playable(
+        &self,
+    ) -> Result<
+        Option<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getJukeboxPlayable",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::inventory::meta::components::JukeboxPlayableComponent::from_raw(
+                &self.jni_ref(),
+                unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+            )?,
+        ))
+    }
+    /// Sets the item tool.
+    pub fn set_jukebox_playable(
+        &self,
+        jukebox_playable: impl Into<crate::inventory::meta::components::JukeboxPlayableComponent<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/meta/components/JukeboxPlayableComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(jukebox_playable.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setJukeboxPlayable",
+            sig.as_str(),
+            args,
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Checks for the existence of any AttributeModifiers.
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let args = Vec::new();
@@ -31022,12 +33384,10 @@ impl<'mc> MapMeta<'mc> {
     pub fn serialize(
         &self,
     ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Ljava/util/Map;";
+        let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), args);
+            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())

@@ -3,6 +3,1170 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
+pub struct ValidatingPrompt<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for ValidatingPrompt<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ValidatingPrompt<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate ValidatingPrompt from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/ValidatingPrompt")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ValidatingPrompt object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> ValidatingPrompt<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::conversations::ValidatingPrompt<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let cls = jni.find_class("org/bukkit/conversations/ValidatingPrompt");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), vec![]);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::ValidatingPrompt::from_raw(&jni, res)
+    }
+    /// Accepts and processes input from the user and validates it. If
+    /// validation fails, this prompt is returned for re-execution, otherwise
+    /// the next Prompt in the prompt graph is returned.
+    pub fn accept_input(
+        &self,
+        context: impl Into<crate::conversations::ConversationContext<'mc>>,
+        input: impl Into<String>,
+    ) -> Result<Option<crate::conversations::Prompt<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/conversations/ConversationContext;Ljava/lang/String;)Lorg/bukkit/conversations/Prompt;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(context.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(input.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "acceptInput",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::conversations::Prompt::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    /// Ensures that the prompt waits for the user to provide input.
+    pub fn blocks_for_input(
+        &self,
+        context: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/conversations/ConversationContext;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(context.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "blocksForInput",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the text to display to the user when this prompt is first
+    /// presented.
+    pub fn get_prompt_text(
+        &self,
+        context: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/conversations/ConversationContext;)Ljava/lang/String;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(context.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPromptText",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::conversations::Prompt<'mc>> for ValidatingPrompt<'mc> {
+    fn into(self) -> crate::conversations::Prompt<'mc> {
+        crate::conversations::Prompt::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting ValidatingPrompt into crate::conversations::Prompt")
+    }
+}
+#[repr(C)]
+pub struct NumericPrompt<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for NumericPrompt<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for NumericPrompt<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate NumericPrompt from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/NumericPrompt")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a NumericPrompt object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> NumericPrompt<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::conversations::NumericPrompt<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let cls = jni.find_class("org/bukkit/conversations/NumericPrompt");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), vec![]);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::NumericPrompt::from_raw(&jni, res)
+    }
+    // SUPER CLASS: org.bukkit.conversations.ValidatingPrompt ( [])
+    /// Accepts and processes input from the user and validates it. If
+    /// validation fails, this prompt is returned for re-execution, otherwise
+    /// the next Prompt in the prompt graph is returned.
+    pub fn accept_input(
+        &self,
+        context: impl Into<crate::conversations::ConversationContext<'mc>>,
+        input: impl Into<String>,
+    ) -> Result<Option<crate::conversations::Prompt<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::ValidatingPrompt = temp_clone.into();
+        real.accept_input(context, input)
+    }
+    /// Ensures that the prompt waits for the user to provide input.
+    pub fn blocks_for_input(
+        &self,
+        context: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::ValidatingPrompt = temp_clone.into();
+        real.blocks_for_input(context)
+    }
+    /// Gets the text to display to the user when this prompt is first
+    /// presented.
+    pub fn get_prompt_text(
+        &self,
+        context: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::ValidatingPrompt = temp_clone.into();
+        real.get_prompt_text(context)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for NumericPrompt<'mc> {
+    fn into(self) -> crate::conversations::ValidatingPrompt<'mc> {
+        crate::conversations::ValidatingPrompt::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting NumericPrompt into crate::conversations::ValidatingPrompt")
+    }
+}
+#[repr(C)]
+pub struct InactivityConversationCanceller<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for InactivityConversationCanceller<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for InactivityConversationCanceller<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate InactivityConversationCanceller from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/conversations/InactivityConversationCanceller",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a InactivityConversationCanceller object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> InactivityConversationCanceller<'mc> {
+    /// Creates an InactivityConversationCanceller.
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: impl Into<crate::plugin::Plugin<'mc>>,
+        timeout_seconds: i32,
+    ) -> Result<
+        crate::conversations::InactivityConversationCanceller<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;I)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Int(timeout_seconds);
+        let cls = jni.find_class("org/bukkit/conversations/InactivityConversationCanceller");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::InactivityConversationCanceller::from_raw(&jni, res)
+    }
+
+    pub fn set_conversation(
+        &self,
+        conversation: impl Into<crate::conversations::Conversation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/conversations/Conversation;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(conversation.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setConversation",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn cancel_based_on_input(
+        &self,
+        context: impl Into<crate::conversations::ConversationContext<'mc>>,
+        input: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/conversations/ConversationContext;Ljava/lang/String;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(context.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(input.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "cancelBasedOnInput",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn clone(
+        &self,
+    ) -> Result<crate::conversations::ConversationCanceller<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/conversations/ConversationCanceller;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "clone", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::ConversationCanceller::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::conversations::ConversationCanceller<'mc>>
+    for InactivityConversationCanceller<'mc>
+{
+    fn into(self) -> crate::conversations::ConversationCanceller<'mc> {
+        crate::conversations::ConversationCanceller::from_raw(&self.jni_ref(), self.1).expect("Error converting InactivityConversationCanceller into crate::conversations::ConversationCanceller")
+    }
+}
+#[repr(C)]
+pub struct ConversationFactory<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for ConversationFactory<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ConversationFactory<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate ConversationFactory from null object.").into(),
+            );
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/conversations/ConversationFactory")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ConversationFactory object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> ConversationFactory<'mc> {
+    /// Constructs a ConversationFactory.
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: impl Into<crate::plugin::Plugin<'mc>>,
+    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/conversations/ConversationFactory");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::ConversationFactory::from_raw(&jni, res)
+    }
+    /// Sets the modality of all {@link Conversation}s created by this factory.
+    /// If a conversation is modal, all messages directed to the player are
+    /// suppressed for the duration of the conversation.
+    ///
+    /// The default is True.
+    pub fn with_modality(
+        &self,
+        modal: bool,
+    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)Lorg/bukkit/conversations/ConversationFactory;");
+        let val_1 = jni::objects::JValueGen::Bool(modal.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "withModality",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the local echo status for all {@link Conversation}s created by
+    /// this factory. If local echo is enabled, any text submitted to a
+    /// conversation gets echoed back into the submitter's chat window.
+    pub fn with_local_echo(
+        &self,
+        local_echo_enabled: bool,
+    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)Lorg/bukkit/conversations/ConversationFactory;");
+        let val_1 = jni::objects::JValueGen::Bool(local_echo_enabled.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "withLocalEcho",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the {@link ConversationPrefix} that prepends all output from all
+    /// generated conversations.
+    ///
+    /// The default is a {@link NullConversationPrefix};
+    pub fn with_prefix(
+        &self,
+        prefix: impl Into<crate::conversations::ConversationPrefix<'mc>>,
+    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/conversations/ConversationPrefix;)Lorg/bukkit/conversations/ConversationFactory;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(prefix.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "withPrefix",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the number of inactive seconds to wait before automatically
+    /// abandoning all generated conversations.
+    ///
+    /// The default is 600 seconds (5 minutes).
+    pub fn with_timeout(
+        &self,
+        timeout_seconds: i32,
+    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(I)Lorg/bukkit/conversations/ConversationFactory;");
+        let val_1 = jni::objects::JValueGen::Int(timeout_seconds);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "withTimeout",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the first prompt to use in all generated conversations.
+    ///
+    /// The default is Prompt.END_OF_CONVERSATION.
+    pub fn with_first_prompt(
+        &self,
+        first_prompt: impl Into<crate::conversations::Prompt<'mc>>,
+    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Lorg/bukkit/conversations/Prompt;)Lorg/bukkit/conversations/ConversationFactory;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(first_prompt.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "withFirstPrompt",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets any initial data with which to populate the conversation context
+    /// sessionData map.
+    pub fn with_initial_session_data(
+        &self,
+        initial_session_data: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
+    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/Map;)Lorg/bukkit/conversations/ConversationFactory;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(initial_session_data.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "withInitialSessionData",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the player input that, when received, will immediately terminate
+    /// the conversation.
+    pub fn with_escape_sequence(
+        &self,
+        escape_sequence: impl Into<String>,
+    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Ljava/lang/String;)Lorg/bukkit/conversations/ConversationFactory;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(escape_sequence.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "withEscapeSequence",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Adds a {@link ConversationCanceller} to constructed conversations.
+    pub fn with_conversation_canceller(
+        &self,
+        canceller: impl Into<crate::conversations::ConversationCanceller<'mc>>,
+    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/conversations/ConversationCanceller;)Lorg/bukkit/conversations/ConversationFactory;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(canceller.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "withConversationCanceller",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Prevents this factory from creating a conversation for non-player
+    /// {@link Conversable} objects.
+    pub fn that_excludes_non_players_with_message(
+        &self,
+        player_only_message: impl Into<String>,
+    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Ljava/lang/String;)Lorg/bukkit/conversations/ConversationFactory;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(player_only_message.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "thatExcludesNonPlayersWithMessage",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Adds a {@link ConversationAbandonedListener} to all conversations
+    /// constructed by this factory.
+    pub fn add_conversation_abandoned_listener(
+        &self,
+        listener: impl Into<crate::conversations::ConversationAbandonedListener<'mc>>,
+    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/conversations/ConversationAbandonedListener;)Lorg/bukkit/conversations/ConversationFactory;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(listener.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addConversationAbandonedListener",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Constructs a {@link Conversation} in accordance with the defaults set
+    /// for this factory.
+    pub fn build_conversation(
+        &self,
+        for_whom: impl Into<crate::conversations::Conversable<'mc>>,
+    ) -> Result<crate::conversations::Conversation<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Lorg/bukkit/conversations/Conversable;)Lorg/bukkit/conversations/Conversation;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(for_whom.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "buildConversation",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::Conversation::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct Conversation<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Conversation<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for Conversation<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Conversation from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/Conversation")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Conversation object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> Conversation<'mc> {
+    /// Initializes a new Conversation.
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: impl Into<crate::plugin::Plugin<'mc>>,
+        for_whom: impl Into<crate::conversations::Conversable<'mc>>,
+        first_prompt: impl Into<crate::conversations::Prompt<'mc>>,
+        initial_session_data: std::option::Option<impl Into<blackboxmc_java::util::JavaMap<'mc>>>,
+    ) -> Result<crate::conversations::Conversation<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/plugin/Plugin;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/conversations/Conversable;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(for_whom.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += "Lorg/bukkit/conversations/Prompt;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(first_prompt.into().jni_object().clone())
+        });
+        args.push(val_3);
+        if let Some(a) = initial_session_data {
+            sig += "Ljava/util/Map;";
+            let val_4 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_4);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/conversations/Conversation");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::Conversation::from_raw(&jni, res)
+    }
+    /// Gets the entity for whom this conversation is mediating.
+    pub fn for_whom(
+        &self,
+    ) -> Result<crate::conversations::Conversable<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/conversations/Conversable;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getForWhom", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::Conversable::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the modality of this conversation. If a conversation is modal, all
+    /// messages directed to the player are suppressed for the duration of the
+    /// conversation.
+    pub fn is_modal(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isModal", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the status of local echo for this conversation. If local echo is
+    /// enabled, any text submitted to a conversation gets echoed back into the
+    /// submitter's chat window.
+    pub fn is_local_echo_enabled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isLocalEchoEnabled",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the status of local echo for this conversation. If local echo is
+    /// enabled, any text submitted to a conversation gets echoed back into the
+    /// submitter's chat window.
+    pub fn set_local_echo_enabled(
+        &self,
+        local_echo_enabled: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(local_echo_enabled.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLocalEchoEnabled",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets the {@link ConversationPrefix} that prepends all output from this
+    /// conversation.
+    pub fn prefix(
+        &self,
+    ) -> Result<crate::conversations::ConversationPrefix<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/conversations/ConversationPrefix;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getPrefix", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::ConversationPrefix::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the list of {@link ConversationCanceller}s
+    pub fn cancellers(
+        &self,
+    ) -> Result<Vec<crate::conversations::ConversationCanceller<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getCancellers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::conversations::ConversationCanceller::from_raw(
+                &self.0, obj,
+            )?);
+        }
+        Ok(new_vec)
+    }
+    /// Returns the Conversation's {@link ConversationContext}.
+    pub fn context(
+        &self,
+    ) -> Result<crate::conversations::ConversationContext<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/conversations/ConversationContext;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContext", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::ConversationContext::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Displays the first prompt of this conversation and begins redirecting
+    /// the user's chat responses.
+    pub fn begin(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "begin", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Returns Returns the current state of the conversation.
+    pub fn state(
+        &self,
+    ) -> Result<crate::conversations::ConversationConversationState<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/conversations/Conversation/ConversationState;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getState", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::conversations::ConversationConversationState::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Passes player input into the current prompt. The next prompt (as
+    /// determined by the current prompt) is then displayed to the user.
+    pub fn accept_input(&self, input: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(input.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "acceptInput",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Adds a {@link ConversationAbandonedListener}.
+    pub fn add_conversation_abandoned_listener(
+        &self,
+        listener: impl Into<crate::conversations::ConversationAbandonedListener<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/conversations/ConversationAbandonedListener;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(listener.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addConversationAbandonedListener",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Removes a {@link ConversationAbandonedListener}.
+    pub fn remove_conversation_abandoned_listener(
+        &self,
+        listener: impl Into<crate::conversations::ConversationAbandonedListener<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/conversations/ConversationAbandonedListener;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(listener.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeConversationAbandonedListener",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Abandons and resets the current conversation. Restores the user's
+    /// normal chat behavior.
+    pub fn abandon(
+        &self,
+        details: std::option::Option<
+            impl Into<crate::conversations::ConversationAbandonedEvent<'mc>>,
+        >,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = details {
+            sig += "Lorg/bukkit/conversations/ConversationAbandonedEvent;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "abandon", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Displays the next user prompt and abandons the conversation if the next
+    /// prompt is null.
+    pub fn output_next_prompt(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "outputNextPrompt",
+            sig.as_str(),
+            vec![],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+pub enum ConversationConversationState<'mc> {
+    Unstarted {
+        inner: ConversationConversationStateStruct<'mc>,
+    },
+    Started {
+        inner: ConversationConversationStateStruct<'mc>,
+    },
+    Abandoned {
+        inner: ConversationConversationStateStruct<'mc>,
+    },
+}
+impl<'mc> std::fmt::Display for ConversationConversationState<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ConversationConversationState::Unstarted { .. } => f.write_str("UNSTARTED"),
+            ConversationConversationState::Started { .. } => f.write_str("STARTED"),
+            ConversationConversationState::Abandoned { .. } => f.write_str("ABANDONED"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for ConversationConversationState<'mc> {
+    type Target = ConversationConversationStateStruct<'mc>;
+    fn deref(&self) -> &<ConversationConversationState<'mc> as std::ops::Deref>::Target {
+        match self {
+            ConversationConversationState::Unstarted { inner } => inner,
+            ConversationConversationState::Started { inner } => inner,
+            ConversationConversationState::Abandoned { inner } => inner,
+        }
+    }
+}
+
+impl<'mc> ConversationConversationState<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<ConversationConversationState<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/conversations/Conversation/ConversationState");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/conversations/Conversation/ConversationState;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "UNSTARTED" => Ok(ConversationConversationState::Unstarted {
+                inner: ConversationConversationStateStruct::from_raw(env, obj)?,
+            }),
+            "STARTED" => Ok(ConversationConversationState::Started {
+                inner: ConversationConversationStateStruct::from_raw(env, obj)?,
+            }),
+            "ABANDONED" => Ok(ConversationConversationState::Abandoned {
+                inner: ConversationConversationStateStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct ConversationConversationStateStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for ConversationConversationState<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Unstarted { inner } => inner.0.clone(),
+            Self::Started { inner } => inner.0.clone(),
+            Self::Abandoned { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Unstarted { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Started { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Abandoned { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ConversationConversationState<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate ConversationConversationState from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/conversations/Conversation/ConversationState",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ConversationConversationState object, got {}",
+                name
+            )
+            .into())
+        } else {
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "UNSTARTED" => Ok(ConversationConversationState::Unstarted {
+                    inner: ConversationConversationStateStruct::from_raw(env, obj)?,
+                }),
+                "STARTED" => Ok(ConversationConversationState::Started {
+                    inner: ConversationConversationStateStruct::from_raw(env, obj)?,
+                }),
+                "ABANDONED" => Ok(ConversationConversationState::Abandoned {
+                    inner: ConversationConversationStateStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
+        }
+    }
+}
+
+impl<'mc> JNIRaw<'mc> for ConversationConversationStateStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ConversationConversationStateStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate ConversationConversationStateStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/conversations/Conversation/ConversationState",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a ConversationConversationStateStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> ConversationConversationStateStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::conversations::ConversationConversationState<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/conversations/Conversation/ConversationState;");
+        let cls = jni.find_class("org/bukkit/conversations/Conversation/ConversationState");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::conversations::ConversationConversationState::from_raw(&jni, obj)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
 pub struct BooleanPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -73,6 +1237,18 @@ impl<'mc> BooleanPrompt<'mc> {
         })?;
         let real: crate::conversations::ValidatingPrompt = temp_clone.into();
         real.blocks_for_input(context)
+    }
+    /// Gets the text to display to the user when this prompt is first
+    /// presented.
+    pub fn get_prompt_text(
+        &self,
+        context: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::ValidatingPrompt = temp_clone.into();
+        real.get_prompt_text(context)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -280,6 +1456,18 @@ impl<'mc> PlayerNamePrompt<'mc> {
         })?;
         let real: crate::conversations::ValidatingPrompt = temp_clone.into();
         real.blocks_for_input(context)
+    }
+    /// Gets the text to display to the user when this prompt is first
+    /// presented.
+    pub fn get_prompt_text(
+        &self,
+        context: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::ValidatingPrompt = temp_clone.into();
+        real.get_prompt_text(context)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -1078,6 +2266,18 @@ impl<'mc> RegexPrompt<'mc> {
         let real: crate::conversations::ValidatingPrompt = temp_clone.into();
         real.blocks_for_input(context)
     }
+    /// Gets the text to display to the user when this prompt is first
+    /// presented.
+    pub fn get_prompt_text(
+        &self,
+        context: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::ValidatingPrompt = temp_clone.into();
+        real.get_prompt_text(context)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -1218,309 +2418,6 @@ impl<'mc> Prompt<'mc> {
     }
 }
 #[repr(C)]
-pub struct ConversationFactory<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for ConversationFactory<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for ConversationFactory<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate ConversationFactory from null object.").into(),
-            );
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/conversations/ConversationFactory")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a ConversationFactory object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> ConversationFactory<'mc> {
-    /// Constructs a ConversationFactory.
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: impl Into<crate::plugin::Plugin<'mc>>,
-    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/conversations/ConversationFactory");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::conversations::ConversationFactory::from_raw(&jni, res)
-    }
-    /// Sets the modality of all {@link Conversation}s created by this factory.
-    /// If a conversation is modal, all messages directed to the player are
-    /// suppressed for the duration of the conversation.
-    ///
-    /// The default is True.
-    pub fn with_modality(
-        &self,
-        modal: bool,
-    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)Lorg/bukkit/conversations/ConversationFactory;");
-        let val_1 = jni::objects::JValueGen::Bool(modal.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "withModality",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Sets the local echo status for all {@link Conversation}s created by
-    /// this factory. If local echo is enabled, any text submitted to a
-    /// conversation gets echoed back into the submitter's chat window.
-    pub fn with_local_echo(
-        &self,
-        local_echo_enabled: bool,
-    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)Lorg/bukkit/conversations/ConversationFactory;");
-        let val_1 = jni::objects::JValueGen::Bool(local_echo_enabled.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "withLocalEcho",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Sets the {@link ConversationPrefix} that prepends all output from all
-    /// generated conversations.
-    ///
-    /// The default is a {@link NullConversationPrefix};
-    pub fn with_prefix(
-        &self,
-        prefix: impl Into<crate::conversations::ConversationPrefix<'mc>>,
-    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/conversations/ConversationPrefix;)Lorg/bukkit/conversations/ConversationFactory;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(prefix.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "withPrefix",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Sets the number of inactive seconds to wait before automatically
-    /// abandoning all generated conversations.
-    ///
-    /// The default is 600 seconds (5 minutes).
-    pub fn with_timeout(
-        &self,
-        timeout_seconds: i32,
-    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(I)Lorg/bukkit/conversations/ConversationFactory;");
-        let val_1 = jni::objects::JValueGen::Int(timeout_seconds);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "withTimeout",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Sets the first prompt to use in all generated conversations.
-    ///
-    /// The default is Prompt.END_OF_CONVERSATION.
-    pub fn with_first_prompt(
-        &self,
-        first_prompt: impl Into<crate::conversations::Prompt<'mc>>,
-    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Lorg/bukkit/conversations/Prompt;)Lorg/bukkit/conversations/ConversationFactory;",
-        );
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(first_prompt.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "withFirstPrompt",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Sets any initial data with which to populate the conversation context
-    /// sessionData map.
-    pub fn with_initial_session_data(
-        &self,
-        initial_session_data: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
-    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/Map;)Lorg/bukkit/conversations/ConversationFactory;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(initial_session_data.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "withInitialSessionData",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Sets the player input that, when received, will immediately terminate
-    /// the conversation.
-    pub fn with_escape_sequence(
-        &self,
-        escape_sequence: impl Into<String>,
-    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
-        let sig =
-            String::from("(Ljava/lang/String;)Lorg/bukkit/conversations/ConversationFactory;");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(escape_sequence.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "withEscapeSequence",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Adds a {@link ConversationCanceller} to constructed conversations.
-    pub fn with_conversation_canceller(
-        &self,
-        canceller: impl Into<crate::conversations::ConversationCanceller<'mc>>,
-    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/conversations/ConversationCanceller;)Lorg/bukkit/conversations/ConversationFactory;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(canceller.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "withConversationCanceller",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Prevents this factory from creating a conversation for non-player
-    /// {@link Conversable} objects.
-    pub fn that_excludes_non_players_with_message(
-        &self,
-        player_only_message: impl Into<String>,
-    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
-        let sig =
-            String::from("(Ljava/lang/String;)Lorg/bukkit/conversations/ConversationFactory;");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(player_only_message.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "thatExcludesNonPlayersWithMessage",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Adds a {@link ConversationAbandonedListener} to all conversations
-    /// constructed by this factory.
-    pub fn add_conversation_abandoned_listener(
-        &self,
-        listener: impl Into<crate::conversations::ConversationAbandonedListener<'mc>>,
-    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/conversations/ConversationAbandonedListener;)Lorg/bukkit/conversations/ConversationFactory;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(listener.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addConversationAbandonedListener",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::ConversationFactory::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Constructs a {@link Conversation} in accordance with the defaults set
-    /// for this factory.
-    pub fn build_conversation(
-        &self,
-        for_whom: impl Into<crate::conversations::Conversable<'mc>>,
-    ) -> Result<crate::conversations::Conversation<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Lorg/bukkit/conversations/Conversable;)Lorg/bukkit/conversations/Conversation;",
-        );
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(for_whom.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "buildConversation",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::Conversation::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
 pub struct ConversationCanceller<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1638,145 +2535,6 @@ impl<'mc> ConversationCanceller<'mc> {
     }
 }
 #[repr(C)]
-pub struct InactivityConversationCanceller<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for InactivityConversationCanceller<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for InactivityConversationCanceller<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate InactivityConversationCanceller from null object."
-            )
-            .into());
-        }
-        let (valid, name) = env.validate_name(
-            &obj,
-            "org/bukkit/conversations/InactivityConversationCanceller",
-        )?;
-        if !valid {
-            Err(eyre::eyre!(
-                    "Invalid argument passed. Expected a InactivityConversationCanceller object, got {}",
-                    name
-                )
-                .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> InactivityConversationCanceller<'mc> {
-    /// Creates an InactivityConversationCanceller.
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: impl Into<crate::plugin::Plugin<'mc>>,
-        timeout_seconds: i32,
-    ) -> Result<
-        crate::conversations::InactivityConversationCanceller<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let sig = String::from("(Lorg/bukkit/plugin/Plugin;I)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Int(timeout_seconds);
-        let cls = jni.find_class("org/bukkit/conversations/InactivityConversationCanceller");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::conversations::InactivityConversationCanceller::from_raw(&jni, res)
-    }
-
-    pub fn set_conversation(
-        &self,
-        conversation: impl Into<crate::conversations::Conversation<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/conversations/Conversation;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(conversation.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setConversation",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn cancel_based_on_input(
-        &self,
-        context: impl Into<crate::conversations::ConversationContext<'mc>>,
-        input: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig =
-            String::from("(Lorg/bukkit/conversations/ConversationContext;Ljava/lang/String;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(context.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(input.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "cancelBasedOnInput",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn clone(
-        &self,
-    ) -> Result<crate::conversations::ConversationCanceller<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/conversations/ConversationCanceller;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "clone", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::ConversationCanceller::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::conversations::ConversationCanceller<'mc>>
-    for InactivityConversationCanceller<'mc>
-{
-    fn into(self) -> crate::conversations::ConversationCanceller<'mc> {
-        crate::conversations::ConversationCanceller::from_raw(&self.jni_ref(), self.1).expect("Error converting InactivityConversationCanceller into crate::conversations::ConversationCanceller")
-    }
-}
-#[repr(C)]
 pub struct FixedSetPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1860,6 +2618,18 @@ impl<'mc> FixedSetPrompt<'mc> {
         })?;
         let real: crate::conversations::ValidatingPrompt = temp_clone.into();
         real.blocks_for_input(context)
+    }
+    /// Gets the text to display to the user when this prompt is first
+    /// presented.
+    pub fn get_prompt_text(
+        &self,
+        context: impl Into<crate::conversations::ConversationContext<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::conversations::ValidatingPrompt = temp_clone.into();
+        real.get_prompt_text(context)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -2198,577 +2968,6 @@ impl<'mc> ConversationPrefix<'mc> {
     }
 }
 #[repr(C)]
-pub struct ValidatingPrompt<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for ValidatingPrompt<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for ValidatingPrompt<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate ValidatingPrompt from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/ValidatingPrompt")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a ValidatingPrompt object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> ValidatingPrompt<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::conversations::ValidatingPrompt<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let cls = jni.find_class("org/bukkit/conversations/ValidatingPrompt");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), vec![]);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::conversations::ValidatingPrompt::from_raw(&jni, res)
-    }
-    /// Accepts and processes input from the user and validates it. If
-    /// validation fails, this prompt is returned for re-execution, otherwise
-    /// the next Prompt in the prompt graph is returned.
-    pub fn accept_input(
-        &self,
-        context: impl Into<crate::conversations::ConversationContext<'mc>>,
-        input: impl Into<String>,
-    ) -> Result<Option<crate::conversations::Prompt<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/conversations/ConversationContext;Ljava/lang/String;)Lorg/bukkit/conversations/Prompt;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(context.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(input.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "acceptInput",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::conversations::Prompt::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-    /// Ensures that the prompt waits for the user to provide input.
-    pub fn blocks_for_input(
-        &self,
-        context: impl Into<crate::conversations::ConversationContext<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/conversations/ConversationContext;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(context.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "blocksForInput",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Gets the text to display to the user when this prompt is first
-    /// presented.
-    pub fn get_prompt_text(
-        &self,
-        context: impl Into<crate::conversations::ConversationContext<'mc>>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let sig =
-            String::from("(Lorg/bukkit/conversations/ConversationContext;)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(context.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPromptText",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::conversations::Prompt<'mc>> for ValidatingPrompt<'mc> {
-    fn into(self) -> crate::conversations::Prompt<'mc> {
-        crate::conversations::Prompt::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting ValidatingPrompt into crate::conversations::Prompt")
-    }
-}
-#[repr(C)]
-pub struct Conversation<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for Conversation<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for Conversation<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate Conversation from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/Conversation")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a Conversation object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> Conversation<'mc> {
-    /// Initializes a new Conversation.
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: impl Into<crate::plugin::Plugin<'mc>>,
-        for_whom: impl Into<crate::conversations::Conversable<'mc>>,
-        first_prompt: impl Into<crate::conversations::Prompt<'mc>>,
-        initial_session_data: std::option::Option<impl Into<blackboxmc_java::util::JavaMap<'mc>>>,
-    ) -> Result<crate::conversations::Conversation<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/plugin/Plugin;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Lorg/bukkit/conversations/Conversable;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(for_whom.into().jni_object().clone())
-        });
-        args.push(val_2);
-        sig += "Lorg/bukkit/conversations/Prompt;";
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(first_prompt.into().jni_object().clone())
-        });
-        args.push(val_3);
-        if let Some(a) = initial_session_data {
-            sig += "Ljava/util/Map;";
-            let val_4 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_4);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/conversations/Conversation");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::conversations::Conversation::from_raw(&jni, res)
-    }
-    /// Gets the entity for whom this conversation is mediating.
-    pub fn for_whom(
-        &self,
-    ) -> Result<crate::conversations::Conversable<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/conversations/Conversable;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getForWhom", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::Conversable::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets the modality of this conversation. If a conversation is modal, all
-    /// messages directed to the player are suppressed for the duration of the
-    /// conversation.
-    pub fn is_modal(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isModal", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Gets the status of local echo for this conversation. If local echo is
-    /// enabled, any text submitted to a conversation gets echoed back into the
-    /// submitter's chat window.
-    pub fn is_local_echo_enabled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isLocalEchoEnabled",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Sets the status of local echo for this conversation. If local echo is
-    /// enabled, any text submitted to a conversation gets echoed back into the
-    /// submitter's chat window.
-    pub fn set_local_echo_enabled(
-        &self,
-        local_echo_enabled: bool,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(local_echo_enabled.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLocalEchoEnabled",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the {@link ConversationPrefix} that prepends all output from this
-    /// conversation.
-    pub fn prefix(
-        &self,
-    ) -> Result<crate::conversations::ConversationPrefix<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/conversations/ConversationPrefix;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getPrefix", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::ConversationPrefix::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets the list of {@link ConversationCanceller}s
-    pub fn cancellers(
-        &self,
-    ) -> Result<Vec<crate::conversations::ConversationCanceller<'mc>>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Ljava/util/List;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getCancellers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        let mut new_vec = Vec::new();
-        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let iter = list.iterator()?;
-        while iter.has_next()? {
-            let obj = iter.next()?;
-            new_vec.push(crate::conversations::ConversationCanceller::from_raw(
-                &self.0, obj,
-            )?);
-        }
-        Ok(new_vec)
-    }
-    /// Returns the Conversation's {@link ConversationContext}.
-    pub fn context(
-        &self,
-    ) -> Result<crate::conversations::ConversationContext<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/conversations/ConversationContext;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getContext", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::ConversationContext::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Displays the first prompt of this conversation and begins redirecting
-    /// the user's chat responses.
-    pub fn begin(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "begin", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Returns Returns the current state of the conversation.
-    pub fn state(
-        &self,
-    ) -> Result<crate::conversations::ConversationConversationState<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/conversations/Conversation/ConversationState;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getState", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::conversations::ConversationConversationState::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Passes player input into the current prompt. The next prompt (as
-    /// determined by the current prompt) is then displayed to the user.
-    pub fn accept_input(&self, input: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(input.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "acceptInput",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Adds a {@link ConversationAbandonedListener}.
-    pub fn add_conversation_abandoned_listener(
-        &self,
-        listener: impl Into<crate::conversations::ConversationAbandonedListener<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/conversations/ConversationAbandonedListener;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(listener.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addConversationAbandonedListener",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Removes a {@link ConversationAbandonedListener}.
-    pub fn remove_conversation_abandoned_listener(
-        &self,
-        listener: impl Into<crate::conversations::ConversationAbandonedListener<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/conversations/ConversationAbandonedListener;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(listener.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeConversationAbandonedListener",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Abandons and resets the current conversation. Restores the user's
-    /// normal chat behavior.
-    pub fn abandon(
-        &self,
-        details: std::option::Option<
-            impl Into<crate::conversations::ConversationAbandonedEvent<'mc>>,
-        >,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = details {
-            sig += "Lorg/bukkit/conversations/ConversationAbandonedEvent;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "abandon", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Displays the next user prompt and abandons the conversation if the next
-    /// prompt is null.
-    pub fn output_next_prompt(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "outputNextPrompt",
-            sig.as_str(),
-            vec![],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-pub enum ConversationConversationState<'mc> {}
-impl<'mc> std::fmt::Display for ConversationConversationState<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
-    }
-}
-
-impl<'mc> ConversationConversationState<'mc> {
-    pub fn value_of(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<ConversationConversationState<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
-        let cls = env.find_class("org/bukkit/conversations/Conversation/ConversationState");
-        let cls = env.translate_error_with_class(cls)?;
-        let res = env.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/conversations/Conversation/ConversationState;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = env.translate_error(res)?;
-        let obj = res.l()?;
-        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = env.translate_error(variant)?;
-        let variant_str = env
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        match variant_str.as_str() {
-            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-        }
-    }
-}
-
-#[repr(C)]
-pub struct ConversationConversationStateStruct<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for ConversationConversationState<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for ConversationConversationState<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate ConversationConversationState from null object."
-            )
-            .into());
-        }
-        let (valid, name) = env.validate_name(
-            &obj,
-            "org/bukkit/conversations/Conversation/ConversationState",
-        )?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a ConversationConversationState object, got {}",
-                name
-            )
-            .into())
-        } else {
-            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-            let variant = env.translate_error(variant)?;
-            let variant_str = env
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            match variant_str.as_str() {
-                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-            }
-        }
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for ConversationConversationStateStruct<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for ConversationConversationStateStruct<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate ConversationConversationStateStruct from null object."
-            )
-            .into());
-        }
-        let (valid, name) = env.validate_name(
-            &obj,
-            "org/bukkit/conversations/Conversation/ConversationState",
-        )?;
-        if !valid {
-            Err(eyre::eyre!(
-                    "Invalid argument passed. Expected a ConversationConversationStateStruct object, got {}",
-                    name
-                )
-                .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> ConversationConversationStateStruct<'mc> {
-    pub fn values(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::conversations::ConversationConversationState<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/conversations/Conversation/ConversationState;");
-        let cls = jni.find_class("org/bukkit/conversations/Conversation/ConversationState");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::conversations::ConversationConversationState::from_raw(&jni, obj)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
 pub struct NullConversationPrefix<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2852,102 +3051,6 @@ impl<'mc> Into<crate::conversations::ConversationPrefix<'mc>> for NullConversati
         crate::conversations::ConversationPrefix::from_raw(&self.jni_ref(), self.1).expect(
             "Error converting NullConversationPrefix into crate::conversations::ConversationPrefix",
         )
-    }
-}
-#[repr(C)]
-pub struct NumericPrompt<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for NumericPrompt<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for NumericPrompt<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate NumericPrompt from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/NumericPrompt")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a NumericPrompt object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> NumericPrompt<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::conversations::NumericPrompt<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let cls = jni.find_class("org/bukkit/conversations/NumericPrompt");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), vec![]);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::conversations::NumericPrompt::from_raw(&jni, res)
-    }
-    // SUPER CLASS: org.bukkit.conversations.ValidatingPrompt ( [])
-    /// Accepts and processes input from the user and validates it. If
-    /// validation fails, this prompt is returned for re-execution, otherwise
-    /// the next Prompt in the prompt graph is returned.
-    pub fn accept_input(
-        &self,
-        context: impl Into<crate::conversations::ConversationContext<'mc>>,
-        input: impl Into<String>,
-    ) -> Result<Option<crate::conversations::Prompt<'mc>>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::conversations::ValidatingPrompt = temp_clone.into();
-        real.accept_input(context, input)
-    }
-    /// Ensures that the prompt waits for the user to provide input.
-    pub fn blocks_for_input(
-        &self,
-        context: impl Into<crate::conversations::ConversationContext<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::conversations::ValidatingPrompt = temp_clone.into();
-        real.blocks_for_input(context)
-    }
-    /// Gets the text to display to the user when this prompt is first
-    /// presented.
-    pub fn get_prompt_text(
-        &self,
-        context: impl Into<crate::conversations::ConversationContext<'mc>>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = crate::conversations::ValidatingPrompt::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::conversations::ValidatingPrompt = temp_clone.into();
-        real.get_prompt_text(context)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for NumericPrompt<'mc> {
-    fn into(self) -> crate::conversations::ValidatingPrompt<'mc> {
-        crate::conversations::ValidatingPrompt::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting NumericPrompt into crate::conversations::ValidatingPrompt")
     }
 }
 #[repr(C)]

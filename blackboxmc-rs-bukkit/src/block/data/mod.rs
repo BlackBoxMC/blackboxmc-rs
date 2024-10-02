@@ -3091,10 +3091,25 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Bisected<'mc> {
             .expect("Error converting Bisected into crate::block::data::BlockData")
     }
 }
-pub enum BisectedHalf<'mc> {}
+pub enum BisectedHalf<'mc> {
+    Top { inner: BisectedHalfStruct<'mc> },
+    Bottom { inner: BisectedHalfStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for BisectedHalf<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            BisectedHalf::Top { .. } => f.write_str("TOP"),
+            BisectedHalf::Bottom { .. } => f.write_str("BOTTOM"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for BisectedHalf<'mc> {
+    type Target = BisectedHalfStruct<'mc>;
+    fn deref(&self) -> &<BisectedHalf<'mc> as std::ops::Deref>::Target {
+        match self {
+            BisectedHalf::Top { inner } => inner,
+            BisectedHalf::Bottom { inner } => inner,
+        }
     }
 }
 
@@ -3121,6 +3136,13 @@ impl<'mc> BisectedHalf<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "TOP" => Ok(BisectedHalf::Top {
+                inner: BisectedHalfStruct::from_raw(env, obj)?,
+            }),
+            "BOTTOM" => Ok(BisectedHalf::Bottom {
+                inner: BisectedHalfStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -3134,10 +3156,16 @@ pub struct BisectedHalfStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for BisectedHalf<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Top { inner } => inner.0.clone(),
+            Self::Bottom { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Top { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Bottom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for BisectedHalf<'mc> {
@@ -3163,6 +3191,12 @@ impl<'mc> JNIInstantiatable<'mc> for BisectedHalf<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "TOP" => Ok(BisectedHalf::Top {
+                    inner: BisectedHalfStruct::from_raw(env, obj)?,
+                }),
+                "BOTTOM" => Ok(BisectedHalf::Bottom {
+                    inner: BisectedHalfStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -5435,10 +5469,34 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for FaceAttachable<'mc> {
             .expect("Error converting FaceAttachable into crate::block::data::BlockData")
     }
 }
-pub enum FaceAttachableAttachedFace<'mc> {}
+pub enum FaceAttachableAttachedFace<'mc> {
+    Floor {
+        inner: FaceAttachableAttachedFaceStruct<'mc>,
+    },
+    Wall {
+        inner: FaceAttachableAttachedFaceStruct<'mc>,
+    },
+    Ceiling {
+        inner: FaceAttachableAttachedFaceStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for FaceAttachableAttachedFace<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            FaceAttachableAttachedFace::Floor { .. } => f.write_str("FLOOR"),
+            FaceAttachableAttachedFace::Wall { .. } => f.write_str("WALL"),
+            FaceAttachableAttachedFace::Ceiling { .. } => f.write_str("CEILING"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for FaceAttachableAttachedFace<'mc> {
+    type Target = FaceAttachableAttachedFaceStruct<'mc>;
+    fn deref(&self) -> &<FaceAttachableAttachedFace<'mc> as std::ops::Deref>::Target {
+        match self {
+            FaceAttachableAttachedFace::Floor { inner } => inner,
+            FaceAttachableAttachedFace::Wall { inner } => inner,
+            FaceAttachableAttachedFace::Ceiling { inner } => inner,
+        }
     }
 }
 
@@ -5465,6 +5523,16 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "FLOOR" => Ok(FaceAttachableAttachedFace::Floor {
+                inner: FaceAttachableAttachedFaceStruct::from_raw(env, obj)?,
+            }),
+            "WALL" => Ok(FaceAttachableAttachedFace::Wall {
+                inner: FaceAttachableAttachedFaceStruct::from_raw(env, obj)?,
+            }),
+            "CEILING" => Ok(FaceAttachableAttachedFace::Ceiling {
+                inner: FaceAttachableAttachedFaceStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -5478,10 +5546,18 @@ pub struct FaceAttachableAttachedFaceStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for FaceAttachableAttachedFace<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Floor { inner } => inner.0.clone(),
+            Self::Wall { inner } => inner.0.clone(),
+            Self::Ceiling { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Floor { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Wall { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Ceiling { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for FaceAttachableAttachedFace<'mc> {
@@ -5511,6 +5587,15 @@ impl<'mc> JNIInstantiatable<'mc> for FaceAttachableAttachedFace<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "FLOOR" => Ok(FaceAttachableAttachedFace::Floor {
+                    inner: FaceAttachableAttachedFaceStruct::from_raw(env, obj)?,
+                }),
+                "WALL" => Ok(FaceAttachableAttachedFace::Wall {
+                    inner: FaceAttachableAttachedFaceStruct::from_raw(env, obj)?,
+                }),
+                "CEILING" => Ok(FaceAttachableAttachedFace::Ceiling {
+                    inner: FaceAttachableAttachedFaceStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -8257,10 +8342,49 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Rail<'mc> {
             .expect("Error converting Rail into crate::block::data::Waterlogged")
     }
 }
-pub enum RailShape<'mc> {}
+pub enum RailShape<'mc> {
+    NorthSouth { inner: RailShapeStruct<'mc> },
+    EastWest { inner: RailShapeStruct<'mc> },
+    AscendingEast { inner: RailShapeStruct<'mc> },
+    AscendingWest { inner: RailShapeStruct<'mc> },
+    AscendingNorth { inner: RailShapeStruct<'mc> },
+    AscendingSouth { inner: RailShapeStruct<'mc> },
+    SouthEast { inner: RailShapeStruct<'mc> },
+    SouthWest { inner: RailShapeStruct<'mc> },
+    NorthWest { inner: RailShapeStruct<'mc> },
+    NorthEast { inner: RailShapeStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for RailShape<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            RailShape::NorthSouth { .. } => f.write_str("NORTH_SOUTH"),
+            RailShape::EastWest { .. } => f.write_str("EAST_WEST"),
+            RailShape::AscendingEast { .. } => f.write_str("ASCENDING_EAST"),
+            RailShape::AscendingWest { .. } => f.write_str("ASCENDING_WEST"),
+            RailShape::AscendingNorth { .. } => f.write_str("ASCENDING_NORTH"),
+            RailShape::AscendingSouth { .. } => f.write_str("ASCENDING_SOUTH"),
+            RailShape::SouthEast { .. } => f.write_str("SOUTH_EAST"),
+            RailShape::SouthWest { .. } => f.write_str("SOUTH_WEST"),
+            RailShape::NorthWest { .. } => f.write_str("NORTH_WEST"),
+            RailShape::NorthEast { .. } => f.write_str("NORTH_EAST"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for RailShape<'mc> {
+    type Target = RailShapeStruct<'mc>;
+    fn deref(&self) -> &<RailShape<'mc> as std::ops::Deref>::Target {
+        match self {
+            RailShape::NorthSouth { inner } => inner,
+            RailShape::EastWest { inner } => inner,
+            RailShape::AscendingEast { inner } => inner,
+            RailShape::AscendingWest { inner } => inner,
+            RailShape::AscendingNorth { inner } => inner,
+            RailShape::AscendingSouth { inner } => inner,
+            RailShape::SouthEast { inner } => inner,
+            RailShape::SouthWest { inner } => inner,
+            RailShape::NorthWest { inner } => inner,
+            RailShape::NorthEast { inner } => inner,
+        }
     }
 }
 
@@ -8287,6 +8411,37 @@ impl<'mc> RailShape<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "NORTH_SOUTH" => Ok(RailShape::NorthSouth {
+                inner: RailShapeStruct::from_raw(env, obj)?,
+            }),
+            "EAST_WEST" => Ok(RailShape::EastWest {
+                inner: RailShapeStruct::from_raw(env, obj)?,
+            }),
+            "ASCENDING_EAST" => Ok(RailShape::AscendingEast {
+                inner: RailShapeStruct::from_raw(env, obj)?,
+            }),
+            "ASCENDING_WEST" => Ok(RailShape::AscendingWest {
+                inner: RailShapeStruct::from_raw(env, obj)?,
+            }),
+            "ASCENDING_NORTH" => Ok(RailShape::AscendingNorth {
+                inner: RailShapeStruct::from_raw(env, obj)?,
+            }),
+            "ASCENDING_SOUTH" => Ok(RailShape::AscendingSouth {
+                inner: RailShapeStruct::from_raw(env, obj)?,
+            }),
+            "SOUTH_EAST" => Ok(RailShape::SouthEast {
+                inner: RailShapeStruct::from_raw(env, obj)?,
+            }),
+            "SOUTH_WEST" => Ok(RailShape::SouthWest {
+                inner: RailShapeStruct::from_raw(env, obj)?,
+            }),
+            "NORTH_WEST" => Ok(RailShape::NorthWest {
+                inner: RailShapeStruct::from_raw(env, obj)?,
+            }),
+            "NORTH_EAST" => Ok(RailShape::NorthEast {
+                inner: RailShapeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -8300,10 +8455,50 @@ pub struct RailShapeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for RailShape<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::NorthSouth { inner } => inner.0.clone(),
+            Self::EastWest { inner } => inner.0.clone(),
+            Self::AscendingEast { inner } => inner.0.clone(),
+            Self::AscendingWest { inner } => inner.0.clone(),
+            Self::AscendingNorth { inner } => inner.0.clone(),
+            Self::AscendingSouth { inner } => inner.0.clone(),
+            Self::SouthEast { inner } => inner.0.clone(),
+            Self::SouthWest { inner } => inner.0.clone(),
+            Self::NorthWest { inner } => inner.0.clone(),
+            Self::NorthEast { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::NorthSouth { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EastWest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::AscendingEast { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::AscendingWest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::AscendingNorth { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::AscendingSouth { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SouthEast { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SouthWest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NorthWest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NorthEast { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for RailShape<'mc> {
@@ -8329,6 +8524,36 @@ impl<'mc> JNIInstantiatable<'mc> for RailShape<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "NORTH_SOUTH" => Ok(RailShape::NorthSouth {
+                    inner: RailShapeStruct::from_raw(env, obj)?,
+                }),
+                "EAST_WEST" => Ok(RailShape::EastWest {
+                    inner: RailShapeStruct::from_raw(env, obj)?,
+                }),
+                "ASCENDING_EAST" => Ok(RailShape::AscendingEast {
+                    inner: RailShapeStruct::from_raw(env, obj)?,
+                }),
+                "ASCENDING_WEST" => Ok(RailShape::AscendingWest {
+                    inner: RailShapeStruct::from_raw(env, obj)?,
+                }),
+                "ASCENDING_NORTH" => Ok(RailShape::AscendingNorth {
+                    inner: RailShapeStruct::from_raw(env, obj)?,
+                }),
+                "ASCENDING_SOUTH" => Ok(RailShape::AscendingSouth {
+                    inner: RailShapeStruct::from_raw(env, obj)?,
+                }),
+                "SOUTH_EAST" => Ok(RailShape::SouthEast {
+                    inner: RailShapeStruct::from_raw(env, obj)?,
+                }),
+                "SOUTH_WEST" => Ok(RailShape::SouthWest {
+                    inner: RailShapeStruct::from_raw(env, obj)?,
+                }),
+                "NORTH_WEST" => Ok(RailShape::NorthWest {
+                    inner: RailShapeStruct::from_raw(env, obj)?,
+                }),
+                "NORTH_EAST" => Ok(RailShape::NorthEast {
+                    inner: RailShapeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }

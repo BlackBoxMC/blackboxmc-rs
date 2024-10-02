@@ -3,12 +3,12 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
-pub struct RemoteConsoleCommandSender<'mc>(
+pub struct SimpleCommandMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 
-impl<'mc> JNIRaw<'mc> for RemoteConsoleCommandSender<'mc> {
+impl<'mc> JNIRaw<'mc> for SimpleCommandMap<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -16,135 +16,20 @@ impl<'mc> JNIRaw<'mc> for RemoteConsoleCommandSender<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JNIInstantiatable<'mc> for RemoteConsoleCommandSender<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate RemoteConsoleCommandSender from null object."
-            )
-            .into());
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/command/RemoteConsoleCommandSender")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a RemoteConsoleCommandSender object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> RemoteConsoleCommandSender<'mc> {
-    /// Gets the socket address of this remote sender.
-    pub fn address(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/net/SocketAddress;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getAddress", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    /// Sends this sender multiple messages
-    pub fn send_message(
-        &self,
-        sender: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        messages: std::option::Option<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/util/UUID;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = messages {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Returns the server instance that this command is running on
-    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Server;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getServer", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Server::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets the name of this command sender
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Ljava/lang/String;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::command::CommandSender<'mc>> for RemoteConsoleCommandSender<'mc> {
-    fn into(self) -> crate::command::CommandSender<'mc> {
-        crate::command::CommandSender::from_raw(&self.jni_ref(), self.1).expect(
-            "Error converting RemoteConsoleCommandSender into crate::command::CommandSender",
-        )
-    }
-}
-#[repr(C)]
-pub struct ConsoleCommandSender<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for ConsoleCommandSender<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for ConsoleCommandSender<'mc> {
+impl<'mc> JNIInstantiatable<'mc> for SimpleCommandMap<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
-                eyre::eyre!("Tried to instantiate ConsoleCommandSender from null object.").into(),
+                eyre::eyre!("Tried to instantiate SimpleCommandMap from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/ConsoleCommandSender")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/SimpleCommandMap")?;
         if !valid {
             Err(eyre::eyre!(
-                "Invalid argument passed. Expected a ConsoleCommandSender object, got {}",
+                "Invalid argument passed. Expected a SimpleCommandMap object, got {}",
                 name
             )
             .into())
@@ -154,163 +39,238 @@ impl<'mc> JNIInstantiatable<'mc> for ConsoleCommandSender<'mc> {
     }
 }
 
-impl<'mc> ConsoleCommandSender<'mc> {
-    /// Sends this sender multiple messages
-    pub fn send_message(
-        &self,
-        sender: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        messages: std::option::Option<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/util/UUID;";
+impl<'mc> SimpleCommandMap<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        server: impl Into<crate::Server<'mc>>,
+    ) -> Result<crate::command::SimpleCommandMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/Server;)V");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
+            jni::objects::JObject::from_raw(server.into().jni_object().clone())
         });
-        args.push(val_1);
-        if let Some(a) = messages {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
+        let cls = jni.find_class("org/bukkit/command/SimpleCommandMap");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::command::SimpleCommandMap::from_raw(&jni, res)
+    }
+
+    pub fn set_fallback_commands(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFallbackCommands",
+            sig.as_str(),
+            vec![],
+        );
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Returns the server instance that this command is running on
-    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Server;");
-        let res = self
+    /// {@inheritDoc}
+    pub fn register_all(
+        &self,
+        fallback_prefix: impl Into<String>,
+        commands: Vec<jni::objects::JObject<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;Ljava/util/List;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(fallback_prefix.into())?,
+        ));
+        let raw_val_2 = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getServer", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Server::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in commands {
+            let map_val_0 = jni::objects::JValueGen::Object(v);
+            self.jni_ref().call_method(
+                &raw_val_2,
+                "add",
+                "(Ljava/lang/Object;)Z",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "registerAll",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
-    /// Gets the name of this command sender
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let args = Vec::new();
+    /// {@inheritDoc}
+    pub fn register(
+        &self,
+        label: impl Into<String>,
+        fallback_prefix: impl Into<String>,
+        command: std::option::Option<impl Into<crate::command::Command<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += ")Ljava/lang/String;";
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(label.into())?,
+        ));
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(fallback_prefix.into())?,
+        ));
+        args.push(val_2);
+        if let Some(a) = command {
+            sig += "Lorg/bukkit/command/Command;";
+            let val_3 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_3);
+        }
+        sig += ")Z";
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// Tests to see of a Conversable object is actively engaged in a
-    /// conversation.
-    pub fn is_conversing(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isConversing", sig.as_str(), vec![]);
+            .call_method(&self.jni_object(), "register", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    /// Accepts input into the active conversation. If no conversation is in
-    /// progress, this method does nothing.
-    pub fn accept_conversation_input(
+    /// {@inheritDoc}
+    pub fn dispatch(
         &self,
-        input: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(input.into())?,
+        sender: impl Into<crate::command::CommandSender<'mc>>,
+        command_line: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;Ljava/lang/String;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(command_line.into())?,
         ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "acceptConversationInput",
+            "dispatch",
             sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Enters into a dialog with a Conversation object.
-    pub fn begin_conversation(
-        &self,
-        conversation: impl Into<crate::conversations::Conversation<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/conversations/Conversation;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(conversation.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "beginConversation",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    /// Abandons an active conversation.
-    pub fn abandon_conversation(
-        &self,
-        conversation: impl Into<crate::conversations::Conversation<'mc>>,
-        details: std::option::Option<
-            impl Into<crate::conversations::ConversationAbandonedEvent<'mc>>,
-        >,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/conversations/Conversation;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(conversation.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = details {
-            sig += "Lorg/bukkit/conversations/ConversationAbandonedEvent;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "abandonConversation",
-            sig.as_str(),
-            args,
-        );
+
+    pub fn clear_commands(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clearCommands", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Sends this sender a message raw
-    pub fn send_raw_message(
+
+    pub fn get_command(
         &self,
-        sender: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        message: std::option::Option<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+        name: impl Into<String>,
+    ) -> Result<Option<crate::command::Command<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/command/Command;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(name.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCommand",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::command::Command::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+
+    pub fn tab_complete(
+        &self,
+        sender: impl Into<crate::command::CommandSender<'mc>>,
+        cmd_line: impl Into<String>,
+        location: std::option::Option<impl Into<crate::Location<'mc>>>,
+    ) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/util/UUID;";
+        sig += "Lorg/bukkit/command/CommandSender;";
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(sender.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = message {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(cmd_line.into())?,
+        ));
+        args.push(val_2);
+        if let Some(a) = location {
+            sig += "Lorg/bukkit/Location;";
+            let val_3 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_3);
         }
-        sig += ")V";
+        sig += ")Ljava/util/List;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "tabComplete", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(Some(new_vec))
+    }
+
+    pub fn commands(
+        &self,
+    ) -> Result<Vec<crate::command::Command<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Collection;");
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "sendRawMessage", sig.as_str(), args);
+                .call_method(&self.jni_object(), "getCommands", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::command::Command::from_raw(&self.0, obj)?);
+        }
+        Ok(new_vec)
+    }
+
+    pub fn register_server_aliases(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "registerServerAliases",
+            sig.as_str(),
+            vec![],
+        );
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -320,16 +280,93 @@ impl<'mc> ConsoleCommandSender<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-impl<'mc> Into<crate::command::CommandSender<'mc>> for ConsoleCommandSender<'mc> {
-    fn into(self) -> crate::command::CommandSender<'mc> {
-        crate::command::CommandSender::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting ConsoleCommandSender into crate::command::CommandSender")
+impl<'mc> Into<crate::command::CommandMap<'mc>> for SimpleCommandMap<'mc> {
+    fn into(self) -> crate::command::CommandMap<'mc> {
+        crate::command::CommandMap::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting SimpleCommandMap into crate::command::CommandMap")
     }
 }
-impl<'mc> Into<crate::conversations::Conversable<'mc>> for ConsoleCommandSender<'mc> {
-    fn into(self) -> crate::conversations::Conversable<'mc> {
-        crate::conversations::Conversable::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting ConsoleCommandSender into crate::conversations::Conversable")
+#[repr(C)]
+pub struct PluginCommandYamlParser<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PluginCommandYamlParser<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PluginCommandYamlParser<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PluginCommandYamlParser from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/command/PluginCommandYamlParser")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PluginCommandYamlParser object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> PluginCommandYamlParser<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::command::PluginCommandYamlParser<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let cls = jni.find_class("org/bukkit/command/PluginCommandYamlParser");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), vec![]);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::command::PluginCommandYamlParser::from_raw(&jni, res)
+    }
+
+    pub fn parse(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: impl Into<crate::plugin::Plugin<'mc>>,
+    ) -> Result<Vec<crate::command::Command<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/command/PluginCommandYamlParser");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "parse",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&jni, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::command::Command::from_raw(&jni, obj)?);
+        }
+        Ok(new_vec)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 #[repr(C)]
@@ -1197,191 +1234,6 @@ impl<'mc> Into<crate::command::Command<'mc>> for FormattedCommandAlias<'mc> {
     }
 }
 #[repr(C)]
-pub struct PluginCommandYamlParser<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for PluginCommandYamlParser<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PluginCommandYamlParser<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate PluginCommandYamlParser from null object."
-            )
-            .into());
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/command/PluginCommandYamlParser")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PluginCommandYamlParser object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> PluginCommandYamlParser<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::command::PluginCommandYamlParser<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let cls = jni.find_class("org/bukkit/command/PluginCommandYamlParser");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), vec![]);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::command::PluginCommandYamlParser::from_raw(&jni, res)
-    }
-
-    pub fn parse(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: impl Into<crate::plugin::Plugin<'mc>>,
-    ) -> Result<Vec<crate::command::Command<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)Ljava/util/List;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/command/PluginCommandYamlParser");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "parse",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let mut new_vec = Vec::new();
-        let list = blackboxmc_java::util::JavaList::from_raw(&jni, res.l()?)?;
-        let iter = list.iterator()?;
-        while iter.has_next()? {
-            let obj = iter.next()?;
-            new_vec.push(crate::command::Command::from_raw(&jni, obj)?);
-        }
-        Ok(new_vec)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct TabCompleter<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for TabCompleter<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for TabCompleter<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate TabCompleter from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/TabCompleter")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a TabCompleter object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> TabCompleter<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "TabCompleter", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-    /// Requests a list of possible completions for a command argument.
-    pub fn on_tab_complete(
-        &self,
-        sender: impl Into<crate::command::CommandSender<'mc>>,
-        command: impl Into<crate::command::Command<'mc>>,
-        label: impl Into<String>,
-        val_args: impl Into<String>,
-    ) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Ljava/util/List;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(command.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(label.into())?,
-        ));
-        let val_4 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(val_args.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "onTabComplete",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        let mut new_vec = Vec::new();
-        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let iter = list.iterator()?;
-        while iter.has_next()? {
-            let obj = iter.next()?;
-            new_vec.push(
-                self.jni_ref()
-                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
-                    .to_string_lossy()
-                    .to_string(),
-            );
-        }
-        Ok(Some(new_vec))
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
 pub struct Command<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1886,6 +1738,323 @@ impl<'mc> std::string::ToString for Command<'mc> {
 }
 
 #[repr(C)]
+pub struct ConsoleCommandSender<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for ConsoleCommandSender<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ConsoleCommandSender<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate ConsoleCommandSender from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/ConsoleCommandSender")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ConsoleCommandSender object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> ConsoleCommandSender<'mc> {
+    /// Sends this sender multiple messages
+    pub fn send_message(
+        &self,
+        sender: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+        messages: std::option::Option<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = messages {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Returns the server instance that this command is running on
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/Server;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getServer", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Server::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the name of this command sender
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Ljava/lang/String;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Tests to see of a Conversable object is actively engaged in a
+    /// conversation.
+    pub fn is_conversing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isConversing", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Accepts input into the active conversation. If no conversation is in
+    /// progress, this method does nothing.
+    pub fn accept_conversation_input(
+        &self,
+        input: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(input.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "acceptConversationInput",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Enters into a dialog with a Conversation object.
+    pub fn begin_conversation(
+        &self,
+        conversation: impl Into<crate::conversations::Conversation<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/conversations/Conversation;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(conversation.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "beginConversation",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Abandons an active conversation.
+    pub fn abandon_conversation(
+        &self,
+        conversation: impl Into<crate::conversations::Conversation<'mc>>,
+        details: std::option::Option<
+            impl Into<crate::conversations::ConversationAbandonedEvent<'mc>>,
+        >,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/conversations/Conversation;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(conversation.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = details {
+            sig += "Lorg/bukkit/conversations/ConversationAbandonedEvent;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "abandonConversation",
+            sig.as_str(),
+            args,
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Sends this sender a message raw
+    pub fn send_raw_message(
+        &self,
+        sender: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+        message: std::option::Option<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = message {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "sendRawMessage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::command::CommandSender<'mc>> for ConsoleCommandSender<'mc> {
+    fn into(self) -> crate::command::CommandSender<'mc> {
+        crate::command::CommandSender::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting ConsoleCommandSender into crate::command::CommandSender")
+    }
+}
+impl<'mc> Into<crate::conversations::Conversable<'mc>> for ConsoleCommandSender<'mc> {
+    fn into(self) -> crate::conversations::Conversable<'mc> {
+        crate::conversations::Conversable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting ConsoleCommandSender into crate::conversations::Conversable")
+    }
+}
+#[repr(C)]
+pub struct TabCompleter<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for TabCompleter<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for TabCompleter<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate TabCompleter from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/TabCompleter")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a TabCompleter object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> TabCompleter<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "TabCompleter", name, lib_name) }?;
+        Self::from_raw(env, obj)
+    }
+    /// Requests a list of possible completions for a command argument.
+    pub fn on_tab_complete(
+        &self,
+        sender: impl Into<crate::command::CommandSender<'mc>>,
+        command: impl Into<crate::command::Command<'mc>>,
+        label: impl Into<String>,
+        val_args: impl Into<String>,
+    ) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(command.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(label.into())?,
+        ));
+        let val_4 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(val_args.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "onTabComplete",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(Some(new_vec))
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
 pub struct TabExecutor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2244,6 +2413,121 @@ impl<'mc> CommandExecutor<'mc> {
     }
 }
 #[repr(C)]
+pub struct RemoteConsoleCommandSender<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for RemoteConsoleCommandSender<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for RemoteConsoleCommandSender<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate RemoteConsoleCommandSender from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/command/RemoteConsoleCommandSender")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a RemoteConsoleCommandSender object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> RemoteConsoleCommandSender<'mc> {
+    /// Gets the socket address of this remote sender.
+    pub fn address(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/net/SocketAddress;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getAddress", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    /// Sends this sender multiple messages
+    pub fn send_message(
+        &self,
+        sender: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+        messages: std::option::Option<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = messages {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Returns the server instance that this command is running on
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/Server;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getServer", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Server::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the name of this command sender
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Ljava/lang/String;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::command::CommandSender<'mc>> for RemoteConsoleCommandSender<'mc> {
+    fn into(self) -> crate::command::CommandSender<'mc> {
+        crate::command::CommandSender::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting RemoteConsoleCommandSender into crate::command::CommandSender",
+        )
+    }
+}
+#[repr(C)]
 pub struct ProxiedCommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2366,290 +2650,6 @@ impl<'mc> Into<crate::command::CommandSender<'mc>> for ProxiedCommandSender<'mc>
     fn into(self) -> crate::command::CommandSender<'mc> {
         crate::command::CommandSender::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting ProxiedCommandSender into crate::command::CommandSender")
-    }
-}
-#[repr(C)]
-pub struct SimpleCommandMap<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for SimpleCommandMap<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for SimpleCommandMap<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate SimpleCommandMap from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/SimpleCommandMap")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a SimpleCommandMap object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> SimpleCommandMap<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        server: impl Into<crate::Server<'mc>>,
-    ) -> Result<crate::command::SimpleCommandMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/Server;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(server.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/command/SimpleCommandMap");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::command::SimpleCommandMap::from_raw(&jni, res)
-    }
-
-    pub fn set_fallback_commands(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFallbackCommands",
-            sig.as_str(),
-            vec![],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// {@inheritDoc}
-    pub fn register_all(
-        &self,
-        fallback_prefix: impl Into<String>,
-        commands: Vec<jni::objects::JObject<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Ljava/util/List;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(fallback_prefix.into())?,
-        ));
-        let raw_val_2 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in commands {
-            let map_val_0 = jni::objects::JValueGen::Object(v);
-            self.jni_ref().call_method(
-                &raw_val_2,
-                "add",
-                "(Ljava/lang/Object;)Z",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "registerAll",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// {@inheritDoc}
-    pub fn register(
-        &self,
-        label: impl Into<String>,
-        fallback_prefix: impl Into<String>,
-        command: std::option::Option<impl Into<crate::command::Command<'mc>>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/lang/String;";
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(label.into())?,
-        ));
-        args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(fallback_prefix.into())?,
-        ));
-        args.push(val_2);
-        if let Some(a) = command {
-            sig += "Lorg/bukkit/command/Command;";
-            let val_3 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_3);
-        }
-        sig += ")Z";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "register", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// {@inheritDoc}
-    pub fn dispatch(
-        &self,
-        sender: impl Into<crate::command::CommandSender<'mc>>,
-        command_line: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandSender;Ljava/lang/String;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(command_line.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "dispatch",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn clear_commands(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "clearCommands", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn get_command(
-        &self,
-        name: impl Into<String>,
-    ) -> Result<Option<crate::command::Command<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/command/Command;");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(name.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getCommand",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::command::Command::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-
-    pub fn tab_complete(
-        &self,
-        sender: impl Into<crate::command::CommandSender<'mc>>,
-        cmd_line: impl Into<String>,
-        location: std::option::Option<impl Into<crate::Location<'mc>>>,
-    ) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/command/CommandSender;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(cmd_line.into())?,
-        ));
-        args.push(val_2);
-        if let Some(a) = location {
-            sig += "Lorg/bukkit/Location;";
-            let val_3 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/List;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "tabComplete", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        let mut new_vec = Vec::new();
-        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let iter = list.iterator()?;
-        while iter.has_next()? {
-            let obj = iter.next()?;
-            new_vec.push(
-                self.jni_ref()
-                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
-                    .to_string_lossy()
-                    .to_string(),
-            );
-        }
-        Ok(Some(new_vec))
-    }
-
-    pub fn commands(
-        &self,
-    ) -> Result<Vec<crate::command::Command<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Collection;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getCommands", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        let mut new_vec = Vec::new();
-        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
-        let iter = col.iterator()?;
-        while iter.has_next()? {
-            let obj = iter.next()?;
-            new_vec.push(crate::command::Command::from_raw(&self.0, obj)?);
-        }
-        Ok(new_vec)
-    }
-
-    pub fn register_server_aliases(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "registerServerAliases",
-            sig.as_str(),
-            vec![],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::command::CommandMap<'mc>> for SimpleCommandMap<'mc> {
-    fn into(self) -> crate::command::CommandMap<'mc> {
-        crate::command::CommandMap::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting SimpleCommandMap into crate::command::CommandMap")
     }
 }
 #[repr(C)]

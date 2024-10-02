@@ -3,6 +3,249 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
+pub struct ServerListPingEvent<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for ServerListPingEvent<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for ServerListPingEvent<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate ServerListPingEvent from null object.").into(),
+            );
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/server/ServerListPingEvent")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ServerListPingEvent object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> ServerListPingEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        hostname: impl Into<String>,
+        address: jni::objects::JObject<'mc>,
+        motd: impl Into<String>,
+        num_players: i32,
+        max_players: i32,
+    ) -> Result<crate::event::server::ServerListPingEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;Ljava/net/InetAddress;Ljava/lang/String;II)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(hostname.into())?,
+        ));
+        let val_2 = jni::objects::JValueGen::Object(address);
+        let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(motd.into())?,
+        ));
+        let val_4 = jni::objects::JValueGen::Int(num_players);
+        let val_5 = jni::objects::JValueGen::Int(max_players);
+        let cls = jni.find_class("org/bukkit/event/server/ServerListPingEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+                jni::objects::JValueGen::from(val_5),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::server::ServerListPingEvent::from_raw(&jni, res)
+    }
+    /// Gets the hostname that the player used to connect to the server, or
+    /// blank if unknown
+    pub fn hostname(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHostname", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Get the address the ping is coming from.
+    pub fn address(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/net/InetAddress;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getAddress", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    /// Get the message of the day message.
+    pub fn motd(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getMotd", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Change the message of the day message.
+    pub fn set_motd(&self, motd: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(motd.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setMotd",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Get the number of players sent.
+    pub fn num_players(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getNumPlayers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Get the maximum number of players sent.
+    pub fn max_players(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaxPlayers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    #[deprecated]
+    /// Gets whether the server needs to send a preview of the chat to the client.
+    pub fn should_send_chat_previews(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "shouldSendChatPreviews",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Set the maximum number of players sent.
+    pub fn set_max_players(&self, max_players: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(max_players);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setMaxPlayers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Sets the server-icon sent to the client.
+    pub fn set_server_icon(
+        &self,
+        icon: impl Into<crate::util::CachedServerIcon<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/util/CachedServerIcon;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(icon.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setServerIcon",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let cls = jni.find_class("org/bukkit/event/server/ServerListPingEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::event::HandlerList::from_raw(&jni, obj)
+    }
+    /// {@inheritDoc}
+    ///
+    /// Calling the {@link Iterator#remove()} method will force that particular
+    /// player to not be displayed on the player list, decrease the size
+    /// returned by {@link #getNumPlayers()}, and will not be returned again by
+    /// any new iterator.
+    ///
+    /// <b>Note:</b> The players here will not be shown in the server info if
+    /// {@link Bukkit#getHideOnlinePlayers()} is true.
+    pub fn iterator(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Iterator;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "iterator", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    // SUPER CLASS: org.bukkit.event.server.ServerEvent ( ['getHostname', 'getAddress', 'getMotd', 'setMotd', 'getNumPlayers', 'getMaxPlayers', 'shouldSendChatPreviews', 'setMaxPlayers', 'setServerIcon', 'getHandlers', 'getHandlerList', 'iterator'])
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for ServerListPingEvent<'mc> {
+    fn into(self) -> crate::event::server::ServerEvent<'mc> {
+        crate::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting ServerListPingEvent into crate::event::server::ServerEvent")
+    }
+}
+#[repr(C)]
 pub struct PluginEnableEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1080,10 +1323,29 @@ impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for ServerLoadEvent<'mc> 
             .expect("Error converting ServerLoadEvent into crate::event::server::ServerEvent")
     }
 }
-pub enum ServerLoadEventLoadType<'mc> {}
+pub enum ServerLoadEventLoadType<'mc> {
+    Startup {
+        inner: ServerLoadEventLoadTypeStruct<'mc>,
+    },
+    Reload {
+        inner: ServerLoadEventLoadTypeStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for ServerLoadEventLoadType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            ServerLoadEventLoadType::Startup { .. } => f.write_str("STARTUP"),
+            ServerLoadEventLoadType::Reload { .. } => f.write_str("RELOAD"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for ServerLoadEventLoadType<'mc> {
+    type Target = ServerLoadEventLoadTypeStruct<'mc>;
+    fn deref(&self) -> &<ServerLoadEventLoadType<'mc> as std::ops::Deref>::Target {
+        match self {
+            ServerLoadEventLoadType::Startup { inner } => inner,
+            ServerLoadEventLoadType::Reload { inner } => inner,
+        }
     }
 }
 
@@ -1110,6 +1372,13 @@ impl<'mc> ServerLoadEventLoadType<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "STARTUP" => Ok(ServerLoadEventLoadType::Startup {
+                inner: ServerLoadEventLoadTypeStruct::from_raw(env, obj)?,
+            }),
+            "RELOAD" => Ok(ServerLoadEventLoadType::Reload {
+                inner: ServerLoadEventLoadTypeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -1123,10 +1392,16 @@ pub struct ServerLoadEventLoadTypeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for ServerLoadEventLoadType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Startup { inner } => inner.0.clone(),
+            Self::Reload { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Startup { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Reload { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for ServerLoadEventLoadType<'mc> {
@@ -1156,6 +1431,12 @@ impl<'mc> JNIInstantiatable<'mc> for ServerLoadEventLoadType<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "STARTUP" => Ok(ServerLoadEventLoadType::Startup {
+                    inner: ServerLoadEventLoadTypeStruct::from_raw(env, obj)?,
+                }),
+                "RELOAD" => Ok(ServerLoadEventLoadType::Reload {
+                    inner: ServerLoadEventLoadTypeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -1315,249 +1596,6 @@ impl<'mc> Into<crate::event::Event<'mc>> for ServerEvent<'mc> {
     fn into(self) -> crate::event::Event<'mc> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting ServerEvent into crate::event::Event")
-    }
-}
-#[repr(C)]
-pub struct ServerListPingEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for ServerListPingEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for ServerListPingEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate ServerListPingEvent from null object.").into(),
-            );
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/server/ServerListPingEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a ServerListPingEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> ServerListPingEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        hostname: impl Into<String>,
-        address: jni::objects::JObject<'mc>,
-        motd: impl Into<String>,
-        num_players: i32,
-        max_players: i32,
-    ) -> Result<crate::event::server::ServerListPingEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Ljava/net/InetAddress;Ljava/lang/String;II)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(hostname.into())?,
-        ));
-        let val_2 = jni::objects::JValueGen::Object(address);
-        let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(motd.into())?,
-        ));
-        let val_4 = jni::objects::JValueGen::Int(num_players);
-        let val_5 = jni::objects::JValueGen::Int(max_players);
-        let cls = jni.find_class("org/bukkit/event/server/ServerListPingEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-                jni::objects::JValueGen::from(val_5),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::server::ServerListPingEvent::from_raw(&jni, res)
-    }
-    /// Gets the hostname that the player used to connect to the server, or
-    /// blank if unknown
-    pub fn hostname(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHostname", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// Get the address the ping is coming from.
-    pub fn address(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/net/InetAddress;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getAddress", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    /// Get the message of the day message.
-    pub fn motd(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getMotd", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// Change the message of the day message.
-    pub fn set_motd(&self, motd: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(motd.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setMotd",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Get the number of players sent.
-    pub fn num_players(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getNumPlayers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// Get the maximum number of players sent.
-    pub fn max_players(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMaxPlayers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    #[deprecated]
-    /// Gets whether the server needs to send a preview of the chat to the client.
-    pub fn should_send_chat_previews(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "shouldSendChatPreviews",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Set the maximum number of players sent.
-    pub fn set_max_players(&self, max_players: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(max_players);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setMaxPlayers",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Sets the server-icon sent to the client.
-    pub fn set_server_icon(
-        &self,
-        icon: impl Into<crate::util::CachedServerIcon<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/util/CachedServerIcon;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(icon.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setServerIcon",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/server/ServerListPingEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    /// {@inheritDoc}
-    ///
-    /// Calling the {@link Iterator#remove()} method will force that particular
-    /// player to not be displayed on the player list, decrease the size
-    /// returned by {@link #getNumPlayers()}, and will not be returned again by
-    /// any new iterator.
-    ///
-    /// <b>Note:</b> The players here will not be shown in the server info if
-    /// {@link Bukkit#getHideOnlinePlayers()} is true.
-    pub fn iterator(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Iterator;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "iterator", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    // SUPER CLASS: org.bukkit.event.server.ServerEvent ( ['getHostname', 'getAddress', 'getMotd', 'setMotd', 'getNumPlayers', 'getMaxPlayers', 'shouldSendChatPreviews', 'setMaxPlayers', 'setServerIcon', 'getHandlers', 'getHandlerList', 'iterator'])
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for ServerListPingEvent<'mc> {
-    fn into(self) -> crate::event::server::ServerEvent<'mc> {
-        crate::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting ServerListPingEvent into crate::event::server::ServerEvent")
     }
 }
 #[repr(C)]

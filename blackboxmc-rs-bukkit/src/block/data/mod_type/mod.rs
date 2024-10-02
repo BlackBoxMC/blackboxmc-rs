@@ -3,1602 +3,6 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
-pub struct Vault<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for Vault<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for Vault<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate Vault from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Vault")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a Vault object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> Vault<'mc> {
-    /// Gets the value of the 'vault_state' property.
-    pub fn trial_spawner_state(
-        &self,
-    ) -> Result<crate::block::data::mod_type::VaultState<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/data/type/Vault/State;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getTrialSpawnerState",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::data::mod_type::VaultState::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Sets the value of the 'vault_state' property.
-    pub fn set_trial_spawner_state(
-        &self,
-        state: impl Into<crate::block::data::mod_type::VaultState<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/data/type/Vault/State;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(state.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setTrialSpawnerState",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the value of the 'ominous' property.
-    pub fn is_ominous(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isOminous", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Sets the value of the 'ominous' property.
-    pub fn set_ominous(&self, ominous: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(ominous.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setOminous",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the value of the 'facing' property.
-    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/BlockFace;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Sets the value of the 'facing' property.
-    pub fn set_facing(
-        &self,
-        facing: impl Into<crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/BlockFace;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(facing.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacing",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the faces which are applicable to this block.
-    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Set;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::block::data::Directional<'mc>> for Vault<'mc> {
-    fn into(self) -> crate::block::data::Directional<'mc> {
-        crate::block::data::Directional::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting Vault into crate::block::data::Directional")
-    }
-}
-pub enum VaultState<'mc> {}
-impl<'mc> std::fmt::Display for VaultState<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
-    }
-}
-
-impl<'mc> VaultState<'mc> {
-    pub fn value_of(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<VaultState<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
-        let cls = env.find_class("org/bukkit/block/data/type/Vault/State");
-        let cls = env.translate_error_with_class(cls)?;
-        let res = env.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Vault/State;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = env.translate_error(res)?;
-        let obj = res.l()?;
-        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = env.translate_error(variant)?;
-        let variant_str = env
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        match variant_str.as_str() {
-            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-        }
-    }
-}
-
-#[repr(C)]
-pub struct VaultStateStruct<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for VaultState<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for VaultState<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate VaultState from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Vault/State")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a VaultState object, got {}",
-                name
-            )
-            .into())
-        } else {
-            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-            let variant = env.translate_error(variant)?;
-            let variant_str = env
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            match variant_str.as_str() {
-                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-            }
-        }
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for VaultStateStruct<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for VaultStateStruct<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate VaultStateStruct from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Vault/State")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a VaultStateStruct object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> VaultStateStruct<'mc> {
-    pub fn values(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::block::data::mod_type::VaultState<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/data/type/Vault/State;");
-        let cls = jni.find_class("org/bukkit/block/data/type/Vault/State");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::block::data::mod_type::VaultState::from_raw(&jni, obj)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct TrialSpawner<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for TrialSpawner<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for TrialSpawner<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate TrialSpawner from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/TrialSpawner")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a TrialSpawner object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> TrialSpawner<'mc> {
-    /// Gets the value of the 'trial_spawner_state' property.
-    pub fn trial_spawner_state(
-        &self,
-    ) -> Result<crate::block::data::mod_type::TrialSpawnerState<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/block/data/type/TrialSpawner/State;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getTrialSpawnerState",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::data::mod_type::TrialSpawnerState::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Sets the value of the 'trial_spawner_state' property.
-    pub fn set_trial_spawner_state(
-        &self,
-        state: impl Into<crate::block::data::mod_type::TrialSpawnerState<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/data/type/TrialSpawner/State;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(state.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setTrialSpawnerState",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the value of the 'ominous' property.
-    pub fn is_ominous(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isOminous", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Sets the value of the 'ominous' property.
-    pub fn set_ominous(&self, ominous: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(ominous.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setOminous",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Get the Material represented by this block data.
-    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Material;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Material::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets a string, which when passed into a method such as
-    /// {@link Server#createBlockData(java.lang.String)} will recreate this or a
-    /// similar instance where unspecified states (if any) may be optionally
-    /// omitted. If this instance was parsed and states are omitted, this exact
-    /// instance will be creatable when parsed again, else their equality cannot
-    /// be guaranteed.
-    ///
-    /// This method will only take effect for BlockData instances created by
-    /// methods such as {@link Server#createBlockData(String)} or any similar
-    /// method whereby states are optionally defined. If otherwise, the result of
-    /// {@link #getAsString()} will be returned. The following behaviour would be
-    /// expected:
-    /// <pre>{@code
-    /// String dataString = "minecraft:chest[waterlogged=true]"
-    /// BlockData data = Bukkit.createBlockData(dataString);
-    /// dataString.equals(data.getAsString(true)); // This would return true
-    /// dataString.equals(data.getAsString(false)); // This would return false as all states are present
-    /// dataString.equals(data.getAsString()); // This is equivalent to the above, "getAsString(false)"
-    /// }</pre>
-    pub fn get_as_string(
-        &self,
-        hide_unspecified: bool,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Bool(hide_unspecified.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// Merges all explicitly set states from the given data with this BlockData.
-    ///
-    /// Note that the given data MUST have been created from one of the String
-    /// parse methods, e.g. {@link Server#createBlockData(java.lang.String)} and
-    /// not have been subsequently modified.
-    ///
-    /// Note also that the block types must match identically.
-    pub fn merge(
-        &self,
-        data: impl Into<crate::block::data::BlockData<'mc>>,
-    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let sig =
-            String::from("(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(data.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::data::BlockData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Checks if the specified BlockData matches this block data.
-    ///
-    /// The semantics of this method are such that for manually created or
-    /// modified BlockData it has the same effect as
-    /// {@link Object#equals(java.lang.Object)}, whilst for parsed data (that to
-    /// which {@link #merge(org.bukkit.block.data.BlockData)} applies, it will
-    /// return true when the type and all explicitly set states match.
-    ///
-    /// <b>Note that these semantics mean that a.matches(b) may not be the same
-    /// as b.matches(a)</b>
-    pub fn matches(
-        &self,
-        data: impl Into<crate::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(data.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Returns a copy of this BlockData.
-    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/data/BlockData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "clone", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::data::BlockData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets the block's {@link SoundGroup} which can be used to get its step
-    /// sound, hit sound, and others.
-    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/SoundGroup;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getSoundGroup", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::SoundGroup::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Get the amount of light emitted by this state when in the world.
-    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLightEmission",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// Check whether or not this state will occlude other blocks.
-    ///
-    /// Block state occlusion affects visual features of other blocks (e.g. leaves and
-    /// wet sponges will not spawn dripping water particles if an occluding state is
-    /// below it), or whether light will pass through it.
-    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isOccluding", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Check whether or not this state requires a specific item to be used to drop
-    /// items when broken. For example, diamond ore requires an iron pickaxe and will
-    /// not drop diamonds when broken with a wooden or stone pickaxe.
-    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "requiresCorrectToolForDrops",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Returns if the given item is a preferred choice to break this Block.
-    /// In some cases this determines if a block will drop anything or extra
-    /// loot.
-    pub fn is_preferred_tool(
-        &self,
-        tool: impl Into<crate::inventory::ItemStack<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(tool.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isPreferredTool",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Returns the reaction of the block when moved by a piston
-    pub fn piston_move_reaction(
-        &self,
-    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/PistonMoveReaction;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPistonMoveReaction",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Checks if this state would be properly supported if it were placed at
-    /// the block at the given {@link Location}.
-    ///
-    /// This may be useful, for instance, to check whether or not a wall torch is
-    /// capable of surviving on its neighbouring block states.
-    pub fn is_supported(
-        &self,
-        location: impl Into<crate::Location<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Location;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(location.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += ")Z";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Checks if a state's {@link BlockFace} is capable of providing a given level
-    /// of {@link BlockSupport} for neighbouring block states.
-    ///
-    /// Any given state may support either none, one, or more than one level of block
-    /// support depending on its states. A common example would be a wall's ability to support
-    /// torches only on the center of the upper block face, whereas a grass block would
-    /// support all levels of block support on all block faces.
-    pub fn is_face_sturdy(
-        &self,
-        face: impl Into<crate::block::BlockFace<'mc>>,
-        support: impl Into<crate::block::BlockSupport<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/BlockFace;Lorg/bukkit/block/BlockSupport;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(face.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(support.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isFaceSturdy",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Gets the color this block should appear as when rendered on a map.
-    pub fn map_color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Color;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMapColor", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Color::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets the material that a player would use to place this block.
-    ///
-    /// For most blocks this is the same as {@link #getMaterial()} but some blocks
-    /// have different materials used to place them.
-    /// For example:
-    /// <pre>
-    /// {@link Material#REDSTONE_WIRE} -> {@link Material#REDSTONE}
-    /// {@link Material#CARROTS} -> {@link Material#CARROT}
-    /// </pre>
-    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Material;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPlacementMaterial",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Material::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Rotates this blockdata by the specified {@link StructureRotation}.
-    ///
-    /// This has no effect on blocks that do not have any rotatable states.
-    pub fn rotate(
-        &self,
-        rotation: impl Into<crate::block::structure::StructureRotation<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/structure/StructureRotation;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(rotation.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "rotate",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Mirrors this blockdata using the specified {@link Mirror}.
-    ///
-    /// This has no effect on blocks that do not have any mirrorable states.
-    pub fn mirror(
-        &self,
-        mirror: impl Into<crate::block::structure::Mirror<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/structure/Mirror;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(mirror.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "mirror",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Copies all applicable properties from this BlockData to the provided
-    /// BlockData.
-    ///
-    /// Only modifies properties that both blocks share in common.
-    pub fn copy_to(
-        &self,
-        other: impl Into<crate::block::data::BlockData<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(other.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copyTo",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Creates a new default {@link BlockState} for this type of Block, not
-    /// bound to a location.
-    pub fn create_block_state(
-        &self,
-    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/BlockState;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "createBlockState",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::BlockState::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::block::data::BlockData<'mc>> for TrialSpawner<'mc> {
-    fn into(self) -> crate::block::data::BlockData<'mc> {
-        crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting TrialSpawner into crate::block::data::BlockData")
-    }
-}
-pub enum TrialSpawnerState<'mc> {}
-impl<'mc> std::fmt::Display for TrialSpawnerState<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
-    }
-}
-
-impl<'mc> TrialSpawnerState<'mc> {
-    pub fn value_of(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<TrialSpawnerState<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
-        let cls = env.find_class("org/bukkit/block/data/type/TrialSpawner/State");
-        let cls = env.translate_error_with_class(cls)?;
-        let res = env.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/TrialSpawner/State;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = env.translate_error(res)?;
-        let obj = res.l()?;
-        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = env.translate_error(variant)?;
-        let variant_str = env
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        match variant_str.as_str() {
-            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-        }
-    }
-}
-
-#[repr(C)]
-pub struct TrialSpawnerStateStruct<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for TrialSpawnerState<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for TrialSpawnerState<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate TrialSpawnerState from null object.").into(),
-            );
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/block/data/type/TrialSpawner/State")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a TrialSpawnerState object, got {}",
-                name
-            )
-            .into())
-        } else {
-            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-            let variant = env.translate_error(variant)?;
-            let variant_str = env
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            match variant_str.as_str() {
-                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-            }
-        }
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for TrialSpawnerStateStruct<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for TrialSpawnerStateStruct<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate TrialSpawnerStateStruct from null object."
-            )
-            .into());
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/block/data/type/TrialSpawner/State")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a TrialSpawnerStateStruct object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> TrialSpawnerStateStruct<'mc> {
-    pub fn values(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::block::data::mod_type::TrialSpawnerState<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/block/data/type/TrialSpawner/State;");
-        let cls = jni.find_class("org/bukkit/block/data/type/TrialSpawner/State");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::block::data::mod_type::TrialSpawnerState::from_raw(&jni, obj)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct Crafter<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for Crafter<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for Crafter<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate Crafter from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Crafter")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a Crafter object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> Crafter<'mc> {
-    /// Gets the value of the 'crafting' property.
-    pub fn is_crafting(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCrafting", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Sets the value of the 'crafting' property.
-    pub fn set_crafting(&self, crafting: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(crafting.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCrafting",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the value of the 'triggered' property.
-    pub fn is_triggered(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isTriggered", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Sets the value of the 'triggered' property.
-    pub fn set_triggered(&self, triggered: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(triggered.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setTriggered",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the value of the 'orientation' property.
-    pub fn orientation(
-        &self,
-    ) -> Result<crate::block::data::mod_type::CrafterOrientation<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/block/data/type/Crafter/Orientation;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getOrientation", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::data::mod_type::CrafterOrientation::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Sets the value of the 'orientation' property.
-    pub fn set_orientation(
-        &self,
-        orientation: impl Into<crate::block::data::mod_type::CrafterOrientation<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/data/type/Crafter/Orientation;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(orientation.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setOrientation",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Get the Material represented by this block data.
-    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Material;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Material::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets a string, which when passed into a method such as
-    /// {@link Server#createBlockData(java.lang.String)} will recreate this or a
-    /// similar instance where unspecified states (if any) may be optionally
-    /// omitted. If this instance was parsed and states are omitted, this exact
-    /// instance will be creatable when parsed again, else their equality cannot
-    /// be guaranteed.
-    ///
-    /// This method will only take effect for BlockData instances created by
-    /// methods such as {@link Server#createBlockData(String)} or any similar
-    /// method whereby states are optionally defined. If otherwise, the result of
-    /// {@link #getAsString()} will be returned. The following behaviour would be
-    /// expected:
-    /// <pre>{@code
-    /// String dataString = "minecraft:chest[waterlogged=true]"
-    /// BlockData data = Bukkit.createBlockData(dataString);
-    /// dataString.equals(data.getAsString(true)); // This would return true
-    /// dataString.equals(data.getAsString(false)); // This would return false as all states are present
-    /// dataString.equals(data.getAsString()); // This is equivalent to the above, "getAsString(false)"
-    /// }</pre>
-    pub fn get_as_string(
-        &self,
-        hide_unspecified: bool,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Bool(hide_unspecified.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// Merges all explicitly set states from the given data with this BlockData.
-    ///
-    /// Note that the given data MUST have been created from one of the String
-    /// parse methods, e.g. {@link Server#createBlockData(java.lang.String)} and
-    /// not have been subsequently modified.
-    ///
-    /// Note also that the block types must match identically.
-    pub fn merge(
-        &self,
-        data: impl Into<crate::block::data::BlockData<'mc>>,
-    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let sig =
-            String::from("(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(data.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::data::BlockData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Checks if the specified BlockData matches this block data.
-    ///
-    /// The semantics of this method are such that for manually created or
-    /// modified BlockData it has the same effect as
-    /// {@link Object#equals(java.lang.Object)}, whilst for parsed data (that to
-    /// which {@link #merge(org.bukkit.block.data.BlockData)} applies, it will
-    /// return true when the type and all explicitly set states match.
-    ///
-    /// <b>Note that these semantics mean that a.matches(b) may not be the same
-    /// as b.matches(a)</b>
-    pub fn matches(
-        &self,
-        data: impl Into<crate::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(data.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Returns a copy of this BlockData.
-    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/data/BlockData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "clone", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::data::BlockData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets the block's {@link SoundGroup} which can be used to get its step
-    /// sound, hit sound, and others.
-    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/SoundGroup;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getSoundGroup", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::SoundGroup::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Get the amount of light emitted by this state when in the world.
-    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLightEmission",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// Check whether or not this state will occlude other blocks.
-    ///
-    /// Block state occlusion affects visual features of other blocks (e.g. leaves and
-    /// wet sponges will not spawn dripping water particles if an occluding state is
-    /// below it), or whether light will pass through it.
-    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isOccluding", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Check whether or not this state requires a specific item to be used to drop
-    /// items when broken. For example, diamond ore requires an iron pickaxe and will
-    /// not drop diamonds when broken with a wooden or stone pickaxe.
-    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "requiresCorrectToolForDrops",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Returns if the given item is a preferred choice to break this Block.
-    /// In some cases this determines if a block will drop anything or extra
-    /// loot.
-    pub fn is_preferred_tool(
-        &self,
-        tool: impl Into<crate::inventory::ItemStack<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(tool.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isPreferredTool",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Returns the reaction of the block when moved by a piston
-    pub fn piston_move_reaction(
-        &self,
-    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/PistonMoveReaction;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPistonMoveReaction",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Checks if this state would be properly supported if it were placed at
-    /// the block at the given {@link Location}.
-    ///
-    /// This may be useful, for instance, to check whether or not a wall torch is
-    /// capable of surviving on its neighbouring block states.
-    pub fn is_supported(
-        &self,
-        location: impl Into<crate::Location<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Location;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(location.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += ")Z";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Checks if a state's {@link BlockFace} is capable of providing a given level
-    /// of {@link BlockSupport} for neighbouring block states.
-    ///
-    /// Any given state may support either none, one, or more than one level of block
-    /// support depending on its states. A common example would be a wall's ability to support
-    /// torches only on the center of the upper block face, whereas a grass block would
-    /// support all levels of block support on all block faces.
-    pub fn is_face_sturdy(
-        &self,
-        face: impl Into<crate::block::BlockFace<'mc>>,
-        support: impl Into<crate::block::BlockSupport<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/BlockFace;Lorg/bukkit/block/BlockSupport;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(face.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(support.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isFaceSturdy",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Gets the color this block should appear as when rendered on a map.
-    pub fn map_color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Color;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMapColor", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Color::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets the material that a player would use to place this block.
-    ///
-    /// For most blocks this is the same as {@link #getMaterial()} but some blocks
-    /// have different materials used to place them.
-    /// For example:
-    /// <pre>
-    /// {@link Material#REDSTONE_WIRE} -> {@link Material#REDSTONE}
-    /// {@link Material#CARROTS} -> {@link Material#CARROT}
-    /// </pre>
-    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Material;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPlacementMaterial",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Material::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Rotates this blockdata by the specified {@link StructureRotation}.
-    ///
-    /// This has no effect on blocks that do not have any rotatable states.
-    pub fn rotate(
-        &self,
-        rotation: impl Into<crate::block::structure::StructureRotation<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/structure/StructureRotation;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(rotation.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "rotate",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Mirrors this blockdata using the specified {@link Mirror}.
-    ///
-    /// This has no effect on blocks that do not have any mirrorable states.
-    pub fn mirror(
-        &self,
-        mirror: impl Into<crate::block::structure::Mirror<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/structure/Mirror;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(mirror.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "mirror",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Copies all applicable properties from this BlockData to the provided
-    /// BlockData.
-    ///
-    /// Only modifies properties that both blocks share in common.
-    pub fn copy_to(
-        &self,
-        other: impl Into<crate::block::data::BlockData<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(other.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copyTo",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Creates a new default {@link BlockState} for this type of Block, not
-    /// bound to a location.
-    pub fn create_block_state(
-        &self,
-    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/BlockState;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "createBlockState",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::BlockState::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::block::data::BlockData<'mc>> for Crafter<'mc> {
-    fn into(self) -> crate::block::data::BlockData<'mc> {
-        crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting Crafter into crate::block::data::BlockData")
-    }
-}
-pub enum CrafterOrientation<'mc> {}
-impl<'mc> std::fmt::Display for CrafterOrientation<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
-    }
-}
-
-impl<'mc> CrafterOrientation<'mc> {
-    pub fn value_of(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<CrafterOrientation<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
-        let cls = env.find_class("org/bukkit/block/data/type/Crafter/Orientation");
-        let cls = env.translate_error_with_class(cls)?;
-        let res = env.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Crafter/Orientation;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = env.translate_error(res)?;
-        let obj = res.l()?;
-        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = env.translate_error(variant)?;
-        let variant_str = env
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        match variant_str.as_str() {
-            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-        }
-    }
-}
-
-#[repr(C)]
-pub struct CrafterOrientationStruct<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for CrafterOrientation<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for CrafterOrientation<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate CrafterOrientation from null object.").into(),
-            );
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/block/data/type/Crafter/Orientation")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a CrafterOrientation object, got {}",
-                name
-            )
-            .into())
-        } else {
-            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-            let variant = env.translate_error(variant)?;
-            let variant_str = env
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            match variant_str.as_str() {
-                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-            }
-        }
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for CrafterOrientationStruct<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for CrafterOrientationStruct<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate CrafterOrientationStruct from null object."
-            )
-            .into());
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/block/data/type/Crafter/Orientation")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a CrafterOrientationStruct object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> CrafterOrientationStruct<'mc> {
-    pub fn values(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::block::data::mod_type::CrafterOrientation<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/block/data/type/Crafter/Orientation;");
-        let cls = jni.find_class("org/bukkit/block/data/type/Crafter/Orientation");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::block::data::mod_type::CrafterOrientation::from_raw(&jni, obj)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct CopperBulb<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for CopperBulb<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for CopperBulb<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate CopperBulb from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/CopperBulb")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a CopperBulb object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> CopperBulb<'mc> {
-    /// Gets the value of the 'lit' property.
-    pub fn is_lit(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isLit", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Sets the value of the 'lit' property.
-    pub fn set_lit(&self, lit: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(lit.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLit",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the value of the 'powered' property.
-    pub fn is_powered(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isPowered", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Sets the value of the 'powered' property.
-    pub fn set_powered(&self, powered: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(powered.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setPowered",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::block::data::Lightable<'mc>> for CopperBulb<'mc> {
-    fn into(self) -> crate::block::data::Lightable<'mc> {
-        crate::block::data::Lightable::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting CopperBulb into crate::block::data::Lightable")
-    }
-}
-impl<'mc> Into<crate::block::data::Powerable<'mc>> for CopperBulb<'mc> {
-    fn into(self) -> crate::block::data::Powerable<'mc> {
-        crate::block::data::Powerable::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting CopperBulb into crate::block::data::Powerable")
-    }
-}
-#[repr(C)]
 pub struct Sapling<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3155,10 +1559,31 @@ impl<'mc> Into<crate::block::data::mod_type::Dripleaf<'mc>> for BigDripleaf<'mc>
             .expect("Error converting BigDripleaf into crate::block::data::mod_type::Dripleaf")
     }
 }
-pub enum BigDripleafTilt<'mc> {}
+pub enum BigDripleafTilt<'mc> {
+    None { inner: BigDripleafTiltStruct<'mc> },
+    Unstable { inner: BigDripleafTiltStruct<'mc> },
+    Partial { inner: BigDripleafTiltStruct<'mc> },
+    Full { inner: BigDripleafTiltStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for BigDripleafTilt<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            BigDripleafTilt::None { .. } => f.write_str("NONE"),
+            BigDripleafTilt::Unstable { .. } => f.write_str("UNSTABLE"),
+            BigDripleafTilt::Partial { .. } => f.write_str("PARTIAL"),
+            BigDripleafTilt::Full { .. } => f.write_str("FULL"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for BigDripleafTilt<'mc> {
+    type Target = BigDripleafTiltStruct<'mc>;
+    fn deref(&self) -> &<BigDripleafTilt<'mc> as std::ops::Deref>::Target {
+        match self {
+            BigDripleafTilt::None { inner } => inner,
+            BigDripleafTilt::Unstable { inner } => inner,
+            BigDripleafTilt::Partial { inner } => inner,
+            BigDripleafTilt::Full { inner } => inner,
+        }
     }
 }
 
@@ -3185,6 +1610,19 @@ impl<'mc> BigDripleafTilt<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "NONE" => Ok(BigDripleafTilt::None {
+                inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+            }),
+            "UNSTABLE" => Ok(BigDripleafTilt::Unstable {
+                inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+            }),
+            "PARTIAL" => Ok(BigDripleafTilt::Partial {
+                inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+            }),
+            "FULL" => Ok(BigDripleafTilt::Full {
+                inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -3198,10 +1636,20 @@ pub struct BigDripleafTiltStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for BigDripleafTilt<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::None { inner } => inner.0.clone(),
+            Self::Unstable { inner } => inner.0.clone(),
+            Self::Partial { inner } => inner.0.clone(),
+            Self::Full { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unstable { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Partial { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Full { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for BigDripleafTilt<'mc> {
@@ -3230,6 +1678,18 @@ impl<'mc> JNIInstantiatable<'mc> for BigDripleafTilt<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "NONE" => Ok(BigDripleafTilt::None {
+                    inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+                }),
+                "UNSTABLE" => Ok(BigDripleafTilt::Unstable {
+                    inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+                }),
+                "PARTIAL" => Ok(BigDripleafTilt::Partial {
+                    inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+                }),
+                "FULL" => Ok(BigDripleafTilt::Full {
+                    inner: BigDripleafTiltStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -3604,10 +2064,34 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Stairs<'mc> {
             .expect("Error converting Stairs into crate::block::data::Waterlogged")
     }
 }
-pub enum StairsShape<'mc> {}
+pub enum StairsShape<'mc> {
+    Straight { inner: StairsShapeStruct<'mc> },
+    InnerLeft { inner: StairsShapeStruct<'mc> },
+    InnerRight { inner: StairsShapeStruct<'mc> },
+    OuterLeft { inner: StairsShapeStruct<'mc> },
+    OuterRight { inner: StairsShapeStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for StairsShape<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            StairsShape::Straight { .. } => f.write_str("STRAIGHT"),
+            StairsShape::InnerLeft { .. } => f.write_str("INNER_LEFT"),
+            StairsShape::InnerRight { .. } => f.write_str("INNER_RIGHT"),
+            StairsShape::OuterLeft { .. } => f.write_str("OUTER_LEFT"),
+            StairsShape::OuterRight { .. } => f.write_str("OUTER_RIGHT"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for StairsShape<'mc> {
+    type Target = StairsShapeStruct<'mc>;
+    fn deref(&self) -> &<StairsShape<'mc> as std::ops::Deref>::Target {
+        match self {
+            StairsShape::Straight { inner } => inner,
+            StairsShape::InnerLeft { inner } => inner,
+            StairsShape::InnerRight { inner } => inner,
+            StairsShape::OuterLeft { inner } => inner,
+            StairsShape::OuterRight { inner } => inner,
+        }
     }
 }
 
@@ -3634,6 +2118,22 @@ impl<'mc> StairsShape<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "STRAIGHT" => Ok(StairsShape::Straight {
+                inner: StairsShapeStruct::from_raw(env, obj)?,
+            }),
+            "INNER_LEFT" => Ok(StairsShape::InnerLeft {
+                inner: StairsShapeStruct::from_raw(env, obj)?,
+            }),
+            "INNER_RIGHT" => Ok(StairsShape::InnerRight {
+                inner: StairsShapeStruct::from_raw(env, obj)?,
+            }),
+            "OUTER_LEFT" => Ok(StairsShape::OuterLeft {
+                inner: StairsShapeStruct::from_raw(env, obj)?,
+            }),
+            "OUTER_RIGHT" => Ok(StairsShape::OuterRight {
+                inner: StairsShapeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -3647,10 +2147,30 @@ pub struct StairsShapeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for StairsShape<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Straight { inner } => inner.0.clone(),
+            Self::InnerLeft { inner } => inner.0.clone(),
+            Self::InnerRight { inner } => inner.0.clone(),
+            Self::OuterLeft { inner } => inner.0.clone(),
+            Self::OuterRight { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Straight { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::InnerLeft { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::InnerRight { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::OuterLeft { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::OuterRight { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for StairsShape<'mc> {
@@ -3676,6 +2196,21 @@ impl<'mc> JNIInstantiatable<'mc> for StairsShape<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "STRAIGHT" => Ok(StairsShape::Straight {
+                    inner: StairsShapeStruct::from_raw(env, obj)?,
+                }),
+                "INNER_LEFT" => Ok(StairsShape::InnerLeft {
+                    inner: StairsShapeStruct::from_raw(env, obj)?,
+                }),
+                "INNER_RIGHT" => Ok(StairsShape::InnerRight {
+                    inner: StairsShapeStruct::from_raw(env, obj)?,
+                }),
+                "OUTER_LEFT" => Ok(StairsShape::OuterLeft {
+                    inner: StairsShapeStruct::from_raw(env, obj)?,
+                }),
+                "OUTER_RIGHT" => Ok(StairsShape::OuterRight {
+                    inner: StairsShapeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -3724,6 +2259,801 @@ impl<'mc> StairsShapeStruct<'mc> {
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::block::data::mod_type::StairsShape::from_raw(&jni, obj)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct Crafter<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Crafter<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for Crafter<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Crafter from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Crafter")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Crafter object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> Crafter<'mc> {
+    /// Gets the value of the 'crafting' property.
+    pub fn is_crafting(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isCrafting", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the value of the 'crafting' property.
+    pub fn set_crafting(&self, crafting: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(crafting.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCrafting",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets the value of the 'triggered' property.
+    pub fn is_triggered(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isTriggered", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the value of the 'triggered' property.
+    pub fn set_triggered(&self, triggered: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(triggered.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setTriggered",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets the value of the 'orientation' property.
+    pub fn orientation(
+        &self,
+    ) -> Result<crate::block::data::mod_type::CrafterOrientation<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/block/data/type/Crafter/Orientation;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getOrientation", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::data::mod_type::CrafterOrientation::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the value of the 'orientation' property.
+    pub fn set_orientation(
+        &self,
+        orientation: impl Into<crate::block::data::mod_type::CrafterOrientation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/type/Crafter/Orientation;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(orientation.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setOrientation",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Get the Material represented by this block data.
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/Material;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets a string, which when passed into a method such as
+    /// {@link Server#createBlockData(java.lang.String)} will recreate this or a
+    /// similar instance where unspecified states (if any) may be optionally
+    /// omitted. If this instance was parsed and states are omitted, this exact
+    /// instance will be creatable when parsed again, else their equality cannot
+    /// be guaranteed.
+    ///
+    /// This method will only take effect for BlockData instances created by
+    /// methods such as {@link Server#createBlockData(String)} or any similar
+    /// method whereby states are optionally defined. If otherwise, the result of
+    /// {@link #getAsString()} will be returned. The following behaviour would be
+    /// expected:
+    /// <pre>{@code
+    /// String dataString = "minecraft:chest[waterlogged=true]"
+    /// BlockData data = Bukkit.createBlockData(dataString);
+    /// dataString.equals(data.getAsString(true)); // This would return true
+    /// dataString.equals(data.getAsString(false)); // This would return false as all states are present
+    /// dataString.equals(data.getAsString()); // This is equivalent to the above, "getAsString(false)"
+    /// }</pre>
+    pub fn get_as_string(
+        &self,
+        hide_unspecified: bool,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)Ljava/lang/String;");
+        let val_1 = jni::objects::JValueGen::Bool(hide_unspecified.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Merges all explicitly set states from the given data with this BlockData.
+    ///
+    /// Note that the given data MUST have been created from one of the String
+    /// parse methods, e.g. {@link Server#createBlockData(java.lang.String)} and
+    /// not have been subsequently modified.
+    ///
+    /// Note also that the block types must match identically.
+    pub fn merge(
+        &self,
+        data: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(data.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::data::BlockData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Checks if the specified BlockData matches this block data.
+    ///
+    /// The semantics of this method are such that for manually created or
+    /// modified BlockData it has the same effect as
+    /// {@link Object#equals(java.lang.Object)}, whilst for parsed data (that to
+    /// which {@link #merge(org.bukkit.block.data.BlockData)} applies, it will
+    /// return true when the type and all explicitly set states match.
+    ///
+    /// <b>Note that these semantics mean that a.matches(b) may not be the same
+    /// as b.matches(a)</b>
+    pub fn matches(
+        &self,
+        data: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(data.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Returns a copy of this BlockData.
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/data/BlockData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "clone", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::data::BlockData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the block's {@link SoundGroup} which can be used to get its step
+    /// sound, hit sound, and others.
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/SoundGroup;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getSoundGroup", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::SoundGroup::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Get the amount of light emitted by this state when in the world.
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLightEmission",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Check whether or not this state will occlude other blocks.
+    ///
+    /// Block state occlusion affects visual features of other blocks (e.g. leaves and
+    /// wet sponges will not spawn dripping water particles if an occluding state is
+    /// below it), or whether light will pass through it.
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isOccluding", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Check whether or not this state requires a specific item to be used to drop
+    /// items when broken. For example, diamond ore requires an iron pickaxe and will
+    /// not drop diamonds when broken with a wooden or stone pickaxe.
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Returns if the given item is a preferred choice to break this Block.
+    /// In some cases this determines if a block will drop anything or extra
+    /// loot.
+    pub fn is_preferred_tool(
+        &self,
+        tool: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(tool.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isPreferredTool",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Returns the reaction of the block when moved by a piston
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/PistonMoveReaction;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPistonMoveReaction",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Checks if this state would be properly supported if it were placed at
+    /// the block at the given {@link Location}.
+    ///
+    /// This may be useful, for instance, to check whether or not a wall torch is
+    /// capable of surviving on its neighbouring block states.
+    pub fn is_supported(
+        &self,
+        location: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(location.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Checks if a state's {@link BlockFace} is capable of providing a given level
+    /// of {@link BlockSupport} for neighbouring block states.
+    ///
+    /// Any given state may support either none, one, or more than one level of block
+    /// support depending on its states. A common example would be a wall's ability to support
+    /// torches only on the center of the upper block face, whereas a grass block would
+    /// support all levels of block support on all block faces.
+    pub fn is_face_sturdy(
+        &self,
+        face: impl Into<crate::block::BlockFace<'mc>>,
+        support: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/BlockFace;Lorg/bukkit/block/BlockSupport;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(face.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(support.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isFaceSturdy",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the color this block should appear as when rendered on a map.
+    pub fn map_color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/Color;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMapColor", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Color::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the material that a player would use to place this block.
+    ///
+    /// For most blocks this is the same as {@link #getMaterial()} but some blocks
+    /// have different materials used to place them.
+    /// For example:
+    /// <pre>
+    /// {@link Material#REDSTONE_WIRE} -> {@link Material#REDSTONE}
+    /// {@link Material#CARROTS} -> {@link Material#CARROT}
+    /// </pre>
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/Material;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPlacementMaterial",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Rotates this blockdata by the specified {@link StructureRotation}.
+    ///
+    /// This has no effect on blocks that do not have any rotatable states.
+    pub fn rotate(
+        &self,
+        rotation: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/structure/StructureRotation;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(rotation.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "rotate",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Mirrors this blockdata using the specified {@link Mirror}.
+    ///
+    /// This has no effect on blocks that do not have any mirrorable states.
+    pub fn mirror(
+        &self,
+        mirror: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/structure/Mirror;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(mirror.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "mirror",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Copies all applicable properties from this BlockData to the provided
+    /// BlockData.
+    ///
+    /// Only modifies properties that both blocks share in common.
+    pub fn copy_to(
+        &self,
+        other: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(other.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "copyTo",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Creates a new default {@link BlockState} for this type of Block, not
+    /// bound to a location.
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/BlockState;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "createBlockState",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::BlockState::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::block::data::BlockData<'mc>> for Crafter<'mc> {
+    fn into(self) -> crate::block::data::BlockData<'mc> {
+        crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting Crafter into crate::block::data::BlockData")
+    }
+}
+pub enum CrafterOrientation<'mc> {
+    DownEast {
+        inner: CrafterOrientationStruct<'mc>,
+    },
+    DownNorth {
+        inner: CrafterOrientationStruct<'mc>,
+    },
+    DownSouth {
+        inner: CrafterOrientationStruct<'mc>,
+    },
+    DownWest {
+        inner: CrafterOrientationStruct<'mc>,
+    },
+    UpEast {
+        inner: CrafterOrientationStruct<'mc>,
+    },
+    UpNorth {
+        inner: CrafterOrientationStruct<'mc>,
+    },
+    UpSouth {
+        inner: CrafterOrientationStruct<'mc>,
+    },
+    UpWest {
+        inner: CrafterOrientationStruct<'mc>,
+    },
+    WestUp {
+        inner: CrafterOrientationStruct<'mc>,
+    },
+    EastUp {
+        inner: CrafterOrientationStruct<'mc>,
+    },
+    NorthUp {
+        inner: CrafterOrientationStruct<'mc>,
+    },
+    SouthUp {
+        inner: CrafterOrientationStruct<'mc>,
+    },
+}
+impl<'mc> std::fmt::Display for CrafterOrientation<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            CrafterOrientation::DownEast { .. } => f.write_str("DOWN_EAST"),
+            CrafterOrientation::DownNorth { .. } => f.write_str("DOWN_NORTH"),
+            CrafterOrientation::DownSouth { .. } => f.write_str("DOWN_SOUTH"),
+            CrafterOrientation::DownWest { .. } => f.write_str("DOWN_WEST"),
+            CrafterOrientation::UpEast { .. } => f.write_str("UP_EAST"),
+            CrafterOrientation::UpNorth { .. } => f.write_str("UP_NORTH"),
+            CrafterOrientation::UpSouth { .. } => f.write_str("UP_SOUTH"),
+            CrafterOrientation::UpWest { .. } => f.write_str("UP_WEST"),
+            CrafterOrientation::WestUp { .. } => f.write_str("WEST_UP"),
+            CrafterOrientation::EastUp { .. } => f.write_str("EAST_UP"),
+            CrafterOrientation::NorthUp { .. } => f.write_str("NORTH_UP"),
+            CrafterOrientation::SouthUp { .. } => f.write_str("SOUTH_UP"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for CrafterOrientation<'mc> {
+    type Target = CrafterOrientationStruct<'mc>;
+    fn deref(&self) -> &<CrafterOrientation<'mc> as std::ops::Deref>::Target {
+        match self {
+            CrafterOrientation::DownEast { inner } => inner,
+            CrafterOrientation::DownNorth { inner } => inner,
+            CrafterOrientation::DownSouth { inner } => inner,
+            CrafterOrientation::DownWest { inner } => inner,
+            CrafterOrientation::UpEast { inner } => inner,
+            CrafterOrientation::UpNorth { inner } => inner,
+            CrafterOrientation::UpSouth { inner } => inner,
+            CrafterOrientation::UpWest { inner } => inner,
+            CrafterOrientation::WestUp { inner } => inner,
+            CrafterOrientation::EastUp { inner } => inner,
+            CrafterOrientation::NorthUp { inner } => inner,
+            CrafterOrientation::SouthUp { inner } => inner,
+        }
+    }
+}
+
+impl<'mc> CrafterOrientation<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<CrafterOrientation<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Crafter/Orientation");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Crafter/Orientation;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "DOWN_EAST" => Ok(CrafterOrientation::DownEast {
+                inner: CrafterOrientationStruct::from_raw(env, obj)?,
+            }),
+            "DOWN_NORTH" => Ok(CrafterOrientation::DownNorth {
+                inner: CrafterOrientationStruct::from_raw(env, obj)?,
+            }),
+            "DOWN_SOUTH" => Ok(CrafterOrientation::DownSouth {
+                inner: CrafterOrientationStruct::from_raw(env, obj)?,
+            }),
+            "DOWN_WEST" => Ok(CrafterOrientation::DownWest {
+                inner: CrafterOrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_EAST" => Ok(CrafterOrientation::UpEast {
+                inner: CrafterOrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_NORTH" => Ok(CrafterOrientation::UpNorth {
+                inner: CrafterOrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_SOUTH" => Ok(CrafterOrientation::UpSouth {
+                inner: CrafterOrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_WEST" => Ok(CrafterOrientation::UpWest {
+                inner: CrafterOrientationStruct::from_raw(env, obj)?,
+            }),
+            "WEST_UP" => Ok(CrafterOrientation::WestUp {
+                inner: CrafterOrientationStruct::from_raw(env, obj)?,
+            }),
+            "EAST_UP" => Ok(CrafterOrientation::EastUp {
+                inner: CrafterOrientationStruct::from_raw(env, obj)?,
+            }),
+            "NORTH_UP" => Ok(CrafterOrientation::NorthUp {
+                inner: CrafterOrientationStruct::from_raw(env, obj)?,
+            }),
+            "SOUTH_UP" => Ok(CrafterOrientation::SouthUp {
+                inner: CrafterOrientationStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct CrafterOrientationStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for CrafterOrientation<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::DownEast { inner } => inner.0.clone(),
+            Self::DownNorth { inner } => inner.0.clone(),
+            Self::DownSouth { inner } => inner.0.clone(),
+            Self::DownWest { inner } => inner.0.clone(),
+            Self::UpEast { inner } => inner.0.clone(),
+            Self::UpNorth { inner } => inner.0.clone(),
+            Self::UpSouth { inner } => inner.0.clone(),
+            Self::UpWest { inner } => inner.0.clone(),
+            Self::WestUp { inner } => inner.0.clone(),
+            Self::EastUp { inner } => inner.0.clone(),
+            Self::NorthUp { inner } => inner.0.clone(),
+            Self::SouthUp { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::DownEast { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::DownNorth { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DownSouth { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DownWest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpEast { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpNorth { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpSouth { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpWest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WestUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::EastUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NorthUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SouthUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for CrafterOrientation<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate CrafterOrientation from null object.").into(),
+            );
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/block/data/type/Crafter/Orientation")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a CrafterOrientation object, got {}",
+                name
+            )
+            .into())
+        } else {
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "DOWN_EAST" => Ok(CrafterOrientation::DownEast {
+                    inner: CrafterOrientationStruct::from_raw(env, obj)?,
+                }),
+                "DOWN_NORTH" => Ok(CrafterOrientation::DownNorth {
+                    inner: CrafterOrientationStruct::from_raw(env, obj)?,
+                }),
+                "DOWN_SOUTH" => Ok(CrafterOrientation::DownSouth {
+                    inner: CrafterOrientationStruct::from_raw(env, obj)?,
+                }),
+                "DOWN_WEST" => Ok(CrafterOrientation::DownWest {
+                    inner: CrafterOrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_EAST" => Ok(CrafterOrientation::UpEast {
+                    inner: CrafterOrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_NORTH" => Ok(CrafterOrientation::UpNorth {
+                    inner: CrafterOrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_SOUTH" => Ok(CrafterOrientation::UpSouth {
+                    inner: CrafterOrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_WEST" => Ok(CrafterOrientation::UpWest {
+                    inner: CrafterOrientationStruct::from_raw(env, obj)?,
+                }),
+                "WEST_UP" => Ok(CrafterOrientation::WestUp {
+                    inner: CrafterOrientationStruct::from_raw(env, obj)?,
+                }),
+                "EAST_UP" => Ok(CrafterOrientation::EastUp {
+                    inner: CrafterOrientationStruct::from_raw(env, obj)?,
+                }),
+                "NORTH_UP" => Ok(CrafterOrientation::NorthUp {
+                    inner: CrafterOrientationStruct::from_raw(env, obj)?,
+                }),
+                "SOUTH_UP" => Ok(CrafterOrientation::SouthUp {
+                    inner: CrafterOrientationStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
+        }
+    }
+}
+
+impl<'mc> JNIRaw<'mc> for CrafterOrientationStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for CrafterOrientationStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate CrafterOrientationStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/block/data/type/Crafter/Orientation")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a CrafterOrientationStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> CrafterOrientationStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::block::data::mod_type::CrafterOrientation<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/block/data/type/Crafter/Orientation;");
+        let cls = jni.find_class("org/bukkit/block/data/type/Crafter/Orientation");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::block::data::mod_type::CrafterOrientation::from_raw(&jni, obj)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -3964,6 +3294,335 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for SeaPickle<'mc> {
     }
 }
 #[repr(C)]
+pub struct Vault<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Vault<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for Vault<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Vault from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Vault")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Vault object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> Vault<'mc> {
+    /// Gets the value of the 'vault_state' property.
+    pub fn trial_spawner_state(
+        &self,
+    ) -> Result<crate::block::data::mod_type::VaultState<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/data/type/Vault/State;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getTrialSpawnerState",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::data::mod_type::VaultState::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the value of the 'vault_state' property.
+    pub fn set_trial_spawner_state(
+        &self,
+        state: impl Into<crate::block::data::mod_type::VaultState<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/type/Vault/State;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(state.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setTrialSpawnerState",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets the value of the 'ominous' property.
+    pub fn is_ominous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isOminous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the value of the 'ominous' property.
+    pub fn set_ominous(&self, ominous: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(ominous.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setOminous",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets the value of the 'facing' property.
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/BlockFace;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the value of the 'facing' property.
+    pub fn set_facing(
+        &self,
+        facing: impl Into<crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/BlockFace;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(facing.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacing",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets the faces which are applicable to this block.
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::block::data::Directional<'mc>> for Vault<'mc> {
+    fn into(self) -> crate::block::data::Directional<'mc> {
+        crate::block::data::Directional::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting Vault into crate::block::data::Directional")
+    }
+}
+pub enum VaultState<'mc> {
+    Inactive { inner: VaultStateStruct<'mc> },
+    Active { inner: VaultStateStruct<'mc> },
+    Unlocking { inner: VaultStateStruct<'mc> },
+    Ejecting { inner: VaultStateStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for VaultState<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            VaultState::Inactive { .. } => f.write_str("INACTIVE"),
+            VaultState::Active { .. } => f.write_str("ACTIVE"),
+            VaultState::Unlocking { .. } => f.write_str("UNLOCKING"),
+            VaultState::Ejecting { .. } => f.write_str("EJECTING"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for VaultState<'mc> {
+    type Target = VaultStateStruct<'mc>;
+    fn deref(&self) -> &<VaultState<'mc> as std::ops::Deref>::Target {
+        match self {
+            VaultState::Inactive { inner } => inner,
+            VaultState::Active { inner } => inner,
+            VaultState::Unlocking { inner } => inner,
+            VaultState::Ejecting { inner } => inner,
+        }
+    }
+}
+
+impl<'mc> VaultState<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<VaultState<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/Vault/State");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/Vault/State;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "INACTIVE" => Ok(VaultState::Inactive {
+                inner: VaultStateStruct::from_raw(env, obj)?,
+            }),
+            "ACTIVE" => Ok(VaultState::Active {
+                inner: VaultStateStruct::from_raw(env, obj)?,
+            }),
+            "UNLOCKING" => Ok(VaultState::Unlocking {
+                inner: VaultStateStruct::from_raw(env, obj)?,
+            }),
+            "EJECTING" => Ok(VaultState::Ejecting {
+                inner: VaultStateStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct VaultStateStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for VaultState<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Inactive { inner } => inner.0.clone(),
+            Self::Active { inner } => inner.0.clone(),
+            Self::Unlocking { inner } => inner.0.clone(),
+            Self::Ejecting { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Inactive { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Active { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unlocking { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Ejecting { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for VaultState<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate VaultState from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Vault/State")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a VaultState object, got {}",
+                name
+            )
+            .into())
+        } else {
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "INACTIVE" => Ok(VaultState::Inactive {
+                    inner: VaultStateStruct::from_raw(env, obj)?,
+                }),
+                "ACTIVE" => Ok(VaultState::Active {
+                    inner: VaultStateStruct::from_raw(env, obj)?,
+                }),
+                "UNLOCKING" => Ok(VaultState::Unlocking {
+                    inner: VaultStateStruct::from_raw(env, obj)?,
+                }),
+                "EJECTING" => Ok(VaultState::Ejecting {
+                    inner: VaultStateStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
+        }
+    }
+}
+
+impl<'mc> JNIRaw<'mc> for VaultStateStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for VaultStateStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate VaultStateStruct from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Vault/State")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a VaultStateStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> VaultStateStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::block::data::mod_type::VaultState<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/data/type/Vault/State;");
+        let cls = jni.find_class("org/bukkit/block/data/type/Vault/State");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::block::data::mod_type::VaultState::from_raw(&jni, obj)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
 pub struct SculkSensor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4102,10 +3761,28 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for SculkSensor<'mc> {
             .expect("Error converting SculkSensor into crate::block::data::Waterlogged")
     }
 }
-pub enum SculkSensorPhase<'mc> {}
+pub enum SculkSensorPhase<'mc> {
+    Inactive { inner: SculkSensorPhaseStruct<'mc> },
+    Active { inner: SculkSensorPhaseStruct<'mc> },
+    Cooldown { inner: SculkSensorPhaseStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for SculkSensorPhase<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            SculkSensorPhase::Inactive { .. } => f.write_str("INACTIVE"),
+            SculkSensorPhase::Active { .. } => f.write_str("ACTIVE"),
+            SculkSensorPhase::Cooldown { .. } => f.write_str("COOLDOWN"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for SculkSensorPhase<'mc> {
+    type Target = SculkSensorPhaseStruct<'mc>;
+    fn deref(&self) -> &<SculkSensorPhase<'mc> as std::ops::Deref>::Target {
+        match self {
+            SculkSensorPhase::Inactive { inner } => inner,
+            SculkSensorPhase::Active { inner } => inner,
+            SculkSensorPhase::Cooldown { inner } => inner,
+        }
     }
 }
 
@@ -4132,6 +3809,16 @@ impl<'mc> SculkSensorPhase<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "INACTIVE" => Ok(SculkSensorPhase::Inactive {
+                inner: SculkSensorPhaseStruct::from_raw(env, obj)?,
+            }),
+            "ACTIVE" => Ok(SculkSensorPhase::Active {
+                inner: SculkSensorPhaseStruct::from_raw(env, obj)?,
+            }),
+            "COOLDOWN" => Ok(SculkSensorPhase::Cooldown {
+                inner: SculkSensorPhaseStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -4145,10 +3832,18 @@ pub struct SculkSensorPhaseStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for SculkSensorPhase<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Inactive { inner } => inner.0.clone(),
+            Self::Active { inner } => inner.0.clone(),
+            Self::Cooldown { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Inactive { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Active { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Cooldown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for SculkSensorPhase<'mc> {
@@ -4177,6 +3872,15 @@ impl<'mc> JNIInstantiatable<'mc> for SculkSensorPhase<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "INACTIVE" => Ok(SculkSensorPhase::Inactive {
+                    inner: SculkSensorPhaseStruct::from_raw(env, obj)?,
+                }),
+                "ACTIVE" => Ok(SculkSensorPhase::Active {
+                    inner: SculkSensorPhaseStruct::from_raw(env, obj)?,
+                }),
+                "COOLDOWN" => Ok(SculkSensorPhase::Cooldown {
+                    inner: SculkSensorPhaseStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -5078,10 +4782,28 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Wall<'mc> {
             .expect("Error converting Wall into crate::block::data::Waterlogged")
     }
 }
-pub enum WallHeight<'mc> {}
+pub enum WallHeight<'mc> {
+    None { inner: WallHeightStruct<'mc> },
+    Low { inner: WallHeightStruct<'mc> },
+    Tall { inner: WallHeightStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for WallHeight<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            WallHeight::None { .. } => f.write_str("NONE"),
+            WallHeight::Low { .. } => f.write_str("LOW"),
+            WallHeight::Tall { .. } => f.write_str("TALL"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for WallHeight<'mc> {
+    type Target = WallHeightStruct<'mc>;
+    fn deref(&self) -> &<WallHeight<'mc> as std::ops::Deref>::Target {
+        match self {
+            WallHeight::None { inner } => inner,
+            WallHeight::Low { inner } => inner,
+            WallHeight::Tall { inner } => inner,
+        }
     }
 }
 
@@ -5108,6 +4830,16 @@ impl<'mc> WallHeight<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "NONE" => Ok(WallHeight::None {
+                inner: WallHeightStruct::from_raw(env, obj)?,
+            }),
+            "LOW" => Ok(WallHeight::Low {
+                inner: WallHeightStruct::from_raw(env, obj)?,
+            }),
+            "TALL" => Ok(WallHeight::Tall {
+                inner: WallHeightStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -5121,10 +4853,18 @@ pub struct WallHeightStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for WallHeight<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::None { inner } => inner.0.clone(),
+            Self::Low { inner } => inner.0.clone(),
+            Self::Tall { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Low { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Tall { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for WallHeight<'mc> {
@@ -5150,6 +4890,15 @@ impl<'mc> JNIInstantiatable<'mc> for WallHeight<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "NONE" => Ok(WallHeight::None {
+                    inner: WallHeightStruct::from_raw(env, obj)?,
+                }),
+                "LOW" => Ok(WallHeight::Low {
+                    inner: WallHeightStruct::from_raw(env, obj)?,
+                }),
+                "TALL" => Ok(WallHeight::Tall {
+                    inner: WallHeightStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -5903,10 +5652,44 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for PointedDripstone<'mc> {
             .expect("Error converting PointedDripstone into crate::block::data::Waterlogged")
     }
 }
-pub enum PointedDripstoneThickness<'mc> {}
+pub enum PointedDripstoneThickness<'mc> {
+    TipMerge {
+        inner: PointedDripstoneThicknessStruct<'mc>,
+    },
+    Tip {
+        inner: PointedDripstoneThicknessStruct<'mc>,
+    },
+    Frustum {
+        inner: PointedDripstoneThicknessStruct<'mc>,
+    },
+    Middle {
+        inner: PointedDripstoneThicknessStruct<'mc>,
+    },
+    Base {
+        inner: PointedDripstoneThicknessStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for PointedDripstoneThickness<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            PointedDripstoneThickness::TipMerge { .. } => f.write_str("TIP_MERGE"),
+            PointedDripstoneThickness::Tip { .. } => f.write_str("TIP"),
+            PointedDripstoneThickness::Frustum { .. } => f.write_str("FRUSTUM"),
+            PointedDripstoneThickness::Middle { .. } => f.write_str("MIDDLE"),
+            PointedDripstoneThickness::Base { .. } => f.write_str("BASE"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PointedDripstoneThickness<'mc> {
+    type Target = PointedDripstoneThicknessStruct<'mc>;
+    fn deref(&self) -> &<PointedDripstoneThickness<'mc> as std::ops::Deref>::Target {
+        match self {
+            PointedDripstoneThickness::TipMerge { inner } => inner,
+            PointedDripstoneThickness::Tip { inner } => inner,
+            PointedDripstoneThickness::Frustum { inner } => inner,
+            PointedDripstoneThickness::Middle { inner } => inner,
+            PointedDripstoneThickness::Base { inner } => inner,
+        }
     }
 }
 
@@ -5933,6 +5716,22 @@ impl<'mc> PointedDripstoneThickness<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "TIP_MERGE" => Ok(PointedDripstoneThickness::TipMerge {
+                inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+            }),
+            "TIP" => Ok(PointedDripstoneThickness::Tip {
+                inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+            }),
+            "FRUSTUM" => Ok(PointedDripstoneThickness::Frustum {
+                inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+            }),
+            "MIDDLE" => Ok(PointedDripstoneThickness::Middle {
+                inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+            }),
+            "BASE" => Ok(PointedDripstoneThickness::Base {
+                inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -5946,10 +5745,22 @@ pub struct PointedDripstoneThicknessStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for PointedDripstoneThickness<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::TipMerge { inner } => inner.0.clone(),
+            Self::Tip { inner } => inner.0.clone(),
+            Self::Frustum { inner } => inner.0.clone(),
+            Self::Middle { inner } => inner.0.clone(),
+            Self::Base { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::TipMerge { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Tip { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Frustum { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Middle { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Base { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PointedDripstoneThickness<'mc> {
@@ -5981,6 +5792,21 @@ impl<'mc> JNIInstantiatable<'mc> for PointedDripstoneThickness<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "TIP_MERGE" => Ok(PointedDripstoneThickness::TipMerge {
+                    inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+                }),
+                "TIP" => Ok(PointedDripstoneThickness::Tip {
+                    inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+                }),
+                "FRUSTUM" => Ok(PointedDripstoneThickness::Frustum {
+                    inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+                }),
+                "MIDDLE" => Ok(PointedDripstoneThickness::Middle {
+                    inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+                }),
+                "BASE" => Ok(PointedDripstoneThickness::Base {
+                    inner: PointedDripstoneThicknessStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -6442,10 +6268,34 @@ impl<'mc> Into<crate::block::data::AnaloguePowerable<'mc>> for RedstoneWire<'mc>
             .expect("Error converting RedstoneWire into crate::block::data::AnaloguePowerable")
     }
 }
-pub enum RedstoneWireConnection<'mc> {}
+pub enum RedstoneWireConnection<'mc> {
+    Up {
+        inner: RedstoneWireConnectionStruct<'mc>,
+    },
+    Side {
+        inner: RedstoneWireConnectionStruct<'mc>,
+    },
+    None {
+        inner: RedstoneWireConnectionStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for RedstoneWireConnection<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            RedstoneWireConnection::Up { .. } => f.write_str("UP"),
+            RedstoneWireConnection::Side { .. } => f.write_str("SIDE"),
+            RedstoneWireConnection::None { .. } => f.write_str("NONE"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for RedstoneWireConnection<'mc> {
+    type Target = RedstoneWireConnectionStruct<'mc>;
+    fn deref(&self) -> &<RedstoneWireConnection<'mc> as std::ops::Deref>::Target {
+        match self {
+            RedstoneWireConnection::Up { inner } => inner,
+            RedstoneWireConnection::Side { inner } => inner,
+            RedstoneWireConnection::None { inner } => inner,
+        }
     }
 }
 
@@ -6472,6 +6322,16 @@ impl<'mc> RedstoneWireConnection<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "UP" => Ok(RedstoneWireConnection::Up {
+                inner: RedstoneWireConnectionStruct::from_raw(env, obj)?,
+            }),
+            "SIDE" => Ok(RedstoneWireConnection::Side {
+                inner: RedstoneWireConnectionStruct::from_raw(env, obj)?,
+            }),
+            "NONE" => Ok(RedstoneWireConnection::None {
+                inner: RedstoneWireConnectionStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -6485,10 +6345,18 @@ pub struct RedstoneWireConnectionStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for RedstoneWireConnection<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Up { inner } => inner.0.clone(),
+            Self::Side { inner } => inner.0.clone(),
+            Self::None { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Up { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Side { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for RedstoneWireConnection<'mc> {
@@ -6518,6 +6386,15 @@ impl<'mc> JNIInstantiatable<'mc> for RedstoneWireConnection<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "UP" => Ok(RedstoneWireConnection::Up {
+                    inner: RedstoneWireConnectionStruct::from_raw(env, obj)?,
+                }),
+                "SIDE" => Ok(RedstoneWireConnection::Side {
+                    inner: RedstoneWireConnectionStruct::from_raw(env, obj)?,
+                }),
+                "NONE" => Ok(RedstoneWireConnection::None {
+                    inner: RedstoneWireConnectionStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -7437,10 +7314,25 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Door<'mc> {
             .expect("Error converting Door into crate::block::data::Powerable")
     }
 }
-pub enum DoorHinge<'mc> {}
+pub enum DoorHinge<'mc> {
+    Left { inner: DoorHingeStruct<'mc> },
+    Right { inner: DoorHingeStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for DoorHinge<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            DoorHinge::Left { .. } => f.write_str("LEFT"),
+            DoorHinge::Right { .. } => f.write_str("RIGHT"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for DoorHinge<'mc> {
+    type Target = DoorHingeStruct<'mc>;
+    fn deref(&self) -> &<DoorHinge<'mc> as std::ops::Deref>::Target {
+        match self {
+            DoorHinge::Left { inner } => inner,
+            DoorHinge::Right { inner } => inner,
+        }
     }
 }
 
@@ -7467,6 +7359,13 @@ impl<'mc> DoorHinge<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "LEFT" => Ok(DoorHinge::Left {
+                inner: DoorHingeStruct::from_raw(env, obj)?,
+            }),
+            "RIGHT" => Ok(DoorHinge::Right {
+                inner: DoorHingeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -7480,10 +7379,16 @@ pub struct DoorHingeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for DoorHinge<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Left { inner } => inner.0.clone(),
+            Self::Right { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Left { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Right { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for DoorHinge<'mc> {
@@ -7509,6 +7414,12 @@ impl<'mc> JNIInstantiatable<'mc> for DoorHinge<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "LEFT" => Ok(DoorHinge::Left {
+                    inner: DoorHingeStruct::from_raw(env, obj)?,
+                }),
+                "RIGHT" => Ok(DoorHinge::Right {
+                    inner: DoorHingeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -8162,6 +8073,111 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for TrapDoor<'mc> {
     fn into(self) -> crate::block::data::Waterlogged<'mc> {
         crate::block::data::Waterlogged::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting TrapDoor into crate::block::data::Waterlogged")
+    }
+}
+#[repr(C)]
+pub struct Skull<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Skull<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for Skull<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Skull from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/Skull")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Skull object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> Skull<'mc> {
+    /// Gets the value of the 'powered' property.
+    pub fn is_powered(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isPowered", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the value of the 'powered' property.
+    pub fn set_powered(&self, powered: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(powered.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPowered",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets the value of the 'rotation' property.
+    pub fn rotation(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/BlockFace;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getRotation", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the value of the 'rotation' property.
+    pub fn set_rotation(
+        &self,
+        rotation: impl Into<crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/BlockFace;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(rotation.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setRotation",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::block::data::Powerable<'mc>> for Skull<'mc> {
+    fn into(self) -> crate::block::data::Powerable<'mc> {
+        crate::block::data::Powerable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting Skull into crate::block::data::Powerable")
+    }
+}
+impl<'mc> Into<crate::block::data::Rotatable<'mc>> for Skull<'mc> {
+    fn into(self) -> crate::block::data::Rotatable<'mc> {
+        crate::block::data::Rotatable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting Skull into crate::block::data::Rotatable")
     }
 }
 #[repr(C)]
@@ -10987,10 +11003,25 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for Bed<'mc> {
             .expect("Error converting Bed into crate::block::data::Directional")
     }
 }
-pub enum BedPart<'mc> {}
+pub enum BedPart<'mc> {
+    Head { inner: BedPartStruct<'mc> },
+    Foot { inner: BedPartStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for BedPart<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            BedPart::Head { .. } => f.write_str("HEAD"),
+            BedPart::Foot { .. } => f.write_str("FOOT"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for BedPart<'mc> {
+    type Target = BedPartStruct<'mc>;
+    fn deref(&self) -> &<BedPart<'mc> as std::ops::Deref>::Target {
+        match self {
+            BedPart::Head { inner } => inner,
+            BedPart::Foot { inner } => inner,
+        }
     }
 }
 
@@ -11017,6 +11048,13 @@ impl<'mc> BedPart<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "HEAD" => Ok(BedPart::Head {
+                inner: BedPartStruct::from_raw(env, obj)?,
+            }),
+            "FOOT" => Ok(BedPart::Foot {
+                inner: BedPartStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -11030,10 +11068,16 @@ pub struct BedPartStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for BedPart<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Head { inner } => inner.0.clone(),
+            Self::Foot { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Head { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Foot { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for BedPart<'mc> {
@@ -11059,6 +11103,12 @@ impl<'mc> JNIInstantiatable<'mc> for BedPart<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "HEAD" => Ok(BedPart::Head {
+                    inner: BedPartStruct::from_raw(env, obj)?,
+                }),
+                "FOOT" => Ok(BedPart::Foot {
+                    inner: BedPartStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -11477,6 +11527,122 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for WallHangingSign<'mc> {
     }
 }
 #[repr(C)]
+pub struct WallSkull<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for WallSkull<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for WallSkull<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate WallSkull from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/WallSkull")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a WallSkull object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> WallSkull<'mc> {
+    /// Gets the value of the 'facing' property.
+    pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/BlockFace;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getFacing", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the value of the 'facing' property.
+    pub fn set_facing(
+        &self,
+        facing: impl Into<crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/BlockFace;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(facing.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacing",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets the faces which are applicable to this block.
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the value of the 'powered' property.
+    pub fn is_powered(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isPowered", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the value of the 'powered' property.
+    pub fn set_powered(&self, powered: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(powered.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPowered",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::block::data::Directional<'mc>> for WallSkull<'mc> {
+    fn into(self) -> crate::block::data::Directional<'mc> {
+        crate::block::data::Directional::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting WallSkull into crate::block::data::Directional")
+    }
+}
+impl<'mc> Into<crate::block::data::Powerable<'mc>> for WallSkull<'mc> {
+    fn into(self) -> crate::block::data::Powerable<'mc> {
+        crate::block::data::Powerable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting WallSkull into crate::block::data::Powerable")
+    }
+}
+#[repr(C)]
 pub struct Beehive<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11870,10 +12036,28 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Chest<'mc> {
             .expect("Error converting Chest into crate::block::data::Waterlogged")
     }
 }
-pub enum ChestType<'mc> {}
+pub enum ChestType<'mc> {
+    Single { inner: ChestTypeStruct<'mc> },
+    Left { inner: ChestTypeStruct<'mc> },
+    Right { inner: ChestTypeStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for ChestType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            ChestType::Single { .. } => f.write_str("SINGLE"),
+            ChestType::Left { .. } => f.write_str("LEFT"),
+            ChestType::Right { .. } => f.write_str("RIGHT"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for ChestType<'mc> {
+    type Target = ChestTypeStruct<'mc>;
+    fn deref(&self) -> &<ChestType<'mc> as std::ops::Deref>::Target {
+        match self {
+            ChestType::Single { inner } => inner,
+            ChestType::Left { inner } => inner,
+            ChestType::Right { inner } => inner,
+        }
     }
 }
 
@@ -11900,6 +12084,16 @@ impl<'mc> ChestType<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "SINGLE" => Ok(ChestType::Single {
+                inner: ChestTypeStruct::from_raw(env, obj)?,
+            }),
+            "LEFT" => Ok(ChestType::Left {
+                inner: ChestTypeStruct::from_raw(env, obj)?,
+            }),
+            "RIGHT" => Ok(ChestType::Right {
+                inner: ChestTypeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -11913,10 +12107,18 @@ pub struct ChestTypeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for ChestType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Single { inner } => inner.0.clone(),
+            Self::Left { inner } => inner.0.clone(),
+            Self::Right { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Single { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Left { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Right { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for ChestType<'mc> {
@@ -11942,6 +12144,15 @@ impl<'mc> JNIInstantiatable<'mc> for ChestType<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "SINGLE" => Ok(ChestType::Single {
+                    inner: ChestTypeStruct::from_raw(env, obj)?,
+                }),
+                "LEFT" => Ok(ChestType::Left {
+                    inner: ChestTypeStruct::from_raw(env, obj)?,
+                }),
+                "RIGHT" => Ok(ChestType::Right {
+                    inner: ChestTypeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -12144,10 +12355,31 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Bell<'mc> {
             .expect("Error converting Bell into crate::block::data::Powerable")
     }
 }
-pub enum BellAttachment<'mc> {}
+pub enum BellAttachment<'mc> {
+    Floor { inner: BellAttachmentStruct<'mc> },
+    Ceiling { inner: BellAttachmentStruct<'mc> },
+    SingleWall { inner: BellAttachmentStruct<'mc> },
+    DoubleWall { inner: BellAttachmentStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for BellAttachment<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            BellAttachment::Floor { .. } => f.write_str("FLOOR"),
+            BellAttachment::Ceiling { .. } => f.write_str("CEILING"),
+            BellAttachment::SingleWall { .. } => f.write_str("SINGLE_WALL"),
+            BellAttachment::DoubleWall { .. } => f.write_str("DOUBLE_WALL"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for BellAttachment<'mc> {
+    type Target = BellAttachmentStruct<'mc>;
+    fn deref(&self) -> &<BellAttachment<'mc> as std::ops::Deref>::Target {
+        match self {
+            BellAttachment::Floor { inner } => inner,
+            BellAttachment::Ceiling { inner } => inner,
+            BellAttachment::SingleWall { inner } => inner,
+            BellAttachment::DoubleWall { inner } => inner,
+        }
     }
 }
 
@@ -12174,6 +12406,19 @@ impl<'mc> BellAttachment<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "FLOOR" => Ok(BellAttachment::Floor {
+                inner: BellAttachmentStruct::from_raw(env, obj)?,
+            }),
+            "CEILING" => Ok(BellAttachment::Ceiling {
+                inner: BellAttachmentStruct::from_raw(env, obj)?,
+            }),
+            "SINGLE_WALL" => Ok(BellAttachment::SingleWall {
+                inner: BellAttachmentStruct::from_raw(env, obj)?,
+            }),
+            "DOUBLE_WALL" => Ok(BellAttachment::DoubleWall {
+                inner: BellAttachmentStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -12187,10 +12432,24 @@ pub struct BellAttachmentStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for BellAttachment<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Floor { inner } => inner.0.clone(),
+            Self::Ceiling { inner } => inner.0.clone(),
+            Self::SingleWall { inner } => inner.0.clone(),
+            Self::DoubleWall { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Floor { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Ceiling { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SingleWall { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DoubleWall { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for BellAttachment<'mc> {
@@ -12219,6 +12478,18 @@ impl<'mc> JNIInstantiatable<'mc> for BellAttachment<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "FLOOR" => Ok(BellAttachment::Floor {
+                    inner: BellAttachmentStruct::from_raw(env, obj)?,
+                }),
+                "CEILING" => Ok(BellAttachment::Ceiling {
+                    inner: BellAttachmentStruct::from_raw(env, obj)?,
+                }),
+                "SINGLE_WALL" => Ok(BellAttachment::SingleWall {
+                    inner: BellAttachmentStruct::from_raw(env, obj)?,
+                }),
+                "DOUBLE_WALL" => Ok(BellAttachment::DoubleWall {
+                    inner: BellAttachmentStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -13570,10 +13841,29 @@ impl<'mc> Into<crate::block::data::Directional<'mc>> for TechnicalPiston<'mc> {
             .expect("Error converting TechnicalPiston into crate::block::data::Directional")
     }
 }
-pub enum TechnicalPistonType<'mc> {}
+pub enum TechnicalPistonType<'mc> {
+    Normal {
+        inner: TechnicalPistonTypeStruct<'mc>,
+    },
+    Sticky {
+        inner: TechnicalPistonTypeStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for TechnicalPistonType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            TechnicalPistonType::Normal { .. } => f.write_str("NORMAL"),
+            TechnicalPistonType::Sticky { .. } => f.write_str("STICKY"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for TechnicalPistonType<'mc> {
+    type Target = TechnicalPistonTypeStruct<'mc>;
+    fn deref(&self) -> &<TechnicalPistonType<'mc> as std::ops::Deref>::Target {
+        match self {
+            TechnicalPistonType::Normal { inner } => inner,
+            TechnicalPistonType::Sticky { inner } => inner,
+        }
     }
 }
 
@@ -13600,6 +13890,13 @@ impl<'mc> TechnicalPistonType<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "NORMAL" => Ok(TechnicalPistonType::Normal {
+                inner: TechnicalPistonTypeStruct::from_raw(env, obj)?,
+            }),
+            "STICKY" => Ok(TechnicalPistonType::Sticky {
+                inner: TechnicalPistonTypeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -13613,10 +13910,16 @@ pub struct TechnicalPistonTypeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for TechnicalPistonType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Normal { inner } => inner.0.clone(),
+            Self::Sticky { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Normal { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Sticky { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for TechnicalPistonType<'mc> {
@@ -13645,6 +13948,12 @@ impl<'mc> JNIInstantiatable<'mc> for TechnicalPistonType<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "NORMAL" => Ok(TechnicalPistonType::Normal {
+                    inner: TechnicalPistonTypeStruct::from_raw(env, obj)?,
+                }),
+                "STICKY" => Ok(TechnicalPistonType::Sticky {
+                    inner: TechnicalPistonTypeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -14778,10 +15087,25 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Comparator<'mc> {
             .expect("Error converting Comparator into crate::block::data::Powerable")
     }
 }
-pub enum ComparatorMode<'mc> {}
+pub enum ComparatorMode<'mc> {
+    Compare { inner: ComparatorModeStruct<'mc> },
+    Subtract { inner: ComparatorModeStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for ComparatorMode<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            ComparatorMode::Compare { .. } => f.write_str("COMPARE"),
+            ComparatorMode::Subtract { .. } => f.write_str("SUBTRACT"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for ComparatorMode<'mc> {
+    type Target = ComparatorModeStruct<'mc>;
+    fn deref(&self) -> &<ComparatorMode<'mc> as std::ops::Deref>::Target {
+        match self {
+            ComparatorMode::Compare { inner } => inner,
+            ComparatorMode::Subtract { inner } => inner,
+        }
     }
 }
 
@@ -14808,6 +15132,13 @@ impl<'mc> ComparatorMode<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "COMPARE" => Ok(ComparatorMode::Compare {
+                inner: ComparatorModeStruct::from_raw(env, obj)?,
+            }),
+            "SUBTRACT" => Ok(ComparatorMode::Subtract {
+                inner: ComparatorModeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -14821,10 +15152,16 @@ pub struct ComparatorModeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for ComparatorMode<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Compare { inner } => inner.0.clone(),
+            Self::Subtract { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Compare { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Subtract { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for ComparatorMode<'mc> {
@@ -14853,6 +15190,12 @@ impl<'mc> JNIInstantiatable<'mc> for ComparatorMode<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "COMPARE" => Ok(ComparatorMode::Compare {
+                    inner: ComparatorModeStruct::from_raw(env, obj)?,
+                }),
+                "SUBTRACT" => Ok(ComparatorMode::Subtract {
+                    inner: ComparatorModeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -16211,10 +16554,28 @@ impl<'mc> Into<crate::block::data::Powerable<'mc>> for Switch<'mc> {
             .expect("Error converting Switch into crate::block::data::Powerable")
     }
 }
-pub enum SwitchFace<'mc> {}
+pub enum SwitchFace<'mc> {
+    Floor { inner: SwitchFaceStruct<'mc> },
+    Wall { inner: SwitchFaceStruct<'mc> },
+    Ceiling { inner: SwitchFaceStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for SwitchFace<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            SwitchFace::Floor { .. } => f.write_str("FLOOR"),
+            SwitchFace::Wall { .. } => f.write_str("WALL"),
+            SwitchFace::Ceiling { .. } => f.write_str("CEILING"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for SwitchFace<'mc> {
+    type Target = SwitchFaceStruct<'mc>;
+    fn deref(&self) -> &<SwitchFace<'mc> as std::ops::Deref>::Target {
+        match self {
+            SwitchFace::Floor { inner } => inner,
+            SwitchFace::Wall { inner } => inner,
+            SwitchFace::Ceiling { inner } => inner,
+        }
     }
 }
 
@@ -16241,6 +16602,16 @@ impl<'mc> SwitchFace<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "FLOOR" => Ok(SwitchFace::Floor {
+                inner: SwitchFaceStruct::from_raw(env, obj)?,
+            }),
+            "WALL" => Ok(SwitchFace::Wall {
+                inner: SwitchFaceStruct::from_raw(env, obj)?,
+            }),
+            "CEILING" => Ok(SwitchFace::Ceiling {
+                inner: SwitchFaceStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -16254,10 +16625,18 @@ pub struct SwitchFaceStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for SwitchFace<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Floor { inner } => inner.0.clone(),
+            Self::Wall { inner } => inner.0.clone(),
+            Self::Ceiling { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Floor { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Wall { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Ceiling { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for SwitchFace<'mc> {
@@ -16283,6 +16662,15 @@ impl<'mc> JNIInstantiatable<'mc> for SwitchFace<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "FLOOR" => Ok(SwitchFace::Floor {
+                    inner: SwitchFaceStruct::from_raw(env, obj)?,
+                }),
+                "WALL" => Ok(SwitchFace::Wall {
+                    inner: SwitchFaceStruct::from_raw(env, obj)?,
+                }),
+                "CEILING" => Ok(SwitchFace::Ceiling {
+                    inner: SwitchFaceStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -17603,10 +17991,55 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Jigsaw<'mc> {
             .expect("Error converting Jigsaw into crate::block::data::BlockData")
     }
 }
-pub enum JigsawOrientation<'mc> {}
+pub enum JigsawOrientation<'mc> {
+    DownEast { inner: JigsawOrientationStruct<'mc> },
+    DownNorth { inner: JigsawOrientationStruct<'mc> },
+    DownSouth { inner: JigsawOrientationStruct<'mc> },
+    DownWest { inner: JigsawOrientationStruct<'mc> },
+    UpEast { inner: JigsawOrientationStruct<'mc> },
+    UpNorth { inner: JigsawOrientationStruct<'mc> },
+    UpSouth { inner: JigsawOrientationStruct<'mc> },
+    UpWest { inner: JigsawOrientationStruct<'mc> },
+    WestUp { inner: JigsawOrientationStruct<'mc> },
+    EastUp { inner: JigsawOrientationStruct<'mc> },
+    NorthUp { inner: JigsawOrientationStruct<'mc> },
+    SouthUp { inner: JigsawOrientationStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for JigsawOrientation<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            JigsawOrientation::DownEast { .. } => f.write_str("DOWN_EAST"),
+            JigsawOrientation::DownNorth { .. } => f.write_str("DOWN_NORTH"),
+            JigsawOrientation::DownSouth { .. } => f.write_str("DOWN_SOUTH"),
+            JigsawOrientation::DownWest { .. } => f.write_str("DOWN_WEST"),
+            JigsawOrientation::UpEast { .. } => f.write_str("UP_EAST"),
+            JigsawOrientation::UpNorth { .. } => f.write_str("UP_NORTH"),
+            JigsawOrientation::UpSouth { .. } => f.write_str("UP_SOUTH"),
+            JigsawOrientation::UpWest { .. } => f.write_str("UP_WEST"),
+            JigsawOrientation::WestUp { .. } => f.write_str("WEST_UP"),
+            JigsawOrientation::EastUp { .. } => f.write_str("EAST_UP"),
+            JigsawOrientation::NorthUp { .. } => f.write_str("NORTH_UP"),
+            JigsawOrientation::SouthUp { .. } => f.write_str("SOUTH_UP"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for JigsawOrientation<'mc> {
+    type Target = JigsawOrientationStruct<'mc>;
+    fn deref(&self) -> &<JigsawOrientation<'mc> as std::ops::Deref>::Target {
+        match self {
+            JigsawOrientation::DownEast { inner } => inner,
+            JigsawOrientation::DownNorth { inner } => inner,
+            JigsawOrientation::DownSouth { inner } => inner,
+            JigsawOrientation::DownWest { inner } => inner,
+            JigsawOrientation::UpEast { inner } => inner,
+            JigsawOrientation::UpNorth { inner } => inner,
+            JigsawOrientation::UpSouth { inner } => inner,
+            JigsawOrientation::UpWest { inner } => inner,
+            JigsawOrientation::WestUp { inner } => inner,
+            JigsawOrientation::EastUp { inner } => inner,
+            JigsawOrientation::NorthUp { inner } => inner,
+            JigsawOrientation::SouthUp { inner } => inner,
+        }
     }
 }
 
@@ -17633,6 +18066,43 @@ impl<'mc> JigsawOrientation<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "DOWN_EAST" => Ok(JigsawOrientation::DownEast {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "DOWN_NORTH" => Ok(JigsawOrientation::DownNorth {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "DOWN_SOUTH" => Ok(JigsawOrientation::DownSouth {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "DOWN_WEST" => Ok(JigsawOrientation::DownWest {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_EAST" => Ok(JigsawOrientation::UpEast {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_NORTH" => Ok(JigsawOrientation::UpNorth {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_SOUTH" => Ok(JigsawOrientation::UpSouth {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "UP_WEST" => Ok(JigsawOrientation::UpWest {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "WEST_UP" => Ok(JigsawOrientation::WestUp {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "EAST_UP" => Ok(JigsawOrientation::EastUp {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "NORTH_UP" => Ok(JigsawOrientation::NorthUp {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+            "SOUTH_UP" => Ok(JigsawOrientation::SouthUp {
+                inner: JigsawOrientationStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -17646,10 +18116,40 @@ pub struct JigsawOrientationStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for JigsawOrientation<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::DownEast { inner } => inner.0.clone(),
+            Self::DownNorth { inner } => inner.0.clone(),
+            Self::DownSouth { inner } => inner.0.clone(),
+            Self::DownWest { inner } => inner.0.clone(),
+            Self::UpEast { inner } => inner.0.clone(),
+            Self::UpNorth { inner } => inner.0.clone(),
+            Self::UpSouth { inner } => inner.0.clone(),
+            Self::UpWest { inner } => inner.0.clone(),
+            Self::WestUp { inner } => inner.0.clone(),
+            Self::EastUp { inner } => inner.0.clone(),
+            Self::NorthUp { inner } => inner.0.clone(),
+            Self::SouthUp { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::DownEast { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::DownNorth { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DownSouth { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DownWest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpEast { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpNorth { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpSouth { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::UpWest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WestUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::EastUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NorthUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SouthUp { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for JigsawOrientation<'mc> {
@@ -17678,6 +18178,42 @@ impl<'mc> JNIInstantiatable<'mc> for JigsawOrientation<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "DOWN_EAST" => Ok(JigsawOrientation::DownEast {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "DOWN_NORTH" => Ok(JigsawOrientation::DownNorth {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "DOWN_SOUTH" => Ok(JigsawOrientation::DownSouth {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "DOWN_WEST" => Ok(JigsawOrientation::DownWest {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_EAST" => Ok(JigsawOrientation::UpEast {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_NORTH" => Ok(JigsawOrientation::UpNorth {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_SOUTH" => Ok(JigsawOrientation::UpSouth {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "UP_WEST" => Ok(JigsawOrientation::UpWest {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "WEST_UP" => Ok(JigsawOrientation::WestUp {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "EAST_UP" => Ok(JigsawOrientation::EastUp {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "NORTH_UP" => Ok(JigsawOrientation::NorthUp {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
+                "SOUTH_UP" => Ok(JigsawOrientation::SouthUp {
+                    inner: JigsawOrientationStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -18249,10 +18785,28 @@ impl<'mc> Into<crate::block::data::mod_type::Sapling<'mc>> for Bamboo<'mc> {
             .expect("Error converting Bamboo into crate::block::data::mod_type::Sapling")
     }
 }
-pub enum BambooLeaves<'mc> {}
+pub enum BambooLeaves<'mc> {
+    None { inner: BambooLeavesStruct<'mc> },
+    Small { inner: BambooLeavesStruct<'mc> },
+    Large { inner: BambooLeavesStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for BambooLeaves<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            BambooLeaves::None { .. } => f.write_str("NONE"),
+            BambooLeaves::Small { .. } => f.write_str("SMALL"),
+            BambooLeaves::Large { .. } => f.write_str("LARGE"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for BambooLeaves<'mc> {
+    type Target = BambooLeavesStruct<'mc>;
+    fn deref(&self) -> &<BambooLeaves<'mc> as std::ops::Deref>::Target {
+        match self {
+            BambooLeaves::None { inner } => inner,
+            BambooLeaves::Small { inner } => inner,
+            BambooLeaves::Large { inner } => inner,
+        }
     }
 }
 
@@ -18279,6 +18833,16 @@ impl<'mc> BambooLeaves<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "NONE" => Ok(BambooLeaves::None {
+                inner: BambooLeavesStruct::from_raw(env, obj)?,
+            }),
+            "SMALL" => Ok(BambooLeaves::Small {
+                inner: BambooLeavesStruct::from_raw(env, obj)?,
+            }),
+            "LARGE" => Ok(BambooLeaves::Large {
+                inner: BambooLeavesStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -18292,10 +18856,18 @@ pub struct BambooLeavesStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for BambooLeaves<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::None { inner } => inner.0.clone(),
+            Self::Small { inner } => inner.0.clone(),
+            Self::Large { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Small { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Large { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for BambooLeaves<'mc> {
@@ -18321,6 +18893,15 @@ impl<'mc> JNIInstantiatable<'mc> for BambooLeaves<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "NONE" => Ok(BambooLeaves::None {
+                    inner: BambooLeavesStruct::from_raw(env, obj)?,
+                }),
+                "SMALL" => Ok(BambooLeaves::Small {
+                    inner: BambooLeavesStruct::from_raw(env, obj)?,
+                }),
+                "LARGE" => Ok(BambooLeaves::Large {
+                    inner: BambooLeavesStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -18824,10 +19405,39 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for StructureBlock<'mc> {
             .expect("Error converting StructureBlock into crate::block::data::BlockData")
     }
 }
-pub enum StructureBlockMode<'mc> {}
+pub enum StructureBlockMode<'mc> {
+    Save {
+        inner: StructureBlockModeStruct<'mc>,
+    },
+    Load {
+        inner: StructureBlockModeStruct<'mc>,
+    },
+    Corner {
+        inner: StructureBlockModeStruct<'mc>,
+    },
+    Data {
+        inner: StructureBlockModeStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for StructureBlockMode<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            StructureBlockMode::Save { .. } => f.write_str("SAVE"),
+            StructureBlockMode::Load { .. } => f.write_str("LOAD"),
+            StructureBlockMode::Corner { .. } => f.write_str("CORNER"),
+            StructureBlockMode::Data { .. } => f.write_str("DATA"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for StructureBlockMode<'mc> {
+    type Target = StructureBlockModeStruct<'mc>;
+    fn deref(&self) -> &<StructureBlockMode<'mc> as std::ops::Deref>::Target {
+        match self {
+            StructureBlockMode::Save { inner } => inner,
+            StructureBlockMode::Load { inner } => inner,
+            StructureBlockMode::Corner { inner } => inner,
+            StructureBlockMode::Data { inner } => inner,
+        }
     }
 }
 
@@ -18854,6 +19464,19 @@ impl<'mc> StructureBlockMode<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "SAVE" => Ok(StructureBlockMode::Save {
+                inner: StructureBlockModeStruct::from_raw(env, obj)?,
+            }),
+            "LOAD" => Ok(StructureBlockMode::Load {
+                inner: StructureBlockModeStruct::from_raw(env, obj)?,
+            }),
+            "CORNER" => Ok(StructureBlockMode::Corner {
+                inner: StructureBlockModeStruct::from_raw(env, obj)?,
+            }),
+            "DATA" => Ok(StructureBlockMode::Data {
+                inner: StructureBlockModeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -18867,10 +19490,20 @@ pub struct StructureBlockModeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for StructureBlockMode<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Save { inner } => inner.0.clone(),
+            Self::Load { inner } => inner.0.clone(),
+            Self::Corner { inner } => inner.0.clone(),
+            Self::Data { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Save { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Load { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Corner { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Data { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for StructureBlockMode<'mc> {
@@ -18899,6 +19532,18 @@ impl<'mc> JNIInstantiatable<'mc> for StructureBlockMode<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "SAVE" => Ok(StructureBlockMode::Save {
+                    inner: StructureBlockModeStruct::from_raw(env, obj)?,
+                }),
+                "LOAD" => Ok(StructureBlockMode::Load {
+                    inner: StructureBlockModeStruct::from_raw(env, obj)?,
+                }),
+                "CORNER" => Ok(StructureBlockMode::Corner {
+                    inner: StructureBlockModeStruct::from_raw(env, obj)?,
+                }),
+                "DATA" => Ok(StructureBlockMode::Data {
+                    inner: StructureBlockModeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -19174,10 +19819,28 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Slab<'mc> {
             .expect("Error converting Slab into crate::block::data::Waterlogged")
     }
 }
-pub enum SlabType<'mc> {}
+pub enum SlabType<'mc> {
+    Top { inner: SlabTypeStruct<'mc> },
+    Bottom { inner: SlabTypeStruct<'mc> },
+    Double { inner: SlabTypeStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for SlabType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            SlabType::Top { .. } => f.write_str("TOP"),
+            SlabType::Bottom { .. } => f.write_str("BOTTOM"),
+            SlabType::Double { .. } => f.write_str("DOUBLE"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for SlabType<'mc> {
+    type Target = SlabTypeStruct<'mc>;
+    fn deref(&self) -> &<SlabType<'mc> as std::ops::Deref>::Target {
+        match self {
+            SlabType::Top { inner } => inner,
+            SlabType::Bottom { inner } => inner,
+            SlabType::Double { inner } => inner,
+        }
     }
 }
 
@@ -19204,6 +19867,16 @@ impl<'mc> SlabType<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "TOP" => Ok(SlabType::Top {
+                inner: SlabTypeStruct::from_raw(env, obj)?,
+            }),
+            "BOTTOM" => Ok(SlabType::Bottom {
+                inner: SlabTypeStruct::from_raw(env, obj)?,
+            }),
+            "DOUBLE" => Ok(SlabType::Double {
+                inner: SlabTypeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -19217,10 +19890,18 @@ pub struct SlabTypeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for SlabType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Top { inner } => inner.0.clone(),
+            Self::Bottom { inner } => inner.0.clone(),
+            Self::Double { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Top { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Bottom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Double { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for SlabType<'mc> {
@@ -19246,6 +19927,15 @@ impl<'mc> JNIInstantiatable<'mc> for SlabType<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "TOP" => Ok(SlabType::Top {
+                    inner: SlabTypeStruct::from_raw(env, obj)?,
+                }),
+                "BOTTOM" => Ok(SlabType::Bottom {
+                    inner: SlabTypeStruct::from_raw(env, obj)?,
+                }),
+                "DOUBLE" => Ok(SlabType::Double {
+                    inner: SlabTypeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -19415,6 +20105,794 @@ impl<'mc> Into<crate::block::data::Openable<'mc>> for Barrel<'mc> {
     fn into(self) -> crate::block::data::Openable<'mc> {
         crate::block::data::Openable::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting Barrel into crate::block::data::Openable")
+    }
+}
+#[repr(C)]
+pub struct TrialSpawner<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for TrialSpawner<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for TrialSpawner<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate TrialSpawner from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/TrialSpawner")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a TrialSpawner object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> TrialSpawner<'mc> {
+    /// Gets the value of the 'trial_spawner_state' property.
+    pub fn trial_spawner_state(
+        &self,
+    ) -> Result<crate::block::data::mod_type::TrialSpawnerState<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/block/data/type/TrialSpawner/State;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getTrialSpawnerState",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::data::mod_type::TrialSpawnerState::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the value of the 'trial_spawner_state' property.
+    pub fn set_trial_spawner_state(
+        &self,
+        state: impl Into<crate::block::data::mod_type::TrialSpawnerState<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/type/TrialSpawner/State;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(state.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setTrialSpawnerState",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets the value of the 'ominous' property.
+    pub fn is_ominous(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isOminous", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the value of the 'ominous' property.
+    pub fn set_ominous(&self, ominous: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(ominous.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setOminous",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Get the Material represented by this block data.
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/Material;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets a string, which when passed into a method such as
+    /// {@link Server#createBlockData(java.lang.String)} will recreate this or a
+    /// similar instance where unspecified states (if any) may be optionally
+    /// omitted. If this instance was parsed and states are omitted, this exact
+    /// instance will be creatable when parsed again, else their equality cannot
+    /// be guaranteed.
+    ///
+    /// This method will only take effect for BlockData instances created by
+    /// methods such as {@link Server#createBlockData(String)} or any similar
+    /// method whereby states are optionally defined. If otherwise, the result of
+    /// {@link #getAsString()} will be returned. The following behaviour would be
+    /// expected:
+    /// <pre>{@code
+    /// String dataString = "minecraft:chest[waterlogged=true]"
+    /// BlockData data = Bukkit.createBlockData(dataString);
+    /// dataString.equals(data.getAsString(true)); // This would return true
+    /// dataString.equals(data.getAsString(false)); // This would return false as all states are present
+    /// dataString.equals(data.getAsString()); // This is equivalent to the above, "getAsString(false)"
+    /// }</pre>
+    pub fn get_as_string(
+        &self,
+        hide_unspecified: bool,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)Ljava/lang/String;");
+        let val_1 = jni::objects::JValueGen::Bool(hide_unspecified.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Merges all explicitly set states from the given data with this BlockData.
+    ///
+    /// Note that the given data MUST have been created from one of the String
+    /// parse methods, e.g. {@link Server#createBlockData(java.lang.String)} and
+    /// not have been subsequently modified.
+    ///
+    /// Note also that the block types must match identically.
+    pub fn merge(
+        &self,
+        data: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let sig =
+            String::from("(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(data.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::data::BlockData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Checks if the specified BlockData matches this block data.
+    ///
+    /// The semantics of this method are such that for manually created or
+    /// modified BlockData it has the same effect as
+    /// {@link Object#equals(java.lang.Object)}, whilst for parsed data (that to
+    /// which {@link #merge(org.bukkit.block.data.BlockData)} applies, it will
+    /// return true when the type and all explicitly set states match.
+    ///
+    /// <b>Note that these semantics mean that a.matches(b) may not be the same
+    /// as b.matches(a)</b>
+    pub fn matches(
+        &self,
+        data: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(data.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Returns a copy of this BlockData.
+    pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/data/BlockData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "clone", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::data::BlockData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the block's {@link SoundGroup} which can be used to get its step
+    /// sound, hit sound, and others.
+    pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/SoundGroup;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getSoundGroup", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::SoundGroup::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Get the amount of light emitted by this state when in the world.
+    pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLightEmission",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Check whether or not this state will occlude other blocks.
+    ///
+    /// Block state occlusion affects visual features of other blocks (e.g. leaves and
+    /// wet sponges will not spawn dripping water particles if an occluding state is
+    /// below it), or whether light will pass through it.
+    pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isOccluding", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Check whether or not this state requires a specific item to be used to drop
+    /// items when broken. For example, diamond ore requires an iron pickaxe and will
+    /// not drop diamonds when broken with a wooden or stone pickaxe.
+    pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "requiresCorrectToolForDrops",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Returns if the given item is a preferred choice to break this Block.
+    /// In some cases this determines if a block will drop anything or extra
+    /// loot.
+    pub fn is_preferred_tool(
+        &self,
+        tool: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(tool.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isPreferredTool",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Returns the reaction of the block when moved by a piston
+    pub fn piston_move_reaction(
+        &self,
+    ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/PistonMoveReaction;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPistonMoveReaction",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::PistonMoveReaction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Checks if this state would be properly supported if it were placed at
+    /// the block at the given {@link Location}.
+    ///
+    /// This may be useful, for instance, to check whether or not a wall torch is
+    /// capable of surviving on its neighbouring block states.
+    pub fn is_supported(
+        &self,
+        location: impl Into<crate::Location<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Location;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(location.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSupported", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Checks if a state's {@link BlockFace} is capable of providing a given level
+    /// of {@link BlockSupport} for neighbouring block states.
+    ///
+    /// Any given state may support either none, one, or more than one level of block
+    /// support depending on its states. A common example would be a wall's ability to support
+    /// torches only on the center of the upper block face, whereas a grass block would
+    /// support all levels of block support on all block faces.
+    pub fn is_face_sturdy(
+        &self,
+        face: impl Into<crate::block::BlockFace<'mc>>,
+        support: impl Into<crate::block::BlockSupport<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/BlockFace;Lorg/bukkit/block/BlockSupport;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(face.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(support.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isFaceSturdy",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets the color this block should appear as when rendered on a map.
+    pub fn map_color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/Color;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMapColor", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Color::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the material that a player would use to place this block.
+    ///
+    /// For most blocks this is the same as {@link #getMaterial()} but some blocks
+    /// have different materials used to place them.
+    /// For example:
+    /// <pre>
+    /// {@link Material#REDSTONE_WIRE} -> {@link Material#REDSTONE}
+    /// {@link Material#CARROTS} -> {@link Material#CARROT}
+    /// </pre>
+    pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/Material;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPlacementMaterial",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Rotates this blockdata by the specified {@link StructureRotation}.
+    ///
+    /// This has no effect on blocks that do not have any rotatable states.
+    pub fn rotate(
+        &self,
+        rotation: impl Into<crate::block::structure::StructureRotation<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/structure/StructureRotation;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(rotation.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "rotate",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Mirrors this blockdata using the specified {@link Mirror}.
+    ///
+    /// This has no effect on blocks that do not have any mirrorable states.
+    pub fn mirror(
+        &self,
+        mirror: impl Into<crate::block::structure::Mirror<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/structure/Mirror;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(mirror.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "mirror",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Copies all applicable properties from this BlockData to the provided
+    /// BlockData.
+    ///
+    /// Only modifies properties that both blocks share in common.
+    pub fn copy_to(
+        &self,
+        other: impl Into<crate::block::data::BlockData<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/block/data/BlockData;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(other.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "copyTo",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Creates a new default {@link BlockState} for this type of Block, not
+    /// bound to a location.
+    pub fn create_block_state(
+        &self,
+    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/BlockState;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "createBlockState",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::BlockState::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::block::data::BlockData<'mc>> for TrialSpawner<'mc> {
+    fn into(self) -> crate::block::data::BlockData<'mc> {
+        crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting TrialSpawner into crate::block::data::BlockData")
+    }
+}
+pub enum TrialSpawnerState<'mc> {
+    Inactive { inner: TrialSpawnerStateStruct<'mc> },
+    WaitingForPlayers { inner: TrialSpawnerStateStruct<'mc> },
+    Active { inner: TrialSpawnerStateStruct<'mc> },
+    WaitingForRewardEjection { inner: TrialSpawnerStateStruct<'mc> },
+    EjectingReward { inner: TrialSpawnerStateStruct<'mc> },
+    Cooldown { inner: TrialSpawnerStateStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for TrialSpawnerState<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TrialSpawnerState::Inactive { .. } => f.write_str("INACTIVE"),
+            TrialSpawnerState::WaitingForPlayers { .. } => f.write_str("WAITING_FOR_PLAYERS"),
+            TrialSpawnerState::Active { .. } => f.write_str("ACTIVE"),
+            TrialSpawnerState::WaitingForRewardEjection { .. } => {
+                f.write_str("WAITING_FOR_REWARD_EJECTION")
+            }
+            TrialSpawnerState::EjectingReward { .. } => f.write_str("EJECTING_REWARD"),
+            TrialSpawnerState::Cooldown { .. } => f.write_str("COOLDOWN"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for TrialSpawnerState<'mc> {
+    type Target = TrialSpawnerStateStruct<'mc>;
+    fn deref(&self) -> &<TrialSpawnerState<'mc> as std::ops::Deref>::Target {
+        match self {
+            TrialSpawnerState::Inactive { inner } => inner,
+            TrialSpawnerState::WaitingForPlayers { inner } => inner,
+            TrialSpawnerState::Active { inner } => inner,
+            TrialSpawnerState::WaitingForRewardEjection { inner } => inner,
+            TrialSpawnerState::EjectingReward { inner } => inner,
+            TrialSpawnerState::Cooldown { inner } => inner,
+        }
+    }
+}
+
+impl<'mc> TrialSpawnerState<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<TrialSpawnerState<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/block/data/type/TrialSpawner/State");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/data/type/TrialSpawner/State;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "INACTIVE" => Ok(TrialSpawnerState::Inactive {
+                inner: TrialSpawnerStateStruct::from_raw(env, obj)?,
+            }),
+            "WAITING_FOR_PLAYERS" => Ok(TrialSpawnerState::WaitingForPlayers {
+                inner: TrialSpawnerStateStruct::from_raw(env, obj)?,
+            }),
+            "ACTIVE" => Ok(TrialSpawnerState::Active {
+                inner: TrialSpawnerStateStruct::from_raw(env, obj)?,
+            }),
+            "WAITING_FOR_REWARD_EJECTION" => Ok(TrialSpawnerState::WaitingForRewardEjection {
+                inner: TrialSpawnerStateStruct::from_raw(env, obj)?,
+            }),
+            "EJECTING_REWARD" => Ok(TrialSpawnerState::EjectingReward {
+                inner: TrialSpawnerStateStruct::from_raw(env, obj)?,
+            }),
+            "COOLDOWN" => Ok(TrialSpawnerState::Cooldown {
+                inner: TrialSpawnerStateStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct TrialSpawnerStateStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for TrialSpawnerState<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Inactive { inner } => inner.0.clone(),
+            Self::WaitingForPlayers { inner } => inner.0.clone(),
+            Self::Active { inner } => inner.0.clone(),
+            Self::WaitingForRewardEjection { inner } => inner.0.clone(),
+            Self::EjectingReward { inner } => inner.0.clone(),
+            Self::Cooldown { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Inactive { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WaitingForPlayers { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Active { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WaitingForRewardEjection { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EjectingReward { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Cooldown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for TrialSpawnerState<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate TrialSpawnerState from null object.").into(),
+            );
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/block/data/type/TrialSpawner/State")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a TrialSpawnerState object, got {}",
+                name
+            )
+            .into())
+        } else {
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "INACTIVE" => Ok(TrialSpawnerState::Inactive {
+                    inner: TrialSpawnerStateStruct::from_raw(env, obj)?,
+                }),
+                "WAITING_FOR_PLAYERS" => Ok(TrialSpawnerState::WaitingForPlayers {
+                    inner: TrialSpawnerStateStruct::from_raw(env, obj)?,
+                }),
+                "ACTIVE" => Ok(TrialSpawnerState::Active {
+                    inner: TrialSpawnerStateStruct::from_raw(env, obj)?,
+                }),
+                "WAITING_FOR_REWARD_EJECTION" => Ok(TrialSpawnerState::WaitingForRewardEjection {
+                    inner: TrialSpawnerStateStruct::from_raw(env, obj)?,
+                }),
+                "EJECTING_REWARD" => Ok(TrialSpawnerState::EjectingReward {
+                    inner: TrialSpawnerStateStruct::from_raw(env, obj)?,
+                }),
+                "COOLDOWN" => Ok(TrialSpawnerState::Cooldown {
+                    inner: TrialSpawnerStateStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
+        }
+    }
+}
+
+impl<'mc> JNIRaw<'mc> for TrialSpawnerStateStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for TrialSpawnerStateStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate TrialSpawnerStateStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/block/data/type/TrialSpawner/State")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a TrialSpawnerStateStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> TrialSpawnerStateStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::block::data::mod_type::TrialSpawnerState<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/block/data/type/TrialSpawner/State;");
+        let cls = jni.find_class("org/bukkit/block/data/type/TrialSpawner/State");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::block::data::mod_type::TrialSpawnerState::from_raw(&jni, obj)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct CopperBulb<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for CopperBulb<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for CopperBulb<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate CopperBulb from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/type/CopperBulb")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a CopperBulb object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> CopperBulb<'mc> {
+    /// Gets the value of the 'lit' property.
+    pub fn is_lit(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isLit", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the value of the 'lit' property.
+    pub fn set_lit(&self, lit: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(lit.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLit",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets the value of the 'powered' property.
+    pub fn is_powered(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isPowered", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the value of the 'powered' property.
+    pub fn set_powered(&self, powered: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(powered.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPowered",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::block::data::Lightable<'mc>> for CopperBulb<'mc> {
+    fn into(self) -> crate::block::data::Lightable<'mc> {
+        crate::block::data::Lightable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting CopperBulb into crate::block::data::Lightable")
+    }
+}
+impl<'mc> Into<crate::block::data::Powerable<'mc>> for CopperBulb<'mc> {
+    fn into(self) -> crate::block::data::Powerable<'mc> {
+        crate::block::data::Powerable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting CopperBulb into crate::block::data::Powerable")
     }
 }
 #[repr(C)]

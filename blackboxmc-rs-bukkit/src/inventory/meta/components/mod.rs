@@ -130,6 +130,44 @@ impl<'mc> FoodComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the item this food will convert to once eaten.
+    pub fn using_converts_to(
+        &self,
+    ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getUsingConvertsTo",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::inventory::ItemStack::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    /// Sets the item this food will convert to once eaten.
+    pub fn set_using_converts_to(
+        &self,
+        item: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(item.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setUsingConvertsTo",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     /// Gets the effects which may be applied by this item when eaten.
     pub fn effects(
         &self,
@@ -220,12 +258,10 @@ impl<'mc> FoodComponent<'mc> {
     pub fn serialize(
         &self,
     ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Ljava/util/Map;";
+        let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), args);
+            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -344,12 +380,10 @@ impl<'mc> FoodComponentFoodEffect<'mc> {
     pub fn serialize(
         &self,
     ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Ljava/util/Map;";
+        let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), args);
+            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -366,6 +400,161 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
 {
     fn into(self) -> crate::configuration::serialization::ConfigurationSerializable<'mc> {
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting FoodComponentFoodEffect into crate::configuration::serialization::ConfigurationSerializable")
+    }
+}
+#[repr(C)]
+pub struct JukeboxPlayableComponent<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for JukeboxPlayableComponent<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for JukeboxPlayableComponent<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate JukeboxPlayableComponent from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/inventory/meta/components/JukeboxPlayableComponent",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a JukeboxPlayableComponent object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> JukeboxPlayableComponent<'mc> {
+    /// Gets the song assigned to this component.
+    pub fn song(&self) -> Result<Option<crate::JukeboxSong<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/JukeboxSong;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getSong", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::JukeboxSong::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    /// Gets the key of the song assigned to this component.
+    pub fn song_key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/NamespacedKey;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getSongKey", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the song assigned to this component.
+    pub fn set_song(
+        &self,
+        song: impl Into<crate::JukeboxSong<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/JukeboxSong;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(song.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setSong",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Sets the key of the song assigned to this component.
+    pub fn set_song_key(
+        &self,
+        song: impl Into<crate::NamespacedKey<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/NamespacedKey;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(song.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setSongKey",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets if the song will show in the item tooltip.
+    pub fn is_show_in_tooltip(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isShowInTooltip", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets if the song will show in the item tooltip.
+    pub fn set_show_in_tooltip(&self, show: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(show.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setShowInTooltip",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Creates a Map representation of this class.
+    ///
+    /// This class must provide a method to restore this class, as defined in
+    /// the {@link ConfigurationSerializable} interface javadocs.
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
+    for JukeboxPlayableComponent<'mc>
+{
+    fn into(self) -> crate::configuration::serialization::ConfigurationSerializable<'mc> {
+        crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting JukeboxPlayableComponent into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
 #[repr(C)]
@@ -581,12 +770,10 @@ impl<'mc> ToolComponent<'mc> {
     pub fn serialize(
         &self,
     ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Ljava/util/Map;";
+        let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), args);
+            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -751,12 +938,10 @@ impl<'mc> ToolComponentToolRule<'mc> {
     pub fn serialize(
         &self,
     ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Ljava/util/Map;";
+        let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), args);
+            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())

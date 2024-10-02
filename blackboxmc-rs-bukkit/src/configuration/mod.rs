@@ -3,819 +3,6 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
-pub struct MemoryConfiguration<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for MemoryConfiguration<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for MemoryConfiguration<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate MemoryConfiguration from null object.").into(),
-            );
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/configuration/MemoryConfiguration")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a MemoryConfiguration object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> MemoryConfiguration<'mc> {
-    /// Creates an empty {@link MemoryConfiguration} using the specified {@link
-    /// Configuration} as a source for all default values.
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        defaults: std::option::Option<impl Into<crate::configuration::Configuration<'mc>>>,
-    ) -> Result<crate::configuration::MemoryConfiguration<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = defaults {
-            sig += "Lorg/bukkit/configuration/Configuration;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/configuration/MemoryConfiguration");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::configuration::MemoryConfiguration::from_raw(&jni, res)
-    }
-
-    pub fn add_defaults(
-        &self,
-        defaults: impl Into<crate::configuration::Configuration<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/configuration/Configuration;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(defaults.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "addDefaults", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn set_defaults(
-        &self,
-        defaults: impl Into<crate::configuration::Configuration<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/configuration/Configuration;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(defaults.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setDefaults",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn defaults(
-        &self,
-    ) -> Result<Option<crate::configuration::Configuration<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/configuration/Configuration;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getDefaults", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::configuration::Configuration::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-
-    pub fn parent(
-        &self,
-    ) -> Result<Option<crate::configuration::ConfigurationSection<'mc>>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/configuration/ConfigurationSection;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getParent", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::configuration::ConfigurationSection::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-
-    pub fn options(
-        &self,
-    ) -> Result<crate::configuration::MemoryConfigurationOptions<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/configuration/MemoryConfigurationOptions;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "options", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::configuration::MemoryConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Sets the default value of the given path as provided.
-    ///
-    /// If no source {@link Configuration} was provided as a default
-    /// collection, then a new {@link MemoryConfiguration} will be created to
-    /// hold the new default value.
-    ///
-    /// If value is null, the value will be removed from the default
-    /// Configuration source.
-    pub fn add_default(
-        &self,
-        path: impl Into<String>,
-        value: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Ljava/lang/Object;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(path.into())?,
-        ));
-        let val_2 = jni::objects::JValueGen::Object(value);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addDefault",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    // SUPER CLASS: org.bukkit.configuration.MemorySection ( ['addDefaults', 'setDefaults', 'getDefaults', 'getParent', 'options', 'addDefault'])
-
-    pub fn get_keys(
-        &self,
-        deep: bool,
-    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)Ljava/util/Set;");
-        let val_1 = jni::objects::JValueGen::Bool(deep.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKeys",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn get_values(
-        &self,
-        deep: bool,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)Ljava/util/Map;");
-        let val_1 = jni::objects::JValueGen::Bool(deep.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getValues",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn contains(
-        &self,
-        path: impl Into<String>,
-        ignore_default: std::option::Option<bool>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/lang/String;";
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(path.into())?,
-        ));
-        args.push(val_1);
-        if let Some(a) = ignore_default {
-            sig += "Z";
-            let val_2 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_2);
-        }
-        sig += ")Z";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "contains", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn is_set(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.is_set(path)
-    }
-
-    pub fn current_path(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.current_path()
-    }
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.name()
-    }
-
-    pub fn root(
-        &self,
-    ) -> Result<Option<crate::configuration::Configuration<'mc>>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.root()
-    }
-
-    pub fn default_section(
-        &self,
-    ) -> Result<Option<crate::configuration::ConfigurationSection<'mc>>, Box<dyn std::error::Error>>
-    {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.default_section()
-    }
-
-    pub fn set(
-        &self,
-        path: impl Into<String>,
-        value: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.set(path, value)
-    }
-
-    pub fn get(
-        &self,
-        path: impl Into<String>,
-        def: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.get(path, def)
-    }
-
-    pub fn create_section(
-        &self,
-        path: impl Into<String>,
-        map: std::option::Option<impl Into<blackboxmc_java::util::JavaMap<'mc>>>,
-    ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.create_section(path, map)
-    }
-
-    pub fn get_string(
-        &self,
-        path: impl Into<String>,
-        def: std::option::Option<impl Into<String>>,
-    ) -> Result<Option<String>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.get_string(path, def)
-    }
-
-    pub fn is_string(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.is_string(path)
-    }
-
-    pub fn get_int(
-        &self,
-        path: impl Into<String>,
-        def: std::option::Option<i32>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.get_int(path, def)
-    }
-
-    pub fn is_int(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.is_int(path)
-    }
-
-    pub fn get_boolean(
-        &self,
-        path: impl Into<String>,
-        def: std::option::Option<bool>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.get_boolean(path, def)
-    }
-
-    pub fn is_boolean(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.is_boolean(path)
-    }
-
-    pub fn get_double(
-        &self,
-        path: impl Into<String>,
-        def: std::option::Option<f64>,
-    ) -> Result<f64, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.get_double(path, def)
-    }
-
-    pub fn is_double(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.is_double(path)
-    }
-
-    pub fn get_long(
-        &self,
-        path: impl Into<String>,
-        def: std::option::Option<i64>,
-    ) -> Result<i64, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.get_long(path, def)
-    }
-
-    pub fn is_long(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.is_long(path)
-    }
-
-    pub fn is_list(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.is_list(path)
-    }
-
-    pub fn get_string_list(
-        &self,
-        path: impl Into<String>,
-    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.get_string_list(path)
-    }
-
-    pub fn get_object(
-        &self,
-        path: impl Into<String>,
-        clazz: jni::objects::JClass<'mc>,
-        def: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.get_object(path, clazz, def)
-    }
-
-    pub fn get_serializable(
-        &self,
-        path: impl Into<String>,
-        clazz: jni::objects::JClass<'mc>,
-        def: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.get_serializable(path, clazz, def)
-    }
-
-    pub fn get_vector(
-        &self,
-        path: impl Into<String>,
-        def: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
-    ) -> Result<Option<crate::util::Vector<'mc>>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.get_vector(path, def)
-    }
-
-    pub fn is_vector(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.is_vector(path)
-    }
-
-    pub fn get_offline_player(
-        &self,
-        path: impl Into<String>,
-        def: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
-    ) -> Result<Option<crate::OfflinePlayer<'mc>>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.get_offline_player(path, def)
-    }
-
-    pub fn is_offline_player(
-        &self,
-        path: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.is_offline_player(path)
-    }
-
-    pub fn get_item_stack(
-        &self,
-        path: impl Into<String>,
-        def: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.get_item_stack(path, def)
-    }
-
-    pub fn is_item_stack(
-        &self,
-        path: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.is_item_stack(path)
-    }
-
-    pub fn get_color(
-        &self,
-        path: impl Into<String>,
-        def: std::option::Option<impl Into<crate::Color<'mc>>>,
-    ) -> Result<Option<crate::Color<'mc>>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.get_color(path, def)
-    }
-
-    pub fn is_color(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.is_color(path)
-    }
-
-    pub fn get_location(
-        &self,
-        path: impl Into<String>,
-        def: std::option::Option<impl Into<crate::Location<'mc>>>,
-    ) -> Result<Option<crate::Location<'mc>>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.get_location(path, def)
-    }
-
-    pub fn is_location(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.is_location(path)
-    }
-
-    pub fn get_configuration_section(
-        &self,
-        path: impl Into<String>,
-    ) -> Result<Option<crate::configuration::ConfigurationSection<'mc>>, Box<dyn std::error::Error>>
-    {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.get_configuration_section(path)
-    }
-
-    pub fn is_configuration_section(
-        &self,
-        path: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.is_configuration_section(path)
-    }
-    /// Creates a relative path to the given {@link ConfigurationSection} from
-    /// the given relative section.
-    ///
-    /// You may use this method for any given {@link ConfigurationSection}, not
-    /// only {@link MemorySection}.
-    pub fn create_path(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        section: impl Into<crate::configuration::ConfigurationSection<'mc>>,
-        key: impl Into<String>,
-        relative_to: std::option::Option<
-            impl Into<crate::configuration::ConfigurationSection<'mc>>,
-        >,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        crate::configuration::MemorySection::create_path(jni, section, key, relative_to)
-    }
-
-    pub fn get_comments(
-        &self,
-        path: impl Into<String>,
-    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(path.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getComments",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let mut new_vec = Vec::new();
-        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let iter = list.iterator()?;
-        while iter.has_next()? {
-            let obj = iter.next()?;
-            new_vec.push(
-                self.jni_ref()
-                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
-                    .to_string_lossy()
-                    .to_string(),
-            );
-        }
-        Ok(new_vec)
-    }
-
-    pub fn get_inline_comments(
-        &self,
-        path: impl Into<String>,
-    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(path.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getInlineComments",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let mut new_vec = Vec::new();
-        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let iter = list.iterator()?;
-        while iter.has_next()? {
-            let obj = iter.next()?;
-            new_vec.push(
-                self.jni_ref()
-                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
-                    .to_string_lossy()
-                    .to_string(),
-            );
-        }
-        Ok(new_vec)
-    }
-
-    pub fn set_comments(
-        &self,
-        path: impl Into<String>,
-        comments: Vec<jni::objects::JObject<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Ljava/util/List;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(path.into())?,
-        ));
-        let raw_val_2 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in comments {
-            let map_val_0 = jni::objects::JValueGen::Object(v);
-            self.jni_ref().call_method(
-                &raw_val_2,
-                "add",
-                "(Ljava/lang/Object;)Z",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setComments",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn set_inline_comments(
-        &self,
-        path: impl Into<String>,
-        comments: Vec<jni::objects::JObject<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Ljava/util/List;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(path.into())?,
-        ));
-        let raw_val_2 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in comments {
-            let map_val_0 = jni::objects::JValueGen::Object(v);
-            self.jni_ref().call_method(
-                &raw_val_2,
-                "add",
-                "(Ljava/lang/Object;)Z",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setInlineComments",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    #[doc(hidden)]
-    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::configuration::MemorySection = temp_clone.into();
-        real.internal_to_string()
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::configuration::Configuration<'mc>> for MemoryConfiguration<'mc> {
-    fn into(self) -> crate::configuration::Configuration<'mc> {
-        crate::configuration::Configuration::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting MemoryConfiguration into crate::configuration::Configuration")
-    }
-}
-impl<'mc> Into<crate::configuration::MemorySection<'mc>> for MemoryConfiguration<'mc> {
-    fn into(self) -> crate::configuration::MemorySection<'mc> {
-        crate::configuration::MemorySection::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting MemoryConfiguration into crate::configuration::MemorySection")
-    }
-}
-#[repr(C)]
-pub struct InvalidConfigurationException<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for InvalidConfigurationException<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for InvalidConfigurationException<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate InvalidConfigurationException from null object."
-            )
-            .into());
-        }
-        let (valid, name) = env.validate_name(
-            &obj,
-            "org/bukkit/configuration/InvalidConfigurationException",
-        )?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a InvalidConfigurationException object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> InvalidConfigurationException<'mc> {
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
 pub struct MemorySection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1925,6 +1112,819 @@ impl<'mc> Into<crate::configuration::ConfigurationSection<'mc>> for MemorySectio
         crate::configuration::ConfigurationSection::from_raw(&self.jni_ref(), self.1).expect(
             "Error converting MemorySection into crate::configuration::ConfigurationSection",
         )
+    }
+}
+#[repr(C)]
+pub struct MemoryConfiguration<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for MemoryConfiguration<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for MemoryConfiguration<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate MemoryConfiguration from null object.").into(),
+            );
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/configuration/MemoryConfiguration")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a MemoryConfiguration object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> MemoryConfiguration<'mc> {
+    /// Creates an empty {@link MemoryConfiguration} using the specified {@link
+    /// Configuration} as a source for all default values.
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        defaults: std::option::Option<impl Into<crate::configuration::Configuration<'mc>>>,
+    ) -> Result<crate::configuration::MemoryConfiguration<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = defaults {
+            sig += "Lorg/bukkit/configuration/Configuration;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/configuration/MemoryConfiguration");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::configuration::MemoryConfiguration::from_raw(&jni, res)
+    }
+
+    pub fn add_defaults(
+        &self,
+        defaults: impl Into<crate::configuration::Configuration<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/configuration/Configuration;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(defaults.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "addDefaults", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn set_defaults(
+        &self,
+        defaults: impl Into<crate::configuration::Configuration<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/configuration/Configuration;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(defaults.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setDefaults",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn defaults(
+        &self,
+    ) -> Result<Option<crate::configuration::Configuration<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/configuration/Configuration;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDefaults", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::configuration::Configuration::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+
+    pub fn parent(
+        &self,
+    ) -> Result<Option<crate::configuration::ConfigurationSection<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/configuration/ConfigurationSection;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getParent", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::configuration::ConfigurationSection::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+
+    pub fn options(
+        &self,
+    ) -> Result<crate::configuration::MemoryConfigurationOptions<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/configuration/MemoryConfigurationOptions;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "options", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::configuration::MemoryConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Sets the default value of the given path as provided.
+    ///
+    /// If no source {@link Configuration} was provided as a default
+    /// collection, then a new {@link MemoryConfiguration} will be created to
+    /// hold the new default value.
+    ///
+    /// If value is null, the value will be removed from the default
+    /// Configuration source.
+    pub fn add_default(
+        &self,
+        path: impl Into<String>,
+        value: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;Ljava/lang/Object;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(path.into())?,
+        ));
+        let val_2 = jni::objects::JValueGen::Object(value);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addDefault",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    // SUPER CLASS: org.bukkit.configuration.MemorySection ( ['addDefaults', 'setDefaults', 'getDefaults', 'getParent', 'options', 'addDefault'])
+
+    pub fn get_keys(
+        &self,
+        deep: bool,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)Ljava/util/Set;");
+        let val_1 = jni::objects::JValueGen::Bool(deep.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getKeys",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn get_values(
+        &self,
+        deep: bool,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)Ljava/util/Map;");
+        let val_1 = jni::objects::JValueGen::Bool(deep.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getValues",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn contains(
+        &self,
+        path: impl Into<String>,
+        ignore_default: std::option::Option<bool>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(path.into())?,
+        ));
+        args.push(val_1);
+        if let Some(a) = ignore_default {
+            sig += "Z";
+            let val_2 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_2);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "contains", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn is_set(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.is_set(path)
+    }
+
+    pub fn current_path(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.current_path()
+    }
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.name()
+    }
+
+    pub fn root(
+        &self,
+    ) -> Result<Option<crate::configuration::Configuration<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.root()
+    }
+
+    pub fn default_section(
+        &self,
+    ) -> Result<Option<crate::configuration::ConfigurationSection<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.default_section()
+    }
+
+    pub fn set(
+        &self,
+        path: impl Into<String>,
+        value: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.set(path, value)
+    }
+
+    pub fn get(
+        &self,
+        path: impl Into<String>,
+        def: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.get(path, def)
+    }
+
+    pub fn create_section(
+        &self,
+        path: impl Into<String>,
+        map: std::option::Option<impl Into<blackboxmc_java::util::JavaMap<'mc>>>,
+    ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.create_section(path, map)
+    }
+
+    pub fn get_string(
+        &self,
+        path: impl Into<String>,
+        def: std::option::Option<impl Into<String>>,
+    ) -> Result<Option<String>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.get_string(path, def)
+    }
+
+    pub fn is_string(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.is_string(path)
+    }
+
+    pub fn get_int(
+        &self,
+        path: impl Into<String>,
+        def: std::option::Option<i32>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.get_int(path, def)
+    }
+
+    pub fn is_int(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.is_int(path)
+    }
+
+    pub fn get_boolean(
+        &self,
+        path: impl Into<String>,
+        def: std::option::Option<bool>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.get_boolean(path, def)
+    }
+
+    pub fn is_boolean(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.is_boolean(path)
+    }
+
+    pub fn get_double(
+        &self,
+        path: impl Into<String>,
+        def: std::option::Option<f64>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.get_double(path, def)
+    }
+
+    pub fn is_double(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.is_double(path)
+    }
+
+    pub fn get_long(
+        &self,
+        path: impl Into<String>,
+        def: std::option::Option<i64>,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.get_long(path, def)
+    }
+
+    pub fn is_long(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.is_long(path)
+    }
+
+    pub fn is_list(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.is_list(path)
+    }
+
+    pub fn get_string_list(
+        &self,
+        path: impl Into<String>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.get_string_list(path)
+    }
+
+    pub fn get_object(
+        &self,
+        path: impl Into<String>,
+        clazz: jni::objects::JClass<'mc>,
+        def: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.get_object(path, clazz, def)
+    }
+
+    pub fn get_serializable(
+        &self,
+        path: impl Into<String>,
+        clazz: jni::objects::JClass<'mc>,
+        def: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.get_serializable(path, clazz, def)
+    }
+
+    pub fn get_vector(
+        &self,
+        path: impl Into<String>,
+        def: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
+    ) -> Result<Option<crate::util::Vector<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.get_vector(path, def)
+    }
+
+    pub fn is_vector(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.is_vector(path)
+    }
+
+    pub fn get_offline_player(
+        &self,
+        path: impl Into<String>,
+        def: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
+    ) -> Result<Option<crate::OfflinePlayer<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.get_offline_player(path, def)
+    }
+
+    pub fn is_offline_player(
+        &self,
+        path: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.is_offline_player(path)
+    }
+
+    pub fn get_item_stack(
+        &self,
+        path: impl Into<String>,
+        def: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.get_item_stack(path, def)
+    }
+
+    pub fn is_item_stack(
+        &self,
+        path: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.is_item_stack(path)
+    }
+
+    pub fn get_color(
+        &self,
+        path: impl Into<String>,
+        def: std::option::Option<impl Into<crate::Color<'mc>>>,
+    ) -> Result<Option<crate::Color<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.get_color(path, def)
+    }
+
+    pub fn is_color(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.is_color(path)
+    }
+
+    pub fn get_location(
+        &self,
+        path: impl Into<String>,
+        def: std::option::Option<impl Into<crate::Location<'mc>>>,
+    ) -> Result<Option<crate::Location<'mc>>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.get_location(path, def)
+    }
+
+    pub fn is_location(&self, path: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.is_location(path)
+    }
+
+    pub fn get_configuration_section(
+        &self,
+        path: impl Into<String>,
+    ) -> Result<Option<crate::configuration::ConfigurationSection<'mc>>, Box<dyn std::error::Error>>
+    {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.get_configuration_section(path)
+    }
+
+    pub fn is_configuration_section(
+        &self,
+        path: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.is_configuration_section(path)
+    }
+    /// Creates a relative path to the given {@link ConfigurationSection} from
+    /// the given relative section.
+    ///
+    /// You may use this method for any given {@link ConfigurationSection}, not
+    /// only {@link MemorySection}.
+    pub fn create_path(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        section: impl Into<crate::configuration::ConfigurationSection<'mc>>,
+        key: impl Into<String>,
+        relative_to: std::option::Option<
+            impl Into<crate::configuration::ConfigurationSection<'mc>>,
+        >,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        crate::configuration::MemorySection::create_path(jni, section, key, relative_to)
+    }
+
+    pub fn get_comments(
+        &self,
+        path: impl Into<String>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(path.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getComments",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
+    }
+
+    pub fn get_inline_comments(
+        &self,
+        path: impl Into<String>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(path.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getInlineComments",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
+    }
+
+    pub fn set_comments(
+        &self,
+        path: impl Into<String>,
+        comments: Vec<jni::objects::JObject<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;Ljava/util/List;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(path.into())?,
+        ));
+        let raw_val_2 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in comments {
+            let map_val_0 = jni::objects::JValueGen::Object(v);
+            self.jni_ref().call_method(
+                &raw_val_2,
+                "add",
+                "(Ljava/lang/Object;)Z",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setComments",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn set_inline_comments(
+        &self,
+        path: impl Into<String>,
+        comments: Vec<jni::objects::JObject<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;Ljava/util/List;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(path.into())?,
+        ));
+        let raw_val_2 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in comments {
+            let map_val_0 = jni::objects::JValueGen::Object(v);
+            self.jni_ref().call_method(
+                &raw_val_2,
+                "add",
+                "(Ljava/lang/Object;)Z",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
+        }
+        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setInlineComments",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::configuration::MemorySection::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::configuration::MemorySection = temp_clone.into();
+        real.internal_to_string()
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::configuration::Configuration<'mc>> for MemoryConfiguration<'mc> {
+    fn into(self) -> crate::configuration::Configuration<'mc> {
+        crate::configuration::Configuration::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting MemoryConfiguration into crate::configuration::Configuration")
+    }
+}
+impl<'mc> Into<crate::configuration::MemorySection<'mc>> for MemoryConfiguration<'mc> {
+    fn into(self) -> crate::configuration::MemorySection<'mc> {
+        crate::configuration::MemorySection::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting MemoryConfiguration into crate::configuration::MemorySection")
+    }
+}
+#[repr(C)]
+pub struct InvalidConfigurationException<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for InvalidConfigurationException<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for InvalidConfigurationException<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate InvalidConfigurationException from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/configuration/InvalidConfigurationException",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a InvalidConfigurationException object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> InvalidConfigurationException<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 #[repr(C)]

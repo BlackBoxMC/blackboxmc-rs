@@ -3,12 +3,12 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
-pub struct HelpTopicFactory<'mc>(
+pub struct IndexHelpTopic<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 
-impl<'mc> JNIRaw<'mc> for HelpTopicFactory<'mc> {
+impl<'mc> JNIRaw<'mc> for IndexHelpTopic<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -16,20 +16,20 @@ impl<'mc> JNIRaw<'mc> for HelpTopicFactory<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JNIInstantiatable<'mc> for HelpTopicFactory<'mc> {
+impl<'mc> JNIInstantiatable<'mc> for IndexHelpTopic<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
-                eyre::eyre!("Tried to instantiate HelpTopicFactory from null object.").into(),
+                eyre::eyre!("Tried to instantiate IndexHelpTopic from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/help/HelpTopicFactory")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/help/IndexHelpTopic")?;
         if !valid {
             Err(eyre::eyre!(
-                "Invalid argument passed. Expected a HelpTopicFactory object, got {}",
+                "Invalid argument passed. Expected a IndexHelpTopic object, got {}",
                 name
             )
             .into())
@@ -39,44 +39,109 @@ impl<'mc> JNIInstantiatable<'mc> for HelpTopicFactory<'mc> {
     }
 }
 
-impl<'mc> HelpTopicFactory<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "HelpTopicFactory", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-    /// This method accepts a command deriving from a custom command base class
-    /// and constructs a custom HelpTopic for it.
-    pub fn create_topic(
+impl<'mc> IndexHelpTopic<'mc> {
+    pub fn can_see(
         &self,
-        command: jni::objects::JObject<'mc>,
-    ) -> Result<Option<crate::help::HelpTopic<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("(LTCommand;)Lorg/bukkit/help/HelpTopic;");
-        let val_1 = jni::objects::JValueGen::Object(command);
+        sender: impl Into<crate::command::CommandSender<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "createTopic",
+            "canSee",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::help::HelpTopic::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
+        Ok(res.z()?)
+    }
+
+    pub fn amend_can_see(
+        &self,
+        amended_permission: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(amended_permission.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "amendCanSee",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn get_full_text(
+        &self,
+        sender: impl Into<crate::command::CommandSender<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;)Ljava/lang/String;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFullText",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    // SUPER CLASS: org.bukkit.help.HelpTopic ( ['canSee', 'amendCanSee', 'getFullText'])
+    /// Returns the name of this help topic.
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::help::HelpTopic = temp_clone.into();
+        real.name()
+    }
+    /// Returns a brief description that will be displayed in the topic index.
+    pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::help::HelpTopic = temp_clone.into();
+        real.short_text()
+    }
+    /// Allows the server admin (or another plugin) to add or replace the
+    /// contents of a help topic.
+    ///
+    /// A null in either parameter will leave that part of the topic unchanged.
+    /// In either amending parameter, the string {@literal <text>} is replaced
+    /// with the existing contents in the help topic. Use this to append or
+    /// prepend additional content into an automatically generated help topic.
+    pub fn amend_topic(
+        &self,
+        amended_short_text: impl Into<String>,
+        amended_full_text: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::help::HelpTopic = temp_clone.into();
+        real.amend_topic(amended_short_text, amended_full_text)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::help::HelpTopic<'mc>> for IndexHelpTopic<'mc> {
+    fn into(self) -> crate::help::HelpTopic<'mc> {
+        crate::help::HelpTopic::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting IndexHelpTopic into crate::help::HelpTopic")
     }
 }
 #[repr(C)]
@@ -427,148 +492,6 @@ impl<'mc> HelpTopic<'mc> {
     }
 }
 #[repr(C)]
-pub struct IndexHelpTopic<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for IndexHelpTopic<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for IndexHelpTopic<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate IndexHelpTopic from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/help/IndexHelpTopic")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a IndexHelpTopic object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> IndexHelpTopic<'mc> {
-    pub fn can_see(
-        &self,
-        sender: impl Into<crate::command::CommandSender<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandSender;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "canSee",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn amend_can_see(
-        &self,
-        amended_permission: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(amended_permission.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "amendCanSee",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn get_full_text(
-        &self,
-        sender: impl Into<crate::command::CommandSender<'mc>>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandSender;)Ljava/lang/String;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFullText",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    // SUPER CLASS: org.bukkit.help.HelpTopic ( ['canSee', 'amendCanSee', 'getFullText'])
-    /// Returns the name of this help topic.
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::help::HelpTopic = temp_clone.into();
-        real.name()
-    }
-    /// Returns a brief description that will be displayed in the topic index.
-    pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::help::HelpTopic = temp_clone.into();
-        real.short_text()
-    }
-    /// Allows the server admin (or another plugin) to add or replace the
-    /// contents of a help topic.
-    ///
-    /// A null in either parameter will leave that part of the topic unchanged.
-    /// In either amending parameter, the string {@literal <text>} is replaced
-    /// with the existing contents in the help topic. Use this to append or
-    /// prepend additional content into an automatically generated help topic.
-    pub fn amend_topic(
-        &self,
-        amended_short_text: impl Into<String>,
-        amended_full_text: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = crate::help::HelpTopic::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::help::HelpTopic = temp_clone.into();
-        real.amend_topic(amended_short_text, amended_full_text)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::help::HelpTopic<'mc>> for IndexHelpTopic<'mc> {
-    fn into(self) -> crate::help::HelpTopic<'mc> {
-        crate::help::HelpTopic::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting IndexHelpTopic into crate::help::HelpTopic")
-    }
-}
-#[repr(C)]
 pub struct GenericCommandHelpTopic<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -718,6 +641,83 @@ impl<'mc> Into<crate::help::HelpTopic<'mc>> for GenericCommandHelpTopic<'mc> {
     fn into(self) -> crate::help::HelpTopic<'mc> {
         crate::help::HelpTopic::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting GenericCommandHelpTopic into crate::help::HelpTopic")
+    }
+}
+#[repr(C)]
+pub struct HelpTopicFactory<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for HelpTopicFactory<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for HelpTopicFactory<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate HelpTopicFactory from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/help/HelpTopicFactory")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a HelpTopicFactory object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> HelpTopicFactory<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "HelpTopicFactory", name, lib_name) }?;
+        Self::from_raw(env, obj)
+    }
+    /// This method accepts a command deriving from a custom command base class
+    /// and constructs a custom HelpTopic for it.
+    pub fn create_topic(
+        &self,
+        command: jni::objects::JObject<'mc>,
+    ) -> Result<Option<crate::help::HelpTopic<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("(LTCommand;)Lorg/bukkit/help/HelpTopic;");
+        let val_1 = jni::objects::JValueGen::Object(command);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "createTopic",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::help::HelpTopic::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 #[repr(C)]

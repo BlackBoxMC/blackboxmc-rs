@@ -2,10 +2,28 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-pub enum Mirror<'mc> {}
+pub enum Mirror<'mc> {
+    None { inner: MirrorStruct<'mc> },
+    LeftRight { inner: MirrorStruct<'mc> },
+    FrontBack { inner: MirrorStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for Mirror<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            Mirror::None { .. } => f.write_str("NONE"),
+            Mirror::LeftRight { .. } => f.write_str("LEFT_RIGHT"),
+            Mirror::FrontBack { .. } => f.write_str("FRONT_BACK"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for Mirror<'mc> {
+    type Target = MirrorStruct<'mc>;
+    fn deref(&self) -> &<Mirror<'mc> as std::ops::Deref>::Target {
+        match self {
+            Mirror::None { inner } => inner,
+            Mirror::LeftRight { inner } => inner,
+            Mirror::FrontBack { inner } => inner,
+        }
     }
 }
 
@@ -32,6 +50,16 @@ impl<'mc> Mirror<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "NONE" => Ok(Mirror::None {
+                inner: MirrorStruct::from_raw(env, obj)?,
+            }),
+            "LEFT_RIGHT" => Ok(Mirror::LeftRight {
+                inner: MirrorStruct::from_raw(env, obj)?,
+            }),
+            "FRONT_BACK" => Ok(Mirror::FrontBack {
+                inner: MirrorStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -45,10 +73,22 @@ pub struct MirrorStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for Mirror<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::None { inner } => inner.0.clone(),
+            Self::LeftRight { inner } => inner.0.clone(),
+            Self::FrontBack { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::LeftRight { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::FrontBack { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for Mirror<'mc> {
@@ -74,6 +114,15 @@ impl<'mc> JNIInstantiatable<'mc> for Mirror<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "NONE" => Ok(Mirror::None {
+                    inner: MirrorStruct::from_raw(env, obj)?,
+                }),
+                "LEFT_RIGHT" => Ok(Mirror::LeftRight {
+                    inner: MirrorStruct::from_raw(env, obj)?,
+                }),
+                "FRONT_BACK" => Ok(Mirror::FrontBack {
+                    inner: MirrorStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -127,10 +176,31 @@ impl<'mc> MirrorStruct<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum StructureRotation<'mc> {}
+pub enum StructureRotation<'mc> {
+    None { inner: StructureRotationStruct<'mc> },
+    Clockwise90 { inner: StructureRotationStruct<'mc> },
+    Clockwise180 { inner: StructureRotationStruct<'mc> },
+    Counterclockwise90 { inner: StructureRotationStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for StructureRotation<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            StructureRotation::None { .. } => f.write_str("NONE"),
+            StructureRotation::Clockwise90 { .. } => f.write_str("CLOCKWISE_90"),
+            StructureRotation::Clockwise180 { .. } => f.write_str("CLOCKWISE_180"),
+            StructureRotation::Counterclockwise90 { .. } => f.write_str("COUNTERCLOCKWISE_90"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for StructureRotation<'mc> {
+    type Target = StructureRotationStruct<'mc>;
+    fn deref(&self) -> &<StructureRotation<'mc> as std::ops::Deref>::Target {
+        match self {
+            StructureRotation::None { inner } => inner,
+            StructureRotation::Clockwise90 { inner } => inner,
+            StructureRotation::Clockwise180 { inner } => inner,
+            StructureRotation::Counterclockwise90 { inner } => inner,
+        }
     }
 }
 
@@ -157,6 +227,19 @@ impl<'mc> StructureRotation<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "NONE" => Ok(StructureRotation::None {
+                inner: StructureRotationStruct::from_raw(env, obj)?,
+            }),
+            "CLOCKWISE_90" => Ok(StructureRotation::Clockwise90 {
+                inner: StructureRotationStruct::from_raw(env, obj)?,
+            }),
+            "CLOCKWISE_180" => Ok(StructureRotation::Clockwise180 {
+                inner: StructureRotationStruct::from_raw(env, obj)?,
+            }),
+            "COUNTERCLOCKWISE_90" => Ok(StructureRotation::Counterclockwise90 {
+                inner: StructureRotationStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -170,10 +253,26 @@ pub struct StructureRotationStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for StructureRotation<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::None { inner } => inner.0.clone(),
+            Self::Clockwise90 { inner } => inner.0.clone(),
+            Self::Clockwise180 { inner } => inner.0.clone(),
+            Self::Counterclockwise90 { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Clockwise90 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Clockwise180 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Counterclockwise90 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for StructureRotation<'mc> {
@@ -202,6 +301,18 @@ impl<'mc> JNIInstantiatable<'mc> for StructureRotation<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "NONE" => Ok(StructureRotation::None {
+                    inner: StructureRotationStruct::from_raw(env, obj)?,
+                }),
+                "CLOCKWISE_90" => Ok(StructureRotation::Clockwise90 {
+                    inner: StructureRotationStruct::from_raw(env, obj)?,
+                }),
+                "CLOCKWISE_180" => Ok(StructureRotation::Clockwise180 {
+                    inner: StructureRotationStruct::from_raw(env, obj)?,
+                }),
+                "COUNTERCLOCKWISE_90" => Ok(StructureRotation::Counterclockwise90 {
+                    inner: StructureRotationStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -259,10 +370,31 @@ impl<'mc> StructureRotationStruct<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum UsageMode<'mc> {}
+pub enum UsageMode<'mc> {
+    Save { inner: UsageModeStruct<'mc> },
+    Load { inner: UsageModeStruct<'mc> },
+    Corner { inner: UsageModeStruct<'mc> },
+    Data { inner: UsageModeStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for UsageMode<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            UsageMode::Save { .. } => f.write_str("SAVE"),
+            UsageMode::Load { .. } => f.write_str("LOAD"),
+            UsageMode::Corner { .. } => f.write_str("CORNER"),
+            UsageMode::Data { .. } => f.write_str("DATA"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for UsageMode<'mc> {
+    type Target = UsageModeStruct<'mc>;
+    fn deref(&self) -> &<UsageMode<'mc> as std::ops::Deref>::Target {
+        match self {
+            UsageMode::Save { inner } => inner,
+            UsageMode::Load { inner } => inner,
+            UsageMode::Corner { inner } => inner,
+            UsageMode::Data { inner } => inner,
+        }
     }
 }
 
@@ -289,6 +421,19 @@ impl<'mc> UsageMode<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "SAVE" => Ok(UsageMode::Save {
+                inner: UsageModeStruct::from_raw(env, obj)?,
+            }),
+            "LOAD" => Ok(UsageMode::Load {
+                inner: UsageModeStruct::from_raw(env, obj)?,
+            }),
+            "CORNER" => Ok(UsageMode::Corner {
+                inner: UsageModeStruct::from_raw(env, obj)?,
+            }),
+            "DATA" => Ok(UsageMode::Data {
+                inner: UsageModeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -302,10 +447,20 @@ pub struct UsageModeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for UsageMode<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Save { inner } => inner.0.clone(),
+            Self::Load { inner } => inner.0.clone(),
+            Self::Corner { inner } => inner.0.clone(),
+            Self::Data { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Save { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Load { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Corner { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Data { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for UsageMode<'mc> {
@@ -331,6 +486,18 @@ impl<'mc> JNIInstantiatable<'mc> for UsageMode<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "SAVE" => Ok(UsageMode::Save {
+                    inner: UsageModeStruct::from_raw(env, obj)?,
+                }),
+                "LOAD" => Ok(UsageMode::Load {
+                    inner: UsageModeStruct::from_raw(env, obj)?,
+                }),
+                "CORNER" => Ok(UsageMode::Corner {
+                    inner: UsageModeStruct::from_raw(env, obj)?,
+                }),
+                "DATA" => Ok(UsageMode::Data {
+                    inner: UsageModeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }

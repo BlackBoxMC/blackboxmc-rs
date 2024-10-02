@@ -2,53 +2,18 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-pub enum PatternType<'mc> {}
-impl<'mc> std::fmt::Display for PatternType<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
-    }
-}
-
-impl<'mc> PatternType<'mc> {
-    pub fn value_of(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<PatternType<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
-        let cls = env.find_class("org/bukkit/block/banner/PatternType");
-        let cls = env.translate_error_with_class(cls)?;
-        let res = env.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/block/banner/PatternType;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = env.translate_error(res)?;
-        let obj = res.l()?;
-        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = env.translate_error(variant)?;
-        let variant_str = env
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        match variant_str.as_str() {
-            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-        }
-    }
-}
-
 #[repr(C)]
-pub struct PatternTypeStruct<'mc>(
+pub struct PatternType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 
 impl<'mc> JNIRaw<'mc> for PatternType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        self.0.clone()
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PatternType<'mc> {
@@ -67,63 +32,12 @@ impl<'mc> JNIInstantiatable<'mc> for PatternType<'mc> {
             )
             .into())
         } else {
-            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-            let variant = env.translate_error(variant)?;
-            let variant_str = env
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            match variant_str.as_str() {
-                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-            }
-        }
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for PatternTypeStruct<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PatternTypeStruct<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate PatternTypeStruct from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/banner/PatternType")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PatternTypeStruct object, got {}",
-                name
-            )
-            .into())
-        } else {
             Ok(Self(env.clone(), obj))
         }
     }
 }
 
-impl<'mc> PatternTypeStruct<'mc> {
-    pub fn values(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/banner/PatternType;");
-        let cls = jni.find_class("org/bukkit/block/banner/PatternType");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::block::banner::PatternType::from_raw(&jni, obj)
-    }
-
+impl<'mc> PatternType<'mc> {
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
@@ -175,10 +89,76 @@ impl<'mc> PatternTypeStruct<'mc> {
             &jni, obj,
         )?))
     }
+    #[deprecated]
+
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/banner/PatternType;");
+        let cls = jni.find_class("org/bukkit/block/banner/PatternType");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::block::banner::PatternType::from_raw(&jni, obj)
+    }
+    #[deprecated]
+
+    pub fn compare_to(
+        &self,
+        other: jni::objects::JObject<'mc>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("(LT;)I");
+        let val_1 = jni::objects::JValueGen::Object(other);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    #[deprecated]
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "name", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    #[deprecated]
+
+    pub fn ordinal(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "ordinal", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::util::OldEnum<'mc>> for PatternType<'mc> {
+    fn into(self) -> crate::util::OldEnum<'mc> {
+        crate::util::OldEnum::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting PatternType into crate::util::OldEnum")
+    }
+}
+impl<'mc> Into<crate::Keyed<'mc>> for PatternType<'mc> {
+    fn into(self) -> crate::Keyed<'mc> {
+        crate::Keyed::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting PatternType into crate::Keyed")
     }
 }
 #[repr(C)]

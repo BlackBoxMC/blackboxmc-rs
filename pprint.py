@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import json
 
 f = open("./spigot.json","r")

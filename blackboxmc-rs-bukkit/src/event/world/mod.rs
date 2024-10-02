@@ -3,134 +3,6 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
-pub struct WorldUnloadEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for WorldUnloadEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for WorldUnloadEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate WorldUnloadEvent from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/world/WorldUnloadEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a WorldUnloadEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> WorldUnloadEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        world: impl Into<crate::World<'mc>>,
-    ) -> Result<crate::event::world::WorldUnloadEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/World;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(world.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/world/WorldUnloadEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::world::WorldUnloadEvent::from_raw(&jni, res)
-    }
-
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCancelled",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/world/WorldUnloadEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.world.WorldEvent ( ['isCancelled', 'setCancelled', 'getHandlers', 'getHandlerList'])
-    /// Gets the world primarily involved with this event
-    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::world::WorldEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::world::WorldEvent = temp_clone.into();
-        real.world()
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::event::Cancellable<'mc>> for WorldUnloadEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting WorldUnloadEvent into crate::event::Cancellable")
-    }
-}
-impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for WorldUnloadEvent<'mc> {
-    fn into(self) -> crate::event::world::WorldEvent<'mc> {
-        crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting WorldUnloadEvent into crate::event::world::WorldEvent")
-    }
-}
-#[repr(C)]
 pub struct LootGenerateEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -391,6 +263,134 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for LootGenerateEvent<'mc> 
     fn into(self) -> crate::event::world::WorldEvent<'mc> {
         crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting LootGenerateEvent into crate::event::world::WorldEvent")
+    }
+}
+#[repr(C)]
+pub struct WorldUnloadEvent<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for WorldUnloadEvent<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for WorldUnloadEvent<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate WorldUnloadEvent from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/world/WorldUnloadEvent")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a WorldUnloadEvent object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> WorldUnloadEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        world: impl Into<crate::World<'mc>>,
+    ) -> Result<crate::event::world::WorldUnloadEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/World;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(world.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/event/world/WorldUnloadEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::world::WorldUnloadEvent::from_raw(&jni, res)
+    }
+
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCancelled",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let cls = jni.find_class("org/bukkit/event/world/WorldUnloadEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::event::HandlerList::from_raw(&jni, obj)
+    }
+    // SUPER CLASS: org.bukkit.event.world.WorldEvent ( ['isCancelled', 'setCancelled', 'getHandlers', 'getHandlerList'])
+    /// Gets the world primarily involved with this event
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::world::WorldEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::world::WorldEvent = temp_clone.into();
+        real.world()
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::event::Cancellable<'mc>> for WorldUnloadEvent<'mc> {
+    fn into(self) -> crate::event::Cancellable<'mc> {
+        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting WorldUnloadEvent into crate::event::Cancellable")
+    }
+}
+impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for WorldUnloadEvent<'mc> {
+    fn into(self) -> crate::event::world::WorldEvent<'mc> {
+        crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting WorldUnloadEvent into crate::event::world::WorldEvent")
     }
 }
 #[repr(C)]
@@ -1354,10 +1354,34 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for PortalCreateEvent<'mc> 
             .expect("Error converting PortalCreateEvent into crate::event::world::WorldEvent")
     }
 }
-pub enum PortalCreateEventCreateReason<'mc> {}
+pub enum PortalCreateEventCreateReason<'mc> {
+    Fire {
+        inner: PortalCreateEventCreateReasonStruct<'mc>,
+    },
+    NetherPair {
+        inner: PortalCreateEventCreateReasonStruct<'mc>,
+    },
+    EndPlatform {
+        inner: PortalCreateEventCreateReasonStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for PortalCreateEventCreateReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            PortalCreateEventCreateReason::Fire { .. } => f.write_str("FIRE"),
+            PortalCreateEventCreateReason::NetherPair { .. } => f.write_str("NETHER_PAIR"),
+            PortalCreateEventCreateReason::EndPlatform { .. } => f.write_str("END_PLATFORM"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PortalCreateEventCreateReason<'mc> {
+    type Target = PortalCreateEventCreateReasonStruct<'mc>;
+    fn deref(&self) -> &<PortalCreateEventCreateReason<'mc> as std::ops::Deref>::Target {
+        match self {
+            PortalCreateEventCreateReason::Fire { inner } => inner,
+            PortalCreateEventCreateReason::NetherPair { inner } => inner,
+            PortalCreateEventCreateReason::EndPlatform { inner } => inner,
+        }
     }
 }
 
@@ -1384,6 +1408,16 @@ impl<'mc> PortalCreateEventCreateReason<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "FIRE" => Ok(PortalCreateEventCreateReason::Fire {
+                inner: PortalCreateEventCreateReasonStruct::from_raw(env, obj)?,
+            }),
+            "NETHER_PAIR" => Ok(PortalCreateEventCreateReason::NetherPair {
+                inner: PortalCreateEventCreateReasonStruct::from_raw(env, obj)?,
+            }),
+            "END_PLATFORM" => Ok(PortalCreateEventCreateReason::EndPlatform {
+                inner: PortalCreateEventCreateReasonStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -1397,10 +1431,22 @@ pub struct PortalCreateEventCreateReasonStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for PortalCreateEventCreateReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Fire { inner } => inner.0.clone(),
+            Self::NetherPair { inner } => inner.0.clone(),
+            Self::EndPlatform { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Fire { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NetherPair { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EndPlatform { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PortalCreateEventCreateReason<'mc> {
@@ -1432,6 +1478,15 @@ impl<'mc> JNIInstantiatable<'mc> for PortalCreateEventCreateReason<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "FIRE" => Ok(PortalCreateEventCreateReason::Fire {
+                    inner: PortalCreateEventCreateReasonStruct::from_raw(env, obj)?,
+                }),
+                "NETHER_PAIR" => Ok(PortalCreateEventCreateReason::NetherPair {
+                    inner: PortalCreateEventCreateReasonStruct::from_raw(env, obj)?,
+                }),
+                "END_PLATFORM" => Ok(PortalCreateEventCreateReason::EndPlatform {
+                    inner: PortalCreateEventCreateReasonStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -2300,10 +2355,36 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for AsyncStructureGenerateE
         )
     }
 }
-pub enum AsyncStructureGenerateEventCause<'mc> {}
+pub enum AsyncStructureGenerateEventCause<'mc> {
+    Command {
+        inner: AsyncStructureGenerateEventCauseStruct<'mc>,
+    },
+    WorldGeneration {
+        inner: AsyncStructureGenerateEventCauseStruct<'mc>,
+    },
+    Custom {
+        inner: AsyncStructureGenerateEventCauseStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for AsyncStructureGenerateEventCause<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            AsyncStructureGenerateEventCause::Command { .. } => f.write_str("COMMAND"),
+            AsyncStructureGenerateEventCause::WorldGeneration { .. } => {
+                f.write_str("WORLD_GENERATION")
+            }
+            AsyncStructureGenerateEventCause::Custom { .. } => f.write_str("CUSTOM"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for AsyncStructureGenerateEventCause<'mc> {
+    type Target = AsyncStructureGenerateEventCauseStruct<'mc>;
+    fn deref(&self) -> &<AsyncStructureGenerateEventCause<'mc> as std::ops::Deref>::Target {
+        match self {
+            AsyncStructureGenerateEventCause::Command { inner } => inner,
+            AsyncStructureGenerateEventCause::WorldGeneration { inner } => inner,
+            AsyncStructureGenerateEventCause::Custom { inner } => inner,
+        }
     }
 }
 
@@ -2330,6 +2411,16 @@ impl<'mc> AsyncStructureGenerateEventCause<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "COMMAND" => Ok(AsyncStructureGenerateEventCause::Command {
+                inner: AsyncStructureGenerateEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "WORLD_GENERATION" => Ok(AsyncStructureGenerateEventCause::WorldGeneration {
+                inner: AsyncStructureGenerateEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "CUSTOM" => Ok(AsyncStructureGenerateEventCause::Custom {
+                inner: AsyncStructureGenerateEventCauseStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -2343,10 +2434,20 @@ pub struct AsyncStructureGenerateEventCauseStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for AsyncStructureGenerateEventCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Command { inner } => inner.0.clone(),
+            Self::WorldGeneration { inner } => inner.0.clone(),
+            Self::Custom { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Command { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WorldGeneration { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Custom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for AsyncStructureGenerateEventCause<'mc> {
@@ -2378,6 +2479,15 @@ impl<'mc> JNIInstantiatable<'mc> for AsyncStructureGenerateEventCause<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "COMMAND" => Ok(AsyncStructureGenerateEventCause::Command {
+                    inner: AsyncStructureGenerateEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "WORLD_GENERATION" => Ok(AsyncStructureGenerateEventCause::WorldGeneration {
+                    inner: AsyncStructureGenerateEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "CUSTOM" => Ok(AsyncStructureGenerateEventCause::Custom {
+                    inner: AsyncStructureGenerateEventCauseStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -3268,10 +3378,34 @@ impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for TimeSkipEvent<'mc> {
             .expect("Error converting TimeSkipEvent into crate::event::world::WorldEvent")
     }
 }
-pub enum TimeSkipEventSkipReason<'mc> {}
+pub enum TimeSkipEventSkipReason<'mc> {
+    Command {
+        inner: TimeSkipEventSkipReasonStruct<'mc>,
+    },
+    Custom {
+        inner: TimeSkipEventSkipReasonStruct<'mc>,
+    },
+    NightSkip {
+        inner: TimeSkipEventSkipReasonStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for TimeSkipEventSkipReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            TimeSkipEventSkipReason::Command { .. } => f.write_str("COMMAND"),
+            TimeSkipEventSkipReason::Custom { .. } => f.write_str("CUSTOM"),
+            TimeSkipEventSkipReason::NightSkip { .. } => f.write_str("NIGHT_SKIP"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for TimeSkipEventSkipReason<'mc> {
+    type Target = TimeSkipEventSkipReasonStruct<'mc>;
+    fn deref(&self) -> &<TimeSkipEventSkipReason<'mc> as std::ops::Deref>::Target {
+        match self {
+            TimeSkipEventSkipReason::Command { inner } => inner,
+            TimeSkipEventSkipReason::Custom { inner } => inner,
+            TimeSkipEventSkipReason::NightSkip { inner } => inner,
+        }
     }
 }
 
@@ -3298,6 +3432,16 @@ impl<'mc> TimeSkipEventSkipReason<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "COMMAND" => Ok(TimeSkipEventSkipReason::Command {
+                inner: TimeSkipEventSkipReasonStruct::from_raw(env, obj)?,
+            }),
+            "CUSTOM" => Ok(TimeSkipEventSkipReason::Custom {
+                inner: TimeSkipEventSkipReasonStruct::from_raw(env, obj)?,
+            }),
+            "NIGHT_SKIP" => Ok(TimeSkipEventSkipReason::NightSkip {
+                inner: TimeSkipEventSkipReasonStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -3311,10 +3455,20 @@ pub struct TimeSkipEventSkipReasonStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for TimeSkipEventSkipReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Command { inner } => inner.0.clone(),
+            Self::Custom { inner } => inner.0.clone(),
+            Self::NightSkip { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Command { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Custom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NightSkip { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for TimeSkipEventSkipReason<'mc> {
@@ -3344,6 +3498,15 @@ impl<'mc> JNIInstantiatable<'mc> for TimeSkipEventSkipReason<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "COMMAND" => Ok(TimeSkipEventSkipReason::Command {
+                    inner: TimeSkipEventSkipReasonStruct::from_raw(env, obj)?,
+                }),
+                "CUSTOM" => Ok(TimeSkipEventSkipReason::Custom {
+                    inner: TimeSkipEventSkipReasonStruct::from_raw(env, obj)?,
+                }),
+                "NIGHT_SKIP" => Ok(TimeSkipEventSkipReason::NightSkip {
+                    inner: TimeSkipEventSkipReasonStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }

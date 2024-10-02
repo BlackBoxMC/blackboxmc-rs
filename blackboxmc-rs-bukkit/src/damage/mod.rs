@@ -143,10 +143,30 @@ impl<'mc> Into<crate::Translatable<'mc>> for DamageType<'mc> {
             .expect("Error converting DamageType into crate::Translatable")
     }
 }
-pub enum DeathMessageType<'mc> {}
+pub enum DeathMessageType<'mc> {
+    Default { inner: DeathMessageTypeStruct<'mc> },
+    FallVariants { inner: DeathMessageTypeStruct<'mc> },
+    IntentionalGameDesign { inner: DeathMessageTypeStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for DeathMessageType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            DeathMessageType::Default { .. } => f.write_str("DEFAULT"),
+            DeathMessageType::FallVariants { .. } => f.write_str("FALL_VARIANTS"),
+            DeathMessageType::IntentionalGameDesign { .. } => {
+                f.write_str("INTENTIONAL_GAME_DESIGN")
+            }
+        }
+    }
+}
+impl<'mc> std::ops::Deref for DeathMessageType<'mc> {
+    type Target = DeathMessageTypeStruct<'mc>;
+    fn deref(&self) -> &<DeathMessageType<'mc> as std::ops::Deref>::Target {
+        match self {
+            DeathMessageType::Default { inner } => inner,
+            DeathMessageType::FallVariants { inner } => inner,
+            DeathMessageType::IntentionalGameDesign { inner } => inner,
+        }
     }
 }
 
@@ -173,6 +193,16 @@ impl<'mc> DeathMessageType<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "DEFAULT" => Ok(DeathMessageType::Default {
+                inner: DeathMessageTypeStruct::from_raw(env, obj)?,
+            }),
+            "FALL_VARIANTS" => Ok(DeathMessageType::FallVariants {
+                inner: DeathMessageTypeStruct::from_raw(env, obj)?,
+            }),
+            "INTENTIONAL_GAME_DESIGN" => Ok(DeathMessageType::IntentionalGameDesign {
+                inner: DeathMessageTypeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -186,10 +216,22 @@ pub struct DeathMessageTypeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for DeathMessageType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Default { inner } => inner.0.clone(),
+            Self::FallVariants { inner } => inner.0.clone(),
+            Self::IntentionalGameDesign { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Default { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FallVariants { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::IntentionalGameDesign { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for DeathMessageType<'mc> {
@@ -217,6 +259,15 @@ impl<'mc> JNIInstantiatable<'mc> for DeathMessageType<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "DEFAULT" => Ok(DeathMessageType::Default {
+                    inner: DeathMessageTypeStruct::from_raw(env, obj)?,
+                }),
+                "FALL_VARIANTS" => Ok(DeathMessageType::FallVariants {
+                    inner: DeathMessageTypeStruct::from_raw(env, obj)?,
+                }),
+                "INTENTIONAL_GAME_DESIGN" => Ok(DeathMessageType::IntentionalGameDesign {
+                    inner: DeathMessageTypeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -273,10 +324,30 @@ impl<'mc> DeathMessageTypeStruct<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum DamageScaling<'mc> {}
+pub enum DamageScaling<'mc> {
+    Never { inner: DamageScalingStruct<'mc> },
+    WhenCausedByLivingNonPlayer { inner: DamageScalingStruct<'mc> },
+    Always { inner: DamageScalingStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for DamageScaling<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            DamageScaling::Never { .. } => f.write_str("NEVER"),
+            DamageScaling::WhenCausedByLivingNonPlayer { .. } => {
+                f.write_str("WHEN_CAUSED_BY_LIVING_NON_PLAYER")
+            }
+            DamageScaling::Always { .. } => f.write_str("ALWAYS"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for DamageScaling<'mc> {
+    type Target = DamageScalingStruct<'mc>;
+    fn deref(&self) -> &<DamageScaling<'mc> as std::ops::Deref>::Target {
+        match self {
+            DamageScaling::Never { inner } => inner,
+            DamageScaling::WhenCausedByLivingNonPlayer { inner } => inner,
+            DamageScaling::Always { inner } => inner,
+        }
     }
 }
 
@@ -303,6 +374,16 @@ impl<'mc> DamageScaling<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "NEVER" => Ok(DamageScaling::Never {
+                inner: DamageScalingStruct::from_raw(env, obj)?,
+            }),
+            "WHEN_CAUSED_BY_LIVING_NON_PLAYER" => Ok(DamageScaling::WhenCausedByLivingNonPlayer {
+                inner: DamageScalingStruct::from_raw(env, obj)?,
+            }),
+            "ALWAYS" => Ok(DamageScaling::Always {
+                inner: DamageScalingStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -316,10 +397,20 @@ pub struct DamageScalingStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for DamageScaling<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Never { inner } => inner.0.clone(),
+            Self::WhenCausedByLivingNonPlayer { inner } => inner.0.clone(),
+            Self::Always { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Never { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::WhenCausedByLivingNonPlayer { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Always { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for DamageScaling<'mc> {
@@ -345,6 +436,17 @@ impl<'mc> JNIInstantiatable<'mc> for DamageScaling<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "NEVER" => Ok(DamageScaling::Never {
+                    inner: DamageScalingStruct::from_raw(env, obj)?,
+                }),
+                "WHEN_CAUSED_BY_LIVING_NON_PLAYER" => {
+                    Ok(DamageScaling::WhenCausedByLivingNonPlayer {
+                        inner: DamageScalingStruct::from_raw(env, obj)?,
+                    })
+                }
+                "ALWAYS" => Ok(DamageScaling::Always {
+                    inner: DamageScalingStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }

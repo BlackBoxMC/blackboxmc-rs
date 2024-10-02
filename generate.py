@@ -772,7 +772,10 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                 else:
                     generics_ = []
             else:
-                generics_ = method["method"]["returnType"]["generics"]
+                if "generics" in method["method"]["returnType"]:
+                    generics_ = method["method"]["returnType"]["generics"]
+                else:
+                    generics_ = []
         else:
             if i <= len(method["method"]["parameters"]):
                 if "generics" in method["method"]["parameters"][i]:
@@ -1453,7 +1456,10 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
             if val_group["type_name_alone"] in omitted_classes:
                 continue
             if static:
-                code.append(val_group["type_name_resolved"]+"::"+name+"("+func_signature_resolved_names_only+")")
+                tyname = val_group["type_name_resolved"]
+                if(val_group["qualifiedName"] in enums):
+                    tyname += "Struct"
+                code.append(tyname+"::"+name+"("+func_signature_resolved_names_only+")")
             else:
                 parsed_name = parsed_names[len(parsed_names)-1]
                 # we do an unsafe clone here but justify it because it's only to execute the method. said unsafe clone
@@ -1633,6 +1639,7 @@ def parse_classes(library, val, classes):
         if "qualifiedName" in val["superclass"]:
             if val["superclass"]["qualifiedName"] == "java.lang.Enum":
                 val["isEnum"] = True
+                val["fields"] = val["constants"]
             else:
                 meth = list(filter(lambda f: f["name"] == "values",val["methods"]))
                 if len(meth) >= 1 and len(val["fields"]) >= 1:
@@ -1657,7 +1664,6 @@ def parse_classes(library, val, classes):
             val["values"] = []
 
         val["values"] += list(map(lambda f: f["name"],val["fields"]))
-        print(val["fields"])
         
         file_cache[mod_path].append(
             "pub enum "+name+"<'mc> {")
@@ -1682,7 +1688,6 @@ def parse_classes(library, val, classes):
             val_proper = val_proper[0].upper() + val_proper[1:]
             if val_proper.lower() in reserved_words:
                 val_proper = "Variant"+val_proper
-            print(v)
             variants.append((v,val_proper))
 
         # DISPLAY IMPL
@@ -1692,6 +1697,16 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("       match self {")
         for (v,val_proper) in variants:
             file_cache[mod_path].append("           "+name+"::"+val_proper+" { .. } => f.write_str(\""+v+"\"),")
+        file_cache[mod_path].append("       }")
+        file_cache[mod_path].append("   }")
+        file_cache[mod_path].append("}")
+
+        file_cache[mod_path].append("impl<'mc> std::ops::Deref for "+name+"<'mc> {")
+        file_cache[mod_path].append("   type Target = "+name+"Struct<'mc>;")
+        file_cache[mod_path].append("   fn deref(&self) -> &<"+name+"<'mc> as std::ops::Deref>::Target {")
+        file_cache[mod_path].append("       match self {")
+        for (v,val_proper) in variants:
+            file_cache[mod_path].append("           "+name+"::"+val_proper+" { inner } => inner,")
         file_cache[mod_path].append("       }")
         file_cache[mod_path].append("   }")
         file_cache[mod_path].append("}")
@@ -1922,20 +1937,27 @@ for package in libraries:
     classes = libraries[package]
     
     for clas in classes:
-        if "isInterface" in clas:
-            if clas["isInterface"]:
-                interface_names.append(clas["packageName"]+"."+clas["name"])
-        if "isEnum" in clas:
-            if clas["isEnum"]:
-                enums.append(clas["packageName"]+"."+clas["name"])
+
+        packageName = clas["qualifiedName"].replace("::",".")
+        if "interface" in clas["modifiers"]:
+            interface_names.append(packageName)
+        
+        if "superclass" in clas:
+            if clas["superclass"]["qualifiedName"] == "java.lang.Enum" or "org.bukkit.Keyed" in list(map(lambda f: f["qualifiedName"], clas["interfaces"])):
+                enums.append(packageName)
+            else:
+                meth = list(filter(lambda f: f["name"] == "clasues",clas["methods"]))
+                if len(meth) >= 1 and len(clas["fields"]) >= 1:
+                    enums.append(packageName)
         if "classes" in clas:
             for cla in clas["classes"]:
-                if "isInterface" in cla:
-                    if cla["isInterface"]:
-                        interface_names.append(cla["packageName"]+"."+cla["name"])
-                if "isEnum" in cla:
-                    if cla["isEnum"]:
-                        enums.append(cla["packageName"]+"."+cla["name"])
+                if "superclass" in cla:
+                    if cla["superclass"]["qualifiedName"] == "java.lang.Enum" or "org.bukkit.Keyed" in list(map(lambda f: f["qualifiedName"], cla["interfaces"])):
+                        enums.append(packageName)
+                    else:
+                        meth = list(filter(lambda f: f["name"] == "clasues",cla["methods"]))
+                        if len(meth) >= 1 and len(cla["fields"]) >= 1:
+                            enums.append(packageName)
 
 for library in libraries:
     packages = libraries[library]

@@ -60,6 +60,37 @@ impl<'mc> std::fmt::Display for MemoryKey<'mc> {
         }
     }
 }
+impl<'mc> std::ops::Deref for MemoryKey<'mc> {
+    type Target = MemoryKeyStruct<'mc>;
+    fn deref(&self) -> &<MemoryKey<'mc> as std::ops::Deref>::Target {
+        match self {
+            MemoryKey::Home { inner } => inner,
+            MemoryKey::PotentialJobSite { inner } => inner,
+            MemoryKey::JobSite { inner } => inner,
+            MemoryKey::MeetingPoint { inner } => inner,
+            MemoryKey::GolemDetectedRecently { inner } => inner,
+            MemoryKey::LastSlept { inner } => inner,
+            MemoryKey::LastWoken { inner } => inner,
+            MemoryKey::LastWorkedAtPoi { inner } => inner,
+            MemoryKey::UniversalAnger { inner } => inner,
+            MemoryKey::AngryAt { inner } => inner,
+            MemoryKey::AdmiringItem { inner } => inner,
+            MemoryKey::AdmiringDisabled { inner } => inner,
+            MemoryKey::HuntedRecently { inner } => inner,
+            MemoryKey::PlayDeadTicks { inner } => inner,
+            MemoryKey::TemptationCooldownTicks { inner } => inner,
+            MemoryKey::IsTempted { inner } => inner,
+            MemoryKey::LongJumpCoolingDown { inner } => inner,
+            MemoryKey::HasHuntingCooldown { inner } => inner,
+            MemoryKey::RamCooldownTicks { inner } => inner,
+            MemoryKey::LikedPlayer { inner } => inner,
+            MemoryKey::LikedNoteblockPosition { inner } => inner,
+            MemoryKey::LikedNoteblockCooldownTicks { inner } => inner,
+            MemoryKey::ItemPickupCooldownTicks { inner } => inner,
+            MemoryKey::SnifferExploredPositions { inner } => inner,
+        }
+    }
+}
 
 impl<'mc> MemoryKey<'mc> {
     pub fn value_of(

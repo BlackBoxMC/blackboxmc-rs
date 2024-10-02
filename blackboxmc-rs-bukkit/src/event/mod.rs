@@ -171,117 +171,37 @@ impl<'mc> HandlerList<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-#[repr(C)]
-pub struct Cancellable<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for Cancellable<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
+pub enum EventPriority<'mc> {
+    Lowest { inner: EventPriorityStruct<'mc> },
+    Low { inner: EventPriorityStruct<'mc> },
+    Normal { inner: EventPriorityStruct<'mc> },
+    High { inner: EventPriorityStruct<'mc> },
+    Highest { inner: EventPriorityStruct<'mc> },
+    Monitor { inner: EventPriorityStruct<'mc> },
 }
-impl<'mc> JNIInstantiatable<'mc> for Cancellable<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate Cancellable from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/Cancellable")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a Cancellable object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> Cancellable<'mc> {
-    /// Gets the cancellation state of this event. A cancelled event will not
-    /// be executed in the server, but will still pass to other plugins
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Sets the cancellation state of this event. A cancelled event will not
-    /// be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCancelled",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct Listener<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for Listener<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for Listener<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate Listener from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/Listener")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a Listener object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> Listener<'mc> {
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-pub enum EventPriority<'mc> {}
 impl<'mc> std::fmt::Display for EventPriority<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            EventPriority::Lowest { .. } => f.write_str("LOWEST"),
+            EventPriority::Low { .. } => f.write_str("LOW"),
+            EventPriority::Normal { .. } => f.write_str("NORMAL"),
+            EventPriority::High { .. } => f.write_str("HIGH"),
+            EventPriority::Highest { .. } => f.write_str("HIGHEST"),
+            EventPriority::Monitor { .. } => f.write_str("MONITOR"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for EventPriority<'mc> {
+    type Target = EventPriorityStruct<'mc>;
+    fn deref(&self) -> &<EventPriority<'mc> as std::ops::Deref>::Target {
+        match self {
+            EventPriority::Lowest { inner } => inner,
+            EventPriority::Low { inner } => inner,
+            EventPriority::Normal { inner } => inner,
+            EventPriority::High { inner } => inner,
+            EventPriority::Highest { inner } => inner,
+            EventPriority::Monitor { inner } => inner,
+        }
     }
 }
 
@@ -308,6 +228,25 @@ impl<'mc> EventPriority<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "LOWEST" => Ok(EventPriority::Lowest {
+                inner: EventPriorityStruct::from_raw(env, obj)?,
+            }),
+            "LOW" => Ok(EventPriority::Low {
+                inner: EventPriorityStruct::from_raw(env, obj)?,
+            }),
+            "NORMAL" => Ok(EventPriority::Normal {
+                inner: EventPriorityStruct::from_raw(env, obj)?,
+            }),
+            "HIGH" => Ok(EventPriority::High {
+                inner: EventPriorityStruct::from_raw(env, obj)?,
+            }),
+            "HIGHEST" => Ok(EventPriority::Highest {
+                inner: EventPriorityStruct::from_raw(env, obj)?,
+            }),
+            "MONITOR" => Ok(EventPriority::Monitor {
+                inner: EventPriorityStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -321,10 +260,24 @@ pub struct EventPriorityStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for EventPriority<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Lowest { inner } => inner.0.clone(),
+            Self::Low { inner } => inner.0.clone(),
+            Self::Normal { inner } => inner.0.clone(),
+            Self::High { inner } => inner.0.clone(),
+            Self::Highest { inner } => inner.0.clone(),
+            Self::Monitor { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Lowest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Low { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Normal { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::High { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Highest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Monitor { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for EventPriority<'mc> {
@@ -350,6 +303,24 @@ impl<'mc> JNIInstantiatable<'mc> for EventPriority<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "LOWEST" => Ok(EventPriority::Lowest {
+                    inner: EventPriorityStruct::from_raw(env, obj)?,
+                }),
+                "LOW" => Ok(EventPriority::Low {
+                    inner: EventPriorityStruct::from_raw(env, obj)?,
+                }),
+                "NORMAL" => Ok(EventPriority::Normal {
+                    inner: EventPriorityStruct::from_raw(env, obj)?,
+                }),
+                "HIGH" => Ok(EventPriority::High {
+                    inner: EventPriorityStruct::from_raw(env, obj)?,
+                }),
+                "HIGHEST" => Ok(EventPriority::Highest {
+                    inner: EventPriorityStruct::from_raw(env, obj)?,
+                }),
+                "MONITOR" => Ok(EventPriority::Monitor {
+                    inner: EventPriorityStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -409,90 +380,6 @@ impl<'mc> EventPriorityStruct<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct EventHandler<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for EventHandler<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for EventHandler<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate EventHandler from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/EventHandler")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a EventHandler object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> EventHandler<'mc> {
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct EventException<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for EventException<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for EventException<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate EventException from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/EventException")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a EventException object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> EventException<'mc> {
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -601,10 +488,28 @@ impl<'mc> Event<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum EventResult<'mc> {}
+pub enum EventResult<'mc> {
+    Deny { inner: EventResultStruct<'mc> },
+    Default { inner: EventResultStruct<'mc> },
+    Allow { inner: EventResultStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for EventResult<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            EventResult::Deny { .. } => f.write_str("DENY"),
+            EventResult::Default { .. } => f.write_str("DEFAULT"),
+            EventResult::Allow { .. } => f.write_str("ALLOW"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for EventResult<'mc> {
+    type Target = EventResultStruct<'mc>;
+    fn deref(&self) -> &<EventResult<'mc> as std::ops::Deref>::Target {
+        match self {
+            EventResult::Deny { inner } => inner,
+            EventResult::Default { inner } => inner,
+            EventResult::Allow { inner } => inner,
+        }
     }
 }
 
@@ -631,6 +536,16 @@ impl<'mc> EventResult<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "DENY" => Ok(EventResult::Deny {
+                inner: EventResultStruct::from_raw(env, obj)?,
+            }),
+            "DEFAULT" => Ok(EventResult::Default {
+                inner: EventResultStruct::from_raw(env, obj)?,
+            }),
+            "ALLOW" => Ok(EventResult::Allow {
+                inner: EventResultStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -644,10 +559,18 @@ pub struct EventResultStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for EventResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Deny { inner } => inner.0.clone(),
+            Self::Default { inner } => inner.0.clone(),
+            Self::Allow { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Deny { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Default { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Allow { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for EventResult<'mc> {
@@ -673,6 +596,15 @@ impl<'mc> JNIInstantiatable<'mc> for EventResult<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "DENY" => Ok(EventResult::Deny {
+                    inner: EventResultStruct::from_raw(env, obj)?,
+                }),
+                "DEFAULT" => Ok(EventResult::Default {
+                    inner: EventResultStruct::from_raw(env, obj)?,
+                }),
+                "ALLOW" => Ok(EventResult::Allow {
+                    inner: EventResultStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -723,6 +655,197 @@ impl<'mc> EventResultStruct<'mc> {
         crate::event::EventResult::from_raw(&jni, obj)
     }
 
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct Cancellable<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Cancellable<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for Cancellable<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Cancellable from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/Cancellable")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Cancellable object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> Cancellable<'mc> {
+    /// Gets the cancellation state of this event. A cancelled event will not
+    /// be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the cancellation state of this event. A cancelled event will not
+    /// be executed in the server, but will still pass to other plugins.
+    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCancelled",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct Listener<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Listener<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for Listener<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Listener from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/Listener")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Listener object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> Listener<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct EventHandler<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for EventHandler<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EventHandler<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate EventHandler from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/EventHandler")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a EventHandler object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> EventHandler<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct EventException<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for EventException<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EventException<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate EventException from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/EventException")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a EventException object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> EventException<'mc> {
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)

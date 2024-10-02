@@ -3,12 +3,12 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
-pub struct PlayerSignOpenEvent<'mc>(
+pub struct PlayerStatisticIncrementEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 
-impl<'mc> JNIRaw<'mc> for PlayerSignOpenEvent<'mc> {
+impl<'mc> JNIRaw<'mc> for PlayerStatisticIncrementEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -16,21 +16,24 @@ impl<'mc> JNIRaw<'mc> for PlayerSignOpenEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JNIInstantiatable<'mc> for PlayerSignOpenEvent<'mc> {
+impl<'mc> JNIInstantiatable<'mc> for PlayerStatisticIncrementEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate PlayerSignOpenEvent from null object.").into(),
-            );
+            return Err(eyre::eyre!(
+                "Tried to instantiate PlayerStatisticIncrementEvent from null object."
+            )
+            .into());
         }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/player/PlayerSignOpenEvent")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/player/PlayerStatisticIncrementEvent",
+        )?;
         if !valid {
             Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PlayerSignOpenEvent object, got {}",
+                "Invalid argument passed. Expected a PlayerStatisticIncrementEvent object, got {}",
                 name
             )
             .into())
@@ -40,77 +43,112 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerSignOpenEvent<'mc> {
     }
 }
 
-impl<'mc> PlayerSignOpenEvent<'mc> {
+impl<'mc> PlayerStatisticIncrementEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         player: impl Into<crate::entity::Player<'mc>>,
-        sign: impl Into<crate::block::Sign<'mc>>,
-        side: impl Into<crate::block::sign::Side<'mc>>,
-        cause: impl Into<crate::event::player::PlayerSignOpenEventCause<'mc>>,
-    ) -> Result<crate::event::player::PlayerSignOpenEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/entity/Player;Lorg/bukkit/block/Sign;Lorg/bukkit/block/sign/Side;Lorg/bukkit/event/player/PlayerSignOpenEvent/Cause;)V");
+        statistic: impl Into<crate::Statistic<'mc>>,
+        initial_value: i32,
+        new_value: i32,
+        material: std::option::Option<impl Into<crate::Material<'mc>>>,
+    ) -> Result<crate::event::player::PlayerStatisticIncrementEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Player;";
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(player.into().jni_object().clone())
         });
+        args.push(val_1);
+        sig += "Lorg/bukkit/Statistic;";
         let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(sign.into().jni_object().clone())
+            jni::objects::JObject::from_raw(statistic.into().jni_object().clone())
         });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(side.into().jni_object().clone())
-        });
-        let val_4 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(cause.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/player/PlayerSignOpenEvent");
+        args.push(val_2);
+        sig += "I";
+        let val_3 = jni::objects::JValueGen::Int(initial_value);
+        args.push(val_3);
+        sig += "I";
+        let val_4 = jni::objects::JValueGen::Int(new_value);
+        args.push(val_4);
+        if let Some(a) = material {
+            sig += "Lorg/bukkit/Material;";
+            let val_5 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_5);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/event/player/PlayerStatisticIncrementEvent");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-            ],
-        );
+        let res = jni.new_object(cls, sig.as_str(), args);
         let res = jni.translate_error_no_gen(res)?;
-        crate::event::player::PlayerSignOpenEvent::from_raw(&jni, res)
+        crate::event::player::PlayerStatisticIncrementEvent::from_raw(&jni, res)
     }
-    /// Gets the sign that was opened.
-    pub fn sign(&self) -> Result<crate::block::Sign<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/Sign;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getSign", sig.as_str(), vec![]);
+    /// Gets the statistic that is being incremented.
+    pub fn statistic(&self) -> Result<crate::Statistic<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/Statistic;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getStatistic", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::block::Sign::from_raw(&self.jni_ref(), unsafe {
+        crate::Statistic::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets side of the sign opened.
-    pub fn side(&self) -> Result<crate::block::sign::Side<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/sign/Side;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getSide", sig.as_str(), vec![]);
+    /// Gets the previous value of the statistic.
+    pub fn previous_value(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPreviousValue",
+            sig.as_str(),
+            vec![],
+        );
         let res = self.jni_ref().translate_error(res)?;
-        crate::block::sign::Side::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.i()?)
     }
-    /// Gets the cause of the sign open.
-    pub fn cause(
+    /// Gets the new value of the statistic.
+    pub fn new_value(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getNewValue", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Gets the EntityType if {@link #getStatistic() getStatistic()} is an
+    /// entity statistic otherwise returns null.
+    pub fn entity_type(
         &self,
-    ) -> Result<crate::event::player::PlayerSignOpenEventCause<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/event/player/PlayerSignOpenEvent/Cause;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getCause", sig.as_str(), vec![]);
+    ) -> Result<Option<crate::entity::EntityType<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEntityType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::event::player::PlayerSignOpenEventCause::from_raw(&self.jni_ref(), unsafe {
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::EntityType::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    /// Gets the Material if {@link #getStatistic() getStatistic()} is a block
+    /// or item statistic otherwise returns null.
+    pub fn material(&self) -> Result<Option<crate::Material<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/Material;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::Material::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        })?))
     }
 
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -150,14 +188,14 @@ impl<'mc> PlayerSignOpenEvent<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/player/PlayerSignOpenEvent");
+        let cls = jni.find_class("org/bukkit/event/player/PlayerStatisticIncrementEvent");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getSign', 'getSide', 'getCause', 'isCancelled', 'setCancelled', 'getHandlers', 'getHandlerList'])
+    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getStatistic', 'getPreviousValue', 'getNewValue', 'getEntityType', 'getMaterial', 'isCancelled', 'setCancelled', 'getHandlers', 'getHandlerList'])
     /// Returns the player involved in this event
     pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::player::PlayerEvent::from_raw(&self.0, unsafe {
@@ -172,150 +210,17 @@ impl<'mc> PlayerSignOpenEvent<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for PlayerSignOpenEvent<'mc> {
+impl<'mc> Into<crate::event::Cancellable<'mc>> for PlayerStatisticIncrementEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting PlayerSignOpenEvent into crate::event::Cancellable")
+            .expect("Error converting PlayerStatisticIncrementEvent into crate::event::Cancellable")
     }
 }
-impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerSignOpenEvent<'mc> {
+impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerStatisticIncrementEvent<'mc> {
     fn into(self) -> crate::event::player::PlayerEvent<'mc> {
-        crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting PlayerSignOpenEvent into crate::event::player::PlayerEvent")
-    }
-}
-pub enum PlayerSignOpenEventCause<'mc> {}
-impl<'mc> std::fmt::Display for PlayerSignOpenEventCause<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
-    }
-}
-
-impl<'mc> PlayerSignOpenEventCause<'mc> {
-    pub fn value_of(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<PlayerSignOpenEventCause<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
-        let cls = env.find_class("org/bukkit/event/player/PlayerSignOpenEvent/Cause");
-        let cls = env.translate_error_with_class(cls)?;
-        let res = env.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/event/player/PlayerSignOpenEvent/Cause;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = env.translate_error(res)?;
-        let obj = res.l()?;
-        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = env.translate_error(variant)?;
-        let variant_str = env
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        match variant_str.as_str() {
-            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-        }
-    }
-}
-
-#[repr(C)]
-pub struct PlayerSignOpenEventCauseStruct<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for PlayerSignOpenEventCause<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PlayerSignOpenEventCause<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate PlayerSignOpenEventCause from null object."
-            )
-            .into());
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/player/PlayerSignOpenEvent/Cause")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PlayerSignOpenEventCause object, got {}",
-                name
-            )
-            .into())
-        } else {
-            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-            let variant = env.translate_error(variant)?;
-            let variant_str = env
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            match variant_str.as_str() {
-                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-            }
-        }
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for PlayerSignOpenEventCauseStruct<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PlayerSignOpenEventCauseStruct<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate PlayerSignOpenEventCauseStruct from null object."
-            )
-            .into());
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/player/PlayerSignOpenEvent/Cause")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PlayerSignOpenEventCauseStruct object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> PlayerSignOpenEventCauseStruct<'mc> {
-    pub fn values(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::player::PlayerSignOpenEventCause<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/event/player/PlayerSignOpenEvent/Cause;");
-        let cls = jni.find_class("org/bukkit/event/player/PlayerSignOpenEvent/Cause");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::player::PlayerSignOpenEventCause::from_raw(&jni, obj)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+        crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting PlayerStatisticIncrementEvent into crate::event::player::PlayerEvent",
+        )
     }
 }
 #[repr(C)]
@@ -534,10 +439,49 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerSpawnChangeEven
         )
     }
 }
-pub enum PlayerSpawnChangeEventCause<'mc> {}
+pub enum PlayerSpawnChangeEventCause<'mc> {
+    Command {
+        inner: PlayerSpawnChangeEventCauseStruct<'mc>,
+    },
+    Bed {
+        inner: PlayerSpawnChangeEventCauseStruct<'mc>,
+    },
+    RespawnAnchor {
+        inner: PlayerSpawnChangeEventCauseStruct<'mc>,
+    },
+    Plugin {
+        inner: PlayerSpawnChangeEventCauseStruct<'mc>,
+    },
+    Reset {
+        inner: PlayerSpawnChangeEventCauseStruct<'mc>,
+    },
+    Unknown {
+        inner: PlayerSpawnChangeEventCauseStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for PlayerSpawnChangeEventCause<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            PlayerSpawnChangeEventCause::Command { .. } => f.write_str("COMMAND"),
+            PlayerSpawnChangeEventCause::Bed { .. } => f.write_str("BED"),
+            PlayerSpawnChangeEventCause::RespawnAnchor { .. } => f.write_str("RESPAWN_ANCHOR"),
+            PlayerSpawnChangeEventCause::Plugin { .. } => f.write_str("PLUGIN"),
+            PlayerSpawnChangeEventCause::Reset { .. } => f.write_str("RESET"),
+            PlayerSpawnChangeEventCause::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PlayerSpawnChangeEventCause<'mc> {
+    type Target = PlayerSpawnChangeEventCauseStruct<'mc>;
+    fn deref(&self) -> &<PlayerSpawnChangeEventCause<'mc> as std::ops::Deref>::Target {
+        match self {
+            PlayerSpawnChangeEventCause::Command { inner } => inner,
+            PlayerSpawnChangeEventCause::Bed { inner } => inner,
+            PlayerSpawnChangeEventCause::RespawnAnchor { inner } => inner,
+            PlayerSpawnChangeEventCause::Plugin { inner } => inner,
+            PlayerSpawnChangeEventCause::Reset { inner } => inner,
+            PlayerSpawnChangeEventCause::Unknown { inner } => inner,
+        }
     }
 }
 
@@ -564,6 +508,25 @@ impl<'mc> PlayerSpawnChangeEventCause<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "COMMAND" => Ok(PlayerSpawnChangeEventCause::Command {
+                inner: PlayerSpawnChangeEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "BED" => Ok(PlayerSpawnChangeEventCause::Bed {
+                inner: PlayerSpawnChangeEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "RESPAWN_ANCHOR" => Ok(PlayerSpawnChangeEventCause::RespawnAnchor {
+                inner: PlayerSpawnChangeEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "PLUGIN" => Ok(PlayerSpawnChangeEventCause::Plugin {
+                inner: PlayerSpawnChangeEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "RESET" => Ok(PlayerSpawnChangeEventCause::Reset {
+                inner: PlayerSpawnChangeEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(PlayerSpawnChangeEventCause::Unknown {
+                inner: PlayerSpawnChangeEventCauseStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -577,10 +540,26 @@ pub struct PlayerSpawnChangeEventCauseStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for PlayerSpawnChangeEventCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Command { inner } => inner.0.clone(),
+            Self::Bed { inner } => inner.0.clone(),
+            Self::RespawnAnchor { inner } => inner.0.clone(),
+            Self::Plugin { inner } => inner.0.clone(),
+            Self::Reset { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Command { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Bed { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::RespawnAnchor { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Plugin { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Reset { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PlayerSpawnChangeEventCause<'mc> {
@@ -610,6 +589,24 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerSpawnChangeEventCause<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "COMMAND" => Ok(PlayerSpawnChangeEventCause::Command {
+                    inner: PlayerSpawnChangeEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "BED" => Ok(PlayerSpawnChangeEventCause::Bed {
+                    inner: PlayerSpawnChangeEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "RESPAWN_ANCHOR" => Ok(PlayerSpawnChangeEventCause::RespawnAnchor {
+                    inner: PlayerSpawnChangeEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "PLUGIN" => Ok(PlayerSpawnChangeEventCause::Plugin {
+                    inner: PlayerSpawnChangeEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "RESET" => Ok(PlayerSpawnChangeEventCause::Reset {
+                    inner: PlayerSpawnChangeEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(PlayerSpawnChangeEventCause::Unknown {
+                    inner: PlayerSpawnChangeEventCauseStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -669,12 +666,12 @@ impl<'mc> PlayerSpawnChangeEventCauseStruct<'mc> {
     }
 }
 #[repr(C)]
-pub struct PlayerExpCooldownChangeEvent<'mc>(
+pub struct PlayerRecipeBookClickEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 
-impl<'mc> JNIRaw<'mc> for PlayerExpCooldownChangeEvent<'mc> {
+impl<'mc> JNIRaw<'mc> for PlayerRecipeBookClickEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -682,22 +679,22 @@ impl<'mc> JNIRaw<'mc> for PlayerExpCooldownChangeEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JNIInstantiatable<'mc> for PlayerExpCooldownChangeEvent<'mc> {
+impl<'mc> JNIInstantiatable<'mc> for PlayerRecipeBookClickEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
-                "Tried to instantiate PlayerExpCooldownChangeEvent from null object."
+                "Tried to instantiate PlayerRecipeBookClickEvent from null object."
             )
             .into());
         }
         let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/player/PlayerExpCooldownChangeEvent")?;
+            env.validate_name(&obj, "org/bukkit/event/player/PlayerRecipeBookClickEvent")?;
         if !valid {
             Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PlayerExpCooldownChangeEvent object, got {}",
+                "Invalid argument passed. Expected a PlayerRecipeBookClickEvent object, got {}",
                 name
             )
             .into())
@@ -707,23 +704,23 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerExpCooldownChangeEvent<'mc> {
     }
 }
 
-impl<'mc> PlayerExpCooldownChangeEvent<'mc> {
+impl<'mc> PlayerRecipeBookClickEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         player: impl Into<crate::entity::Player<'mc>>,
-        newcooldown: i32,
-        reason: impl Into<crate::event::player::PlayerExpCooldownChangeEventChangeReason<'mc>>,
-    ) -> Result<crate::event::player::PlayerExpCooldownChangeEvent<'mc>, Box<dyn std::error::Error>>
+        recipe: impl Into<crate::inventory::Recipe<'mc>>,
+        shift_click: bool,
+    ) -> Result<crate::event::player::PlayerRecipeBookClickEvent<'mc>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("(Lorg/bukkit/entity/Player;ILorg/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason;)V");
+        let sig = String::from("(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/Recipe;Z)V");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(player.into().jni_object().clone())
         });
-        let val_2 = jni::objects::JValueGen::Int(newcooldown);
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(reason.into().jni_object().clone())
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(recipe.into().jni_object().clone())
         });
-        let cls = jni.find_class("org/bukkit/event/player/PlayerExpCooldownChangeEvent");
+        let val_3 = jni::objects::JValueGen::Bool(shift_click.into());
+        let cls = jni.find_class("org/bukkit/event/player/PlayerRecipeBookClickEvent");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
@@ -735,42 +732,83 @@ impl<'mc> PlayerExpCooldownChangeEvent<'mc> {
             ],
         );
         let res = jni.translate_error_no_gen(res)?;
-        crate::event::player::PlayerExpCooldownChangeEvent::from_raw(&jni, res)
+        crate::event::player::PlayerRecipeBookClickEvent::from_raw(&jni, res)
     }
-    /// Gets the reason for the change.
-    pub fn reason(
+    /// Gets the original recipe the player was trying to craft.
+    ///
+    /// This <em>will not</em> reflect any changes made with {@link setRecipe}.
+    pub fn original_recipe(
         &self,
-    ) -> Result<
-        crate::event::player::PlayerExpCooldownChangeEventChangeReason<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let sig =
-            String::from("()Lorg/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getReason", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::player::PlayerExpCooldownChangeEventChangeReason::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )
-    }
-    /// Gets the new cooldown for the player.
-    pub fn new_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getNewCooldown", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// Sets the new cooldown for the player.
-    pub fn set_new_cooldown(&self, new_cooldown: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(new_cooldown);
+    ) -> Result<crate::inventory::Recipe<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/Recipe;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "setNewCooldown",
+            "getOriginalRecipe",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::Recipe::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the recipe the player is trying to craft.
+    ///
+    /// This <em>will</em> reflect changes made with {@link setRecipe}.
+    pub fn recipe(&self) -> Result<crate::inventory::Recipe<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/Recipe;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getRecipe", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::Recipe::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Set the recipe that will be used.
+    ///
+    /// The game will attempt to move the ingredients for this recipe into the
+    /// appropriate slots.
+    ///
+    /// If the original recipe is a {@link CraftingRecipe} the provided recipe
+    /// must also be a {@link CraftingRecipe}, otherwise the provided recipe must
+    /// be of the same type as the original recipe.
+    pub fn set_recipe(
+        &self,
+        recipe: impl Into<crate::inventory::Recipe<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/Recipe;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(recipe.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setRecipe",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// If true the game will attempt to move the ingredients for as many copies
+    /// of this recipe as possible into the appropriate slots, otherwise only 1
+    /// copy will be moved.
+    pub fn is_shift_click(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isShiftClick", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets if the game will attempt to move the ingredients for as many copies
+    /// of this recipe as possible into the appropriate slots.
+    pub fn set_shift_click(&self, shift_click: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(shift_click.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setShiftClick",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -793,14 +831,14 @@ impl<'mc> PlayerExpCooldownChangeEvent<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/player/PlayerExpCooldownChangeEvent");
+        let cls = jni.find_class("org/bukkit/event/player/PlayerRecipeBookClickEvent");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getReason', 'getNewCooldown', 'setNewCooldown', 'getHandlers', 'getHandlerList'])
+    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getOriginalRecipe', 'getRecipe', 'setRecipe', 'isShiftClick', 'setShiftClick', 'getHandlers', 'getHandlerList'])
     /// Returns the player involved in this event
     pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let temp_clone = crate::event::player::PlayerEvent::from_raw(&self.0, unsafe {
@@ -815,99 +853,20 @@ impl<'mc> PlayerExpCooldownChangeEvent<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerExpCooldownChangeEvent<'mc> {
+impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerRecipeBookClickEvent<'mc> {
     fn into(self) -> crate::event::player::PlayerEvent<'mc> {
         crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1).expect(
-            "Error converting PlayerExpCooldownChangeEvent into crate::event::player::PlayerEvent",
+            "Error converting PlayerRecipeBookClickEvent into crate::event::player::PlayerEvent",
         )
     }
 }
-pub enum PlayerExpCooldownChangeEventChangeReason<'mc> {}
-impl<'mc> std::fmt::Display for PlayerExpCooldownChangeEventChangeReason<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
-    }
-}
-
-impl<'mc> PlayerExpCooldownChangeEventChangeReason<'mc> {
-    pub fn value_of(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<PlayerExpCooldownChangeEventChangeReason<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
-        let cls =
-            env.find_class("org/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason");
-        let cls = env.translate_error_with_class(cls)?;
-        let res = env.call_static_method(
-                    cls,
-                    "valueOf",
-                    "(Ljava/lang/String;)Lorg/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason;",
-                    vec![jni::objects::JValueGen::from(val_1)],
-                );
-        let res = env.translate_error(res)?;
-        let obj = res.l()?;
-        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = env.translate_error(variant)?;
-        let variant_str = env
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        match variant_str.as_str() {
-            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-        }
-    }
-}
-
 #[repr(C)]
-pub struct PlayerExpCooldownChangeEventChangeReasonStruct<'mc>(
+pub struct PlayerItemConsumeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 
-impl<'mc> JNIRaw<'mc> for PlayerExpCooldownChangeEventChangeReason<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PlayerExpCooldownChangeEventChangeReason<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate PlayerExpCooldownChangeEventChangeReason from null object."
-            )
-            .into());
-        }
-        let (valid, name) = env.validate_name(
-            &obj,
-            "org/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason",
-        )?;
-        if !valid {
-            Err(eyre::eyre!(
-                    "Invalid argument passed. Expected a PlayerExpCooldownChangeEventChangeReason object, got {}",
-                    name
-                )
-                .into())
-        } else {
-            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-            let variant = env.translate_error(variant)?;
-            let variant_str = env
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            match variant_str.as_str() {
-                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-            }
-        }
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for PlayerExpCooldownChangeEventChangeReasonStruct<'mc> {
+impl<'mc> JNIRaw<'mc> for PlayerItemConsumeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -915,53 +874,932 @@ impl<'mc> JNIRaw<'mc> for PlayerExpCooldownChangeEventChangeReasonStruct<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JNIInstantiatable<'mc> for PlayerExpCooldownChangeEventChangeReasonStruct<'mc> {
+impl<'mc> JNIInstantiatable<'mc> for PlayerItemConsumeEvent<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
-                    "Tried to instantiate PlayerExpCooldownChangeEventChangeReasonStruct from null object.")
-                .into());
+                "Tried to instantiate PlayerItemConsumeEvent from null object."
+            )
+            .into());
         }
-        let (valid, name) = env.validate_name(
-            &obj,
-            "org/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason",
-        )?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/player/PlayerItemConsumeEvent")?;
         if !valid {
             Err(eyre::eyre!(
-                    "Invalid argument passed. Expected a PlayerExpCooldownChangeEventChangeReasonStruct object, got {}",
-                    name
-                )
-                .into())
+                "Invalid argument passed. Expected a PlayerItemConsumeEvent object, got {}",
+                name
+            )
+            .into())
         } else {
             Ok(Self(env.clone(), obj))
         }
     }
 }
 
-impl<'mc> PlayerExpCooldownChangeEventChangeReasonStruct<'mc> {
-    pub fn values(
+impl<'mc> PlayerItemConsumeEvent<'mc> {
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<
-        crate::event::player::PlayerExpCooldownChangeEventChangeReason<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let sig =
-            String::from("()Lorg/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason;");
-        let cls =
-            jni.find_class("org/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason");
+        player: impl Into<crate::entity::Player<'mc>>,
+        item: impl Into<crate::inventory::ItemStack<'mc>>,
+        hand: std::option::Option<impl Into<crate::inventory::EquipmentSlot<'mc>>>,
+    ) -> Result<crate::event::player::PlayerItemConsumeEvent<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Player;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(player.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/inventory/ItemStack;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(item.into().jni_object().clone())
+        });
+        args.push(val_2);
+        if let Some(a) = hand {
+            sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+            let val_3 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_3);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/event/player/PlayerItemConsumeEvent");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::player::PlayerItemConsumeEvent::from_raw(&jni, res)
+    }
+    /// Gets the item that is being consumed. Modifying the returned item will
+    /// have no effect, you must use {@link
+    /// #setItem(org.bukkit.inventory.ItemStack)} instead.
+    pub fn item(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getItem", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Set the item being consumed
+    pub fn set_item(
+        &self,
+        item: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(item.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Get the hand used to consume the item.
+    pub fn hand(&self) -> Result<crate::inventory::EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/EquipmentSlot;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCancelled",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let cls = jni.find_class("org/bukkit/event/player/PlayerItemConsumeEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        crate::event::player::PlayerExpCooldownChangeEventChangeReason::from_raw(&jni, obj)
+        crate::event::HandlerList::from_raw(&jni, obj)
+    }
+    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getItem', 'setItem', 'getHand', 'isCancelled', 'setCancelled', 'getHandlers', 'getHandlerList'])
+    /// Returns the player involved in this event
+    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::player::PlayerEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::player::PlayerEvent = temp_clone.into();
+        real.player()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::event::Cancellable<'mc>> for PlayerItemConsumeEvent<'mc> {
+    fn into(self) -> crate::event::Cancellable<'mc> {
+        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting PlayerItemConsumeEvent into crate::event::Cancellable")
+    }
+}
+impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerItemConsumeEvent<'mc> {
+    fn into(self) -> crate::event::player::PlayerEvent<'mc> {
+        crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting PlayerItemConsumeEvent into crate::event::player::PlayerEvent",
+        )
+    }
+}
+#[repr(C)]
+pub struct PlayerInteractEvent<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PlayerInteractEvent<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PlayerInteractEvent<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PlayerInteractEvent from null object.").into(),
+            );
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/player/PlayerInteractEvent")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PlayerInteractEvent object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> PlayerInteractEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        who: impl Into<crate::entity::Player<'mc>>,
+        action: impl Into<crate::event::block::Action<'mc>>,
+        item: impl Into<crate::inventory::ItemStack<'mc>>,
+        clicked_block: impl Into<crate::block::Block<'mc>>,
+        clicked_face: impl Into<crate::block::BlockFace<'mc>>,
+        hand: std::option::Option<impl Into<crate::inventory::EquipmentSlot<'mc>>>,
+        clicked_position: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
+    ) -> Result<crate::event::player::PlayerInteractEvent<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Player;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(who.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/event/block/Action;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(action.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += "Lorg/bukkit/inventory/ItemStack;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(item.into().jni_object().clone())
+        });
+        args.push(val_3);
+        sig += "Lorg/bukkit/block/Block;";
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(clicked_block.into().jni_object().clone())
+        });
+        args.push(val_4);
+        sig += "Lorg/bukkit/block/BlockFace;";
+        let val_5 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(clicked_face.into().jni_object().clone())
+        });
+        args.push(val_5);
+        if let Some(a) = hand {
+            sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+            let val_6 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_6);
+        }
+        if let Some(a) = clicked_position {
+            sig += "Lorg/bukkit/util/Vector;";
+            let val_7 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_7);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/event/player/PlayerInteractEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::player::PlayerInteractEvent::from_raw(&jni, res)
+    }
+    /// Returns the action type
+    pub fn action(&self) -> Result<crate::event::block::Action<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/block/Action;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getAction", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::block::Action::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    #[deprecated]
+    /// Gets the cancellation state of this event. Set to true if you want to prevent buckets from placing water and so forth
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Sets the cancellation state of this event. A canceled event will not be
+    /// executed in the server, but will still pass to other plugins
+    ///
+    /// Canceling this event will prevent use of food (player won't lose the
+    /// food item), prevent bows/snowballs/eggs from firing, etc. (player won't
+    /// lose the ammo)
+    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCancelled",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Returns the item in hand represented by this event
+    pub fn item(
+        &self,
+    ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getItem", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::inventory::ItemStack::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    /// Convenience method. Returns the material of the item represented by
+    /// this event
+    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/Material;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Check if this event involved a block
+    pub fn has_block(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hasBlock", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Check if this event involved an item
+    pub fn has_item(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hasItem", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Convenience method to inform the user whether this was a block
+    /// placement event.
+    pub fn is_block_in_hand(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isBlockInHand", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Returns the clicked block
+    pub fn clicked_block(
+        &self,
+    ) -> Result<Option<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/Block;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClickedBlock", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::block::Block::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    /// Returns the face of the block that was clicked
+    pub fn block_face(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/BlockFace;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getBlockFace", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// This controls the action to take with the block (if any) that was
+    /// clicked on. This event gets processed for all blocks, but most don't
+    /// have a default action
+    pub fn use_interacted_block(
+        &self,
+    ) -> Result<crate::event::EventResult<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/Event/Result;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "useInteractedBlock",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::EventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn set_use_interacted_block(
+        &self,
+        use_interacted_block: impl Into<crate::event::EventResult<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/event/Event/Result;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(use_interacted_block.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setUseInteractedBlock",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// This controls the action to take with the item the player is holding.
+    /// This includes both blocks and items (such as flint and steel or
+    /// records). When this is set to default, it will be allowed if no action
+    /// is taken on the interacted block.
+    pub fn use_item_in_hand(
+        &self,
+    ) -> Result<crate::event::EventResult<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/Event/Result;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "useItemInHand", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::EventResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn set_use_item_in_hand(
+        &self,
+        use_item_in_hand: impl Into<crate::event::EventResult<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/event/Event/Result;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(use_item_in_hand.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setUseItemInHand",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// The hand used to perform this interaction. May be null in the case of
+    /// {@link Action#PHYSICAL}.
+    pub fn hand(
+        &self,
+    ) -> Result<Option<crate::inventory::EquipmentSlot<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/EquipmentSlot;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::inventory::EquipmentSlot::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    /// Gets the exact position on the block the player interacted with, this will
+    /// be null outside of {@link Action#RIGHT_CLICK_BLOCK}.
+    ///
+    /// All vector components are between 0.0 and 1.0 inclusive.
+    pub fn clicked_position(
+        &self,
+    ) -> Result<Option<crate::util::Vector<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/util/Vector;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getClickedPosition",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::util::Vector::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let cls = jni.find_class("org/bukkit/event/player/PlayerInteractEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::event::HandlerList::from_raw(&jni, obj)
+    }
+    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getAction', 'isCancelled', 'setCancelled', 'getItem', 'getMaterial', 'hasBlock', 'hasItem', 'isBlockInHand', 'getClickedBlock', 'getBlockFace', 'useInteractedBlock', 'setUseInteractedBlock', 'useItemInHand', 'setUseItemInHand', 'getHand', 'getClickedPosition', 'getHandlers', 'getHandlerList'])
+    /// Returns the player involved in this event
+    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::player::PlayerEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::player::PlayerEvent = temp_clone.into();
+        real.player()
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::event::Cancellable<'mc>> for PlayerInteractEvent<'mc> {
+    fn into(self) -> crate::event::Cancellable<'mc> {
+        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting PlayerInteractEvent into crate::event::Cancellable")
+    }
+}
+impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerInteractEvent<'mc> {
+    fn into(self) -> crate::event::player::PlayerEvent<'mc> {
+        crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting PlayerInteractEvent into crate::event::player::PlayerEvent")
+    }
+}
+#[repr(C)]
+pub struct PlayerChatTabCompleteEvent<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PlayerChatTabCompleteEvent<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PlayerChatTabCompleteEvent<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PlayerChatTabCompleteEvent from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/player/PlayerChatTabCompleteEvent")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PlayerChatTabCompleteEvent object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> PlayerChatTabCompleteEvent<'mc> {
+    /// Gets the chat message being tab-completed.
+    pub fn chat_message(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getChatMessage", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Gets the last 'token' of the message being tab-completed.
+    ///
+    /// The token is the substring starting with the character after the last
+    /// space in the message.
+    pub fn last_token(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLastToken", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// This is the collection of completions for this event.
+    pub fn tab_completions(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Collection;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getTabCompletions",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
+    }
+
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let cls = jni.find_class("org/bukkit/event/player/PlayerChatTabCompleteEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::event::HandlerList::from_raw(&jni, obj)
+    }
+    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getChatMessage', 'getLastToken', 'getTabCompletions', 'getHandlers', 'getHandlerList'])
+    /// Returns the player involved in this event
+    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::player::PlayerEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::player::PlayerEvent = temp_clone.into();
+        real.player()
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerChatTabCompleteEvent<'mc> {
+    fn into(self) -> crate::event::player::PlayerEvent<'mc> {
+        crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting PlayerChatTabCompleteEvent into crate::event::player::PlayerEvent",
+        )
+    }
+}
+#[repr(C)]
+pub struct PlayerBucketEvent<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PlayerBucketEvent<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PlayerBucketEvent<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PlayerBucketEvent from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/player/PlayerBucketEvent")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PlayerBucketEvent object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> PlayerBucketEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        who: impl Into<crate::entity::Player<'mc>>,
+        block: impl Into<crate::block::Block<'mc>>,
+        block_clicked: impl Into<crate::block::Block<'mc>>,
+        block_face: impl Into<crate::block::BlockFace<'mc>>,
+        bucket: impl Into<crate::Material<'mc>>,
+        item_in_hand: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
+        hand: std::option::Option<impl Into<crate::inventory::EquipmentSlot<'mc>>>,
+    ) -> Result<crate::event::player::PlayerBucketEvent<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Player;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(who.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/block/Block;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(block.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += "Lorg/bukkit/block/Block;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(block_clicked.into().jni_object().clone())
+        });
+        args.push(val_3);
+        sig += "Lorg/bukkit/block/BlockFace;";
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(block_face.into().jni_object().clone())
+        });
+        args.push(val_4);
+        sig += "Lorg/bukkit/Material;";
+        let val_5 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(bucket.into().jni_object().clone())
+        });
+        args.push(val_5);
+        if let Some(a) = item_in_hand {
+            sig += "Lorg/bukkit/inventory/ItemStack;";
+            let val_6 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_6);
+        }
+        if let Some(a) = hand {
+            sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+            let val_7 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_7);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/event/player/PlayerBucketEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::player::PlayerBucketEvent::from_raw(&jni, res)
+    }
+    /// Returns the bucket used in this event
+    pub fn bucket(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/Material;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getBucket", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Get the resulting item in hand after the bucket event
+    pub fn item_stack(
+        &self,
+    ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemStack", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::inventory::ItemStack::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    /// Set the item in hand after the event
+    pub fn set_item_stack(
+        &self,
+        item_stack: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(item_stack.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItemStack",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets the block involved in this event.
+    pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/Block;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getBlock", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::Block::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Return the block clicked
+    pub fn block_clicked(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/Block;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getBlockClicked", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::Block::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Get the face on the clicked block
+    pub fn block_face(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/BlockFace;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getBlockFace", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Get the hand that was used in this event.
+    pub fn hand(&self) -> Result<crate::inventory::EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/EquipmentSlot;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCancelled",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getBucket', 'getItemStack', 'setItemStack', 'getBlock', 'getBlockClicked', 'getBlockFace', 'getHand', 'isCancelled', 'setCancelled'])
+    /// Returns the player involved in this event
+    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::player::PlayerEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::player::PlayerEvent = temp_clone.into();
+        real.player()
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::event::Cancellable<'mc>> for PlayerBucketEvent<'mc> {
+    fn into(self) -> crate::event::Cancellable<'mc> {
+        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting PlayerBucketEvent into crate::event::Cancellable")
+    }
+}
+impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerBucketEvent<'mc> {
+    fn into(self) -> crate::event::player::PlayerEvent<'mc> {
+        crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting PlayerBucketEvent into crate::event::player::PlayerEvent")
     }
 }
 #[repr(C)]
@@ -1300,6 +2138,386 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerMoveEvent<'mc> 
     }
 }
 #[repr(C)]
+pub struct PlayerSignOpenEvent<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PlayerSignOpenEvent<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PlayerSignOpenEvent<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PlayerSignOpenEvent from null object.").into(),
+            );
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/player/PlayerSignOpenEvent")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PlayerSignOpenEvent object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> PlayerSignOpenEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        player: impl Into<crate::entity::Player<'mc>>,
+        sign: impl Into<crate::block::Sign<'mc>>,
+        side: impl Into<crate::block::sign::Side<'mc>>,
+        cause: impl Into<crate::event::player::PlayerSignOpenEventCause<'mc>>,
+    ) -> Result<crate::event::player::PlayerSignOpenEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/entity/Player;Lorg/bukkit/block/Sign;Lorg/bukkit/block/sign/Side;Lorg/bukkit/event/player/PlayerSignOpenEvent/Cause;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(player.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(sign.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(side.into().jni_object().clone())
+        });
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(cause.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/event/player/PlayerSignOpenEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::player::PlayerSignOpenEvent::from_raw(&jni, res)
+    }
+    /// Gets the sign that was opened.
+    pub fn sign(&self) -> Result<crate::block::Sign<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/Sign;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getSign", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::Sign::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets side of the sign opened.
+    pub fn side(&self) -> Result<crate::block::sign::Side<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/block/sign/Side;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getSide", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::sign::Side::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the cause of the sign open.
+    pub fn cause(
+        &self,
+    ) -> Result<crate::event::player::PlayerSignOpenEventCause<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/event/player/PlayerSignOpenEvent/Cause;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getCause", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::player::PlayerSignOpenEventCause::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCancelled",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let cls = jni.find_class("org/bukkit/event/player/PlayerSignOpenEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::event::HandlerList::from_raw(&jni, obj)
+    }
+    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getSign', 'getSide', 'getCause', 'isCancelled', 'setCancelled', 'getHandlers', 'getHandlerList'])
+    /// Returns the player involved in this event
+    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::player::PlayerEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::player::PlayerEvent = temp_clone.into();
+        real.player()
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::event::Cancellable<'mc>> for PlayerSignOpenEvent<'mc> {
+    fn into(self) -> crate::event::Cancellable<'mc> {
+        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting PlayerSignOpenEvent into crate::event::Cancellable")
+    }
+}
+impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerSignOpenEvent<'mc> {
+    fn into(self) -> crate::event::player::PlayerEvent<'mc> {
+        crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting PlayerSignOpenEvent into crate::event::player::PlayerEvent")
+    }
+}
+pub enum PlayerSignOpenEventCause<'mc> {
+    Interact {
+        inner: PlayerSignOpenEventCauseStruct<'mc>,
+    },
+    Place {
+        inner: PlayerSignOpenEventCauseStruct<'mc>,
+    },
+    Plugin {
+        inner: PlayerSignOpenEventCauseStruct<'mc>,
+    },
+    Unknown {
+        inner: PlayerSignOpenEventCauseStruct<'mc>,
+    },
+}
+impl<'mc> std::fmt::Display for PlayerSignOpenEventCause<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            PlayerSignOpenEventCause::Interact { .. } => f.write_str("INTERACT"),
+            PlayerSignOpenEventCause::Place { .. } => f.write_str("PLACE"),
+            PlayerSignOpenEventCause::Plugin { .. } => f.write_str("PLUGIN"),
+            PlayerSignOpenEventCause::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PlayerSignOpenEventCause<'mc> {
+    type Target = PlayerSignOpenEventCauseStruct<'mc>;
+    fn deref(&self) -> &<PlayerSignOpenEventCause<'mc> as std::ops::Deref>::Target {
+        match self {
+            PlayerSignOpenEventCause::Interact { inner } => inner,
+            PlayerSignOpenEventCause::Place { inner } => inner,
+            PlayerSignOpenEventCause::Plugin { inner } => inner,
+            PlayerSignOpenEventCause::Unknown { inner } => inner,
+        }
+    }
+}
+
+impl<'mc> PlayerSignOpenEventCause<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PlayerSignOpenEventCause<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/event/player/PlayerSignOpenEvent/Cause");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/event/player/PlayerSignOpenEvent/Cause;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "INTERACT" => Ok(PlayerSignOpenEventCause::Interact {
+                inner: PlayerSignOpenEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "PLACE" => Ok(PlayerSignOpenEventCause::Place {
+                inner: PlayerSignOpenEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "PLUGIN" => Ok(PlayerSignOpenEventCause::Plugin {
+                inner: PlayerSignOpenEventCauseStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(PlayerSignOpenEventCause::Unknown {
+                inner: PlayerSignOpenEventCauseStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct PlayerSignOpenEventCauseStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PlayerSignOpenEventCause<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::Interact { inner } => inner.0.clone(),
+            Self::Place { inner } => inner.0.clone(),
+            Self::Plugin { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::Interact { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Place { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Plugin { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PlayerSignOpenEventCause<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PlayerSignOpenEventCause from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/player/PlayerSignOpenEvent/Cause")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PlayerSignOpenEventCause object, got {}",
+                name
+            )
+            .into())
+        } else {
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "INTERACT" => Ok(PlayerSignOpenEventCause::Interact {
+                    inner: PlayerSignOpenEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "PLACE" => Ok(PlayerSignOpenEventCause::Place {
+                    inner: PlayerSignOpenEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "PLUGIN" => Ok(PlayerSignOpenEventCause::Plugin {
+                    inner: PlayerSignOpenEventCauseStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(PlayerSignOpenEventCause::Unknown {
+                    inner: PlayerSignOpenEventCauseStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
+        }
+    }
+}
+
+impl<'mc> JNIRaw<'mc> for PlayerSignOpenEventCauseStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PlayerSignOpenEventCauseStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PlayerSignOpenEventCauseStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/player/PlayerSignOpenEvent/Cause")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PlayerSignOpenEventCauseStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> PlayerSignOpenEventCauseStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::player::PlayerSignOpenEventCause<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/event/player/PlayerSignOpenEvent/Cause;");
+        let cls = jni.find_class("org/bukkit/event/player/PlayerSignOpenEvent/Cause");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::event::player::PlayerSignOpenEventCause::from_raw(&jni, obj)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
 pub struct AsyncPlayerPreLoginEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1625,10 +2843,44 @@ impl<'mc> Into<crate::event::Event<'mc>> for AsyncPlayerPreLoginEvent<'mc> {
             .expect("Error converting AsyncPlayerPreLoginEvent into crate::event::Event")
     }
 }
-pub enum AsyncPlayerPreLoginEventResult<'mc> {}
+pub enum AsyncPlayerPreLoginEventResult<'mc> {
+    Allowed {
+        inner: AsyncPlayerPreLoginEventResultStruct<'mc>,
+    },
+    KickFull {
+        inner: AsyncPlayerPreLoginEventResultStruct<'mc>,
+    },
+    KickBanned {
+        inner: AsyncPlayerPreLoginEventResultStruct<'mc>,
+    },
+    KickWhitelist {
+        inner: AsyncPlayerPreLoginEventResultStruct<'mc>,
+    },
+    KickOther {
+        inner: AsyncPlayerPreLoginEventResultStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for AsyncPlayerPreLoginEventResult<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            AsyncPlayerPreLoginEventResult::Allowed { .. } => f.write_str("ALLOWED"),
+            AsyncPlayerPreLoginEventResult::KickFull { .. } => f.write_str("KICK_FULL"),
+            AsyncPlayerPreLoginEventResult::KickBanned { .. } => f.write_str("KICK_BANNED"),
+            AsyncPlayerPreLoginEventResult::KickWhitelist { .. } => f.write_str("KICK_WHITELIST"),
+            AsyncPlayerPreLoginEventResult::KickOther { .. } => f.write_str("KICK_OTHER"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for AsyncPlayerPreLoginEventResult<'mc> {
+    type Target = AsyncPlayerPreLoginEventResultStruct<'mc>;
+    fn deref(&self) -> &<AsyncPlayerPreLoginEventResult<'mc> as std::ops::Deref>::Target {
+        match self {
+            AsyncPlayerPreLoginEventResult::Allowed { inner } => inner,
+            AsyncPlayerPreLoginEventResult::KickFull { inner } => inner,
+            AsyncPlayerPreLoginEventResult::KickBanned { inner } => inner,
+            AsyncPlayerPreLoginEventResult::KickWhitelist { inner } => inner,
+            AsyncPlayerPreLoginEventResult::KickOther { inner } => inner,
+        }
     }
 }
 
@@ -1655,6 +2907,22 @@ impl<'mc> AsyncPlayerPreLoginEventResult<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "ALLOWED" => Ok(AsyncPlayerPreLoginEventResult::Allowed {
+                inner: AsyncPlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+            }),
+            "KICK_FULL" => Ok(AsyncPlayerPreLoginEventResult::KickFull {
+                inner: AsyncPlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+            }),
+            "KICK_BANNED" => Ok(AsyncPlayerPreLoginEventResult::KickBanned {
+                inner: AsyncPlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+            }),
+            "KICK_WHITELIST" => Ok(AsyncPlayerPreLoginEventResult::KickWhitelist {
+                inner: AsyncPlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+            }),
+            "KICK_OTHER" => Ok(AsyncPlayerPreLoginEventResult::KickOther {
+                inner: AsyncPlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -1668,10 +2936,28 @@ pub struct AsyncPlayerPreLoginEventResultStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for AsyncPlayerPreLoginEventResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Allowed { inner } => inner.0.clone(),
+            Self::KickFull { inner } => inner.0.clone(),
+            Self::KickBanned { inner } => inner.0.clone(),
+            Self::KickWhitelist { inner } => inner.0.clone(),
+            Self::KickOther { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Allowed { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::KickFull { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::KickBanned { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::KickWhitelist { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::KickOther { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for AsyncPlayerPreLoginEventResult<'mc> {
@@ -1703,6 +2989,21 @@ impl<'mc> JNIInstantiatable<'mc> for AsyncPlayerPreLoginEventResult<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "ALLOWED" => Ok(AsyncPlayerPreLoginEventResult::Allowed {
+                    inner: AsyncPlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+                }),
+                "KICK_FULL" => Ok(AsyncPlayerPreLoginEventResult::KickFull {
+                    inner: AsyncPlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+                }),
+                "KICK_BANNED" => Ok(AsyncPlayerPreLoginEventResult::KickBanned {
+                    inner: AsyncPlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+                }),
+                "KICK_WHITELIST" => Ok(AsyncPlayerPreLoginEventResult::KickWhitelist {
+                    inner: AsyncPlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+                }),
+                "KICK_OTHER" => Ok(AsyncPlayerPreLoginEventResult::KickOther {
+                    inner: AsyncPlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -1761,144 +3062,6 @@ impl<'mc> AsyncPlayerPreLoginEventResultStruct<'mc> {
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct PlayerChatTabCompleteEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for PlayerChatTabCompleteEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PlayerChatTabCompleteEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate PlayerChatTabCompleteEvent from null object."
-            )
-            .into());
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/player/PlayerChatTabCompleteEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PlayerChatTabCompleteEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> PlayerChatTabCompleteEvent<'mc> {
-    /// Gets the chat message being tab-completed.
-    pub fn chat_message(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getChatMessage", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// Gets the last 'token' of the message being tab-completed.
-    ///
-    /// The token is the substring starting with the character after the last
-    /// space in the message.
-    pub fn last_token(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getLastToken", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// This is the collection of completions for this event.
-    pub fn tab_completions(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Collection;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getTabCompletions",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let mut new_vec = Vec::new();
-        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
-        let iter = col.iterator()?;
-        while iter.has_next()? {
-            let obj = iter.next()?;
-            new_vec.push(
-                self.jni_ref()
-                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
-                    .to_string_lossy()
-                    .to_string(),
-            );
-        }
-        Ok(new_vec)
-    }
-
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/player/PlayerChatTabCompleteEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getChatMessage', 'getLastToken', 'getTabCompletions', 'getHandlers', 'getHandlerList'])
-    /// Returns the player involved in this event
-    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::player::PlayerEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::player::PlayerEvent = temp_clone.into();
-        real.player()
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerChatTabCompleteEvent<'mc> {
-    fn into(self) -> crate::event::player::PlayerEvent<'mc> {
-        crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1).expect(
-            "Error converting PlayerChatTabCompleteEvent into crate::event::player::PlayerEvent",
-        )
     }
 }
 #[repr(C)]
@@ -3656,10 +4819,54 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerFishEvent<'mc> 
             .expect("Error converting PlayerFishEvent into crate::event::player::PlayerEvent")
     }
 }
-pub enum PlayerFishEventState<'mc> {}
+pub enum PlayerFishEventState<'mc> {
+    Fishing {
+        inner: PlayerFishEventStateStruct<'mc>,
+    },
+    CaughtFish {
+        inner: PlayerFishEventStateStruct<'mc>,
+    },
+    CaughtEntity {
+        inner: PlayerFishEventStateStruct<'mc>,
+    },
+    InGround {
+        inner: PlayerFishEventStateStruct<'mc>,
+    },
+    FailedAttempt {
+        inner: PlayerFishEventStateStruct<'mc>,
+    },
+    ReelIn {
+        inner: PlayerFishEventStateStruct<'mc>,
+    },
+    Bite {
+        inner: PlayerFishEventStateStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for PlayerFishEventState<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            PlayerFishEventState::Fishing { .. } => f.write_str("FISHING"),
+            PlayerFishEventState::CaughtFish { .. } => f.write_str("CAUGHT_FISH"),
+            PlayerFishEventState::CaughtEntity { .. } => f.write_str("CAUGHT_ENTITY"),
+            PlayerFishEventState::InGround { .. } => f.write_str("IN_GROUND"),
+            PlayerFishEventState::FailedAttempt { .. } => f.write_str("FAILED_ATTEMPT"),
+            PlayerFishEventState::ReelIn { .. } => f.write_str("REEL_IN"),
+            PlayerFishEventState::Bite { .. } => f.write_str("BITE"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PlayerFishEventState<'mc> {
+    type Target = PlayerFishEventStateStruct<'mc>;
+    fn deref(&self) -> &<PlayerFishEventState<'mc> as std::ops::Deref>::Target {
+        match self {
+            PlayerFishEventState::Fishing { inner } => inner,
+            PlayerFishEventState::CaughtFish { inner } => inner,
+            PlayerFishEventState::CaughtEntity { inner } => inner,
+            PlayerFishEventState::InGround { inner } => inner,
+            PlayerFishEventState::FailedAttempt { inner } => inner,
+            PlayerFishEventState::ReelIn { inner } => inner,
+            PlayerFishEventState::Bite { inner } => inner,
+        }
     }
 }
 
@@ -3686,6 +4893,28 @@ impl<'mc> PlayerFishEventState<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "FISHING" => Ok(PlayerFishEventState::Fishing {
+                inner: PlayerFishEventStateStruct::from_raw(env, obj)?,
+            }),
+            "CAUGHT_FISH" => Ok(PlayerFishEventState::CaughtFish {
+                inner: PlayerFishEventStateStruct::from_raw(env, obj)?,
+            }),
+            "CAUGHT_ENTITY" => Ok(PlayerFishEventState::CaughtEntity {
+                inner: PlayerFishEventStateStruct::from_raw(env, obj)?,
+            }),
+            "IN_GROUND" => Ok(PlayerFishEventState::InGround {
+                inner: PlayerFishEventStateStruct::from_raw(env, obj)?,
+            }),
+            "FAILED_ATTEMPT" => Ok(PlayerFishEventState::FailedAttempt {
+                inner: PlayerFishEventStateStruct::from_raw(env, obj)?,
+            }),
+            "REEL_IN" => Ok(PlayerFishEventState::ReelIn {
+                inner: PlayerFishEventStateStruct::from_raw(env, obj)?,
+            }),
+            "BITE" => Ok(PlayerFishEventState::Bite {
+                inner: PlayerFishEventStateStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -3699,10 +4928,32 @@ pub struct PlayerFishEventStateStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for PlayerFishEventState<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Fishing { inner } => inner.0.clone(),
+            Self::CaughtFish { inner } => inner.0.clone(),
+            Self::CaughtEntity { inner } => inner.0.clone(),
+            Self::InGround { inner } => inner.0.clone(),
+            Self::FailedAttempt { inner } => inner.0.clone(),
+            Self::ReelIn { inner } => inner.0.clone(),
+            Self::Bite { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Fishing { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::CaughtFish { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CaughtEntity { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::InGround { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FailedAttempt { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ReelIn { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Bite { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PlayerFishEventState<'mc> {
@@ -3731,6 +4982,27 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerFishEventState<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "FISHING" => Ok(PlayerFishEventState::Fishing {
+                    inner: PlayerFishEventStateStruct::from_raw(env, obj)?,
+                }),
+                "CAUGHT_FISH" => Ok(PlayerFishEventState::CaughtFish {
+                    inner: PlayerFishEventStateStruct::from_raw(env, obj)?,
+                }),
+                "CAUGHT_ENTITY" => Ok(PlayerFishEventState::CaughtEntity {
+                    inner: PlayerFishEventStateStruct::from_raw(env, obj)?,
+                }),
+                "IN_GROUND" => Ok(PlayerFishEventState::InGround {
+                    inner: PlayerFishEventStateStruct::from_raw(env, obj)?,
+                }),
+                "FAILED_ATTEMPT" => Ok(PlayerFishEventState::FailedAttempt {
+                    inner: PlayerFishEventStateStruct::from_raw(env, obj)?,
+                }),
+                "REEL_IN" => Ok(PlayerFishEventState::ReelIn {
+                    inner: PlayerFishEventStateStruct::from_raw(env, obj)?,
+                }),
+                "BITE" => Ok(PlayerFishEventState::Bite {
+                    inner: PlayerFishEventStateStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -4054,10 +5326,44 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerLoginEvent<'mc>
             .expect("Error converting PlayerLoginEvent into crate::event::player::PlayerEvent")
     }
 }
-pub enum PlayerLoginEventResult<'mc> {}
+pub enum PlayerLoginEventResult<'mc> {
+    Allowed {
+        inner: PlayerLoginEventResultStruct<'mc>,
+    },
+    KickFull {
+        inner: PlayerLoginEventResultStruct<'mc>,
+    },
+    KickBanned {
+        inner: PlayerLoginEventResultStruct<'mc>,
+    },
+    KickWhitelist {
+        inner: PlayerLoginEventResultStruct<'mc>,
+    },
+    KickOther {
+        inner: PlayerLoginEventResultStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for PlayerLoginEventResult<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            PlayerLoginEventResult::Allowed { .. } => f.write_str("ALLOWED"),
+            PlayerLoginEventResult::KickFull { .. } => f.write_str("KICK_FULL"),
+            PlayerLoginEventResult::KickBanned { .. } => f.write_str("KICK_BANNED"),
+            PlayerLoginEventResult::KickWhitelist { .. } => f.write_str("KICK_WHITELIST"),
+            PlayerLoginEventResult::KickOther { .. } => f.write_str("KICK_OTHER"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PlayerLoginEventResult<'mc> {
+    type Target = PlayerLoginEventResultStruct<'mc>;
+    fn deref(&self) -> &<PlayerLoginEventResult<'mc> as std::ops::Deref>::Target {
+        match self {
+            PlayerLoginEventResult::Allowed { inner } => inner,
+            PlayerLoginEventResult::KickFull { inner } => inner,
+            PlayerLoginEventResult::KickBanned { inner } => inner,
+            PlayerLoginEventResult::KickWhitelist { inner } => inner,
+            PlayerLoginEventResult::KickOther { inner } => inner,
+        }
     }
 }
 
@@ -4084,6 +5390,22 @@ impl<'mc> PlayerLoginEventResult<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "ALLOWED" => Ok(PlayerLoginEventResult::Allowed {
+                inner: PlayerLoginEventResultStruct::from_raw(env, obj)?,
+            }),
+            "KICK_FULL" => Ok(PlayerLoginEventResult::KickFull {
+                inner: PlayerLoginEventResultStruct::from_raw(env, obj)?,
+            }),
+            "KICK_BANNED" => Ok(PlayerLoginEventResult::KickBanned {
+                inner: PlayerLoginEventResultStruct::from_raw(env, obj)?,
+            }),
+            "KICK_WHITELIST" => Ok(PlayerLoginEventResult::KickWhitelist {
+                inner: PlayerLoginEventResultStruct::from_raw(env, obj)?,
+            }),
+            "KICK_OTHER" => Ok(PlayerLoginEventResult::KickOther {
+                inner: PlayerLoginEventResultStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -4097,10 +5419,28 @@ pub struct PlayerLoginEventResultStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for PlayerLoginEventResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Allowed { inner } => inner.0.clone(),
+            Self::KickFull { inner } => inner.0.clone(),
+            Self::KickBanned { inner } => inner.0.clone(),
+            Self::KickWhitelist { inner } => inner.0.clone(),
+            Self::KickOther { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Allowed { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::KickFull { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::KickBanned { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::KickWhitelist { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::KickOther { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PlayerLoginEventResult<'mc> {
@@ -4130,6 +5470,21 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerLoginEventResult<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "ALLOWED" => Ok(PlayerLoginEventResult::Allowed {
+                    inner: PlayerLoginEventResultStruct::from_raw(env, obj)?,
+                }),
+                "KICK_FULL" => Ok(PlayerLoginEventResult::KickFull {
+                    inner: PlayerLoginEventResultStruct::from_raw(env, obj)?,
+                }),
+                "KICK_BANNED" => Ok(PlayerLoginEventResult::KickBanned {
+                    inner: PlayerLoginEventResultStruct::from_raw(env, obj)?,
+                }),
+                "KICK_WHITELIST" => Ok(PlayerLoginEventResult::KickWhitelist {
+                    inner: PlayerLoginEventResultStruct::from_raw(env, obj)?,
+                }),
+                "KICK_OTHER" => Ok(PlayerLoginEventResult::KickOther {
+                    inner: PlayerLoginEventResultStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -4447,227 +5802,6 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerChangedWorldEve
     }
 }
 #[repr(C)]
-pub struct PlayerStatisticIncrementEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for PlayerStatisticIncrementEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PlayerStatisticIncrementEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate PlayerStatisticIncrementEvent from null object."
-            )
-            .into());
-        }
-        let (valid, name) = env.validate_name(
-            &obj,
-            "org/bukkit/event/player/PlayerStatisticIncrementEvent",
-        )?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PlayerStatisticIncrementEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> PlayerStatisticIncrementEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        player: impl Into<crate::entity::Player<'mc>>,
-        statistic: impl Into<crate::Statistic<'mc>>,
-        initial_value: i32,
-        new_value: i32,
-        material: std::option::Option<impl Into<crate::Material<'mc>>>,
-    ) -> Result<crate::event::player::PlayerStatisticIncrementEvent<'mc>, Box<dyn std::error::Error>>
-    {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/entity/Player;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(player.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Lorg/bukkit/Statistic;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(statistic.into().jni_object().clone())
-        });
-        args.push(val_2);
-        sig += "I";
-        let val_3 = jni::objects::JValueGen::Int(initial_value);
-        args.push(val_3);
-        sig += "I";
-        let val_4 = jni::objects::JValueGen::Int(new_value);
-        args.push(val_4);
-        if let Some(a) = material {
-            sig += "Lorg/bukkit/Material;";
-            let val_5 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_5);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/event/player/PlayerStatisticIncrementEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::player::PlayerStatisticIncrementEvent::from_raw(&jni, res)
-    }
-    /// Gets the statistic that is being incremented.
-    pub fn statistic(&self) -> Result<crate::Statistic<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Statistic;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getStatistic", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Statistic::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets the previous value of the statistic.
-    pub fn previous_value(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPreviousValue",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// Gets the new value of the statistic.
-    pub fn new_value(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getNewValue", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// Gets the EntityType if {@link #getStatistic() getStatistic()} is an
-    /// entity statistic otherwise returns null.
-    pub fn entity_type(
-        &self,
-    ) -> Result<Option<crate::entity::EntityType<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getEntityType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-    /// Gets the Material if {@link #getStatistic() getStatistic()} is a block
-    /// or item statistic otherwise returns null.
-    pub fn material(&self) -> Result<Option<crate::Material<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Material;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::Material::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })?))
-    }
-
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCancelled",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/player/PlayerStatisticIncrementEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getStatistic', 'getPreviousValue', 'getNewValue', 'getEntityType', 'getMaterial', 'isCancelled', 'setCancelled', 'getHandlers', 'getHandlerList'])
-    /// Returns the player involved in this event
-    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::player::PlayerEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::player::PlayerEvent = temp_clone.into();
-        real.player()
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::event::Cancellable<'mc>> for PlayerStatisticIncrementEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting PlayerStatisticIncrementEvent into crate::event::Cancellable")
-    }
-}
-impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerStatisticIncrementEvent<'mc> {
-    fn into(self) -> crate::event::player::PlayerEvent<'mc> {
-        crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1).expect(
-            "Error converting PlayerStatisticIncrementEvent into crate::event::player::PlayerEvent",
-        )
-    }
-}
-#[repr(C)]
 pub struct PlayerRespawnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4863,10 +5997,34 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerRespawnEvent<'m
             .expect("Error converting PlayerRespawnEvent into crate::event::player::PlayerEvent")
     }
 }
-pub enum PlayerRespawnEventRespawnReason<'mc> {}
+pub enum PlayerRespawnEventRespawnReason<'mc> {
+    Death {
+        inner: PlayerRespawnEventRespawnReasonStruct<'mc>,
+    },
+    EndPortal {
+        inner: PlayerRespawnEventRespawnReasonStruct<'mc>,
+    },
+    Plugin {
+        inner: PlayerRespawnEventRespawnReasonStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for PlayerRespawnEventRespawnReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            PlayerRespawnEventRespawnReason::Death { .. } => f.write_str("DEATH"),
+            PlayerRespawnEventRespawnReason::EndPortal { .. } => f.write_str("END_PORTAL"),
+            PlayerRespawnEventRespawnReason::Plugin { .. } => f.write_str("PLUGIN"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PlayerRespawnEventRespawnReason<'mc> {
+    type Target = PlayerRespawnEventRespawnReasonStruct<'mc>;
+    fn deref(&self) -> &<PlayerRespawnEventRespawnReason<'mc> as std::ops::Deref>::Target {
+        match self {
+            PlayerRespawnEventRespawnReason::Death { inner } => inner,
+            PlayerRespawnEventRespawnReason::EndPortal { inner } => inner,
+            PlayerRespawnEventRespawnReason::Plugin { inner } => inner,
+        }
     }
 }
 
@@ -4893,6 +6051,16 @@ impl<'mc> PlayerRespawnEventRespawnReason<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "DEATH" => Ok(PlayerRespawnEventRespawnReason::Death {
+                inner: PlayerRespawnEventRespawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "END_PORTAL" => Ok(PlayerRespawnEventRespawnReason::EndPortal {
+                inner: PlayerRespawnEventRespawnReasonStruct::from_raw(env, obj)?,
+            }),
+            "PLUGIN" => Ok(PlayerRespawnEventRespawnReason::Plugin {
+                inner: PlayerRespawnEventRespawnReasonStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -4906,10 +6074,20 @@ pub struct PlayerRespawnEventRespawnReasonStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for PlayerRespawnEventRespawnReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Death { inner } => inner.0.clone(),
+            Self::EndPortal { inner } => inner.0.clone(),
+            Self::Plugin { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Death { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::EndPortal { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Plugin { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PlayerRespawnEventRespawnReason<'mc> {
@@ -4941,6 +6119,15 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerRespawnEventRespawnReason<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "DEATH" => Ok(PlayerRespawnEventRespawnReason::Death {
+                    inner: PlayerRespawnEventRespawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "END_PORTAL" => Ok(PlayerRespawnEventRespawnReason::EndPortal {
+                    inner: PlayerRespawnEventRespawnReasonStruct::from_raw(env, obj)?,
+                }),
+                "PLUGIN" => Ok(PlayerRespawnEventRespawnReason::Plugin {
+                    inner: PlayerRespawnEventRespawnReasonStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -5218,6 +6405,461 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerEggThrowEvent<'
     fn into(self) -> crate::event::player::PlayerEvent<'mc> {
         crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting PlayerEggThrowEvent into crate::event::player::PlayerEvent")
+    }
+}
+#[repr(C)]
+pub struct PlayerLinksSendEvent<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PlayerLinksSendEvent<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PlayerLinksSendEvent<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PlayerLinksSendEvent from null object.").into(),
+            );
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/player/PlayerLinksSendEvent")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PlayerLinksSendEvent object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> PlayerLinksSendEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        player: impl Into<crate::entity::Player<'mc>>,
+        links: impl Into<crate::ServerLinks<'mc>>,
+    ) -> Result<crate::event::player::PlayerLinksSendEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/entity/Player;Lorg/bukkit/ServerLinks;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(player.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(links.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/event/player/PlayerLinksSendEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::player::PlayerLinksSendEvent::from_raw(&jni, res)
+    }
+    /// Gets the links to be sent, for modification.
+    pub fn links(&self) -> Result<crate::ServerLinks<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/ServerLinks;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getLinks", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::ServerLinks::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let cls = jni.find_class("org/bukkit/event/player/PlayerLinksSendEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::event::HandlerList::from_raw(&jni, obj)
+    }
+    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getLinks', 'getHandlers', 'getHandlerList'])
+    /// Returns the player involved in this event
+    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::player::PlayerEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::player::PlayerEvent = temp_clone.into();
+        real.player()
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerLinksSendEvent<'mc> {
+    fn into(self) -> crate::event::player::PlayerEvent<'mc> {
+        crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting PlayerLinksSendEvent into crate::event::player::PlayerEvent")
+    }
+}
+#[repr(C)]
+pub struct PlayerExpCooldownChangeEvent<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PlayerExpCooldownChangeEvent<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PlayerExpCooldownChangeEvent<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PlayerExpCooldownChangeEvent from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/player/PlayerExpCooldownChangeEvent")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PlayerExpCooldownChangeEvent object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> PlayerExpCooldownChangeEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        player: impl Into<crate::entity::Player<'mc>>,
+        newcooldown: i32,
+        reason: impl Into<crate::event::player::PlayerExpCooldownChangeEventChangeReason<'mc>>,
+    ) -> Result<crate::event::player::PlayerExpCooldownChangeEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("(Lorg/bukkit/entity/Player;ILorg/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(player.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Int(newcooldown);
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(reason.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/event/player/PlayerExpCooldownChangeEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::player::PlayerExpCooldownChangeEvent::from_raw(&jni, res)
+    }
+    /// Gets the reason for the change.
+    pub fn reason(
+        &self,
+    ) -> Result<
+        crate::event::player::PlayerExpCooldownChangeEventChangeReason<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig =
+            String::from("()Lorg/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getReason", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::player::PlayerExpCooldownChangeEventChangeReason::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )
+    }
+    /// Gets the new cooldown for the player.
+    pub fn new_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getNewCooldown", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Sets the new cooldown for the player.
+    pub fn set_new_cooldown(&self, new_cooldown: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(new_cooldown);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setNewCooldown",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let cls = jni.find_class("org/bukkit/event/player/PlayerExpCooldownChangeEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::event::HandlerList::from_raw(&jni, obj)
+    }
+    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getReason', 'getNewCooldown', 'setNewCooldown', 'getHandlers', 'getHandlerList'])
+    /// Returns the player involved in this event
+    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::player::PlayerEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::player::PlayerEvent = temp_clone.into();
+        real.player()
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerExpCooldownChangeEvent<'mc> {
+    fn into(self) -> crate::event::player::PlayerEvent<'mc> {
+        crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting PlayerExpCooldownChangeEvent into crate::event::player::PlayerEvent",
+        )
+    }
+}
+pub enum PlayerExpCooldownChangeEventChangeReason<'mc> {
+    PickupOrb {
+        inner: PlayerExpCooldownChangeEventChangeReasonStruct<'mc>,
+    },
+    Plugin {
+        inner: PlayerExpCooldownChangeEventChangeReasonStruct<'mc>,
+    },
+}
+impl<'mc> std::fmt::Display for PlayerExpCooldownChangeEventChangeReason<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            PlayerExpCooldownChangeEventChangeReason::PickupOrb { .. } => f.write_str("PICKUP_ORB"),
+            PlayerExpCooldownChangeEventChangeReason::Plugin { .. } => f.write_str("PLUGIN"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PlayerExpCooldownChangeEventChangeReason<'mc> {
+    type Target = PlayerExpCooldownChangeEventChangeReasonStruct<'mc>;
+    fn deref(&self) -> &<PlayerExpCooldownChangeEventChangeReason<'mc> as std::ops::Deref>::Target {
+        match self {
+            PlayerExpCooldownChangeEventChangeReason::PickupOrb { inner } => inner,
+            PlayerExpCooldownChangeEventChangeReason::Plugin { inner } => inner,
+        }
+    }
+}
+
+impl<'mc> PlayerExpCooldownChangeEventChangeReason<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PlayerExpCooldownChangeEventChangeReason<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls =
+            env.find_class("org/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+                    cls,
+                    "valueOf",
+                    "(Ljava/lang/String;)Lorg/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason;",
+                    vec![jni::objects::JValueGen::from(val_1)],
+                );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "PICKUP_ORB" => Ok(PlayerExpCooldownChangeEventChangeReason::PickupOrb {
+                inner: PlayerExpCooldownChangeEventChangeReasonStruct::from_raw(env, obj)?,
+            }),
+            "PLUGIN" => Ok(PlayerExpCooldownChangeEventChangeReason::Plugin {
+                inner: PlayerExpCooldownChangeEventChangeReasonStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct PlayerExpCooldownChangeEventChangeReasonStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PlayerExpCooldownChangeEventChangeReason<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::PickupOrb { inner } => inner.0.clone(),
+            Self::Plugin { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::PickupOrb { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Plugin { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PlayerExpCooldownChangeEventChangeReason<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PlayerExpCooldownChangeEventChangeReason from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a PlayerExpCooldownChangeEventChangeReason object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "PICKUP_ORB" => Ok(PlayerExpCooldownChangeEventChangeReason::PickupOrb {
+                    inner: PlayerExpCooldownChangeEventChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                "PLUGIN" => Ok(PlayerExpCooldownChangeEventChangeReason::Plugin {
+                    inner: PlayerExpCooldownChangeEventChangeReasonStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
+        }
+    }
+}
+
+impl<'mc> JNIRaw<'mc> for PlayerExpCooldownChangeEventChangeReasonStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PlayerExpCooldownChangeEventChangeReasonStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                    "Tried to instantiate PlayerExpCooldownChangeEventChangeReasonStruct from null object.")
+                .into());
+        }
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason",
+        )?;
+        if !valid {
+            Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a PlayerExpCooldownChangeEventChangeReasonStruct object, got {}",
+                    name
+                )
+                .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> PlayerExpCooldownChangeEventChangeReasonStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<
+        crate::event::player::PlayerExpCooldownChangeEventChangeReason<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig =
+            String::from("()Lorg/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason;");
+        let cls =
+            jni.find_class("org/bukkit/event/player/PlayerExpCooldownChangeEvent/ChangeReason");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::event::player::PlayerExpCooldownChangeEventChangeReason::from_raw(&jni, obj)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 #[repr(C)]
@@ -6771,10 +8413,53 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerBedEnterEvent<'
             .expect("Error converting PlayerBedEnterEvent into crate::event::player::PlayerEvent")
     }
 }
-pub enum PlayerBedEnterEventBedEnterResult<'mc> {}
+pub enum PlayerBedEnterEventBedEnterResult<'mc> {
+    Ok {
+        inner: PlayerBedEnterEventBedEnterResultStruct<'mc>,
+    },
+    NotPossibleHere {
+        inner: PlayerBedEnterEventBedEnterResultStruct<'mc>,
+    },
+    NotPossibleNow {
+        inner: PlayerBedEnterEventBedEnterResultStruct<'mc>,
+    },
+    TooFarAway {
+        inner: PlayerBedEnterEventBedEnterResultStruct<'mc>,
+    },
+    NotSafe {
+        inner: PlayerBedEnterEventBedEnterResultStruct<'mc>,
+    },
+    OtherProblem {
+        inner: PlayerBedEnterEventBedEnterResultStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for PlayerBedEnterEventBedEnterResult<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            PlayerBedEnterEventBedEnterResult::Ok { .. } => f.write_str("OK"),
+            PlayerBedEnterEventBedEnterResult::NotPossibleHere { .. } => {
+                f.write_str("NOT_POSSIBLE_HERE")
+            }
+            PlayerBedEnterEventBedEnterResult::NotPossibleNow { .. } => {
+                f.write_str("NOT_POSSIBLE_NOW")
+            }
+            PlayerBedEnterEventBedEnterResult::TooFarAway { .. } => f.write_str("TOO_FAR_AWAY"),
+            PlayerBedEnterEventBedEnterResult::NotSafe { .. } => f.write_str("NOT_SAFE"),
+            PlayerBedEnterEventBedEnterResult::OtherProblem { .. } => f.write_str("OTHER_PROBLEM"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PlayerBedEnterEventBedEnterResult<'mc> {
+    type Target = PlayerBedEnterEventBedEnterResultStruct<'mc>;
+    fn deref(&self) -> &<PlayerBedEnterEventBedEnterResult<'mc> as std::ops::Deref>::Target {
+        match self {
+            PlayerBedEnterEventBedEnterResult::Ok { inner } => inner,
+            PlayerBedEnterEventBedEnterResult::NotPossibleHere { inner } => inner,
+            PlayerBedEnterEventBedEnterResult::NotPossibleNow { inner } => inner,
+            PlayerBedEnterEventBedEnterResult::TooFarAway { inner } => inner,
+            PlayerBedEnterEventBedEnterResult::NotSafe { inner } => inner,
+            PlayerBedEnterEventBedEnterResult::OtherProblem { inner } => inner,
+        }
     }
 }
 
@@ -6801,6 +8486,25 @@ impl<'mc> PlayerBedEnterEventBedEnterResult<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "OK" => Ok(PlayerBedEnterEventBedEnterResult::Ok {
+                inner: PlayerBedEnterEventBedEnterResultStruct::from_raw(env, obj)?,
+            }),
+            "NOT_POSSIBLE_HERE" => Ok(PlayerBedEnterEventBedEnterResult::NotPossibleHere {
+                inner: PlayerBedEnterEventBedEnterResultStruct::from_raw(env, obj)?,
+            }),
+            "NOT_POSSIBLE_NOW" => Ok(PlayerBedEnterEventBedEnterResult::NotPossibleNow {
+                inner: PlayerBedEnterEventBedEnterResultStruct::from_raw(env, obj)?,
+            }),
+            "TOO_FAR_AWAY" => Ok(PlayerBedEnterEventBedEnterResult::TooFarAway {
+                inner: PlayerBedEnterEventBedEnterResultStruct::from_raw(env, obj)?,
+            }),
+            "NOT_SAFE" => Ok(PlayerBedEnterEventBedEnterResult::NotSafe {
+                inner: PlayerBedEnterEventBedEnterResultStruct::from_raw(env, obj)?,
+            }),
+            "OTHER_PROBLEM" => Ok(PlayerBedEnterEventBedEnterResult::OtherProblem {
+                inner: PlayerBedEnterEventBedEnterResultStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -6814,10 +8518,32 @@ pub struct PlayerBedEnterEventBedEnterResultStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for PlayerBedEnterEventBedEnterResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Ok { inner } => inner.0.clone(),
+            Self::NotPossibleHere { inner } => inner.0.clone(),
+            Self::NotPossibleNow { inner } => inner.0.clone(),
+            Self::TooFarAway { inner } => inner.0.clone(),
+            Self::NotSafe { inner } => inner.0.clone(),
+            Self::OtherProblem { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Ok { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NotPossibleHere { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NotPossibleNow { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::TooFarAway { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NotSafe { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::OtherProblem { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PlayerBedEnterEventBedEnterResult<'mc> {
@@ -6849,6 +8575,24 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerBedEnterEventBedEnterResult<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "OK" => Ok(PlayerBedEnterEventBedEnterResult::Ok {
+                    inner: PlayerBedEnterEventBedEnterResultStruct::from_raw(env, obj)?,
+                }),
+                "NOT_POSSIBLE_HERE" => Ok(PlayerBedEnterEventBedEnterResult::NotPossibleHere {
+                    inner: PlayerBedEnterEventBedEnterResultStruct::from_raw(env, obj)?,
+                }),
+                "NOT_POSSIBLE_NOW" => Ok(PlayerBedEnterEventBedEnterResult::NotPossibleNow {
+                    inner: PlayerBedEnterEventBedEnterResultStruct::from_raw(env, obj)?,
+                }),
+                "TOO_FAR_AWAY" => Ok(PlayerBedEnterEventBedEnterResult::TooFarAway {
+                    inner: PlayerBedEnterEventBedEnterResultStruct::from_raw(env, obj)?,
+                }),
+                "NOT_SAFE" => Ok(PlayerBedEnterEventBedEnterResult::NotSafe {
+                    inner: PlayerBedEnterEventBedEnterResultStruct::from_raw(env, obj)?,
+                }),
+                "OTHER_PROBLEM" => Ok(PlayerBedEnterEventBedEnterResult::OtherProblem {
+                    inner: PlayerBedEnterEventBedEnterResultStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -6909,201 +8653,6 @@ impl<'mc> PlayerBedEnterEventBedEnterResultStruct<'mc> {
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct PlayerRecipeBookClickEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for PlayerRecipeBookClickEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PlayerRecipeBookClickEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate PlayerRecipeBookClickEvent from null object."
-            )
-            .into());
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/player/PlayerRecipeBookClickEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PlayerRecipeBookClickEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> PlayerRecipeBookClickEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        player: impl Into<crate::entity::Player<'mc>>,
-        recipe: impl Into<crate::inventory::Recipe<'mc>>,
-        shift_click: bool,
-    ) -> Result<crate::event::player::PlayerRecipeBookClickEvent<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/Recipe;Z)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(player.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(recipe.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Bool(shift_click.into());
-        let cls = jni.find_class("org/bukkit/event/player/PlayerRecipeBookClickEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::player::PlayerRecipeBookClickEvent::from_raw(&jni, res)
-    }
-    /// Gets the original recipe the player was trying to craft.
-    ///
-    /// This <em>will not</em> reflect any changes made with {@link setRecipe}.
-    pub fn original_recipe(
-        &self,
-    ) -> Result<crate::inventory::Recipe<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/Recipe;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getOriginalRecipe",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::Recipe::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets the recipe the player is trying to craft.
-    ///
-    /// This <em>will</em> reflect changes made with {@link setRecipe}.
-    pub fn recipe(&self) -> Result<crate::inventory::Recipe<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/Recipe;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getRecipe", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::Recipe::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Set the recipe that will be used.
-    ///
-    /// The game will attempt to move the ingredients for this recipe into the
-    /// appropriate slots.
-    ///
-    /// If the original recipe is a {@link CraftingRecipe} the provided recipe
-    /// must also be a {@link CraftingRecipe}, otherwise the provided recipe must
-    /// be of the same type as the original recipe.
-    pub fn set_recipe(
-        &self,
-        recipe: impl Into<crate::inventory::Recipe<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/Recipe;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(recipe.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setRecipe",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// If true the game will attempt to move the ingredients for as many copies
-    /// of this recipe as possible into the appropriate slots, otherwise only 1
-    /// copy will be moved.
-    pub fn is_shift_click(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isShiftClick", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Sets if the game will attempt to move the ingredients for as many copies
-    /// of this recipe as possible into the appropriate slots.
-    pub fn set_shift_click(&self, shift_click: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(shift_click.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setShiftClick",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/player/PlayerRecipeBookClickEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getOriginalRecipe', 'getRecipe', 'setRecipe', 'isShiftClick', 'setShiftClick', 'getHandlers', 'getHandlerList'])
-    /// Returns the player involved in this event
-    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::player::PlayerEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::player::PlayerEvent = temp_clone.into();
-        real.player()
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerRecipeBookClickEvent<'mc> {
-    fn into(self) -> crate::event::player::PlayerEvent<'mc> {
-        crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1).expect(
-            "Error converting PlayerRecipeBookClickEvent into crate::event::player::PlayerEvent",
-        )
     }
 }
 #[repr(C)]
@@ -7382,10 +8931,44 @@ impl<'mc> Into<crate::event::Event<'mc>> for PlayerPreLoginEvent<'mc> {
             .expect("Error converting PlayerPreLoginEvent into crate::event::Event")
     }
 }
-pub enum PlayerPreLoginEventResult<'mc> {}
+pub enum PlayerPreLoginEventResult<'mc> {
+    Allowed {
+        inner: PlayerPreLoginEventResultStruct<'mc>,
+    },
+    KickFull {
+        inner: PlayerPreLoginEventResultStruct<'mc>,
+    },
+    KickBanned {
+        inner: PlayerPreLoginEventResultStruct<'mc>,
+    },
+    KickWhitelist {
+        inner: PlayerPreLoginEventResultStruct<'mc>,
+    },
+    KickOther {
+        inner: PlayerPreLoginEventResultStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for PlayerPreLoginEventResult<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            PlayerPreLoginEventResult::Allowed { .. } => f.write_str("ALLOWED"),
+            PlayerPreLoginEventResult::KickFull { .. } => f.write_str("KICK_FULL"),
+            PlayerPreLoginEventResult::KickBanned { .. } => f.write_str("KICK_BANNED"),
+            PlayerPreLoginEventResult::KickWhitelist { .. } => f.write_str("KICK_WHITELIST"),
+            PlayerPreLoginEventResult::KickOther { .. } => f.write_str("KICK_OTHER"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PlayerPreLoginEventResult<'mc> {
+    type Target = PlayerPreLoginEventResultStruct<'mc>;
+    fn deref(&self) -> &<PlayerPreLoginEventResult<'mc> as std::ops::Deref>::Target {
+        match self {
+            PlayerPreLoginEventResult::Allowed { inner } => inner,
+            PlayerPreLoginEventResult::KickFull { inner } => inner,
+            PlayerPreLoginEventResult::KickBanned { inner } => inner,
+            PlayerPreLoginEventResult::KickWhitelist { inner } => inner,
+            PlayerPreLoginEventResult::KickOther { inner } => inner,
+        }
     }
 }
 
@@ -7412,6 +8995,22 @@ impl<'mc> PlayerPreLoginEventResult<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "ALLOWED" => Ok(PlayerPreLoginEventResult::Allowed {
+                inner: PlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+            }),
+            "KICK_FULL" => Ok(PlayerPreLoginEventResult::KickFull {
+                inner: PlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+            }),
+            "KICK_BANNED" => Ok(PlayerPreLoginEventResult::KickBanned {
+                inner: PlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+            }),
+            "KICK_WHITELIST" => Ok(PlayerPreLoginEventResult::KickWhitelist {
+                inner: PlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+            }),
+            "KICK_OTHER" => Ok(PlayerPreLoginEventResult::KickOther {
+                inner: PlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -7425,10 +9024,28 @@ pub struct PlayerPreLoginEventResultStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for PlayerPreLoginEventResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Allowed { inner } => inner.0.clone(),
+            Self::KickFull { inner } => inner.0.clone(),
+            Self::KickBanned { inner } => inner.0.clone(),
+            Self::KickWhitelist { inner } => inner.0.clone(),
+            Self::KickOther { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Allowed { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::KickFull { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::KickBanned { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::KickWhitelist { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::KickOther { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PlayerPreLoginEventResult<'mc> {
@@ -7458,6 +9075,21 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerPreLoginEventResult<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "ALLOWED" => Ok(PlayerPreLoginEventResult::Allowed {
+                    inner: PlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+                }),
+                "KICK_FULL" => Ok(PlayerPreLoginEventResult::KickFull {
+                    inner: PlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+                }),
+                "KICK_BANNED" => Ok(PlayerPreLoginEventResult::KickBanned {
+                    inner: PlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+                }),
+                "KICK_WHITELIST" => Ok(PlayerPreLoginEventResult::KickWhitelist {
+                    inner: PlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+                }),
+                "KICK_OTHER" => Ok(PlayerPreLoginEventResult::KickOther {
+                    inner: PlayerPreLoginEventResultStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -8891,10 +10523,49 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>>
         crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting PlayerRecipeBookSettingsChangeEvent into crate::event::player::PlayerEvent")
     }
 }
-pub enum PlayerRecipeBookSettingsChangeEventRecipeBookType<'mc> {}
+pub enum PlayerRecipeBookSettingsChangeEventRecipeBookType<'mc> {
+    Crafting {
+        inner: PlayerRecipeBookSettingsChangeEventRecipeBookTypeStruct<'mc>,
+    },
+    Furnace {
+        inner: PlayerRecipeBookSettingsChangeEventRecipeBookTypeStruct<'mc>,
+    },
+    BlastFurnace {
+        inner: PlayerRecipeBookSettingsChangeEventRecipeBookTypeStruct<'mc>,
+    },
+    Smoker {
+        inner: PlayerRecipeBookSettingsChangeEventRecipeBookTypeStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for PlayerRecipeBookSettingsChangeEventRecipeBookType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            PlayerRecipeBookSettingsChangeEventRecipeBookType::Crafting { .. } => {
+                f.write_str("CRAFTING")
+            }
+            PlayerRecipeBookSettingsChangeEventRecipeBookType::Furnace { .. } => {
+                f.write_str("FURNACE")
+            }
+            PlayerRecipeBookSettingsChangeEventRecipeBookType::BlastFurnace { .. } => {
+                f.write_str("BLAST_FURNACE")
+            }
+            PlayerRecipeBookSettingsChangeEventRecipeBookType::Smoker { .. } => {
+                f.write_str("SMOKER")
+            }
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PlayerRecipeBookSettingsChangeEventRecipeBookType<'mc> {
+    type Target = PlayerRecipeBookSettingsChangeEventRecipeBookTypeStruct<'mc>;
+    fn deref(
+        &self,
+    ) -> &<PlayerRecipeBookSettingsChangeEventRecipeBookType<'mc> as std::ops::Deref>::Target {
+        match self {
+            PlayerRecipeBookSettingsChangeEventRecipeBookType::Crafting { inner } => inner,
+            PlayerRecipeBookSettingsChangeEventRecipeBookType::Furnace { inner } => inner,
+            PlayerRecipeBookSettingsChangeEventRecipeBookType::BlastFurnace { inner } => inner,
+            PlayerRecipeBookSettingsChangeEventRecipeBookType::Smoker { inner } => inner,
+        }
     }
 }
 
@@ -8924,6 +10595,27 @@ impl<'mc> PlayerRecipeBookSettingsChangeEventRecipeBookType<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "CRAFTING" => Ok(
+                PlayerRecipeBookSettingsChangeEventRecipeBookType::Crafting {
+                    inner: PlayerRecipeBookSettingsChangeEventRecipeBookTypeStruct::from_raw(
+                        env, obj,
+                    )?,
+                },
+            ),
+            "FURNACE" => Ok(PlayerRecipeBookSettingsChangeEventRecipeBookType::Furnace {
+                inner: PlayerRecipeBookSettingsChangeEventRecipeBookTypeStruct::from_raw(env, obj)?,
+            }),
+            "BLAST_FURNACE" => Ok(
+                PlayerRecipeBookSettingsChangeEventRecipeBookType::BlastFurnace {
+                    inner: PlayerRecipeBookSettingsChangeEventRecipeBookTypeStruct::from_raw(
+                        env, obj,
+                    )?,
+                },
+            ),
+            "SMOKER" => Ok(PlayerRecipeBookSettingsChangeEventRecipeBookType::Smoker {
+                inner: PlayerRecipeBookSettingsChangeEventRecipeBookTypeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -8937,10 +10629,22 @@ pub struct PlayerRecipeBookSettingsChangeEventRecipeBookTypeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for PlayerRecipeBookSettingsChangeEventRecipeBookType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Crafting { inner } => inner.0.clone(),
+            Self::Furnace { inner } => inner.0.clone(),
+            Self::BlastFurnace { inner } => inner.0.clone(),
+            Self::Smoker { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Crafting { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Furnace { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::BlastFurnace { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Smoker { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PlayerRecipeBookSettingsChangeEventRecipeBookType<'mc> {
@@ -8971,6 +10675,30 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerRecipeBookSettingsChangeEventRecipeBo
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "CRAFTING" => Ok(
+                    PlayerRecipeBookSettingsChangeEventRecipeBookType::Crafting {
+                        inner: PlayerRecipeBookSettingsChangeEventRecipeBookTypeStruct::from_raw(
+                            env, obj,
+                        )?,
+                    },
+                ),
+                "FURNACE" => Ok(PlayerRecipeBookSettingsChangeEventRecipeBookType::Furnace {
+                    inner: PlayerRecipeBookSettingsChangeEventRecipeBookTypeStruct::from_raw(
+                        env, obj,
+                    )?,
+                }),
+                "BLAST_FURNACE" => Ok(
+                    PlayerRecipeBookSettingsChangeEventRecipeBookType::BlastFurnace {
+                        inner: PlayerRecipeBookSettingsChangeEventRecipeBookTypeStruct::from_raw(
+                            env, obj,
+                        )?,
+                    },
+                ),
+                "SMOKER" => Ok(PlayerRecipeBookSettingsChangeEventRecipeBookType::Smoker {
+                    inner: PlayerRecipeBookSettingsChangeEventRecipeBookTypeStruct::from_raw(
+                        env, obj,
+                    )?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -9432,10 +11160,74 @@ impl<'mc> Into<crate::event::player::PlayerMoveEvent<'mc>> for PlayerTeleportEve
         )
     }
 }
-pub enum PlayerTeleportEventTeleportCause<'mc> {}
+pub enum PlayerTeleportEventTeleportCause<'mc> {
+    EnderPearl {
+        inner: PlayerTeleportEventTeleportCauseStruct<'mc>,
+    },
+    Command {
+        inner: PlayerTeleportEventTeleportCauseStruct<'mc>,
+    },
+    Plugin {
+        inner: PlayerTeleportEventTeleportCauseStruct<'mc>,
+    },
+    NetherPortal {
+        inner: PlayerTeleportEventTeleportCauseStruct<'mc>,
+    },
+    EndPortal {
+        inner: PlayerTeleportEventTeleportCauseStruct<'mc>,
+    },
+    Spectate {
+        inner: PlayerTeleportEventTeleportCauseStruct<'mc>,
+    },
+    EndGateway {
+        inner: PlayerTeleportEventTeleportCauseStruct<'mc>,
+    },
+    ChorusFruit {
+        inner: PlayerTeleportEventTeleportCauseStruct<'mc>,
+    },
+    Dismount {
+        inner: PlayerTeleportEventTeleportCauseStruct<'mc>,
+    },
+    ExitBed {
+        inner: PlayerTeleportEventTeleportCauseStruct<'mc>,
+    },
+    Unknown {
+        inner: PlayerTeleportEventTeleportCauseStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for PlayerTeleportEventTeleportCause<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            PlayerTeleportEventTeleportCause::EnderPearl { .. } => f.write_str("ENDER_PEARL"),
+            PlayerTeleportEventTeleportCause::Command { .. } => f.write_str("COMMAND"),
+            PlayerTeleportEventTeleportCause::Plugin { .. } => f.write_str("PLUGIN"),
+            PlayerTeleportEventTeleportCause::NetherPortal { .. } => f.write_str("NETHER_PORTAL"),
+            PlayerTeleportEventTeleportCause::EndPortal { .. } => f.write_str("END_PORTAL"),
+            PlayerTeleportEventTeleportCause::Spectate { .. } => f.write_str("SPECTATE"),
+            PlayerTeleportEventTeleportCause::EndGateway { .. } => f.write_str("END_GATEWAY"),
+            PlayerTeleportEventTeleportCause::ChorusFruit { .. } => f.write_str("CHORUS_FRUIT"),
+            PlayerTeleportEventTeleportCause::Dismount { .. } => f.write_str("DISMOUNT"),
+            PlayerTeleportEventTeleportCause::ExitBed { .. } => f.write_str("EXIT_BED"),
+            PlayerTeleportEventTeleportCause::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PlayerTeleportEventTeleportCause<'mc> {
+    type Target = PlayerTeleportEventTeleportCauseStruct<'mc>;
+    fn deref(&self) -> &<PlayerTeleportEventTeleportCause<'mc> as std::ops::Deref>::Target {
+        match self {
+            PlayerTeleportEventTeleportCause::EnderPearl { inner } => inner,
+            PlayerTeleportEventTeleportCause::Command { inner } => inner,
+            PlayerTeleportEventTeleportCause::Plugin { inner } => inner,
+            PlayerTeleportEventTeleportCause::NetherPortal { inner } => inner,
+            PlayerTeleportEventTeleportCause::EndPortal { inner } => inner,
+            PlayerTeleportEventTeleportCause::Spectate { inner } => inner,
+            PlayerTeleportEventTeleportCause::EndGateway { inner } => inner,
+            PlayerTeleportEventTeleportCause::ChorusFruit { inner } => inner,
+            PlayerTeleportEventTeleportCause::Dismount { inner } => inner,
+            PlayerTeleportEventTeleportCause::ExitBed { inner } => inner,
+            PlayerTeleportEventTeleportCause::Unknown { inner } => inner,
+        }
     }
 }
 
@@ -9462,6 +11254,40 @@ impl<'mc> PlayerTeleportEventTeleportCause<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "ENDER_PEARL" => Ok(PlayerTeleportEventTeleportCause::EnderPearl {
+                inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+            }),
+            "COMMAND" => Ok(PlayerTeleportEventTeleportCause::Command {
+                inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+            }),
+            "PLUGIN" => Ok(PlayerTeleportEventTeleportCause::Plugin {
+                inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+            }),
+            "NETHER_PORTAL" => Ok(PlayerTeleportEventTeleportCause::NetherPortal {
+                inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+            }),
+            "END_PORTAL" => Ok(PlayerTeleportEventTeleportCause::EndPortal {
+                inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+            }),
+            "SPECTATE" => Ok(PlayerTeleportEventTeleportCause::Spectate {
+                inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+            }),
+            "END_GATEWAY" => Ok(PlayerTeleportEventTeleportCause::EndGateway {
+                inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+            }),
+            "CHORUS_FRUIT" => Ok(PlayerTeleportEventTeleportCause::ChorusFruit {
+                inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+            }),
+            "DISMOUNT" => Ok(PlayerTeleportEventTeleportCause::Dismount {
+                inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+            }),
+            "EXIT_BED" => Ok(PlayerTeleportEventTeleportCause::ExitBed {
+                inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(PlayerTeleportEventTeleportCause::Unknown {
+                inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -9475,10 +11301,44 @@ pub struct PlayerTeleportEventTeleportCauseStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for PlayerTeleportEventTeleportCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::EnderPearl { inner } => inner.0.clone(),
+            Self::Command { inner } => inner.0.clone(),
+            Self::Plugin { inner } => inner.0.clone(),
+            Self::NetherPortal { inner } => inner.0.clone(),
+            Self::EndPortal { inner } => inner.0.clone(),
+            Self::Spectate { inner } => inner.0.clone(),
+            Self::EndGateway { inner } => inner.0.clone(),
+            Self::ChorusFruit { inner } => inner.0.clone(),
+            Self::Dismount { inner } => inner.0.clone(),
+            Self::ExitBed { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::EnderPearl { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Command { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Plugin { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NetherPortal { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::EndPortal { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Spectate { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::EndGateway { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ChorusFruit { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Dismount { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ExitBed { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PlayerTeleportEventTeleportCause<'mc> {
@@ -9510,6 +11370,39 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerTeleportEventTeleportCause<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "ENDER_PEARL" => Ok(PlayerTeleportEventTeleportCause::EnderPearl {
+                    inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+                }),
+                "COMMAND" => Ok(PlayerTeleportEventTeleportCause::Command {
+                    inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+                }),
+                "PLUGIN" => Ok(PlayerTeleportEventTeleportCause::Plugin {
+                    inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+                }),
+                "NETHER_PORTAL" => Ok(PlayerTeleportEventTeleportCause::NetherPortal {
+                    inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+                }),
+                "END_PORTAL" => Ok(PlayerTeleportEventTeleportCause::EndPortal {
+                    inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+                }),
+                "SPECTATE" => Ok(PlayerTeleportEventTeleportCause::Spectate {
+                    inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+                }),
+                "END_GATEWAY" => Ok(PlayerTeleportEventTeleportCause::EndGateway {
+                    inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+                }),
+                "CHORUS_FRUIT" => Ok(PlayerTeleportEventTeleportCause::ChorusFruit {
+                    inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+                }),
+                "DISMOUNT" => Ok(PlayerTeleportEventTeleportCause::Dismount {
+                    inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+                }),
+                "EXIT_BED" => Ok(PlayerTeleportEventTeleportCause::ExitBed {
+                    inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(PlayerTeleportEventTeleportCause::Unknown {
+                    inner: PlayerTeleportEventTeleportCauseStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -9570,575 +11463,6 @@ impl<'mc> PlayerTeleportEventTeleportCauseStruct<'mc> {
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct PlayerItemConsumeEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for PlayerItemConsumeEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PlayerItemConsumeEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate PlayerItemConsumeEvent from null object."
-            )
-            .into());
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/player/PlayerItemConsumeEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PlayerItemConsumeEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> PlayerItemConsumeEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        player: impl Into<crate::entity::Player<'mc>>,
-        item: impl Into<crate::inventory::ItemStack<'mc>>,
-        hand: std::option::Option<impl Into<crate::inventory::EquipmentSlot<'mc>>>,
-    ) -> Result<crate::event::player::PlayerItemConsumeEvent<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/entity/Player;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(player.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Lorg/bukkit/inventory/ItemStack;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(item.into().jni_object().clone())
-        });
-        args.push(val_2);
-        if let Some(a) = hand {
-            sig += "Lorg/bukkit/inventory/EquipmentSlot;";
-            let val_3 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_3);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/event/player/PlayerItemConsumeEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::player::PlayerItemConsumeEvent::from_raw(&jni, res)
-    }
-    /// Gets the item that is being consumed. Modifying the returned item will
-    /// have no effect, you must use {@link
-    /// #setItem(org.bukkit.inventory.ItemStack)} instead.
-    pub fn item(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getItem", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Set the item being consumed
-    pub fn set_item(
-        &self,
-        item: impl Into<crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(item.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Get the hand used to consume the item.
-    pub fn hand(&self) -> Result<crate::inventory::EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/EquipmentSlot;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCancelled",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/player/PlayerItemConsumeEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getItem', 'setItem', 'getHand', 'isCancelled', 'setCancelled', 'getHandlers', 'getHandlerList'])
-    /// Returns the player involved in this event
-    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::player::PlayerEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::player::PlayerEvent = temp_clone.into();
-        real.player()
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::event::Cancellable<'mc>> for PlayerItemConsumeEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting PlayerItemConsumeEvent into crate::event::Cancellable")
-    }
-}
-impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerItemConsumeEvent<'mc> {
-    fn into(self) -> crate::event::player::PlayerEvent<'mc> {
-        crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1).expect(
-            "Error converting PlayerItemConsumeEvent into crate::event::player::PlayerEvent",
-        )
-    }
-}
-#[repr(C)]
-pub struct PlayerInteractEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for PlayerInteractEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PlayerInteractEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate PlayerInteractEvent from null object.").into(),
-            );
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/player/PlayerInteractEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PlayerInteractEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> PlayerInteractEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        who: impl Into<crate::entity::Player<'mc>>,
-        action: impl Into<crate::event::block::Action<'mc>>,
-        item: impl Into<crate::inventory::ItemStack<'mc>>,
-        clicked_block: impl Into<crate::block::Block<'mc>>,
-        clicked_face: impl Into<crate::block::BlockFace<'mc>>,
-        hand: std::option::Option<impl Into<crate::inventory::EquipmentSlot<'mc>>>,
-        clicked_position: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
-    ) -> Result<crate::event::player::PlayerInteractEvent<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/entity/Player;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(who.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Lorg/bukkit/event/block/Action;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(action.into().jni_object().clone())
-        });
-        args.push(val_2);
-        sig += "Lorg/bukkit/inventory/ItemStack;";
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(item.into().jni_object().clone())
-        });
-        args.push(val_3);
-        sig += "Lorg/bukkit/block/Block;";
-        let val_4 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(clicked_block.into().jni_object().clone())
-        });
-        args.push(val_4);
-        sig += "Lorg/bukkit/block/BlockFace;";
-        let val_5 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(clicked_face.into().jni_object().clone())
-        });
-        args.push(val_5);
-        if let Some(a) = hand {
-            sig += "Lorg/bukkit/inventory/EquipmentSlot;";
-            let val_6 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_6);
-        }
-        if let Some(a) = clicked_position {
-            sig += "Lorg/bukkit/util/Vector;";
-            let val_7 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_7);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/event/player/PlayerInteractEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::player::PlayerInteractEvent::from_raw(&jni, res)
-    }
-    /// Returns the action type
-    pub fn action(&self) -> Result<crate::event::block::Action<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/block/Action;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getAction", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::block::Action::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    #[deprecated]
-    /// Gets the cancellation state of this event. Set to true if you want to prevent buckets from placing water and so forth
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Sets the cancellation state of this event. A canceled event will not be
-    /// executed in the server, but will still pass to other plugins
-    ///
-    /// Canceling this event will prevent use of food (player won't lose the
-    /// food item), prevent bows/snowballs/eggs from firing, etc. (player won't
-    /// lose the ammo)
-    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCancelled",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Returns the item in hand represented by this event
-    pub fn item(
-        &self,
-    ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getItem", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::inventory::ItemStack::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-    /// Convenience method. Returns the material of the item represented by
-    /// this event
-    pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Material;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Material::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Check if this event involved a block
-    pub fn has_block(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hasBlock", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Check if this event involved an item
-    pub fn has_item(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hasItem", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Convenience method to inform the user whether this was a block
-    /// placement event.
-    pub fn is_block_in_hand(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isBlockInHand", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Returns the clicked block
-    pub fn clicked_block(
-        &self,
-    ) -> Result<Option<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/Block;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClickedBlock", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::block::Block::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-    /// Returns the face of the block that was clicked
-    pub fn block_face(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/BlockFace;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getBlockFace", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// This controls the action to take with the block (if any) that was
-    /// clicked on. This event gets processed for all blocks, but most don't
-    /// have a default action
-    pub fn use_interacted_block(
-        &self,
-    ) -> Result<crate::event::EventResult<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/Event/Result;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "useInteractedBlock",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::EventResult::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn set_use_interacted_block(
-        &self,
-        use_interacted_block: impl Into<crate::event::EventResult<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/event/Event/Result;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(use_interacted_block.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setUseInteractedBlock",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// This controls the action to take with the item the player is holding.
-    /// This includes both blocks and items (such as flint and steel or
-    /// records). When this is set to default, it will be allowed if no action
-    /// is taken on the interacted block.
-    pub fn use_item_in_hand(
-        &self,
-    ) -> Result<crate::event::EventResult<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/Event/Result;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "useItemInHand", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::EventResult::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn set_use_item_in_hand(
-        &self,
-        use_item_in_hand: impl Into<crate::event::EventResult<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/event/Event/Result;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(use_item_in_hand.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setUseItemInHand",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// The hand used to perform this interaction. May be null in the case of
-    /// {@link Action#PHYSICAL}.
-    pub fn hand(
-        &self,
-    ) -> Result<Option<crate::inventory::EquipmentSlot<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/EquipmentSlot;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::inventory::EquipmentSlot::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-    /// Gets the exact position on the block the player interacted with, this will
-    /// be null outside of {@link Action#RIGHT_CLICK_BLOCK}.
-    ///
-    /// All vector components are between 0.0 and 1.0 inclusive.
-    pub fn clicked_position(
-        &self,
-    ) -> Result<Option<crate::util::Vector<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/util/Vector;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClickedPosition",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::util::Vector::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/player/PlayerInteractEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getAction', 'isCancelled', 'setCancelled', 'getItem', 'getMaterial', 'hasBlock', 'hasItem', 'isBlockInHand', 'getClickedBlock', 'getBlockFace', 'useInteractedBlock', 'setUseInteractedBlock', 'useItemInHand', 'setUseItemInHand', 'getHand', 'getClickedPosition', 'getHandlers', 'getHandlerList'])
-    /// Returns the player involved in this event
-    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::player::PlayerEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::player::PlayerEvent = temp_clone.into();
-        real.player()
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::event::Cancellable<'mc>> for PlayerInteractEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting PlayerInteractEvent into crate::event::Cancellable")
-    }
-}
-impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerInteractEvent<'mc> {
-    fn into(self) -> crate::event::player::PlayerEvent<'mc> {
-        crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting PlayerInteractEvent into crate::event::player::PlayerEvent")
     }
 }
 #[repr(C)]
@@ -11707,10 +13031,65 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerResourcePackSta
         )
     }
 }
-pub enum PlayerResourcePackStatusEventStatus<'mc> {}
+pub enum PlayerResourcePackStatusEventStatus<'mc> {
+    SuccessfullyLoaded {
+        inner: PlayerResourcePackStatusEventStatusStruct<'mc>,
+    },
+    Declined {
+        inner: PlayerResourcePackStatusEventStatusStruct<'mc>,
+    },
+    FailedDownload {
+        inner: PlayerResourcePackStatusEventStatusStruct<'mc>,
+    },
+    Accepted {
+        inner: PlayerResourcePackStatusEventStatusStruct<'mc>,
+    },
+    Downloaded {
+        inner: PlayerResourcePackStatusEventStatusStruct<'mc>,
+    },
+    InvalidUrl {
+        inner: PlayerResourcePackStatusEventStatusStruct<'mc>,
+    },
+    FailedReload {
+        inner: PlayerResourcePackStatusEventStatusStruct<'mc>,
+    },
+    Discarded {
+        inner: PlayerResourcePackStatusEventStatusStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for PlayerResourcePackStatusEventStatus<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            PlayerResourcePackStatusEventStatus::SuccessfullyLoaded { .. } => {
+                f.write_str("SUCCESSFULLY_LOADED")
+            }
+            PlayerResourcePackStatusEventStatus::Declined { .. } => f.write_str("DECLINED"),
+            PlayerResourcePackStatusEventStatus::FailedDownload { .. } => {
+                f.write_str("FAILED_DOWNLOAD")
+            }
+            PlayerResourcePackStatusEventStatus::Accepted { .. } => f.write_str("ACCEPTED"),
+            PlayerResourcePackStatusEventStatus::Downloaded { .. } => f.write_str("DOWNLOADED"),
+            PlayerResourcePackStatusEventStatus::InvalidUrl { .. } => f.write_str("INVALID_URL"),
+            PlayerResourcePackStatusEventStatus::FailedReload { .. } => {
+                f.write_str("FAILED_RELOAD")
+            }
+            PlayerResourcePackStatusEventStatus::Discarded { .. } => f.write_str("DISCARDED"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PlayerResourcePackStatusEventStatus<'mc> {
+    type Target = PlayerResourcePackStatusEventStatusStruct<'mc>;
+    fn deref(&self) -> &<PlayerResourcePackStatusEventStatus<'mc> as std::ops::Deref>::Target {
+        match self {
+            PlayerResourcePackStatusEventStatus::SuccessfullyLoaded { inner } => inner,
+            PlayerResourcePackStatusEventStatus::Declined { inner } => inner,
+            PlayerResourcePackStatusEventStatus::FailedDownload { inner } => inner,
+            PlayerResourcePackStatusEventStatus::Accepted { inner } => inner,
+            PlayerResourcePackStatusEventStatus::Downloaded { inner } => inner,
+            PlayerResourcePackStatusEventStatus::InvalidUrl { inner } => inner,
+            PlayerResourcePackStatusEventStatus::FailedReload { inner } => inner,
+            PlayerResourcePackStatusEventStatus::Discarded { inner } => inner,
+        }
     }
 }
 
@@ -11737,6 +13116,31 @@ impl<'mc> PlayerResourcePackStatusEventStatus<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "SUCCESSFULLY_LOADED" => Ok(PlayerResourcePackStatusEventStatus::SuccessfullyLoaded {
+                inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+            }),
+            "DECLINED" => Ok(PlayerResourcePackStatusEventStatus::Declined {
+                inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+            }),
+            "FAILED_DOWNLOAD" => Ok(PlayerResourcePackStatusEventStatus::FailedDownload {
+                inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+            }),
+            "ACCEPTED" => Ok(PlayerResourcePackStatusEventStatus::Accepted {
+                inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+            }),
+            "DOWNLOADED" => Ok(PlayerResourcePackStatusEventStatus::Downloaded {
+                inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+            }),
+            "INVALID_URL" => Ok(PlayerResourcePackStatusEventStatus::InvalidUrl {
+                inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+            }),
+            "FAILED_RELOAD" => Ok(PlayerResourcePackStatusEventStatus::FailedReload {
+                inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+            }),
+            "DISCARDED" => Ok(PlayerResourcePackStatusEventStatus::Discarded {
+                inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -11750,10 +13154,40 @@ pub struct PlayerResourcePackStatusEventStatusStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for PlayerResourcePackStatusEventStatus<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::SuccessfullyLoaded { inner } => inner.0.clone(),
+            Self::Declined { inner } => inner.0.clone(),
+            Self::FailedDownload { inner } => inner.0.clone(),
+            Self::Accepted { inner } => inner.0.clone(),
+            Self::Downloaded { inner } => inner.0.clone(),
+            Self::InvalidUrl { inner } => inner.0.clone(),
+            Self::FailedReload { inner } => inner.0.clone(),
+            Self::Discarded { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::SuccessfullyLoaded { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Declined { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FailedDownload { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Accepted { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Downloaded { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::InvalidUrl { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::FailedReload { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Discarded { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PlayerResourcePackStatusEventStatus<'mc> {
@@ -11785,6 +13219,32 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerResourcePackStatusEventStatus<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "SUCCESSFULLY_LOADED" => {
+                    Ok(PlayerResourcePackStatusEventStatus::SuccessfullyLoaded {
+                        inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+                    })
+                }
+                "DECLINED" => Ok(PlayerResourcePackStatusEventStatus::Declined {
+                    inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+                }),
+                "FAILED_DOWNLOAD" => Ok(PlayerResourcePackStatusEventStatus::FailedDownload {
+                    inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+                }),
+                "ACCEPTED" => Ok(PlayerResourcePackStatusEventStatus::Accepted {
+                    inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+                }),
+                "DOWNLOADED" => Ok(PlayerResourcePackStatusEventStatus::Downloaded {
+                    inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+                }),
+                "INVALID_URL" => Ok(PlayerResourcePackStatusEventStatus::InvalidUrl {
+                    inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+                }),
+                "FAILED_RELOAD" => Ok(PlayerResourcePackStatusEventStatus::FailedReload {
+                    inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+                }),
+                "DISCARDED" => Ok(PlayerResourcePackStatusEventStatus::Discarded {
+                    inner: PlayerResourcePackStatusEventStatusStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -13291,241 +14751,6 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerToggleFlightEve
     }
 }
 #[repr(C)]
-pub struct PlayerBucketEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for PlayerBucketEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PlayerBucketEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate PlayerBucketEvent from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/player/PlayerBucketEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PlayerBucketEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> PlayerBucketEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        who: impl Into<crate::entity::Player<'mc>>,
-        block: impl Into<crate::block::Block<'mc>>,
-        block_clicked: impl Into<crate::block::Block<'mc>>,
-        block_face: impl Into<crate::block::BlockFace<'mc>>,
-        bucket: impl Into<crate::Material<'mc>>,
-        item_in_hand: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
-        hand: std::option::Option<impl Into<crate::inventory::EquipmentSlot<'mc>>>,
-    ) -> Result<crate::event::player::PlayerBucketEvent<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/entity/Player;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(who.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Lorg/bukkit/block/Block;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(block.into().jni_object().clone())
-        });
-        args.push(val_2);
-        sig += "Lorg/bukkit/block/Block;";
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(block_clicked.into().jni_object().clone())
-        });
-        args.push(val_3);
-        sig += "Lorg/bukkit/block/BlockFace;";
-        let val_4 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(block_face.into().jni_object().clone())
-        });
-        args.push(val_4);
-        sig += "Lorg/bukkit/Material;";
-        let val_5 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(bucket.into().jni_object().clone())
-        });
-        args.push(val_5);
-        if let Some(a) = item_in_hand {
-            sig += "Lorg/bukkit/inventory/ItemStack;";
-            let val_6 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_6);
-        }
-        if let Some(a) = hand {
-            sig += "Lorg/bukkit/inventory/EquipmentSlot;";
-            let val_7 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_7);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/event/player/PlayerBucketEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::player::PlayerBucketEvent::from_raw(&jni, res)
-    }
-    /// Returns the bucket used in this event
-    pub fn bucket(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Material;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getBucket", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Material::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Get the resulting item in hand after the bucket event
-    pub fn item_stack(
-        &self,
-    ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getItemStack", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::inventory::ItemStack::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-    /// Set the item in hand after the event
-    pub fn set_item_stack(
-        &self,
-        item_stack: impl Into<crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(item_stack.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItemStack",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the block involved in this event.
-    pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/Block;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getBlock", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::Block::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Return the block clicked
-    pub fn block_clicked(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/Block;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getBlockClicked", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::Block::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Get the face on the clicked block
-    pub fn block_face(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/block/BlockFace;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getBlockFace", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::BlockFace::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Get the hand that was used in this event.
-    pub fn hand(&self) -> Result<crate::inventory::EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/EquipmentSlot;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getHand", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::EquipmentSlot::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn set_cancelled(&self, cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(cancel.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCancelled",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    // SUPER CLASS: org.bukkit.event.player.PlayerEvent ( ['getBucket', 'getItemStack', 'setItemStack', 'getBlock', 'getBlockClicked', 'getBlockFace', 'getHand', 'isCancelled', 'setCancelled'])
-    /// Returns the player involved in this event
-    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::player::PlayerEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::player::PlayerEvent = temp_clone.into();
-        real.player()
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::event::Cancellable<'mc>> for PlayerBucketEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting PlayerBucketEvent into crate::event::Cancellable")
-    }
-}
-impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerBucketEvent<'mc> {
-    fn into(self) -> crate::event::player::PlayerEvent<'mc> {
-        crate::event::player::PlayerEvent::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting PlayerBucketEvent into crate::event::player::PlayerEvent")
-    }
-}
-#[repr(C)]
 pub struct AsyncPlayerChatEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14256,10 +15481,29 @@ impl<'mc> Into<crate::event::player::PlayerEvent<'mc>> for PlayerSwapHandItemsEv
         )
     }
 }
-pub enum PlayerAnimationType<'mc> {}
+pub enum PlayerAnimationType<'mc> {
+    ArmSwing {
+        inner: PlayerAnimationTypeStruct<'mc>,
+    },
+    OffArmSwing {
+        inner: PlayerAnimationTypeStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for PlayerAnimationType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            PlayerAnimationType::ArmSwing { .. } => f.write_str("ARM_SWING"),
+            PlayerAnimationType::OffArmSwing { .. } => f.write_str("OFF_ARM_SWING"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PlayerAnimationType<'mc> {
+    type Target = PlayerAnimationTypeStruct<'mc>;
+    fn deref(&self) -> &<PlayerAnimationType<'mc> as std::ops::Deref>::Target {
+        match self {
+            PlayerAnimationType::ArmSwing { inner } => inner,
+            PlayerAnimationType::OffArmSwing { inner } => inner,
+        }
     }
 }
 
@@ -14286,6 +15530,13 @@ impl<'mc> PlayerAnimationType<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "ARM_SWING" => Ok(PlayerAnimationType::ArmSwing {
+                inner: PlayerAnimationTypeStruct::from_raw(env, obj)?,
+            }),
+            "OFF_ARM_SWING" => Ok(PlayerAnimationType::OffArmSwing {
+                inner: PlayerAnimationTypeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -14299,10 +15550,18 @@ pub struct PlayerAnimationTypeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for PlayerAnimationType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::ArmSwing { inner } => inner.0.clone(),
+            Self::OffArmSwing { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::ArmSwing { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::OffArmSwing { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PlayerAnimationType<'mc> {
@@ -14331,6 +15590,12 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerAnimationType<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "ARM_SWING" => Ok(PlayerAnimationType::ArmSwing {
+                    inner: PlayerAnimationTypeStruct::from_raw(env, obj)?,
+                }),
+                "OFF_ARM_SWING" => Ok(PlayerAnimationType::OffArmSwing {
+                    inner: PlayerAnimationTypeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }

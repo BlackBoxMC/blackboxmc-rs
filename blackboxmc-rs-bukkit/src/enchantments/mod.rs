@@ -2,6 +2,345 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+pub enum EnchantmentTarget<'mc> {
+    All { inner: EnchantmentTargetStruct<'mc> },
+    Armor { inner: EnchantmentTargetStruct<'mc> },
+    ArmorFeet { inner: EnchantmentTargetStruct<'mc> },
+    ArmorLegs { inner: EnchantmentTargetStruct<'mc> },
+    ArmorTorso { inner: EnchantmentTargetStruct<'mc> },
+    ArmorHead { inner: EnchantmentTargetStruct<'mc> },
+    Weapon { inner: EnchantmentTargetStruct<'mc> },
+    Tool { inner: EnchantmentTargetStruct<'mc> },
+    Bow { inner: EnchantmentTargetStruct<'mc> },
+    FishingRod { inner: EnchantmentTargetStruct<'mc> },
+    Breakable { inner: EnchantmentTargetStruct<'mc> },
+    Wearable { inner: EnchantmentTargetStruct<'mc> },
+    Trident { inner: EnchantmentTargetStruct<'mc> },
+    Crossbow { inner: EnchantmentTargetStruct<'mc> },
+    Vanishable { inner: EnchantmentTargetStruct<'mc> },
+}
+impl<'mc> std::fmt::Display for EnchantmentTarget<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            EnchantmentTarget::All { .. } => f.write_str("ALL"),
+            EnchantmentTarget::Armor { .. } => f.write_str("ARMOR"),
+            EnchantmentTarget::ArmorFeet { .. } => f.write_str("ARMOR_FEET"),
+            EnchantmentTarget::ArmorLegs { .. } => f.write_str("ARMOR_LEGS"),
+            EnchantmentTarget::ArmorTorso { .. } => f.write_str("ARMOR_TORSO"),
+            EnchantmentTarget::ArmorHead { .. } => f.write_str("ARMOR_HEAD"),
+            EnchantmentTarget::Weapon { .. } => f.write_str("WEAPON"),
+            EnchantmentTarget::Tool { .. } => f.write_str("TOOL"),
+            EnchantmentTarget::Bow { .. } => f.write_str("BOW"),
+            EnchantmentTarget::FishingRod { .. } => f.write_str("FISHING_ROD"),
+            EnchantmentTarget::Breakable { .. } => f.write_str("BREAKABLE"),
+            EnchantmentTarget::Wearable { .. } => f.write_str("WEARABLE"),
+            EnchantmentTarget::Trident { .. } => f.write_str("TRIDENT"),
+            EnchantmentTarget::Crossbow { .. } => f.write_str("CROSSBOW"),
+            EnchantmentTarget::Vanishable { .. } => f.write_str("VANISHABLE"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for EnchantmentTarget<'mc> {
+    type Target = EnchantmentTargetStruct<'mc>;
+    fn deref(&self) -> &<EnchantmentTarget<'mc> as std::ops::Deref>::Target {
+        match self {
+            EnchantmentTarget::All { inner } => inner,
+            EnchantmentTarget::Armor { inner } => inner,
+            EnchantmentTarget::ArmorFeet { inner } => inner,
+            EnchantmentTarget::ArmorLegs { inner } => inner,
+            EnchantmentTarget::ArmorTorso { inner } => inner,
+            EnchantmentTarget::ArmorHead { inner } => inner,
+            EnchantmentTarget::Weapon { inner } => inner,
+            EnchantmentTarget::Tool { inner } => inner,
+            EnchantmentTarget::Bow { inner } => inner,
+            EnchantmentTarget::FishingRod { inner } => inner,
+            EnchantmentTarget::Breakable { inner } => inner,
+            EnchantmentTarget::Wearable { inner } => inner,
+            EnchantmentTarget::Trident { inner } => inner,
+            EnchantmentTarget::Crossbow { inner } => inner,
+            EnchantmentTarget::Vanishable { inner } => inner,
+        }
+    }
+}
+
+impl<'mc> EnchantmentTarget<'mc> {
+    pub fn value_of(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<EnchantmentTarget<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
+        let cls = env.find_class("org/bukkit/enchantments/EnchantmentTarget");
+        let cls = env.translate_error_with_class(cls)?;
+        let res = env.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/enchantments/EnchantmentTarget;",
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = env.translate_error(res)?;
+        let obj = res.l()?;
+        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = env.translate_error(variant)?;
+        let variant_str = env
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        match variant_str.as_str() {
+            "ALL" => Ok(EnchantmentTarget::All {
+                inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+            }),
+            "ARMOR" => Ok(EnchantmentTarget::Armor {
+                inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+            }),
+            "ARMOR_FEET" => Ok(EnchantmentTarget::ArmorFeet {
+                inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+            }),
+            "ARMOR_LEGS" => Ok(EnchantmentTarget::ArmorLegs {
+                inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+            }),
+            "ARMOR_TORSO" => Ok(EnchantmentTarget::ArmorTorso {
+                inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+            }),
+            "ARMOR_HEAD" => Ok(EnchantmentTarget::ArmorHead {
+                inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+            }),
+            "WEAPON" => Ok(EnchantmentTarget::Weapon {
+                inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+            }),
+            "TOOL" => Ok(EnchantmentTarget::Tool {
+                inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+            }),
+            "BOW" => Ok(EnchantmentTarget::Bow {
+                inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+            }),
+            "FISHING_ROD" => Ok(EnchantmentTarget::FishingRod {
+                inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+            }),
+            "BREAKABLE" => Ok(EnchantmentTarget::Breakable {
+                inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+            }),
+            "WEARABLE" => Ok(EnchantmentTarget::Wearable {
+                inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+            }),
+            "TRIDENT" => Ok(EnchantmentTarget::Trident {
+                inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+            }),
+            "CROSSBOW" => Ok(EnchantmentTarget::Crossbow {
+                inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+            }),
+            "VANISHABLE" => Ok(EnchantmentTarget::Vanishable {
+                inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+            }),
+
+            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct EnchantmentTargetStruct<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for EnchantmentTarget<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        match self {
+            Self::All { inner } => inner.0.clone(),
+            Self::Armor { inner } => inner.0.clone(),
+            Self::ArmorFeet { inner } => inner.0.clone(),
+            Self::ArmorLegs { inner } => inner.0.clone(),
+            Self::ArmorTorso { inner } => inner.0.clone(),
+            Self::ArmorHead { inner } => inner.0.clone(),
+            Self::Weapon { inner } => inner.0.clone(),
+            Self::Tool { inner } => inner.0.clone(),
+            Self::Bow { inner } => inner.0.clone(),
+            Self::FishingRod { inner } => inner.0.clone(),
+            Self::Breakable { inner } => inner.0.clone(),
+            Self::Wearable { inner } => inner.0.clone(),
+            Self::Trident { inner } => inner.0.clone(),
+            Self::Crossbow { inner } => inner.0.clone(),
+            Self::Vanishable { inner } => inner.0.clone(),
+        }
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        match self {
+            Self::All { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Armor { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ArmorFeet { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ArmorLegs { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ArmorTorso { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ArmorHead { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Weapon { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Tool { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Bow { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::FishingRod { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Breakable { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Wearable { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Trident { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Crossbow { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Vanishable { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EnchantmentTarget<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate EnchantmentTarget from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/enchantments/EnchantmentTarget")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a EnchantmentTarget object, got {}",
+                name
+            )
+            .into())
+        } else {
+            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
+            let variant = env.translate_error(variant)?;
+            let variant_str = env
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            match variant_str.as_str() {
+                "ALL" => Ok(EnchantmentTarget::All {
+                    inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+                }),
+                "ARMOR" => Ok(EnchantmentTarget::Armor {
+                    inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+                }),
+                "ARMOR_FEET" => Ok(EnchantmentTarget::ArmorFeet {
+                    inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+                }),
+                "ARMOR_LEGS" => Ok(EnchantmentTarget::ArmorLegs {
+                    inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+                }),
+                "ARMOR_TORSO" => Ok(EnchantmentTarget::ArmorTorso {
+                    inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+                }),
+                "ARMOR_HEAD" => Ok(EnchantmentTarget::ArmorHead {
+                    inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+                }),
+                "WEAPON" => Ok(EnchantmentTarget::Weapon {
+                    inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+                }),
+                "TOOL" => Ok(EnchantmentTarget::Tool {
+                    inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+                }),
+                "BOW" => Ok(EnchantmentTarget::Bow {
+                    inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+                }),
+                "FISHING_ROD" => Ok(EnchantmentTarget::FishingRod {
+                    inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+                }),
+                "BREAKABLE" => Ok(EnchantmentTarget::Breakable {
+                    inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+                }),
+                "WEARABLE" => Ok(EnchantmentTarget::Wearable {
+                    inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+                }),
+                "TRIDENT" => Ok(EnchantmentTarget::Trident {
+                    inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+                }),
+                "CROSSBOW" => Ok(EnchantmentTarget::Crossbow {
+                    inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+                }),
+                "VANISHABLE" => Ok(EnchantmentTarget::Vanishable {
+                    inner: EnchantmentTargetStruct::from_raw(env, obj)?,
+                }),
+                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
+            }
+        }
+    }
+}
+
+impl<'mc> JNIRaw<'mc> for EnchantmentTargetStruct<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EnchantmentTargetStruct<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate EnchantmentTargetStruct from null object."
+            )
+            .into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/enchantments/EnchantmentTarget")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a EnchantmentTargetStruct object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> EnchantmentTargetStruct<'mc> {
+    pub fn values(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::enchantments::EnchantmentTarget<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/enchantments/EnchantmentTarget;");
+        let cls = jni.find_class("org/bukkit/enchantments/EnchantmentTarget");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::enchantments::EnchantmentTarget::from_raw(&jni, obj)
+    }
+    /// Check whether this target includes the specified item.
+    pub fn includes(
+        &self,
+        item: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(item.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "includes",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
 pub enum Enchantment<'mc> {
     Protection { inner: EnchantmentStruct<'mc> },
     FireProtection { inner: EnchantmentStruct<'mc> },
@@ -91,6 +430,55 @@ impl<'mc> std::fmt::Display for Enchantment<'mc> {
             Enchantment::VanishingCurse { .. } => f.write_str("VANISHING_CURSE"),
             Enchantment::SoulSpeed { .. } => f.write_str("SOUL_SPEED"),
             Enchantment::SwiftSneak { .. } => f.write_str("SWIFT_SNEAK"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for Enchantment<'mc> {
+    type Target = EnchantmentStruct<'mc>;
+    fn deref(&self) -> &<Enchantment<'mc> as std::ops::Deref>::Target {
+        match self {
+            Enchantment::Protection { inner } => inner,
+            Enchantment::FireProtection { inner } => inner,
+            Enchantment::FeatherFalling { inner } => inner,
+            Enchantment::BlastProtection { inner } => inner,
+            Enchantment::ProjectileProtection { inner } => inner,
+            Enchantment::Respiration { inner } => inner,
+            Enchantment::AquaAffinity { inner } => inner,
+            Enchantment::Thorns { inner } => inner,
+            Enchantment::DepthStrider { inner } => inner,
+            Enchantment::FrostWalker { inner } => inner,
+            Enchantment::BindingCurse { inner } => inner,
+            Enchantment::Sharpness { inner } => inner,
+            Enchantment::Smite { inner } => inner,
+            Enchantment::BaneOfArthropods { inner } => inner,
+            Enchantment::Knockback { inner } => inner,
+            Enchantment::FireAspect { inner } => inner,
+            Enchantment::Looting { inner } => inner,
+            Enchantment::SweepingEdge { inner } => inner,
+            Enchantment::Efficiency { inner } => inner,
+            Enchantment::SilkTouch { inner } => inner,
+            Enchantment::Unbreaking { inner } => inner,
+            Enchantment::Fortune { inner } => inner,
+            Enchantment::Power { inner } => inner,
+            Enchantment::Punch { inner } => inner,
+            Enchantment::Flame { inner } => inner,
+            Enchantment::Infinity { inner } => inner,
+            Enchantment::LuckOfTheSea { inner } => inner,
+            Enchantment::Lure { inner } => inner,
+            Enchantment::Loyalty { inner } => inner,
+            Enchantment::Impaling { inner } => inner,
+            Enchantment::Riptide { inner } => inner,
+            Enchantment::Channeling { inner } => inner,
+            Enchantment::Multishot { inner } => inner,
+            Enchantment::QuickCharge { inner } => inner,
+            Enchantment::Piercing { inner } => inner,
+            Enchantment::Density { inner } => inner,
+            Enchantment::Breach { inner } => inner,
+            Enchantment::WindBurst { inner } => inner,
+            Enchantment::Mending { inner } => inner,
+            Enchantment::VanishingCurse { inner } => inner,
+            Enchantment::SoulSpeed { inner } => inner,
+            Enchantment::SwiftSneak { inner } => inner,
         }
     }
 }
@@ -743,14 +1131,14 @@ impl<'mc> EnchantmentWrapper<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         key: impl Into<crate::NamespacedKey<'mc>>,
     ) -> Result<Option<crate::enchantments::Enchantment<'mc>>, Box<dyn std::error::Error>> {
-        crate::enchantments::Enchantment::get_by_key(jni, key)
+        crate::enchantments::EnchantmentStruct::get_by_key(jni, key)
     }
     /// Gets the Enchantment at the specified name
     pub fn get_by_name(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         name: impl Into<String>,
     ) -> Result<Option<crate::enchantments::Enchantment<'mc>>, Box<dyn std::error::Error>> {
-        crate::enchantments::Enchantment::get_by_name(jni, name)
+        crate::enchantments::EnchantmentStruct::get_by_name(jni, name)
     }
     #[deprecated]
     /// Gets an array of all the registered {@link Enchantment}s
@@ -791,154 +1179,6 @@ impl<'mc> Into<crate::enchantments::Enchantment<'mc>> for EnchantmentWrapper<'mc
     fn into(self) -> crate::enchantments::Enchantment<'mc> {
         crate::enchantments::Enchantment::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting EnchantmentWrapper into crate::enchantments::Enchantment")
-    }
-}
-pub enum EnchantmentTarget<'mc> {}
-impl<'mc> std::fmt::Display for EnchantmentTarget<'mc> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
-    }
-}
-
-impl<'mc> EnchantmentTarget<'mc> {
-    pub fn value_of(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<EnchantmentTarget<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(env.new_string(arg0.into())?);
-        let cls = env.find_class("org/bukkit/enchantments/EnchantmentTarget");
-        let cls = env.translate_error_with_class(cls)?;
-        let res = env.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/enchantments/EnchantmentTarget;",
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = env.translate_error(res)?;
-        let obj = res.l()?;
-        let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = env.translate_error(variant)?;
-        let variant_str = env
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        match variant_str.as_str() {
-            _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-        }
-    }
-}
-
-#[repr(C)]
-pub struct EnchantmentTargetStruct<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for EnchantmentTarget<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for EnchantmentTarget<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate EnchantmentTarget from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/enchantments/EnchantmentTarget")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a EnchantmentTarget object, got {}",
-                name
-            )
-            .into())
-        } else {
-            let variant = env.call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
-            let variant = env.translate_error(variant)?;
-            let variant_str = env
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            match variant_str.as_str() {
-                _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
-            }
-        }
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for EnchantmentTargetStruct<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for EnchantmentTargetStruct<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate EnchantmentTargetStruct from null object."
-            )
-            .into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/enchantments/EnchantmentTarget")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a EnchantmentTargetStruct object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> EnchantmentTargetStruct<'mc> {
-    pub fn values(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::enchantments::EnchantmentTarget<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/enchantments/EnchantmentTarget;");
-        let cls = jni.find_class("org/bukkit/enchantments/EnchantmentTarget");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::enchantments::EnchantmentTarget::from_raw(&jni, obj)
-    }
-    /// Check whether this target includes the specified item.
-    pub fn includes(
-        &self,
-        item: impl Into<crate::inventory::ItemStack<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(item.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "includes",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
 #[repr(C)]

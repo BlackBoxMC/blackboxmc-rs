@@ -2,10 +2,40 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-pub enum BarColor<'mc> {}
+pub enum BarColor<'mc> {
+    Pink { inner: BarColorStruct<'mc> },
+    Blue { inner: BarColorStruct<'mc> },
+    Red { inner: BarColorStruct<'mc> },
+    Green { inner: BarColorStruct<'mc> },
+    Yellow { inner: BarColorStruct<'mc> },
+    Purple { inner: BarColorStruct<'mc> },
+    White { inner: BarColorStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for BarColor<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            BarColor::Pink { .. } => f.write_str("PINK"),
+            BarColor::Blue { .. } => f.write_str("BLUE"),
+            BarColor::Red { .. } => f.write_str("RED"),
+            BarColor::Green { .. } => f.write_str("GREEN"),
+            BarColor::Yellow { .. } => f.write_str("YELLOW"),
+            BarColor::Purple { .. } => f.write_str("PURPLE"),
+            BarColor::White { .. } => f.write_str("WHITE"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for BarColor<'mc> {
+    type Target = BarColorStruct<'mc>;
+    fn deref(&self) -> &<BarColor<'mc> as std::ops::Deref>::Target {
+        match self {
+            BarColor::Pink { inner } => inner,
+            BarColor::Blue { inner } => inner,
+            BarColor::Red { inner } => inner,
+            BarColor::Green { inner } => inner,
+            BarColor::Yellow { inner } => inner,
+            BarColor::Purple { inner } => inner,
+            BarColor::White { inner } => inner,
+        }
     }
 }
 
@@ -32,6 +62,28 @@ impl<'mc> BarColor<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "PINK" => Ok(BarColor::Pink {
+                inner: BarColorStruct::from_raw(env, obj)?,
+            }),
+            "BLUE" => Ok(BarColor::Blue {
+                inner: BarColorStruct::from_raw(env, obj)?,
+            }),
+            "RED" => Ok(BarColor::Red {
+                inner: BarColorStruct::from_raw(env, obj)?,
+            }),
+            "GREEN" => Ok(BarColor::Green {
+                inner: BarColorStruct::from_raw(env, obj)?,
+            }),
+            "YELLOW" => Ok(BarColor::Yellow {
+                inner: BarColorStruct::from_raw(env, obj)?,
+            }),
+            "PURPLE" => Ok(BarColor::Purple {
+                inner: BarColorStruct::from_raw(env, obj)?,
+            }),
+            "WHITE" => Ok(BarColor::White {
+                inner: BarColorStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -45,10 +97,26 @@ pub struct BarColorStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for BarColor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Pink { inner } => inner.0.clone(),
+            Self::Blue { inner } => inner.0.clone(),
+            Self::Red { inner } => inner.0.clone(),
+            Self::Green { inner } => inner.0.clone(),
+            Self::Yellow { inner } => inner.0.clone(),
+            Self::Purple { inner } => inner.0.clone(),
+            Self::White { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Pink { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Blue { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Red { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Green { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Yellow { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Purple { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::White { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for BarColor<'mc> {
@@ -74,6 +142,27 @@ impl<'mc> JNIInstantiatable<'mc> for BarColor<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "PINK" => Ok(BarColor::Pink {
+                    inner: BarColorStruct::from_raw(env, obj)?,
+                }),
+                "BLUE" => Ok(BarColor::Blue {
+                    inner: BarColorStruct::from_raw(env, obj)?,
+                }),
+                "RED" => Ok(BarColor::Red {
+                    inner: BarColorStruct::from_raw(env, obj)?,
+                }),
+                "GREEN" => Ok(BarColor::Green {
+                    inner: BarColorStruct::from_raw(env, obj)?,
+                }),
+                "YELLOW" => Ok(BarColor::Yellow {
+                    inner: BarColorStruct::from_raw(env, obj)?,
+                }),
+                "PURPLE" => Ok(BarColor::Purple {
+                    inner: BarColorStruct::from_raw(env, obj)?,
+                }),
+                "WHITE" => Ok(BarColor::White {
+                    inner: BarColorStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -644,10 +733,51 @@ impl<'mc> DragonBattle<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum DragonBattleRespawnPhase<'mc> {}
+pub enum DragonBattleRespawnPhase<'mc> {
+    Start {
+        inner: DragonBattleRespawnPhaseStruct<'mc>,
+    },
+    PreparingToSummonPillars {
+        inner: DragonBattleRespawnPhaseStruct<'mc>,
+    },
+    SummoningPillars {
+        inner: DragonBattleRespawnPhaseStruct<'mc>,
+    },
+    SummoningDragon {
+        inner: DragonBattleRespawnPhaseStruct<'mc>,
+    },
+    End {
+        inner: DragonBattleRespawnPhaseStruct<'mc>,
+    },
+    None {
+        inner: DragonBattleRespawnPhaseStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for DragonBattleRespawnPhase<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            DragonBattleRespawnPhase::Start { .. } => f.write_str("START"),
+            DragonBattleRespawnPhase::PreparingToSummonPillars { .. } => {
+                f.write_str("PREPARING_TO_SUMMON_PILLARS")
+            }
+            DragonBattleRespawnPhase::SummoningPillars { .. } => f.write_str("SUMMONING_PILLARS"),
+            DragonBattleRespawnPhase::SummoningDragon { .. } => f.write_str("SUMMONING_DRAGON"),
+            DragonBattleRespawnPhase::End { .. } => f.write_str("END"),
+            DragonBattleRespawnPhase::None { .. } => f.write_str("NONE"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for DragonBattleRespawnPhase<'mc> {
+    type Target = DragonBattleRespawnPhaseStruct<'mc>;
+    fn deref(&self) -> &<DragonBattleRespawnPhase<'mc> as std::ops::Deref>::Target {
+        match self {
+            DragonBattleRespawnPhase::Start { inner } => inner,
+            DragonBattleRespawnPhase::PreparingToSummonPillars { inner } => inner,
+            DragonBattleRespawnPhase::SummoningPillars { inner } => inner,
+            DragonBattleRespawnPhase::SummoningDragon { inner } => inner,
+            DragonBattleRespawnPhase::End { inner } => inner,
+            DragonBattleRespawnPhase::None { inner } => inner,
+        }
     }
 }
 
@@ -674,6 +804,27 @@ impl<'mc> DragonBattleRespawnPhase<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "START" => Ok(DragonBattleRespawnPhase::Start {
+                inner: DragonBattleRespawnPhaseStruct::from_raw(env, obj)?,
+            }),
+            "PREPARING_TO_SUMMON_PILLARS" => {
+                Ok(DragonBattleRespawnPhase::PreparingToSummonPillars {
+                    inner: DragonBattleRespawnPhaseStruct::from_raw(env, obj)?,
+                })
+            }
+            "SUMMONING_PILLARS" => Ok(DragonBattleRespawnPhase::SummoningPillars {
+                inner: DragonBattleRespawnPhaseStruct::from_raw(env, obj)?,
+            }),
+            "SUMMONING_DRAGON" => Ok(DragonBattleRespawnPhase::SummoningDragon {
+                inner: DragonBattleRespawnPhaseStruct::from_raw(env, obj)?,
+            }),
+            "END" => Ok(DragonBattleRespawnPhase::End {
+                inner: DragonBattleRespawnPhaseStruct::from_raw(env, obj)?,
+            }),
+            "NONE" => Ok(DragonBattleRespawnPhase::None {
+                inner: DragonBattleRespawnPhaseStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -687,10 +838,30 @@ pub struct DragonBattleRespawnPhaseStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for DragonBattleRespawnPhase<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Start { inner } => inner.0.clone(),
+            Self::PreparingToSummonPillars { inner } => inner.0.clone(),
+            Self::SummoningPillars { inner } => inner.0.clone(),
+            Self::SummoningDragon { inner } => inner.0.clone(),
+            Self::End { inner } => inner.0.clone(),
+            Self::None { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Start { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::PreparingToSummonPillars { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SummoningPillars { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SummoningDragon { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::End { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::None { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for DragonBattleRespawnPhase<'mc> {
@@ -719,6 +890,26 @@ impl<'mc> JNIInstantiatable<'mc> for DragonBattleRespawnPhase<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "START" => Ok(DragonBattleRespawnPhase::Start {
+                    inner: DragonBattleRespawnPhaseStruct::from_raw(env, obj)?,
+                }),
+                "PREPARING_TO_SUMMON_PILLARS" => {
+                    Ok(DragonBattleRespawnPhase::PreparingToSummonPillars {
+                        inner: DragonBattleRespawnPhaseStruct::from_raw(env, obj)?,
+                    })
+                }
+                "SUMMONING_PILLARS" => Ok(DragonBattleRespawnPhase::SummoningPillars {
+                    inner: DragonBattleRespawnPhaseStruct::from_raw(env, obj)?,
+                }),
+                "SUMMONING_DRAGON" => Ok(DragonBattleRespawnPhase::SummoningDragon {
+                    inner: DragonBattleRespawnPhaseStruct::from_raw(env, obj)?,
+                }),
+                "END" => Ok(DragonBattleRespawnPhase::End {
+                    inner: DragonBattleRespawnPhaseStruct::from_raw(env, obj)?,
+                }),
+                "NONE" => Ok(DragonBattleRespawnPhase::None {
+                    inner: DragonBattleRespawnPhaseStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -775,10 +966,28 @@ impl<'mc> DragonBattleRespawnPhaseStruct<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum BarFlag<'mc> {}
+pub enum BarFlag<'mc> {
+    DarkenSky { inner: BarFlagStruct<'mc> },
+    PlayBossMusic { inner: BarFlagStruct<'mc> },
+    CreateFog { inner: BarFlagStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for BarFlag<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            BarFlag::DarkenSky { .. } => f.write_str("DARKEN_SKY"),
+            BarFlag::PlayBossMusic { .. } => f.write_str("PLAY_BOSS_MUSIC"),
+            BarFlag::CreateFog { .. } => f.write_str("CREATE_FOG"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for BarFlag<'mc> {
+    type Target = BarFlagStruct<'mc>;
+    fn deref(&self) -> &<BarFlag<'mc> as std::ops::Deref>::Target {
+        match self {
+            BarFlag::DarkenSky { inner } => inner,
+            BarFlag::PlayBossMusic { inner } => inner,
+            BarFlag::CreateFog { inner } => inner,
+        }
     }
 }
 
@@ -805,6 +1014,16 @@ impl<'mc> BarFlag<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "DARKEN_SKY" => Ok(BarFlag::DarkenSky {
+                inner: BarFlagStruct::from_raw(env, obj)?,
+            }),
+            "PLAY_BOSS_MUSIC" => Ok(BarFlag::PlayBossMusic {
+                inner: BarFlagStruct::from_raw(env, obj)?,
+            }),
+            "CREATE_FOG" => Ok(BarFlag::CreateFog {
+                inner: BarFlagStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -818,10 +1037,24 @@ pub struct BarFlagStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for BarFlag<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::DarkenSky { inner } => inner.0.clone(),
+            Self::PlayBossMusic { inner } => inner.0.clone(),
+            Self::CreateFog { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::DarkenSky { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::PlayBossMusic { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CreateFog { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for BarFlag<'mc> {
@@ -847,6 +1080,15 @@ impl<'mc> JNIInstantiatable<'mc> for BarFlag<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "DARKEN_SKY" => Ok(BarFlag::DarkenSky {
+                    inner: BarFlagStruct::from_raw(env, obj)?,
+                }),
+                "PLAY_BOSS_MUSIC" => Ok(BarFlag::PlayBossMusic {
+                    inner: BarFlagStruct::from_raw(env, obj)?,
+                }),
+                "CREATE_FOG" => Ok(BarFlag::CreateFog {
+                    inner: BarFlagStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -900,10 +1142,34 @@ impl<'mc> BarFlagStruct<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum BarStyle<'mc> {}
+pub enum BarStyle<'mc> {
+    Solid { inner: BarStyleStruct<'mc> },
+    Segmented6 { inner: BarStyleStruct<'mc> },
+    Segmented10 { inner: BarStyleStruct<'mc> },
+    Segmented12 { inner: BarStyleStruct<'mc> },
+    Segmented20 { inner: BarStyleStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for BarStyle<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            BarStyle::Solid { .. } => f.write_str("SOLID"),
+            BarStyle::Segmented6 { .. } => f.write_str("SEGMENTED_6"),
+            BarStyle::Segmented10 { .. } => f.write_str("SEGMENTED_10"),
+            BarStyle::Segmented12 { .. } => f.write_str("SEGMENTED_12"),
+            BarStyle::Segmented20 { .. } => f.write_str("SEGMENTED_20"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for BarStyle<'mc> {
+    type Target = BarStyleStruct<'mc>;
+    fn deref(&self) -> &<BarStyle<'mc> as std::ops::Deref>::Target {
+        match self {
+            BarStyle::Solid { inner } => inner,
+            BarStyle::Segmented6 { inner } => inner,
+            BarStyle::Segmented10 { inner } => inner,
+            BarStyle::Segmented12 { inner } => inner,
+            BarStyle::Segmented20 { inner } => inner,
+        }
     }
 }
 
@@ -930,6 +1196,22 @@ impl<'mc> BarStyle<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "SOLID" => Ok(BarStyle::Solid {
+                inner: BarStyleStruct::from_raw(env, obj)?,
+            }),
+            "SEGMENTED_6" => Ok(BarStyle::Segmented6 {
+                inner: BarStyleStruct::from_raw(env, obj)?,
+            }),
+            "SEGMENTED_10" => Ok(BarStyle::Segmented10 {
+                inner: BarStyleStruct::from_raw(env, obj)?,
+            }),
+            "SEGMENTED_12" => Ok(BarStyle::Segmented12 {
+                inner: BarStyleStruct::from_raw(env, obj)?,
+            }),
+            "SEGMENTED_20" => Ok(BarStyle::Segmented20 {
+                inner: BarStyleStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -943,10 +1225,30 @@ pub struct BarStyleStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for BarStyle<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Solid { inner } => inner.0.clone(),
+            Self::Segmented6 { inner } => inner.0.clone(),
+            Self::Segmented10 { inner } => inner.0.clone(),
+            Self::Segmented12 { inner } => inner.0.clone(),
+            Self::Segmented20 { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Solid { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Segmented6 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Segmented10 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Segmented12 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Segmented20 { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for BarStyle<'mc> {
@@ -972,6 +1274,21 @@ impl<'mc> JNIInstantiatable<'mc> for BarStyle<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "SOLID" => Ok(BarStyle::Solid {
+                    inner: BarStyleStruct::from_raw(env, obj)?,
+                }),
+                "SEGMENTED_6" => Ok(BarStyle::Segmented6 {
+                    inner: BarStyleStruct::from_raw(env, obj)?,
+                }),
+                "SEGMENTED_10" => Ok(BarStyle::Segmented10 {
+                    inner: BarStyleStruct::from_raw(env, obj)?,
+                }),
+                "SEGMENTED_12" => Ok(BarStyle::Segmented12 {
+                    inner: BarStyleStruct::from_raw(env, obj)?,
+                }),
+                "SEGMENTED_20" => Ok(BarStyle::Segmented20 {
+                    inner: BarStyleStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }

@@ -175,10 +175,29 @@ impl<'mc> PlayerTextures<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum PlayerTexturesSkinModel<'mc> {}
+pub enum PlayerTexturesSkinModel<'mc> {
+    Classic {
+        inner: PlayerTexturesSkinModelStruct<'mc>,
+    },
+    Slim {
+        inner: PlayerTexturesSkinModelStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for PlayerTexturesSkinModel<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            PlayerTexturesSkinModel::Classic { .. } => f.write_str("CLASSIC"),
+            PlayerTexturesSkinModel::Slim { .. } => f.write_str("SLIM"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PlayerTexturesSkinModel<'mc> {
+    type Target = PlayerTexturesSkinModelStruct<'mc>;
+    fn deref(&self) -> &<PlayerTexturesSkinModel<'mc> as std::ops::Deref>::Target {
+        match self {
+            PlayerTexturesSkinModel::Classic { inner } => inner,
+            PlayerTexturesSkinModel::Slim { inner } => inner,
+        }
     }
 }
 
@@ -205,6 +224,13 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "CLASSIC" => Ok(PlayerTexturesSkinModel::Classic {
+                inner: PlayerTexturesSkinModelStruct::from_raw(env, obj)?,
+            }),
+            "SLIM" => Ok(PlayerTexturesSkinModel::Slim {
+                inner: PlayerTexturesSkinModelStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -218,10 +244,16 @@ pub struct PlayerTexturesSkinModelStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for PlayerTexturesSkinModel<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Classic { inner } => inner.0.clone(),
+            Self::Slim { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Classic { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Slim { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PlayerTexturesSkinModel<'mc> {
@@ -251,6 +283,12 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerTexturesSkinModel<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "CLASSIC" => Ok(PlayerTexturesSkinModel::Classic {
+                    inner: PlayerTexturesSkinModelStruct::from_raw(env, obj)?,
+                }),
+                "SLIM" => Ok(PlayerTexturesSkinModel::Slim {
+                    inner: PlayerTexturesSkinModelStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -439,12 +477,10 @@ impl<'mc> PlayerProfile<'mc> {
     pub fn serialize(
         &self,
     ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Ljava/util/Map;";
+        let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), args);
+            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())

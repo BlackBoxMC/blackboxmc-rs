@@ -2,10 +2,39 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-pub enum CraftingBookCategory<'mc> {}
+pub enum CraftingBookCategory<'mc> {
+    Building {
+        inner: CraftingBookCategoryStruct<'mc>,
+    },
+    Redstone {
+        inner: CraftingBookCategoryStruct<'mc>,
+    },
+    Equipment {
+        inner: CraftingBookCategoryStruct<'mc>,
+    },
+    Misc {
+        inner: CraftingBookCategoryStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for CraftingBookCategory<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            CraftingBookCategory::Building { .. } => f.write_str("BUILDING"),
+            CraftingBookCategory::Redstone { .. } => f.write_str("REDSTONE"),
+            CraftingBookCategory::Equipment { .. } => f.write_str("EQUIPMENT"),
+            CraftingBookCategory::Misc { .. } => f.write_str("MISC"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for CraftingBookCategory<'mc> {
+    type Target = CraftingBookCategoryStruct<'mc>;
+    fn deref(&self) -> &<CraftingBookCategory<'mc> as std::ops::Deref>::Target {
+        match self {
+            CraftingBookCategory::Building { inner } => inner,
+            CraftingBookCategory::Redstone { inner } => inner,
+            CraftingBookCategory::Equipment { inner } => inner,
+            CraftingBookCategory::Misc { inner } => inner,
+        }
     }
 }
 
@@ -32,6 +61,19 @@ impl<'mc> CraftingBookCategory<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "BUILDING" => Ok(CraftingBookCategory::Building {
+                inner: CraftingBookCategoryStruct::from_raw(env, obj)?,
+            }),
+            "REDSTONE" => Ok(CraftingBookCategory::Redstone {
+                inner: CraftingBookCategoryStruct::from_raw(env, obj)?,
+            }),
+            "EQUIPMENT" => Ok(CraftingBookCategory::Equipment {
+                inner: CraftingBookCategoryStruct::from_raw(env, obj)?,
+            }),
+            "MISC" => Ok(CraftingBookCategory::Misc {
+                inner: CraftingBookCategoryStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -45,10 +87,22 @@ pub struct CraftingBookCategoryStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for CraftingBookCategory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Building { inner } => inner.0.clone(),
+            Self::Redstone { inner } => inner.0.clone(),
+            Self::Equipment { inner } => inner.0.clone(),
+            Self::Misc { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Building { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Redstone { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Equipment { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Misc { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for CraftingBookCategory<'mc> {
@@ -77,6 +131,18 @@ impl<'mc> JNIInstantiatable<'mc> for CraftingBookCategory<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "BUILDING" => Ok(CraftingBookCategory::Building {
+                    inner: CraftingBookCategoryStruct::from_raw(env, obj)?,
+                }),
+                "REDSTONE" => Ok(CraftingBookCategory::Redstone {
+                    inner: CraftingBookCategoryStruct::from_raw(env, obj)?,
+                }),
+                "EQUIPMENT" => Ok(CraftingBookCategory::Equipment {
+                    inner: CraftingBookCategoryStruct::from_raw(env, obj)?,
+                }),
+                "MISC" => Ok(CraftingBookCategory::Misc {
+                    inner: CraftingBookCategoryStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -135,10 +201,34 @@ impl<'mc> CraftingBookCategoryStruct<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum CookingBookCategory<'mc> {}
+pub enum CookingBookCategory<'mc> {
+    Food {
+        inner: CookingBookCategoryStruct<'mc>,
+    },
+    Blocks {
+        inner: CookingBookCategoryStruct<'mc>,
+    },
+    Misc {
+        inner: CookingBookCategoryStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for CookingBookCategory<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            CookingBookCategory::Food { .. } => f.write_str("FOOD"),
+            CookingBookCategory::Blocks { .. } => f.write_str("BLOCKS"),
+            CookingBookCategory::Misc { .. } => f.write_str("MISC"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for CookingBookCategory<'mc> {
+    type Target = CookingBookCategoryStruct<'mc>;
+    fn deref(&self) -> &<CookingBookCategory<'mc> as std::ops::Deref>::Target {
+        match self {
+            CookingBookCategory::Food { inner } => inner,
+            CookingBookCategory::Blocks { inner } => inner,
+            CookingBookCategory::Misc { inner } => inner,
+        }
     }
 }
 
@@ -165,6 +255,16 @@ impl<'mc> CookingBookCategory<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "FOOD" => Ok(CookingBookCategory::Food {
+                inner: CookingBookCategoryStruct::from_raw(env, obj)?,
+            }),
+            "BLOCKS" => Ok(CookingBookCategory::Blocks {
+                inner: CookingBookCategoryStruct::from_raw(env, obj)?,
+            }),
+            "MISC" => Ok(CookingBookCategory::Misc {
+                inner: CookingBookCategoryStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -178,10 +278,18 @@ pub struct CookingBookCategoryStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for CookingBookCategory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Food { inner } => inner.0.clone(),
+            Self::Blocks { inner } => inner.0.clone(),
+            Self::Misc { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Food { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Blocks { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Misc { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for CookingBookCategory<'mc> {
@@ -210,6 +318,15 @@ impl<'mc> JNIInstantiatable<'mc> for CookingBookCategory<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "FOOD" => Ok(CookingBookCategory::Food {
+                    inner: CookingBookCategoryStruct::from_raw(env, obj)?,
+                }),
+                "BLOCKS" => Ok(CookingBookCategory::Blocks {
+                    inner: CookingBookCategoryStruct::from_raw(env, obj)?,
+                }),
+                "MISC" => Ok(CookingBookCategory::Misc {
+                    inner: CookingBookCategoryStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }

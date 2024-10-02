@@ -3,6 +3,128 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
+pub struct JavaPluginLoader<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for JavaPluginLoader<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for JavaPluginLoader<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate JavaPluginLoader from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/java/JavaPluginLoader")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a JavaPluginLoader object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> JavaPluginLoader<'mc> {
+    #[deprecated]
+    /// This class was not meant to be constructed explicitly
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        instance: impl Into<crate::Server<'mc>>,
+    ) -> Result<crate::plugin::java::JavaPluginLoader<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/Server;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(instance.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/plugin/java/PluginLoader");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::plugin::java::JavaPluginLoader::from_raw(&jni, res)
+    }
+
+    pub fn plugin_file_filters(
+        &self,
+    ) -> Result<blackboxmc_java::util::regex::JavaPattern<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/regex/Pattern;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPluginFileFilters",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::regex::JavaPattern::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn enable_plugin(
+        &self,
+        plugin: impl Into<crate::plugin::Plugin<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "enablePlugin",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn disable_plugin(
+        &self,
+        plugin: impl Into<crate::plugin::Plugin<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "disablePlugin",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::plugin::PluginLoader<'mc>> for JavaPluginLoader<'mc> {
+    fn into(self) -> crate::plugin::PluginLoader<'mc> {
+        crate::plugin::PluginLoader::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting JavaPluginLoader into crate::plugin::PluginLoader")
+    }
+}
+#[repr(C)]
 pub struct JavaPlugin<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -507,127 +629,5 @@ impl<'mc> Into<crate::plugin::PluginBase<'mc>> for JavaPlugin<'mc> {
     fn into(self) -> crate::plugin::PluginBase<'mc> {
         crate::plugin::PluginBase::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting JavaPlugin into crate::plugin::PluginBase")
-    }
-}
-#[repr(C)]
-pub struct JavaPluginLoader<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for JavaPluginLoader<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for JavaPluginLoader<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate JavaPluginLoader from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/java/JavaPluginLoader")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a JavaPluginLoader object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> JavaPluginLoader<'mc> {
-    #[deprecated]
-    /// This class was not meant to be constructed explicitly
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        instance: impl Into<crate::Server<'mc>>,
-    ) -> Result<crate::plugin::java::JavaPluginLoader<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/Server;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(instance.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/plugin/java/PluginLoader");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::plugin::java::JavaPluginLoader::from_raw(&jni, res)
-    }
-
-    pub fn plugin_file_filters(
-        &self,
-    ) -> Result<blackboxmc_java::util::regex::JavaPattern<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/regex/Pattern;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPluginFileFilters",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::regex::JavaPattern::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn enable_plugin(
-        &self,
-        plugin: impl Into<crate::plugin::Plugin<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "enablePlugin",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn disable_plugin(
-        &self,
-        plugin: impl Into<crate::plugin::Plugin<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "disablePlugin",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::plugin::PluginLoader<'mc>> for JavaPluginLoader<'mc> {
-    fn into(self) -> crate::plugin::PluginLoader<'mc> {
-        crate::plugin::PluginLoader::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting JavaPluginLoader into crate::plugin::PluginLoader")
     }
 }

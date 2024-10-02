@@ -3,6 +3,147 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
+pub struct Criteria<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Criteria<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for Criteria<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Criteria from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/Criteria")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Criteria object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> Criteria<'mc> {
+    /// Get the name of this criteria (its unique id).
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Get whether or not this criteria is read only. If read only, scoreboards with this criteria
+    /// cannot have their scores changed.
+    pub fn is_read_only(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isReadOnly", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Get the {@link RenderType} used by default for this criteria.
+    pub fn default_render_type(
+        &self,
+    ) -> Result<crate::scoreboard::RenderType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/scoreboard/RenderType;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDefaultRenderType",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::scoreboard::RenderType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Get a {@link Criteria} for the specified statistic pertaining to an entity type.
+    ///
+    /// This method expects a {@link Statistic} of {@link Type#ENTITY}. This acts as a convenience
+    /// to create more complex compound criteria such as being killed by a specific entity type.
+    /// An example would be {@code Criteria.statistic(Statistic.KILL_ENTITY, EntityType.CREEPER)},
+    /// returning a Criteria representing "minecraft.killed:minecraft.creeper" which will increment
+    /// when the player kills a creepers.
+    ///
+    /// If the provided statistic does not require additional data, {@link #statistic(Statistic)}
+    /// is called and returned instead.
+    ///
+    /// This method provides no guarantee that any given criteria exists on the vanilla server.
+    pub fn statistic(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        statistic: impl Into<crate::Statistic<'mc>>,
+        entity_type: std::option::Option<impl Into<crate::entity::EntityType<'mc>>>,
+    ) -> Result<crate::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Statistic;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(statistic.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = entity_type {
+            sig += "Lorg/bukkit/entity/EntityType;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Lorg/bukkit/scoreboard/Criteria;";
+        let cls = jni.find_class("org/bukkit/scoreboard/Criteria");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "statistic", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::scoreboard::Criteria::from_raw(&jni, obj)
+    }
+    /// Get (or create) a new {@link Criteria} by its name.
+    pub fn create(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        name: impl Into<String>,
+    ) -> Result<crate::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/scoreboard/Criteria;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(name.into())?,
+        ));
+        let cls = jni.find_class("org/bukkit/scoreboard/Criteria");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "create",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::scoreboard::Criteria::from_raw(&jni, obj)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
 pub struct Objective<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -241,10 +382,25 @@ impl<'mc> Objective<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum RenderType<'mc> {}
+pub enum RenderType<'mc> {
+    Integer { inner: RenderTypeStruct<'mc> },
+    Hearts { inner: RenderTypeStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for RenderType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            RenderType::Integer { .. } => f.write_str("INTEGER"),
+            RenderType::Hearts { .. } => f.write_str("HEARTS"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for RenderType<'mc> {
+    type Target = RenderTypeStruct<'mc>;
+    fn deref(&self) -> &<RenderType<'mc> as std::ops::Deref>::Target {
+        match self {
+            RenderType::Integer { inner } => inner,
+            RenderType::Hearts { inner } => inner,
+        }
     }
 }
 
@@ -271,6 +427,13 @@ impl<'mc> RenderType<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "INTEGER" => Ok(RenderType::Integer {
+                inner: RenderTypeStruct::from_raw(env, obj)?,
+            }),
+            "HEARTS" => Ok(RenderType::Hearts {
+                inner: RenderTypeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -284,10 +447,16 @@ pub struct RenderTypeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for RenderType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Integer { inner } => inner.0.clone(),
+            Self::Hearts { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Integer { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Hearts { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for RenderType<'mc> {
@@ -313,6 +482,12 @@ impl<'mc> JNIInstantiatable<'mc> for RenderType<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "INTEGER" => Ok(RenderType::Integer {
+                    inner: RenderTypeStruct::from_raw(env, obj)?,
+                }),
+                "HEARTS" => Ok(RenderType::Hearts {
+                    inner: RenderTypeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -935,10 +1110,28 @@ impl<'mc> Team<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum TeamOption<'mc> {}
+pub enum TeamOption<'mc> {
+    NameTagVisibility { inner: TeamOptionStruct<'mc> },
+    DeathMessageVisibility { inner: TeamOptionStruct<'mc> },
+    CollisionRule { inner: TeamOptionStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for TeamOption<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            TeamOption::NameTagVisibility { .. } => f.write_str("NAME_TAG_VISIBILITY"),
+            TeamOption::DeathMessageVisibility { .. } => f.write_str("DEATH_MESSAGE_VISIBILITY"),
+            TeamOption::CollisionRule { .. } => f.write_str("COLLISION_RULE"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for TeamOption<'mc> {
+    type Target = TeamOptionStruct<'mc>;
+    fn deref(&self) -> &<TeamOption<'mc> as std::ops::Deref>::Target {
+        match self {
+            TeamOption::NameTagVisibility { inner } => inner,
+            TeamOption::DeathMessageVisibility { inner } => inner,
+            TeamOption::CollisionRule { inner } => inner,
+        }
     }
 }
 
@@ -965,6 +1158,16 @@ impl<'mc> TeamOption<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "NAME_TAG_VISIBILITY" => Ok(TeamOption::NameTagVisibility {
+                inner: TeamOptionStruct::from_raw(env, obj)?,
+            }),
+            "DEATH_MESSAGE_VISIBILITY" => Ok(TeamOption::DeathMessageVisibility {
+                inner: TeamOptionStruct::from_raw(env, obj)?,
+            }),
+            "COLLISION_RULE" => Ok(TeamOption::CollisionRule {
+                inner: TeamOptionStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -978,10 +1181,24 @@ pub struct TeamOptionStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for TeamOption<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::NameTagVisibility { inner } => inner.0.clone(),
+            Self::DeathMessageVisibility { inner } => inner.0.clone(),
+            Self::CollisionRule { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::NameTagVisibility { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DeathMessageVisibility { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CollisionRule { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for TeamOption<'mc> {
@@ -1007,6 +1224,15 @@ impl<'mc> JNIInstantiatable<'mc> for TeamOption<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "NAME_TAG_VISIBILITY" => Ok(TeamOption::NameTagVisibility {
+                    inner: TeamOptionStruct::from_raw(env, obj)?,
+                }),
+                "DEATH_MESSAGE_VISIBILITY" => Ok(TeamOption::DeathMessageVisibility {
+                    inner: TeamOptionStruct::from_raw(env, obj)?,
+                }),
+                "COLLISION_RULE" => Ok(TeamOption::CollisionRule {
+                    inner: TeamOptionStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -1062,10 +1288,31 @@ impl<'mc> TeamOptionStruct<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum TeamOptionStatus<'mc> {}
+pub enum TeamOptionStatus<'mc> {
+    Always { inner: TeamOptionStatusStruct<'mc> },
+    Never { inner: TeamOptionStatusStruct<'mc> },
+    ForOtherTeams { inner: TeamOptionStatusStruct<'mc> },
+    ForOwnTeam { inner: TeamOptionStatusStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for TeamOptionStatus<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            TeamOptionStatus::Always { .. } => f.write_str("ALWAYS"),
+            TeamOptionStatus::Never { .. } => f.write_str("NEVER"),
+            TeamOptionStatus::ForOtherTeams { .. } => f.write_str("FOR_OTHER_TEAMS"),
+            TeamOptionStatus::ForOwnTeam { .. } => f.write_str("FOR_OWN_TEAM"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for TeamOptionStatus<'mc> {
+    type Target = TeamOptionStatusStruct<'mc>;
+    fn deref(&self) -> &<TeamOptionStatus<'mc> as std::ops::Deref>::Target {
+        match self {
+            TeamOptionStatus::Always { inner } => inner,
+            TeamOptionStatus::Never { inner } => inner,
+            TeamOptionStatus::ForOtherTeams { inner } => inner,
+            TeamOptionStatus::ForOwnTeam { inner } => inner,
+        }
     }
 }
 
@@ -1092,6 +1339,19 @@ impl<'mc> TeamOptionStatus<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "ALWAYS" => Ok(TeamOptionStatus::Always {
+                inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+            }),
+            "NEVER" => Ok(TeamOptionStatus::Never {
+                inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+            }),
+            "FOR_OTHER_TEAMS" => Ok(TeamOptionStatus::ForOtherTeams {
+                inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+            }),
+            "FOR_OWN_TEAM" => Ok(TeamOptionStatus::ForOwnTeam {
+                inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -1105,10 +1365,24 @@ pub struct TeamOptionStatusStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for TeamOptionStatus<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Always { inner } => inner.0.clone(),
+            Self::Never { inner } => inner.0.clone(),
+            Self::ForOtherTeams { inner } => inner.0.clone(),
+            Self::ForOwnTeam { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Always { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Never { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ForOtherTeams { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ForOwnTeam { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for TeamOptionStatus<'mc> {
@@ -1136,6 +1410,18 @@ impl<'mc> JNIInstantiatable<'mc> for TeamOptionStatus<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "ALWAYS" => Ok(TeamOptionStatus::Always {
+                    inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+                }),
+                "NEVER" => Ok(TeamOptionStatus::Never {
+                    inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+                }),
+                "FOR_OTHER_TEAMS" => Ok(TeamOptionStatus::ForOtherTeams {
+                    inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+                }),
+                "FOR_OWN_TEAM" => Ok(TeamOptionStatus::ForOwnTeam {
+                    inner: TeamOptionStatusStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -1233,10 +1519,31 @@ impl<'mc> Criterias<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum NameTagVisibility<'mc> {}
+pub enum NameTagVisibility<'mc> {
+    Always { inner: NameTagVisibilityStruct<'mc> },
+    Never { inner: NameTagVisibilityStruct<'mc> },
+    HideForOtherTeams { inner: NameTagVisibilityStruct<'mc> },
+    HideForOwnTeam { inner: NameTagVisibilityStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for NameTagVisibility<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            NameTagVisibility::Always { .. } => f.write_str("ALWAYS"),
+            NameTagVisibility::Never { .. } => f.write_str("NEVER"),
+            NameTagVisibility::HideForOtherTeams { .. } => f.write_str("HIDE_FOR_OTHER_TEAMS"),
+            NameTagVisibility::HideForOwnTeam { .. } => f.write_str("HIDE_FOR_OWN_TEAM"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for NameTagVisibility<'mc> {
+    type Target = NameTagVisibilityStruct<'mc>;
+    fn deref(&self) -> &<NameTagVisibility<'mc> as std::ops::Deref>::Target {
+        match self {
+            NameTagVisibility::Always { inner } => inner,
+            NameTagVisibility::Never { inner } => inner,
+            NameTagVisibility::HideForOtherTeams { inner } => inner,
+            NameTagVisibility::HideForOwnTeam { inner } => inner,
+        }
     }
 }
 
@@ -1263,6 +1570,19 @@ impl<'mc> NameTagVisibility<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "ALWAYS" => Ok(NameTagVisibility::Always {
+                inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+            }),
+            "NEVER" => Ok(NameTagVisibility::Never {
+                inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+            }),
+            "HIDE_FOR_OTHER_TEAMS" => Ok(NameTagVisibility::HideForOtherTeams {
+                inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+            }),
+            "HIDE_FOR_OWN_TEAM" => Ok(NameTagVisibility::HideForOwnTeam {
+                inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -1276,10 +1596,24 @@ pub struct NameTagVisibilityStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for NameTagVisibility<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Always { inner } => inner.0.clone(),
+            Self::Never { inner } => inner.0.clone(),
+            Self::HideForOtherTeams { inner } => inner.0.clone(),
+            Self::HideForOwnTeam { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Always { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Never { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::HideForOtherTeams { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HideForOwnTeam { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for NameTagVisibility<'mc> {
@@ -1307,6 +1641,18 @@ impl<'mc> JNIInstantiatable<'mc> for NameTagVisibility<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "ALWAYS" => Ok(NameTagVisibility::Always {
+                    inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+                }),
+                "NEVER" => Ok(NameTagVisibility::Never {
+                    inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+                }),
+                "HIDE_FOR_OTHER_TEAMS" => Ok(NameTagVisibility::HideForOtherTeams {
+                    inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+                }),
+                "HIDE_FOR_OWN_TEAM" => Ok(NameTagVisibility::HideForOwnTeam {
+                    inner: NameTagVisibilityStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -1363,10 +1709,76 @@ impl<'mc> NameTagVisibilityStruct<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum DisplaySlot<'mc> {}
+pub enum DisplaySlot<'mc> {
+    BelowName { inner: DisplaySlotStruct<'mc> },
+    PlayerList { inner: DisplaySlotStruct<'mc> },
+    Sidebar { inner: DisplaySlotStruct<'mc> },
+    SidebarBlack { inner: DisplaySlotStruct<'mc> },
+    SidebarDarkBlue { inner: DisplaySlotStruct<'mc> },
+    SidebarDarkGreen { inner: DisplaySlotStruct<'mc> },
+    SidebarDarkAqua { inner: DisplaySlotStruct<'mc> },
+    SidebarDarkRed { inner: DisplaySlotStruct<'mc> },
+    SidebarDarkPurple { inner: DisplaySlotStruct<'mc> },
+    SidebarGold { inner: DisplaySlotStruct<'mc> },
+    SidebarGray { inner: DisplaySlotStruct<'mc> },
+    SidebarDarkGray { inner: DisplaySlotStruct<'mc> },
+    SidebarBlue { inner: DisplaySlotStruct<'mc> },
+    SidebarGreen { inner: DisplaySlotStruct<'mc> },
+    SidebarAqua { inner: DisplaySlotStruct<'mc> },
+    SidebarRed { inner: DisplaySlotStruct<'mc> },
+    SidebarLightPurple { inner: DisplaySlotStruct<'mc> },
+    SidebarYellow { inner: DisplaySlotStruct<'mc> },
+    SidebarWhite { inner: DisplaySlotStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for DisplaySlot<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            DisplaySlot::BelowName { .. } => f.write_str("BELOW_NAME"),
+            DisplaySlot::PlayerList { .. } => f.write_str("PLAYER_LIST"),
+            DisplaySlot::Sidebar { .. } => f.write_str("SIDEBAR"),
+            DisplaySlot::SidebarBlack { .. } => f.write_str("SIDEBAR_BLACK"),
+            DisplaySlot::SidebarDarkBlue { .. } => f.write_str("SIDEBAR_DARK_BLUE"),
+            DisplaySlot::SidebarDarkGreen { .. } => f.write_str("SIDEBAR_DARK_GREEN"),
+            DisplaySlot::SidebarDarkAqua { .. } => f.write_str("SIDEBAR_DARK_AQUA"),
+            DisplaySlot::SidebarDarkRed { .. } => f.write_str("SIDEBAR_DARK_RED"),
+            DisplaySlot::SidebarDarkPurple { .. } => f.write_str("SIDEBAR_DARK_PURPLE"),
+            DisplaySlot::SidebarGold { .. } => f.write_str("SIDEBAR_GOLD"),
+            DisplaySlot::SidebarGray { .. } => f.write_str("SIDEBAR_GRAY"),
+            DisplaySlot::SidebarDarkGray { .. } => f.write_str("SIDEBAR_DARK_GRAY"),
+            DisplaySlot::SidebarBlue { .. } => f.write_str("SIDEBAR_BLUE"),
+            DisplaySlot::SidebarGreen { .. } => f.write_str("SIDEBAR_GREEN"),
+            DisplaySlot::SidebarAqua { .. } => f.write_str("SIDEBAR_AQUA"),
+            DisplaySlot::SidebarRed { .. } => f.write_str("SIDEBAR_RED"),
+            DisplaySlot::SidebarLightPurple { .. } => f.write_str("SIDEBAR_LIGHT_PURPLE"),
+            DisplaySlot::SidebarYellow { .. } => f.write_str("SIDEBAR_YELLOW"),
+            DisplaySlot::SidebarWhite { .. } => f.write_str("SIDEBAR_WHITE"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for DisplaySlot<'mc> {
+    type Target = DisplaySlotStruct<'mc>;
+    fn deref(&self) -> &<DisplaySlot<'mc> as std::ops::Deref>::Target {
+        match self {
+            DisplaySlot::BelowName { inner } => inner,
+            DisplaySlot::PlayerList { inner } => inner,
+            DisplaySlot::Sidebar { inner } => inner,
+            DisplaySlot::SidebarBlack { inner } => inner,
+            DisplaySlot::SidebarDarkBlue { inner } => inner,
+            DisplaySlot::SidebarDarkGreen { inner } => inner,
+            DisplaySlot::SidebarDarkAqua { inner } => inner,
+            DisplaySlot::SidebarDarkRed { inner } => inner,
+            DisplaySlot::SidebarDarkPurple { inner } => inner,
+            DisplaySlot::SidebarGold { inner } => inner,
+            DisplaySlot::SidebarGray { inner } => inner,
+            DisplaySlot::SidebarDarkGray { inner } => inner,
+            DisplaySlot::SidebarBlue { inner } => inner,
+            DisplaySlot::SidebarGreen { inner } => inner,
+            DisplaySlot::SidebarAqua { inner } => inner,
+            DisplaySlot::SidebarRed { inner } => inner,
+            DisplaySlot::SidebarLightPurple { inner } => inner,
+            DisplaySlot::SidebarYellow { inner } => inner,
+            DisplaySlot::SidebarWhite { inner } => inner,
+        }
     }
 }
 
@@ -1393,6 +1805,64 @@ impl<'mc> DisplaySlot<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "BELOW_NAME" => Ok(DisplaySlot::BelowName {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "PLAYER_LIST" => Ok(DisplaySlot::PlayerList {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR" => Ok(DisplaySlot::Sidebar {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_BLACK" => Ok(DisplaySlot::SidebarBlack {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_DARK_BLUE" => Ok(DisplaySlot::SidebarDarkBlue {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_DARK_GREEN" => Ok(DisplaySlot::SidebarDarkGreen {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_DARK_AQUA" => Ok(DisplaySlot::SidebarDarkAqua {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_DARK_RED" => Ok(DisplaySlot::SidebarDarkRed {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_DARK_PURPLE" => Ok(DisplaySlot::SidebarDarkPurple {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_GOLD" => Ok(DisplaySlot::SidebarGold {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_GRAY" => Ok(DisplaySlot::SidebarGray {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_DARK_GRAY" => Ok(DisplaySlot::SidebarDarkGray {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_BLUE" => Ok(DisplaySlot::SidebarBlue {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_GREEN" => Ok(DisplaySlot::SidebarGreen {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_AQUA" => Ok(DisplaySlot::SidebarAqua {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_RED" => Ok(DisplaySlot::SidebarRed {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_LIGHT_PURPLE" => Ok(DisplaySlot::SidebarLightPurple {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_YELLOW" => Ok(DisplaySlot::SidebarYellow {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+            "SIDEBAR_WHITE" => Ok(DisplaySlot::SidebarWhite {
+                inner: DisplaySlotStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -1406,10 +1876,86 @@ pub struct DisplaySlotStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for DisplaySlot<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::BelowName { inner } => inner.0.clone(),
+            Self::PlayerList { inner } => inner.0.clone(),
+            Self::Sidebar { inner } => inner.0.clone(),
+            Self::SidebarBlack { inner } => inner.0.clone(),
+            Self::SidebarDarkBlue { inner } => inner.0.clone(),
+            Self::SidebarDarkGreen { inner } => inner.0.clone(),
+            Self::SidebarDarkAqua { inner } => inner.0.clone(),
+            Self::SidebarDarkRed { inner } => inner.0.clone(),
+            Self::SidebarDarkPurple { inner } => inner.0.clone(),
+            Self::SidebarGold { inner } => inner.0.clone(),
+            Self::SidebarGray { inner } => inner.0.clone(),
+            Self::SidebarDarkGray { inner } => inner.0.clone(),
+            Self::SidebarBlue { inner } => inner.0.clone(),
+            Self::SidebarGreen { inner } => inner.0.clone(),
+            Self::SidebarAqua { inner } => inner.0.clone(),
+            Self::SidebarRed { inner } => inner.0.clone(),
+            Self::SidebarLightPurple { inner } => inner.0.clone(),
+            Self::SidebarYellow { inner } => inner.0.clone(),
+            Self::SidebarWhite { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::BelowName { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::PlayerList { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Sidebar { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SidebarBlack { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarDarkBlue { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarDarkGreen { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarDarkAqua { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarDarkRed { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarDarkPurple { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarGold { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarGray { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarDarkGray { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarBlue { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarGreen { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarAqua { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarRed { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarLightPurple { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarYellow { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::SidebarWhite { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for DisplaySlot<'mc> {
@@ -1435,6 +1981,63 @@ impl<'mc> JNIInstantiatable<'mc> for DisplaySlot<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "BELOW_NAME" => Ok(DisplaySlot::BelowName {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "PLAYER_LIST" => Ok(DisplaySlot::PlayerList {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR" => Ok(DisplaySlot::Sidebar {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_BLACK" => Ok(DisplaySlot::SidebarBlack {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_DARK_BLUE" => Ok(DisplaySlot::SidebarDarkBlue {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_DARK_GREEN" => Ok(DisplaySlot::SidebarDarkGreen {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_DARK_AQUA" => Ok(DisplaySlot::SidebarDarkAqua {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_DARK_RED" => Ok(DisplaySlot::SidebarDarkRed {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_DARK_PURPLE" => Ok(DisplaySlot::SidebarDarkPurple {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_GOLD" => Ok(DisplaySlot::SidebarGold {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_GRAY" => Ok(DisplaySlot::SidebarGray {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_DARK_GRAY" => Ok(DisplaySlot::SidebarDarkGray {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_BLUE" => Ok(DisplaySlot::SidebarBlue {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_GREEN" => Ok(DisplaySlot::SidebarGreen {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_AQUA" => Ok(DisplaySlot::SidebarAqua {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_RED" => Ok(DisplaySlot::SidebarRed {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_LIGHT_PURPLE" => Ok(DisplaySlot::SidebarLightPurple {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_YELLOW" => Ok(DisplaySlot::SidebarYellow {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
+                "SIDEBAR_WHITE" => Ok(DisplaySlot::SidebarWhite {
+                    inner: DisplaySlotStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -1820,147 +2423,6 @@ impl<'mc> Scoreboard<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct Criteria<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for Criteria<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for Criteria<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate Criteria from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/Criteria")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a Criteria object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> Criteria<'mc> {
-    /// Get the name of this criteria (its unique id).
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// Get whether or not this criteria is read only. If read only, scoreboards with this criteria
-    /// cannot have their scores changed.
-    pub fn is_read_only(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isReadOnly", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Get the {@link RenderType} used by default for this criteria.
-    pub fn default_render_type(
-        &self,
-    ) -> Result<crate::scoreboard::RenderType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/scoreboard/RenderType;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDefaultRenderType",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::scoreboard::RenderType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Get a {@link Criteria} for the specified statistic pertaining to an entity type.
-    ///
-    /// This method expects a {@link Statistic} of {@link Type#ENTITY}. This acts as a convenience
-    /// to create more complex compound criteria such as being killed by a specific entity type.
-    /// An example would be {@code Criteria.statistic(Statistic.KILL_ENTITY, EntityType.CREEPER)},
-    /// returning a Criteria representing "minecraft.killed:minecraft.creeper" which will increment
-    /// when the player kills a creepers.
-    ///
-    /// If the provided statistic does not require additional data, {@link #statistic(Statistic)}
-    /// is called and returned instead.
-    ///
-    /// This method provides no guarantee that any given criteria exists on the vanilla server.
-    pub fn statistic(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        statistic: impl Into<crate::Statistic<'mc>>,
-        entity_type: std::option::Option<impl Into<crate::entity::EntityType<'mc>>>,
-    ) -> Result<crate::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Statistic;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(statistic.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = entity_type {
-            sig += "Lorg/bukkit/entity/EntityType;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        sig += ")Lorg/bukkit/scoreboard/Criteria;";
-        let cls = jni.find_class("org/bukkit/scoreboard/Criteria");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "statistic", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::scoreboard::Criteria::from_raw(&jni, obj)
-    }
-    /// Get (or create) a new {@link Criteria} by its name.
-    pub fn create(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        name: impl Into<String>,
-    ) -> Result<crate::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/scoreboard/Criteria;");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(name.into())?,
-        ));
-        let cls = jni.find_class("org/bukkit/scoreboard/Criteria");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "create",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::scoreboard::Criteria::from_raw(&jni, obj)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

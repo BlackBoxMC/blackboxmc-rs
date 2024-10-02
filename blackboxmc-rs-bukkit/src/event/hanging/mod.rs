@@ -152,10 +152,44 @@ impl<'mc> Into<crate::event::hanging::HangingEvent<'mc>> for HangingBreakEvent<'
             .expect("Error converting HangingBreakEvent into crate::event::hanging::HangingEvent")
     }
 }
-pub enum HangingBreakEventRemoveCause<'mc> {}
+pub enum HangingBreakEventRemoveCause<'mc> {
+    Entity {
+        inner: HangingBreakEventRemoveCauseStruct<'mc>,
+    },
+    Explosion {
+        inner: HangingBreakEventRemoveCauseStruct<'mc>,
+    },
+    Obstruction {
+        inner: HangingBreakEventRemoveCauseStruct<'mc>,
+    },
+    Physics {
+        inner: HangingBreakEventRemoveCauseStruct<'mc>,
+    },
+    Default {
+        inner: HangingBreakEventRemoveCauseStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for HangingBreakEventRemoveCause<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            HangingBreakEventRemoveCause::Entity { .. } => f.write_str("ENTITY"),
+            HangingBreakEventRemoveCause::Explosion { .. } => f.write_str("EXPLOSION"),
+            HangingBreakEventRemoveCause::Obstruction { .. } => f.write_str("OBSTRUCTION"),
+            HangingBreakEventRemoveCause::Physics { .. } => f.write_str("PHYSICS"),
+            HangingBreakEventRemoveCause::Default { .. } => f.write_str("DEFAULT"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for HangingBreakEventRemoveCause<'mc> {
+    type Target = HangingBreakEventRemoveCauseStruct<'mc>;
+    fn deref(&self) -> &<HangingBreakEventRemoveCause<'mc> as std::ops::Deref>::Target {
+        match self {
+            HangingBreakEventRemoveCause::Entity { inner } => inner,
+            HangingBreakEventRemoveCause::Explosion { inner } => inner,
+            HangingBreakEventRemoveCause::Obstruction { inner } => inner,
+            HangingBreakEventRemoveCause::Physics { inner } => inner,
+            HangingBreakEventRemoveCause::Default { inner } => inner,
+        }
     }
 }
 
@@ -182,6 +216,22 @@ impl<'mc> HangingBreakEventRemoveCause<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "ENTITY" => Ok(HangingBreakEventRemoveCause::Entity {
+                inner: HangingBreakEventRemoveCauseStruct::from_raw(env, obj)?,
+            }),
+            "EXPLOSION" => Ok(HangingBreakEventRemoveCause::Explosion {
+                inner: HangingBreakEventRemoveCauseStruct::from_raw(env, obj)?,
+            }),
+            "OBSTRUCTION" => Ok(HangingBreakEventRemoveCause::Obstruction {
+                inner: HangingBreakEventRemoveCauseStruct::from_raw(env, obj)?,
+            }),
+            "PHYSICS" => Ok(HangingBreakEventRemoveCause::Physics {
+                inner: HangingBreakEventRemoveCauseStruct::from_raw(env, obj)?,
+            }),
+            "DEFAULT" => Ok(HangingBreakEventRemoveCause::Default {
+                inner: HangingBreakEventRemoveCauseStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -195,10 +245,26 @@ pub struct HangingBreakEventRemoveCauseStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for HangingBreakEventRemoveCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Entity { inner } => inner.0.clone(),
+            Self::Explosion { inner } => inner.0.clone(),
+            Self::Obstruction { inner } => inner.0.clone(),
+            Self::Physics { inner } => inner.0.clone(),
+            Self::Default { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Entity { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Explosion { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Obstruction { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Physics { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Default { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for HangingBreakEventRemoveCause<'mc> {
@@ -230,6 +296,21 @@ impl<'mc> JNIInstantiatable<'mc> for HangingBreakEventRemoveCause<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "ENTITY" => Ok(HangingBreakEventRemoveCause::Entity {
+                    inner: HangingBreakEventRemoveCauseStruct::from_raw(env, obj)?,
+                }),
+                "EXPLOSION" => Ok(HangingBreakEventRemoveCause::Explosion {
+                    inner: HangingBreakEventRemoveCauseStruct::from_raw(env, obj)?,
+                }),
+                "OBSTRUCTION" => Ok(HangingBreakEventRemoveCause::Obstruction {
+                    inner: HangingBreakEventRemoveCauseStruct::from_raw(env, obj)?,
+                }),
+                "PHYSICS" => Ok(HangingBreakEventRemoveCause::Physics {
+                    inner: HangingBreakEventRemoveCauseStruct::from_raw(env, obj)?,
+                }),
+                "DEFAULT" => Ok(HangingBreakEventRemoveCause::Default {
+                    inner: HangingBreakEventRemoveCauseStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }

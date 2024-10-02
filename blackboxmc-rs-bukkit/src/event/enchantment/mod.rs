@@ -45,14 +45,14 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         enchanter: impl Into<crate::entity::Player<'mc>>,
-        view: impl Into<crate::inventory::InventoryView<'mc>>,
+        view: impl Into<crate::inventory::view::EnchantmentView<'mc>>,
         table: impl Into<crate::block::Block<'mc>>,
         item: impl Into<crate::inventory::ItemStack<'mc>>,
         offers: impl Into<crate::enchantments::EnchantmentOffer<'mc>>,
         bonus: i32,
     ) -> Result<crate::event::enchantment::PrepareItemEnchantEvent<'mc>, Box<dyn std::error::Error>>
     {
-        let sig = String::from("(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/enchantments/EnchantmentOffer;I)V");
+        let sig = String::from("(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/view/EnchantmentView;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/enchantments/EnchantmentOffer;I)V");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(enchanter.into().jni_object().clone())
         });
@@ -161,6 +161,19 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         Ok(res.i()?)
     }
 
+    pub fn view(
+        &self,
+    ) -> Result<crate::inventory::view::EnchantmentView<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/view/EnchantmentView;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getView", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::view::EnchantmentView::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
@@ -205,7 +218,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    // SUPER CLASS: org.bukkit.event.inventory.InventoryEvent ( ['getEnchanter', 'getEnchantBlock', 'getItem', 'getExpLevelCostsOffered', 'getOffers', 'getEnchantmentBonus', 'isCancelled', 'setCancelled', 'getHandlers', 'getHandlerList'])
+    // SUPER CLASS: org.bukkit.event.inventory.InventoryEvent ( ['getEnchanter', 'getEnchantBlock', 'getItem', 'getExpLevelCostsOffered', 'getOffers', 'getEnchantmentBonus', 'getView', 'isCancelled', 'setCancelled', 'getHandlers', 'getHandlerList'])
     /// Gets the primary Inventory involved in this transaction
     pub fn inventory(
         &self,
@@ -234,14 +247,6 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
-    }
-    /// Gets the view object itself
-    pub fn view(&self) -> Result<crate::inventory::InventoryView<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::inventory::InventoryEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::inventory::InventoryEvent = temp_clone.into();
-        real.view()
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {

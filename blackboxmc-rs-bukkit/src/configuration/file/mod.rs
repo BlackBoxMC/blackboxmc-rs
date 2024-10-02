@@ -3,6 +3,191 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
+pub struct YamlConstructor<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for YamlConstructor<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for YamlConstructor<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate YamlConstructor from null object.").into(),
+            );
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/configuration/file/YamlConstructor")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a YamlConstructor object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> YamlConstructor<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct YamlConfiguration<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for YamlConfiguration<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for YamlConfiguration<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate YamlConfiguration from null object.").into(),
+            );
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/configuration/file/YamlConfiguration")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a YamlConfiguration object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> YamlConfiguration<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::configuration::file::YamlConfiguration<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()V");
+        let cls = jni.find_class("org/bukkit/configuration/file/YamlConfiguration");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), vec![]);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::configuration::file::YamlConfiguration::from_raw(&jni, res)
+    }
+
+    pub fn save_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "saveToString", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+
+    pub fn load_from_string(
+        &self,
+        contents: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(contents.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "loadFromString",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn options(
+        &self,
+    ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/configuration/file/YamlConfigurationOptions;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "options", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::configuration::file::YamlConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    // SUPER CLASS: org.bukkit.configuration.file.FileConfiguration ( ['saveToString', 'loadFromString', 'options', 'loadConfiguration'])
+    /// Saves this {@link FileConfiguration} to the specified location.
+    ///
+    /// If the file does not exist, it will be created. If already exists, it
+    /// will be overwritten. If it cannot be overwritten or created, an
+    /// exception will be thrown.
+    ///
+    /// This method will save using the system default encoding, or possibly
+    /// using UTF8.
+    pub fn save(&self, file: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::configuration::file::FileConfiguration::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::configuration::file::FileConfiguration = temp_clone.into();
+        real.save(file)
+    }
+    /// Loads this {@link FileConfiguration} from the specified location.
+    ///
+    /// All the values contained within this configuration will be removed,
+    /// leaving only settings and defaults, and the new values will be loaded
+    /// from the given file.
+    ///
+    /// If the file cannot be loaded for any reason, an exception will be
+    /// thrown.
+    pub fn load(&self, file: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::configuration::file::FileConfiguration::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::configuration::file::FileConfiguration = temp_clone.into();
+        real.load(file)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::configuration::file::FileConfiguration<'mc>> for YamlConfiguration<'mc> {
+    fn into(self) -> crate::configuration::file::FileConfiguration<'mc> {
+        crate::configuration::file::FileConfiguration::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting YamlConfiguration into crate::configuration::file::FileConfiguration",
+        )
+    }
+}
+#[repr(C)]
 pub struct FileConfiguration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -543,147 +728,6 @@ impl<'mc> Into<crate::configuration::MemoryConfigurationOptions<'mc>>
     }
 }
 #[repr(C)]
-pub struct YamlConfiguration<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for YamlConfiguration<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for YamlConfiguration<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate YamlConfiguration from null object.").into(),
-            );
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/configuration/file/YamlConfiguration")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a YamlConfiguration object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> YamlConfiguration<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::configuration::file::YamlConfiguration<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()V");
-        let cls = jni.find_class("org/bukkit/configuration/file/YamlConfiguration");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), vec![]);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::configuration::file::YamlConfiguration::from_raw(&jni, res)
-    }
-
-    pub fn save_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "saveToString", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn load_from_string(
-        &self,
-        contents: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(contents.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "loadFromString",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn options(
-        &self,
-    ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/configuration/file/YamlConfigurationOptions;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "options", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::configuration::file::YamlConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    // SUPER CLASS: org.bukkit.configuration.file.FileConfiguration ( ['saveToString', 'loadFromString', 'options', 'loadConfiguration'])
-    /// Saves this {@link FileConfiguration} to the specified location.
-    ///
-    /// If the file does not exist, it will be created. If already exists, it
-    /// will be overwritten. If it cannot be overwritten or created, an
-    /// exception will be thrown.
-    ///
-    /// This method will save using the system default encoding, or possibly
-    /// using UTF8.
-    pub fn save(&self, file: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone =
-            crate::configuration::file::FileConfiguration::from_raw(&self.0, unsafe {
-                jni::objects::JObject::from_raw(self.1.clone())
-            })?;
-        let real: crate::configuration::file::FileConfiguration = temp_clone.into();
-        real.save(file)
-    }
-    /// Loads this {@link FileConfiguration} from the specified location.
-    ///
-    /// All the values contained within this configuration will be removed,
-    /// leaving only settings and defaults, and the new values will be loaded
-    /// from the given file.
-    ///
-    /// If the file cannot be loaded for any reason, an exception will be
-    /// thrown.
-    pub fn load(&self, file: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone =
-            crate::configuration::file::FileConfiguration::from_raw(&self.0, unsafe {
-                jni::objects::JObject::from_raw(self.1.clone())
-            })?;
-        let real: crate::configuration::file::FileConfiguration = temp_clone.into();
-        real.load(file)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::configuration::file::FileConfiguration<'mc>> for YamlConfiguration<'mc> {
-    fn into(self) -> crate::configuration::file::FileConfiguration<'mc> {
-        crate::configuration::file::FileConfiguration::from_raw(&self.jni_ref(), self.1).expect(
-            "Error converting YamlConfiguration into crate::configuration::file::FileConfiguration",
-        )
-    }
-}
-#[repr(C)]
 pub struct YamlRepresenter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -722,50 +766,6 @@ impl<'mc> JNIInstantiatable<'mc> for YamlRepresenter<'mc> {
 }
 
 impl<'mc> YamlRepresenter<'mc> {
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct YamlConstructor<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for YamlConstructor<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for YamlConstructor<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate YamlConstructor from null object.").into(),
-            );
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/configuration/file/YamlConstructor")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a YamlConstructor object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> YamlConstructor<'mc> {
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)

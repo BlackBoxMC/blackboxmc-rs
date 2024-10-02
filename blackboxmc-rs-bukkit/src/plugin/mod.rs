@@ -3,12 +3,12 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[repr(C)]
-pub struct EventExecutor<'mc>(
+pub struct TimedRegisteredListener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 
-impl<'mc> JNIRaw<'mc> for EventExecutor<'mc> {
+impl<'mc> JNIRaw<'mc> for TimedRegisteredListener<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -16,18 +16,21 @@ impl<'mc> JNIRaw<'mc> for EventExecutor<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JNIInstantiatable<'mc> for EventExecutor<'mc> {
+impl<'mc> JNIInstantiatable<'mc> for TimedRegisteredListener<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate EventExecutor from null object.").into());
+            return Err(eyre::eyre!(
+                "Tried to instantiate TimedRegisteredListener from null object."
+            )
+            .into());
         }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/EventExecutor")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/TimedRegisteredListener")?;
         if !valid {
             Err(eyre::eyre!(
-                "Invalid argument passed. Expected a EventExecutor object, got {}",
+                "Invalid argument passed. Expected a TimedRegisteredListener object, got {}",
                 name
             )
             .into())
@@ -37,30 +40,300 @@ impl<'mc> JNIInstantiatable<'mc> for EventExecutor<'mc> {
     }
 }
 
-impl<'mc> EventExecutor<'mc> {
-    pub fn execute(
-        &self,
-        listener: impl Into<crate::event::Listener<'mc>>,
-        event: impl Into<crate::event::Event<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/event/Listener;Lorg/bukkit/event/Event;)V");
+impl<'mc> TimedRegisteredListener<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin_listener: impl Into<crate::event::Listener<'mc>>,
+        event_executor: impl Into<crate::plugin::EventExecutor<'mc>>,
+        event_priority: impl Into<crate::event::EventPriority<'mc>>,
+        registered_plugin: impl Into<crate::plugin::Plugin<'mc>>,
+        listen_cancelled: bool,
+    ) -> Result<crate::plugin::TimedRegisteredListener<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/Plugin;Z)V");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(listener.into().jni_object().clone())
+            jni::objects::JObject::from_raw(plugin_listener.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(event.into().jni_object().clone())
+            jni::objects::JObject::from_raw(event_executor.into().jni_object().clone())
         });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "execute",
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(event_priority.into().jni_object().clone())
+        });
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(registered_plugin.into().jni_object().clone())
+        });
+        let val_5 = jni::objects::JValueGen::Bool(listen_cancelled.into());
+        let cls = jni.find_class("org/bukkit/plugin/TimedRegisteredListener");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
             sig.as_str(),
             vec![
                 jni::objects::JValueGen::from(val_1),
                 jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+                jni::objects::JValueGen::from(val_5),
             ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::plugin::TimedRegisteredListener::from_raw(&jni, res)
+    }
+
+    pub fn call_event(
+        &self,
+        event: impl Into<crate::event::Event<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/event/Event;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(event.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "callEvent",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    /// Resets the call count and total time for this listener
+    pub fn reset(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "reset", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets the total times this listener has been called
+    pub fn count(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getCount", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Gets the total time calls to this listener have taken
+    pub fn total_time(&self) -> Result<i64, Box<dyn std::error::Error>> {
+        let sig = String::from("()J");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getTotalTime", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.j()?)
+    }
+    /// Gets the class of the events this listener handled. If it handled
+    /// multiple classes of event, the closest shared superclass will be
+    /// returned, such that for any event this listener has handled,
+    /// <code>this.getEventClass().isAssignableFrom(event.getClass())</code>
+    /// and no class <code>this.getEventClass().isAssignableFrom(clazz)
+    /// {@literal && this.getEventClass() != clazz &&}
+    /// event.getClass().isAssignableFrom(clazz)</code> for all handled events.
+    pub fn event_class(
+        &self,
+    ) -> Result<Option<jni::objects::JClass<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Class;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEventClass", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(unsafe {
+            jni::objects::JClass::from_raw(res.as_jni().l)
+        }))
+    }
+    /// Gets whether this listener has handled multiple events, such that for
+    /// some two events, <code>eventA.getClass() != eventB.getClass()</code>.
+    pub fn has_multiple(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasMultiple", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    // SUPER CLASS: org.bukkit.plugin.RegisteredListener ( ['callEvent', 'reset', 'getCount', 'getTotalTime', 'getEventClass', 'hasMultiple'])
+    /// Gets the listener for this registration
+    pub fn listener(&self) -> Result<crate::event::Listener<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::plugin::RegisteredListener::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::RegisteredListener = temp_clone.into();
+        real.listener()
+    }
+    /// Gets the plugin for this registration
+    pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::plugin::RegisteredListener::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::RegisteredListener = temp_clone.into();
+        real.plugin()
+    }
+    /// Gets the priority for this registration
+    pub fn priority(&self) -> Result<crate::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone = crate::plugin::RegisteredListener::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::RegisteredListener = temp_clone.into();
+        real.priority()
+    }
+    /// Whether this listener accepts cancelled events
+    pub fn is_ignoring_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone = crate::plugin::RegisteredListener::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::plugin::RegisteredListener = temp_clone.into();
+        real.is_ignoring_cancelled()
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::plugin::RegisteredListener<'mc>> for TimedRegisteredListener<'mc> {
+    fn into(self) -> crate::plugin::RegisteredListener<'mc> {
+        crate::plugin::RegisteredListener::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting TimedRegisteredListener into crate::plugin::RegisteredListener",
+        )
+    }
+}
+#[repr(C)]
+pub struct RegisteredServiceProvider<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for RegisteredServiceProvider<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for RegisteredServiceProvider<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate RegisteredServiceProvider from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/plugin/RegisteredServiceProvider")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a RegisteredServiceProvider object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> RegisteredServiceProvider<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        service: jni::objects::JClass<'mc>,
+        provider: jni::objects::JObject<'mc>,
+        priority: impl Into<crate::plugin::ServicePriority<'mc>>,
+        plugin: impl Into<crate::plugin::Plugin<'mc>>,
+    ) -> Result<crate::plugin::RegisteredServiceProvider<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Ljava/lang/Class;LT;Lorg/bukkit/plugin/ServicePriority;Lorg/bukkit/plugin/Plugin;)V",
+        );
+        let val_1 = jni::objects::JValueGen::Object(service.into());
+        let val_2 = jni::objects::JValueGen::Object(provider);
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(priority.into().jni_object().clone())
+        });
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/plugin/RegisteredServiceProvider");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::plugin::RegisteredServiceProvider::from_raw(&jni, res)
+    }
+
+    pub fn service(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Class;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getService", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
+    }
+
+    pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getPlugin", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn provider(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()LT;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getProvider", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+
+    pub fn priority(
+        &self,
+    ) -> Result<crate::plugin::ServicePriority<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/plugin/ServicePriority;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPriority", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::plugin::ServicePriority::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn compare_to(
+        &self,
+        other: impl Into<crate::plugin::RegisteredServiceProvider<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/plugin/RegisteredServiceProvider;)I");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(other.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
     }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
@@ -69,12 +342,12 @@ impl<'mc> EventExecutor<'mc> {
     }
 }
 #[repr(C)]
-pub struct InvalidDescriptionException<'mc>(
+pub struct RegisteredListener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 
-impl<'mc> JNIRaw<'mc> for InvalidDescriptionException<'mc> {
+impl<'mc> JNIRaw<'mc> for RegisteredListener<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -82,22 +355,20 @@ impl<'mc> JNIRaw<'mc> for InvalidDescriptionException<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JNIInstantiatable<'mc> for InvalidDescriptionException<'mc> {
+impl<'mc> JNIInstantiatable<'mc> for RegisteredListener<'mc> {
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate InvalidDescriptionException from null object."
-            )
-            .into());
+            return Err(
+                eyre::eyre!("Tried to instantiate RegisteredListener from null object.").into(),
+            );
         }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/plugin/InvalidDescriptionException")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/RegisteredListener")?;
         if !valid {
             Err(eyre::eyre!(
-                "Invalid argument passed. Expected a InvalidDescriptionException object, got {}",
+                "Invalid argument passed. Expected a RegisteredListener object, got {}",
                 name
             )
             .into())
@@ -107,7 +378,109 @@ impl<'mc> JNIInstantiatable<'mc> for InvalidDescriptionException<'mc> {
     }
 }
 
-impl<'mc> InvalidDescriptionException<'mc> {
+impl<'mc> RegisteredListener<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        listener: impl Into<crate::event::Listener<'mc>>,
+        executor: impl Into<crate::plugin::EventExecutor<'mc>>,
+        priority: impl Into<crate::event::EventPriority<'mc>>,
+        plugin: impl Into<crate::plugin::Plugin<'mc>>,
+        ignore_cancelled: bool,
+    ) -> Result<crate::plugin::RegisteredListener<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/Plugin;Z)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(listener.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(executor.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(priority.into().jni_object().clone())
+        });
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
+        });
+        let val_5 = jni::objects::JValueGen::Bool(ignore_cancelled.into());
+        let cls = jni.find_class("org/bukkit/plugin/RegisteredListener");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+                jni::objects::JValueGen::from(val_5),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::plugin::RegisteredListener::from_raw(&jni, res)
+    }
+    /// Gets the listener for this registration
+    pub fn listener(&self) -> Result<crate::event::Listener<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/Listener;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getListener", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::Listener::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the plugin for this registration
+    pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getPlugin", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the priority for this registration
+    pub fn priority(&self) -> Result<crate::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/EventPriority;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPriority", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::EventPriority::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Calls the event executor
+    pub fn call_event(
+        &self,
+        event: impl Into<crate::event::Event<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/event/Event;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(event.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "callEvent",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Whether this listener accepts cancelled events
+    pub fn is_ignoring_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isIgnoringCancelled",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
@@ -1048,6 +1421,484 @@ impl<'mc> PluginDescriptionFile<'mc> {
     }
 }
 #[repr(C)]
+pub struct PluginBase<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PluginBase<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for PluginBase<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate PluginBase from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/PluginBase")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PluginBase object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> PluginBase<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "PluginBase", name, lib_name) }?;
+        Self::from_raw(env, obj)
+    }
+
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::plugin::PluginBase<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let cls = jni.find_class("org/bukkit/plugin/PluginBase");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), vec![]);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::plugin::PluginBase::from_raw(&jni, res)
+    }
+
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+
+    pub fn equals(
+        &self,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Object;)Z");
+        let val_1 = jni::objects::JValueGen::Object(obj);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Returns the plugin.yaml file containing the details for this plugin
+    pub fn description(
+        &self,
+    ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/plugin/PluginDescriptionFile;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDescription", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::plugin::PluginDescriptionFile::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets a {@link FileConfiguration} for this plugin, read through
+    /// "config.yml"
+    ///
+    /// If there is a default config.yml embedded in this plugin, it will be
+    /// provided as a default for this Configuration.
+    pub fn config(
+        &self,
+    ) -> Result<crate::configuration::file::FileConfiguration<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/configuration/file/FileConfiguration;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getConfig", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::configuration::file::FileConfiguration::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Saves the {@link FileConfiguration} retrievable by {@link #getConfig()}.
+    pub fn save_config(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "saveConfig", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Saves the raw contents of the default config.yml file to the location
+    /// retrievable by {@link #getConfig()}.
+    ///
+    /// This should fail silently if the config.yml already exists.
+    pub fn save_default_config(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "saveDefaultConfig",
+            sig.as_str(),
+            vec![],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Saves the raw contents of any resource embedded with a plugin's .jar
+    /// file assuming it can be found using {@link #getResource(String)}.
+    ///
+    /// The resource is saved into the plugin's data folder using the same
+    /// hierarchy as the .jar file (subdirectories are preserved).
+    pub fn save_resource(
+        &self,
+        resource_path: impl Into<String>,
+        replace: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;Z)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(resource_path.into())?,
+        ));
+        let val_2 = jni::objects::JValueGen::Bool(replace.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "saveResource",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Discards any data in {@link #getConfig()} and reloads from disk.
+    pub fn reload_config(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "reloadConfig", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets the associated PluginLoader responsible for this plugin
+    pub fn plugin_loader(
+        &self,
+    ) -> Result<crate::plugin::PluginLoader<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/plugin/PluginLoader;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPluginLoader", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::plugin::PluginLoader::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Returns the Server instance currently running this plugin
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/Server;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getServer", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Server::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Returns a value indicating whether or not this plugin is currently
+    /// enabled
+    pub fn is_enabled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEnabled", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Called when this plugin is disabled
+    pub fn on_disable(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "onDisable", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Called after a plugin is loaded but before it has been enabled.
+    ///
+    /// When multiple plugins are loaded, the onLoad() for all plugins is
+    /// called before any onEnable() is called.
+    pub fn on_load(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "onLoad", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Called when this plugin is enabled
+    pub fn on_enable(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "onEnable", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Simple boolean if we can still nag to the logs about things
+    pub fn is_naggable(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isNaggable", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Set naggable state
+    pub fn set_naggable(&self, can_nag: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
+        let val_1 = jni::objects::JValueGen::Bool(can_nag.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setNaggable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets a {@link ChunkGenerator} for use in a default world, as specified
+    /// in the server configuration
+    pub fn get_default_world_generator(
+        &self,
+        world_name: impl Into<String>,
+        id: impl Into<String>,
+    ) -> Result<Option<crate::generator::ChunkGenerator<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Ljava/lang/String;Ljava/lang/String;)Lorg/bukkit/generator/ChunkGenerator;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(world_name.into())?,
+        ));
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(id.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDefaultWorldGenerator",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::generator::ChunkGenerator::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    /// Gets a {@link BiomeProvider} for use in a default world, as specified
+    /// in the server configuration
+    pub fn get_default_biome_provider(
+        &self,
+        world_name: impl Into<String>,
+        id: impl Into<String>,
+    ) -> Result<Option<crate::generator::BiomeProvider<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Ljava/lang/String;Ljava/lang/String;)Lorg/bukkit/generator/BiomeProvider;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(world_name.into())?,
+        ));
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(id.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDefaultBiomeProvider",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::generator::BiomeProvider::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    /// Returns the plugin logger associated with this server's logger. The
+    /// returned logger automatically tags all log messages with the plugin's
+    /// name.
+    pub fn logger(
+        &self,
+    ) -> Result<blackboxmc_java::util::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/logging/Logger;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getLogger", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::logging::JavaLogger::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::plugin::Plugin<'mc>> for PluginBase<'mc> {
+    fn into(self) -> crate::plugin::Plugin<'mc> {
+        crate::plugin::Plugin::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting PluginBase into crate::plugin::Plugin")
+    }
+}
+#[repr(C)]
+pub struct EventExecutor<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for EventExecutor<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for EventExecutor<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate EventExecutor from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/EventExecutor")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a EventExecutor object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> EventExecutor<'mc> {
+    pub fn execute(
+        &self,
+        listener: impl Into<crate::event::Listener<'mc>>,
+        event: impl Into<crate::event::Event<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/event/Listener;Lorg/bukkit/event/Event;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(listener.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(event.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "execute",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct InvalidDescriptionException<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for InvalidDescriptionException<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for InvalidDescriptionException<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate InvalidDescriptionException from null object."
+            )
+            .into());
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/plugin/InvalidDescriptionException")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a InvalidDescriptionException object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> InvalidDescriptionException<'mc> {
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
 pub struct UnknownDependencyException<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1199,206 +2050,6 @@ impl<'mc> PluginLoader<'mc> {
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct TimedRegisteredListener<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for TimedRegisteredListener<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for TimedRegisteredListener<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate TimedRegisteredListener from null object."
-            )
-            .into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/TimedRegisteredListener")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a TimedRegisteredListener object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> TimedRegisteredListener<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin_listener: impl Into<crate::event::Listener<'mc>>,
-        event_executor: impl Into<crate::plugin::EventExecutor<'mc>>,
-        event_priority: impl Into<crate::event::EventPriority<'mc>>,
-        registered_plugin: impl Into<crate::plugin::Plugin<'mc>>,
-        listen_cancelled: bool,
-    ) -> Result<crate::plugin::TimedRegisteredListener<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/Plugin;Z)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(plugin_listener.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(event_executor.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(event_priority.into().jni_object().clone())
-        });
-        let val_4 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(registered_plugin.into().jni_object().clone())
-        });
-        let val_5 = jni::objects::JValueGen::Bool(listen_cancelled.into());
-        let cls = jni.find_class("org/bukkit/plugin/TimedRegisteredListener");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-                jni::objects::JValueGen::from(val_5),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::plugin::TimedRegisteredListener::from_raw(&jni, res)
-    }
-
-    pub fn call_event(
-        &self,
-        event: impl Into<crate::event::Event<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/event/Event;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(event.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "callEvent",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Resets the call count and total time for this listener
-    pub fn reset(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "reset", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the total times this listener has been called
-    pub fn count(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getCount", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// Gets the total time calls to this listener have taken
-    pub fn total_time(&self) -> Result<i64, Box<dyn std::error::Error>> {
-        let sig = String::from("()J");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getTotalTime", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j()?)
-    }
-    /// Gets the class of the events this listener handled. If it handled
-    /// multiple classes of event, the closest shared superclass will be
-    /// returned, such that for any event this listener has handled,
-    /// <code>this.getEventClass().isAssignableFrom(event.getClass())</code>
-    /// and no class <code>this.getEventClass().isAssignableFrom(clazz)
-    /// {@literal && this.getEventClass() != clazz &&}
-    /// event.getClass().isAssignableFrom(clazz)</code> for all handled events.
-    pub fn event_class(
-        &self,
-    ) -> Result<Option<jni::objects::JClass<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getEventClass", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(unsafe {
-            jni::objects::JClass::from_raw(res.as_jni().l)
-        }))
-    }
-    /// Gets whether this listener has handled multiple events, such that for
-    /// some two events, <code>eventA.getClass() != eventB.getClass()</code>.
-    pub fn has_multiple(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "hasMultiple", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    // SUPER CLASS: org.bukkit.plugin.RegisteredListener ( ['callEvent', 'reset', 'getCount', 'getTotalTime', 'getEventClass', 'hasMultiple'])
-    /// Gets the listener for this registration
-    pub fn listener(&self) -> Result<crate::event::Listener<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::plugin::RegisteredListener::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::plugin::RegisteredListener = temp_clone.into();
-        real.listener()
-    }
-    /// Gets the plugin for this registration
-    pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::plugin::RegisteredListener::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::plugin::RegisteredListener = temp_clone.into();
-        real.plugin()
-    }
-    /// Gets the priority for this registration
-    pub fn priority(&self) -> Result<crate::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone = crate::plugin::RegisteredListener::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::plugin::RegisteredListener = temp_clone.into();
-        real.priority()
-    }
-    /// Whether this listener accepts cancelled events
-    pub fn is_ignoring_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone = crate::plugin::RegisteredListener::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::plugin::RegisteredListener = temp_clone.into();
-        real.is_ignoring_cancelled()
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::plugin::RegisteredListener<'mc>> for TimedRegisteredListener<'mc> {
-    fn into(self) -> crate::plugin::RegisteredListener<'mc> {
-        crate::plugin::RegisteredListener::from_raw(&self.jni_ref(), self.1).expect(
-            "Error converting TimedRegisteredListener into crate::plugin::RegisteredListener",
-        )
     }
 }
 #[repr(C)]
@@ -2067,604 +2718,34 @@ impl<'mc> AuthorNagException<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-#[repr(C)]
-pub struct RegisteredServiceProvider<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for RegisteredServiceProvider<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
+pub enum ServicePriority<'mc> {
+    Lowest { inner: ServicePriorityStruct<'mc> },
+    Low { inner: ServicePriorityStruct<'mc> },
+    Normal { inner: ServicePriorityStruct<'mc> },
+    High { inner: ServicePriorityStruct<'mc> },
+    Highest { inner: ServicePriorityStruct<'mc> },
 }
-impl<'mc> JNIInstantiatable<'mc> for RegisteredServiceProvider<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate RegisteredServiceProvider from null object."
-            )
-            .into());
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/plugin/RegisteredServiceProvider")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a RegisteredServiceProvider object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> RegisteredServiceProvider<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        service: jni::objects::JClass<'mc>,
-        provider: jni::objects::JObject<'mc>,
-        priority: impl Into<crate::plugin::ServicePriority<'mc>>,
-        plugin: impl Into<crate::plugin::Plugin<'mc>>,
-    ) -> Result<crate::plugin::RegisteredServiceProvider<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Ljava/lang/Class;LT;Lorg/bukkit/plugin/ServicePriority;Lorg/bukkit/plugin/Plugin;)V",
-        );
-        let val_1 = jni::objects::JValueGen::Object(service.into());
-        let val_2 = jni::objects::JValueGen::Object(provider);
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(priority.into().jni_object().clone())
-        });
-        let val_4 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/plugin/RegisteredServiceProvider");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::plugin::RegisteredServiceProvider::from_raw(&jni, res)
-    }
-
-    pub fn service(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Class;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getService", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getPlugin", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn provider(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()LT;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getProvider", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-
-    pub fn priority(
-        &self,
-    ) -> Result<crate::plugin::ServicePriority<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/plugin/ServicePriority;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getPriority", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::ServicePriority::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn compare_to(
-        &self,
-        other: impl Into<crate::plugin::RegisteredServiceProvider<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/plugin/RegisteredServiceProvider;)I");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(other.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "compareTo",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-#[repr(C)]
-pub struct PluginBase<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for PluginBase<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for PluginBase<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate PluginBase from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/PluginBase")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a PluginBase object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> PluginBase<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "PluginBase", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::plugin::PluginBase<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let cls = jni.find_class("org/bukkit/plugin/PluginBase");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), vec![]);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::plugin::PluginBase::from_raw(&jni, res)
-    }
-
-    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-
-    pub fn equals(
-        &self,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Z");
-        let val_1 = jni::objects::JValueGen::Object(obj);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// Returns the plugin.yaml file containing the details for this plugin
-    pub fn description(
-        &self,
-    ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/plugin/PluginDescriptionFile;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getDescription", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::PluginDescriptionFile::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets a {@link FileConfiguration} for this plugin, read through
-    /// "config.yml"
-    ///
-    /// If there is a default config.yml embedded in this plugin, it will be
-    /// provided as a default for this Configuration.
-    pub fn config(
-        &self,
-    ) -> Result<crate::configuration::file::FileConfiguration<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/configuration/file/FileConfiguration;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getConfig", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::configuration::file::FileConfiguration::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Saves the {@link FileConfiguration} retrievable by {@link #getConfig()}.
-    pub fn save_config(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "saveConfig", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Saves the raw contents of the default config.yml file to the location
-    /// retrievable by {@link #getConfig()}.
-    ///
-    /// This should fail silently if the config.yml already exists.
-    pub fn save_default_config(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "saveDefaultConfig",
-            sig.as_str(),
-            vec![],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Saves the raw contents of any resource embedded with a plugin's .jar
-    /// file assuming it can be found using {@link #getResource(String)}.
-    ///
-    /// The resource is saved into the plugin's data folder using the same
-    /// hierarchy as the .jar file (subdirectories are preserved).
-    pub fn save_resource(
-        &self,
-        resource_path: impl Into<String>,
-        replace: bool,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Z)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(resource_path.into())?,
-        ));
-        let val_2 = jni::objects::JValueGen::Bool(replace.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "saveResource",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Discards any data in {@link #getConfig()} and reloads from disk.
-    pub fn reload_config(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "reloadConfig", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the associated PluginLoader responsible for this plugin
-    pub fn plugin_loader(
-        &self,
-    ) -> Result<crate::plugin::PluginLoader<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/plugin/PluginLoader;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getPluginLoader", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::PluginLoader::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns the Server instance currently running this plugin
-    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Server;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getServer", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Server::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a value indicating whether or not this plugin is currently
-    /// enabled
-    pub fn is_enabled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEnabled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Called when this plugin is disabled
-    pub fn on_disable(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "onDisable", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Called after a plugin is loaded but before it has been enabled.
-    ///
-    /// When multiple plugins are loaded, the onLoad() for all plugins is
-    /// called before any onEnable() is called.
-    pub fn on_load(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "onLoad", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Called when this plugin is enabled
-    pub fn on_enable(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "onEnable", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Simple boolean if we can still nag to the logs about things
-    pub fn is_naggable(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isNaggable", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Set naggable state
-    pub fn set_naggable(&self, can_nag: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        let val_1 = jni::objects::JValueGen::Bool(can_nag.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setNaggable",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets a {@link ChunkGenerator} for use in a default world, as specified
-    /// in the server configuration
-    pub fn get_default_world_generator(
-        &self,
-        world_name: impl Into<String>,
-        id: impl Into<String>,
-    ) -> Result<Option<crate::generator::ChunkGenerator<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Ljava/lang/String;Ljava/lang/String;)Lorg/bukkit/generator/ChunkGenerator;",
-        );
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(world_name.into())?,
-        ));
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(id.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDefaultWorldGenerator",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::generator::ChunkGenerator::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-    /// Gets a {@link BiomeProvider} for use in a default world, as specified
-    /// in the server configuration
-    pub fn get_default_biome_provider(
-        &self,
-        world_name: impl Into<String>,
-        id: impl Into<String>,
-    ) -> Result<Option<crate::generator::BiomeProvider<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Ljava/lang/String;Ljava/lang/String;)Lorg/bukkit/generator/BiomeProvider;",
-        );
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(world_name.into())?,
-        ));
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(id.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDefaultBiomeProvider",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::generator::BiomeProvider::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-    /// Returns the plugin logger associated with this server's logger. The
-    /// returned logger automatically tags all log messages with the plugin's
-    /// name.
-    pub fn logger(
-        &self,
-    ) -> Result<blackboxmc_java::util::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/logging/Logger;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getLogger", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::logging::JavaLogger::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Requests a list of possible completions for a command argument.
-    pub fn on_tab_complete(
-        &self,
-        sender: impl Into<crate::command::CommandSender<'mc>>,
-        command: impl Into<crate::command::Command<'mc>>,
-        label: impl Into<String>,
-        val_args: impl Into<String>,
-    ) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Ljava/util/List;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(command.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(label.into())?,
-        ));
-        let val_4 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(val_args.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "onTabComplete",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        let mut new_vec = Vec::new();
-        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let iter = list.iterator()?;
-        while iter.has_next()? {
-            let obj = iter.next()?;
-            new_vec.push(
-                self.jni_ref()
-                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
-                    .to_string_lossy()
-                    .to_string(),
-            );
-        }
-        Ok(Some(new_vec))
-    }
-    /// Executes the given command, returning its success.
-    ///
-    /// If false is returned, then the "usage" plugin.yml entry for this command
-    /// (if defined) will be sent to the player.
-    pub fn on_command(
-        &self,
-        sender: impl Into<crate::command::CommandSender<'mc>>,
-        command: impl Into<crate::command::Command<'mc>>,
-        label: impl Into<String>,
-        val_args: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(sender.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(command.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(label.into())?,
-        ));
-        let val_4 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(val_args.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "onCommand",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::plugin::Plugin<'mc>> for PluginBase<'mc> {
-    fn into(self) -> crate::plugin::Plugin<'mc> {
-        crate::plugin::Plugin::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting PluginBase into crate::plugin::Plugin")
-    }
-}
-pub enum ServicePriority<'mc> {}
 impl<'mc> std::fmt::Display for ServicePriority<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            ServicePriority::Lowest { .. } => f.write_str("Lowest"),
+            ServicePriority::Low { .. } => f.write_str("Low"),
+            ServicePriority::Normal { .. } => f.write_str("Normal"),
+            ServicePriority::High { .. } => f.write_str("High"),
+            ServicePriority::Highest { .. } => f.write_str("Highest"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for ServicePriority<'mc> {
+    type Target = ServicePriorityStruct<'mc>;
+    fn deref(&self) -> &<ServicePriority<'mc> as std::ops::Deref>::Target {
+        match self {
+            ServicePriority::Lowest { inner } => inner,
+            ServicePriority::Low { inner } => inner,
+            ServicePriority::Normal { inner } => inner,
+            ServicePriority::High { inner } => inner,
+            ServicePriority::Highest { inner } => inner,
+        }
     }
 }
 
@@ -2691,6 +2772,22 @@ impl<'mc> ServicePriority<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "Lowest" => Ok(ServicePriority::Lowest {
+                inner: ServicePriorityStruct::from_raw(env, obj)?,
+            }),
+            "Low" => Ok(ServicePriority::Low {
+                inner: ServicePriorityStruct::from_raw(env, obj)?,
+            }),
+            "Normal" => Ok(ServicePriority::Normal {
+                inner: ServicePriorityStruct::from_raw(env, obj)?,
+            }),
+            "High" => Ok(ServicePriority::High {
+                inner: ServicePriorityStruct::from_raw(env, obj)?,
+            }),
+            "Highest" => Ok(ServicePriority::Highest {
+                inner: ServicePriorityStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -2704,10 +2801,22 @@ pub struct ServicePriorityStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for ServicePriority<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Lowest { inner } => inner.0.clone(),
+            Self::Low { inner } => inner.0.clone(),
+            Self::Normal { inner } => inner.0.clone(),
+            Self::High { inner } => inner.0.clone(),
+            Self::Highest { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Lowest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Low { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Normal { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::High { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Highest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for ServicePriority<'mc> {
@@ -2735,6 +2844,21 @@ impl<'mc> JNIInstantiatable<'mc> for ServicePriority<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "Lowest" => Ok(ServicePriority::Lowest {
+                    inner: ServicePriorityStruct::from_raw(env, obj)?,
+                }),
+                "Low" => Ok(ServicePriority::Low {
+                    inner: ServicePriorityStruct::from_raw(env, obj)?,
+                }),
+                "Normal" => Ok(ServicePriority::Normal {
+                    inner: ServicePriorityStruct::from_raw(env, obj)?,
+                }),
+                "High" => Ok(ServicePriority::High {
+                    inner: ServicePriorityStruct::from_raw(env, obj)?,
+                }),
+                "Highest" => Ok(ServicePriority::Highest {
+                    inner: ServicePriorityStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -2834,10 +2958,24 @@ impl<'mc> PluginAwareness<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum PluginAwarenessFlags<'mc> {}
+pub enum PluginAwarenessFlags<'mc> {
+    Utf8 {
+        inner: PluginAwarenessFlagsStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for PluginAwarenessFlags<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            PluginAwarenessFlags::Utf8 { .. } => f.write_str("UTF8"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PluginAwarenessFlags<'mc> {
+    type Target = PluginAwarenessFlagsStruct<'mc>;
+    fn deref(&self) -> &<PluginAwarenessFlags<'mc> as std::ops::Deref>::Target {
+        match self {
+            PluginAwarenessFlags::Utf8 { inner } => inner,
+        }
     }
 }
 
@@ -2864,6 +3002,10 @@ impl<'mc> PluginAwarenessFlags<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "UTF8" => Ok(PluginAwarenessFlags::Utf8 {
+                inner: PluginAwarenessFlagsStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -2877,10 +3019,14 @@ pub struct PluginAwarenessFlagsStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for PluginAwarenessFlags<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Utf8 { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Utf8 { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PluginAwarenessFlags<'mc> {
@@ -2908,6 +3054,9 @@ impl<'mc> JNIInstantiatable<'mc> for PluginAwarenessFlags<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "UTF8" => Ok(PluginAwarenessFlags::Utf8 {
+                    inner: PluginAwarenessFlagsStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -3803,155 +3952,25 @@ impl<'mc> IllegalPluginAccessException<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-#[repr(C)]
-pub struct RegisteredListener<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for RegisteredListener<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
+pub enum PluginLoadOrder<'mc> {
+    Startup { inner: PluginLoadOrderStruct<'mc> },
+    Postworld { inner: PluginLoadOrderStruct<'mc> },
 }
-impl<'mc> JNIInstantiatable<'mc> for RegisteredListener<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate RegisteredListener from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/RegisteredListener")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a RegisteredListener object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> RegisteredListener<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        listener: impl Into<crate::event::Listener<'mc>>,
-        executor: impl Into<crate::plugin::EventExecutor<'mc>>,
-        priority: impl Into<crate::event::EventPriority<'mc>>,
-        plugin: impl Into<crate::plugin::Plugin<'mc>>,
-        ignore_cancelled: bool,
-    ) -> Result<crate::plugin::RegisteredListener<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/Plugin;Z)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(listener.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(executor.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(priority.into().jni_object().clone())
-        });
-        let val_4 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(plugin.into().jni_object().clone())
-        });
-        let val_5 = jni::objects::JValueGen::Bool(ignore_cancelled.into());
-        let cls = jni.find_class("org/bukkit/plugin/RegisteredListener");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-                jni::objects::JValueGen::from(val_5),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::plugin::RegisteredListener::from_raw(&jni, res)
-    }
-    /// Gets the listener for this registration
-    pub fn listener(&self) -> Result<crate::event::Listener<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/Listener;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getListener", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::Listener::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets the plugin for this registration
-    pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getPlugin", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets the priority for this registration
-    pub fn priority(&self) -> Result<crate::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/EventPriority;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getPriority", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::EventPriority::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Calls the event executor
-    pub fn call_event(
-        &self,
-        event: impl Into<crate::event::Event<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/event/Event;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(event.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "callEvent",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Whether this listener accepts cancelled events
-    pub fn is_ignoring_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isIgnoringCancelled",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-pub enum PluginLoadOrder<'mc> {}
 impl<'mc> std::fmt::Display for PluginLoadOrder<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            PluginLoadOrder::Startup { .. } => f.write_str("STARTUP"),
+            PluginLoadOrder::Postworld { .. } => f.write_str("POSTWORLD"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for PluginLoadOrder<'mc> {
+    type Target = PluginLoadOrderStruct<'mc>;
+    fn deref(&self) -> &<PluginLoadOrder<'mc> as std::ops::Deref>::Target {
+        match self {
+            PluginLoadOrder::Startup { inner } => inner,
+            PluginLoadOrder::Postworld { inner } => inner,
+        }
     }
 }
 
@@ -3978,6 +3997,13 @@ impl<'mc> PluginLoadOrder<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "STARTUP" => Ok(PluginLoadOrder::Startup {
+                inner: PluginLoadOrderStruct::from_raw(env, obj)?,
+            }),
+            "POSTWORLD" => Ok(PluginLoadOrder::Postworld {
+                inner: PluginLoadOrderStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -3991,10 +4017,18 @@ pub struct PluginLoadOrderStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for PluginLoadOrder<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Startup { inner } => inner.0.clone(),
+            Self::Postworld { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Startup { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Postworld { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for PluginLoadOrder<'mc> {
@@ -4022,6 +4056,12 @@ impl<'mc> JNIInstantiatable<'mc> for PluginLoadOrder<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "STARTUP" => Ok(PluginLoadOrder::Startup {
+                    inner: PluginLoadOrderStruct::from_raw(env, obj)?,
+                }),
+                "POSTWORLD" => Ok(PluginLoadOrder::Postworld {
+                    inner: PluginLoadOrderStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }

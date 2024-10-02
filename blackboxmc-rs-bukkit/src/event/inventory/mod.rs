@@ -2,10 +2,109 @@
 use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-pub enum InventoryType<'mc> {}
+pub enum InventoryType<'mc> {
+    Chest { inner: InventoryTypeStruct<'mc> },
+    Dispenser { inner: InventoryTypeStruct<'mc> },
+    Dropper { inner: InventoryTypeStruct<'mc> },
+    Furnace { inner: InventoryTypeStruct<'mc> },
+    Workbench { inner: InventoryTypeStruct<'mc> },
+    Crafting { inner: InventoryTypeStruct<'mc> },
+    Enchanting { inner: InventoryTypeStruct<'mc> },
+    Brewing { inner: InventoryTypeStruct<'mc> },
+    Player { inner: InventoryTypeStruct<'mc> },
+    Creative { inner: InventoryTypeStruct<'mc> },
+    Merchant { inner: InventoryTypeStruct<'mc> },
+    EnderChest { inner: InventoryTypeStruct<'mc> },
+    Anvil { inner: InventoryTypeStruct<'mc> },
+    Smithing { inner: InventoryTypeStruct<'mc> },
+    Beacon { inner: InventoryTypeStruct<'mc> },
+    Hopper { inner: InventoryTypeStruct<'mc> },
+    ShulkerBox { inner: InventoryTypeStruct<'mc> },
+    Barrel { inner: InventoryTypeStruct<'mc> },
+    BlastFurnace { inner: InventoryTypeStruct<'mc> },
+    Lectern { inner: InventoryTypeStruct<'mc> },
+    Smoker { inner: InventoryTypeStruct<'mc> },
+    Loom { inner: InventoryTypeStruct<'mc> },
+    Cartography { inner: InventoryTypeStruct<'mc> },
+    Grindstone { inner: InventoryTypeStruct<'mc> },
+    Stonecutter { inner: InventoryTypeStruct<'mc> },
+    Composter { inner: InventoryTypeStruct<'mc> },
+    ChiseledBookshelf { inner: InventoryTypeStruct<'mc> },
+    Jukebox { inner: InventoryTypeStruct<'mc> },
+    Crafter { inner: InventoryTypeStruct<'mc> },
+    SmithingNew { inner: InventoryTypeStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for InventoryType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            InventoryType::Chest { .. } => f.write_str("CHEST"),
+            InventoryType::Dispenser { .. } => f.write_str("DISPENSER"),
+            InventoryType::Dropper { .. } => f.write_str("DROPPER"),
+            InventoryType::Furnace { .. } => f.write_str("FURNACE"),
+            InventoryType::Workbench { .. } => f.write_str("WORKBENCH"),
+            InventoryType::Crafting { .. } => f.write_str("CRAFTING"),
+            InventoryType::Enchanting { .. } => f.write_str("ENCHANTING"),
+            InventoryType::Brewing { .. } => f.write_str("BREWING"),
+            InventoryType::Player { .. } => f.write_str("PLAYER"),
+            InventoryType::Creative { .. } => f.write_str("CREATIVE"),
+            InventoryType::Merchant { .. } => f.write_str("MERCHANT"),
+            InventoryType::EnderChest { .. } => f.write_str("ENDER_CHEST"),
+            InventoryType::Anvil { .. } => f.write_str("ANVIL"),
+            InventoryType::Smithing { .. } => f.write_str("SMITHING"),
+            InventoryType::Beacon { .. } => f.write_str("BEACON"),
+            InventoryType::Hopper { .. } => f.write_str("HOPPER"),
+            InventoryType::ShulkerBox { .. } => f.write_str("SHULKER_BOX"),
+            InventoryType::Barrel { .. } => f.write_str("BARREL"),
+            InventoryType::BlastFurnace { .. } => f.write_str("BLAST_FURNACE"),
+            InventoryType::Lectern { .. } => f.write_str("LECTERN"),
+            InventoryType::Smoker { .. } => f.write_str("SMOKER"),
+            InventoryType::Loom { .. } => f.write_str("LOOM"),
+            InventoryType::Cartography { .. } => f.write_str("CARTOGRAPHY"),
+            InventoryType::Grindstone { .. } => f.write_str("GRINDSTONE"),
+            InventoryType::Stonecutter { .. } => f.write_str("STONECUTTER"),
+            InventoryType::Composter { .. } => f.write_str("COMPOSTER"),
+            InventoryType::ChiseledBookshelf { .. } => f.write_str("CHISELED_BOOKSHELF"),
+            InventoryType::Jukebox { .. } => f.write_str("JUKEBOX"),
+            InventoryType::Crafter { .. } => f.write_str("CRAFTER"),
+            InventoryType::SmithingNew { .. } => f.write_str("SMITHING_NEW"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for InventoryType<'mc> {
+    type Target = InventoryTypeStruct<'mc>;
+    fn deref(&self) -> &<InventoryType<'mc> as std::ops::Deref>::Target {
+        match self {
+            InventoryType::Chest { inner } => inner,
+            InventoryType::Dispenser { inner } => inner,
+            InventoryType::Dropper { inner } => inner,
+            InventoryType::Furnace { inner } => inner,
+            InventoryType::Workbench { inner } => inner,
+            InventoryType::Crafting { inner } => inner,
+            InventoryType::Enchanting { inner } => inner,
+            InventoryType::Brewing { inner } => inner,
+            InventoryType::Player { inner } => inner,
+            InventoryType::Creative { inner } => inner,
+            InventoryType::Merchant { inner } => inner,
+            InventoryType::EnderChest { inner } => inner,
+            InventoryType::Anvil { inner } => inner,
+            InventoryType::Smithing { inner } => inner,
+            InventoryType::Beacon { inner } => inner,
+            InventoryType::Hopper { inner } => inner,
+            InventoryType::ShulkerBox { inner } => inner,
+            InventoryType::Barrel { inner } => inner,
+            InventoryType::BlastFurnace { inner } => inner,
+            InventoryType::Lectern { inner } => inner,
+            InventoryType::Smoker { inner } => inner,
+            InventoryType::Loom { inner } => inner,
+            InventoryType::Cartography { inner } => inner,
+            InventoryType::Grindstone { inner } => inner,
+            InventoryType::Stonecutter { inner } => inner,
+            InventoryType::Composter { inner } => inner,
+            InventoryType::ChiseledBookshelf { inner } => inner,
+            InventoryType::Jukebox { inner } => inner,
+            InventoryType::Crafter { inner } => inner,
+            InventoryType::SmithingNew { inner } => inner,
+        }
     }
 }
 
@@ -32,6 +131,97 @@ impl<'mc> InventoryType<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "CHEST" => Ok(InventoryType::Chest {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "DISPENSER" => Ok(InventoryType::Dispenser {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "DROPPER" => Ok(InventoryType::Dropper {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "FURNACE" => Ok(InventoryType::Furnace {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "WORKBENCH" => Ok(InventoryType::Workbench {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "CRAFTING" => Ok(InventoryType::Crafting {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "ENCHANTING" => Ok(InventoryType::Enchanting {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "BREWING" => Ok(InventoryType::Brewing {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "PLAYER" => Ok(InventoryType::Player {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "CREATIVE" => Ok(InventoryType::Creative {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "MERCHANT" => Ok(InventoryType::Merchant {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "ENDER_CHEST" => Ok(InventoryType::EnderChest {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "ANVIL" => Ok(InventoryType::Anvil {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "SMITHING" => Ok(InventoryType::Smithing {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "BEACON" => Ok(InventoryType::Beacon {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "HOPPER" => Ok(InventoryType::Hopper {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "SHULKER_BOX" => Ok(InventoryType::ShulkerBox {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "BARREL" => Ok(InventoryType::Barrel {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "BLAST_FURNACE" => Ok(InventoryType::BlastFurnace {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "LECTERN" => Ok(InventoryType::Lectern {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "SMOKER" => Ok(InventoryType::Smoker {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "LOOM" => Ok(InventoryType::Loom {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "CARTOGRAPHY" => Ok(InventoryType::Cartography {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "GRINDSTONE" => Ok(InventoryType::Grindstone {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "STONECUTTER" => Ok(InventoryType::Stonecutter {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "COMPOSTER" => Ok(InventoryType::Composter {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "CHISELED_BOOKSHELF" => Ok(InventoryType::ChiseledBookshelf {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "JUKEBOX" => Ok(InventoryType::Jukebox {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "CRAFTER" => Ok(InventoryType::Crafter {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+            "SMITHING_NEW" => Ok(InventoryType::SmithingNew {
+                inner: InventoryTypeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -45,10 +235,96 @@ pub struct InventoryTypeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for InventoryType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Chest { inner } => inner.0.clone(),
+            Self::Dispenser { inner } => inner.0.clone(),
+            Self::Dropper { inner } => inner.0.clone(),
+            Self::Furnace { inner } => inner.0.clone(),
+            Self::Workbench { inner } => inner.0.clone(),
+            Self::Crafting { inner } => inner.0.clone(),
+            Self::Enchanting { inner } => inner.0.clone(),
+            Self::Brewing { inner } => inner.0.clone(),
+            Self::Player { inner } => inner.0.clone(),
+            Self::Creative { inner } => inner.0.clone(),
+            Self::Merchant { inner } => inner.0.clone(),
+            Self::EnderChest { inner } => inner.0.clone(),
+            Self::Anvil { inner } => inner.0.clone(),
+            Self::Smithing { inner } => inner.0.clone(),
+            Self::Beacon { inner } => inner.0.clone(),
+            Self::Hopper { inner } => inner.0.clone(),
+            Self::ShulkerBox { inner } => inner.0.clone(),
+            Self::Barrel { inner } => inner.0.clone(),
+            Self::BlastFurnace { inner } => inner.0.clone(),
+            Self::Lectern { inner } => inner.0.clone(),
+            Self::Smoker { inner } => inner.0.clone(),
+            Self::Loom { inner } => inner.0.clone(),
+            Self::Cartography { inner } => inner.0.clone(),
+            Self::Grindstone { inner } => inner.0.clone(),
+            Self::Stonecutter { inner } => inner.0.clone(),
+            Self::Composter { inner } => inner.0.clone(),
+            Self::ChiseledBookshelf { inner } => inner.0.clone(),
+            Self::Jukebox { inner } => inner.0.clone(),
+            Self::Crafter { inner } => inner.0.clone(),
+            Self::SmithingNew { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Chest { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Dispenser { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Dropper { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Furnace { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Workbench { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Crafting { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Enchanting { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Brewing { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Player { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Creative { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Merchant { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::EnderChest { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Anvil { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Smithing { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Beacon { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Hopper { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ShulkerBox { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Barrel { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::BlastFurnace { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Lectern { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Smoker { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Loom { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Cartography { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Grindstone { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Stonecutter { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Composter { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::ChiseledBookshelf { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Jukebox { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Crafter { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SmithingNew { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for InventoryType<'mc> {
@@ -74,6 +350,96 @@ impl<'mc> JNIInstantiatable<'mc> for InventoryType<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "CHEST" => Ok(InventoryType::Chest {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "DISPENSER" => Ok(InventoryType::Dispenser {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "DROPPER" => Ok(InventoryType::Dropper {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "FURNACE" => Ok(InventoryType::Furnace {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "WORKBENCH" => Ok(InventoryType::Workbench {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "CRAFTING" => Ok(InventoryType::Crafting {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "ENCHANTING" => Ok(InventoryType::Enchanting {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "BREWING" => Ok(InventoryType::Brewing {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "PLAYER" => Ok(InventoryType::Player {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "CREATIVE" => Ok(InventoryType::Creative {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "MERCHANT" => Ok(InventoryType::Merchant {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "ENDER_CHEST" => Ok(InventoryType::EnderChest {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "ANVIL" => Ok(InventoryType::Anvil {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "SMITHING" => Ok(InventoryType::Smithing {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "BEACON" => Ok(InventoryType::Beacon {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "HOPPER" => Ok(InventoryType::Hopper {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "SHULKER_BOX" => Ok(InventoryType::ShulkerBox {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "BARREL" => Ok(InventoryType::Barrel {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "BLAST_FURNACE" => Ok(InventoryType::BlastFurnace {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "LECTERN" => Ok(InventoryType::Lectern {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "SMOKER" => Ok(InventoryType::Smoker {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "LOOM" => Ok(InventoryType::Loom {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "CARTOGRAPHY" => Ok(InventoryType::Cartography {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "GRINDSTONE" => Ok(InventoryType::Grindstone {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "STONECUTTER" => Ok(InventoryType::Stonecutter {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "COMPOSTER" => Ok(InventoryType::Composter {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "CHISELED_BOOKSHELF" => Ok(InventoryType::ChiseledBookshelf {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "JUKEBOX" => Ok(InventoryType::Jukebox {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "CRAFTER" => Ok(InventoryType::Crafter {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
+                "SMITHING_NEW" => Ok(InventoryType::SmithingNew {
+                    inner: InventoryTypeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -145,6 +511,35 @@ impl<'mc> InventoryTypeStruct<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets the corresponding {@link MenuType} of this InventoryType.
+    ///
+    /// Not all InventoryType correspond to a {@link MenuType}. These
+    /// InventoryTypes are also not creatable. If this method returns null,
+    /// {@link #isCreatable()} will return false, with the exception of
+    /// {@link #MERCHANT}.
+    ///
+    /// As well as not necessarily corresponding to a {@link MenuType} some
+    /// InventoryType correspond to the same {@link MenuType}, including:
+    /// <ul>
+    /// <li>Dropper, Dispenser
+    /// <li>ShulkerBox, Barrel, Chest
+    /// </ul>
+    pub fn menu_type(
+        &self,
+    ) -> Result<Option<crate::inventory::MenuType<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/MenuType;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMenuType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::inventory::MenuType::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
     /// Denotes that this InventoryType can be created via the normal
     /// {@link org.bukkit.Bukkit#createInventory} methods.
     pub fn is_creatable(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -161,10 +556,54 @@ impl<'mc> InventoryTypeStruct<'mc> {
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
     }
 }
-pub enum InventoryTypeSlotType<'mc> {}
+pub enum InventoryTypeSlotType<'mc> {
+    Result {
+        inner: InventoryTypeSlotTypeStruct<'mc>,
+    },
+    Crafting {
+        inner: InventoryTypeSlotTypeStruct<'mc>,
+    },
+    Armor {
+        inner: InventoryTypeSlotTypeStruct<'mc>,
+    },
+    Container {
+        inner: InventoryTypeSlotTypeStruct<'mc>,
+    },
+    Quickbar {
+        inner: InventoryTypeSlotTypeStruct<'mc>,
+    },
+    Outside {
+        inner: InventoryTypeSlotTypeStruct<'mc>,
+    },
+    Fuel {
+        inner: InventoryTypeSlotTypeStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for InventoryTypeSlotType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            InventoryTypeSlotType::Result { .. } => f.write_str("RESULT"),
+            InventoryTypeSlotType::Crafting { .. } => f.write_str("CRAFTING"),
+            InventoryTypeSlotType::Armor { .. } => f.write_str("ARMOR"),
+            InventoryTypeSlotType::Container { .. } => f.write_str("CONTAINER"),
+            InventoryTypeSlotType::Quickbar { .. } => f.write_str("QUICKBAR"),
+            InventoryTypeSlotType::Outside { .. } => f.write_str("OUTSIDE"),
+            InventoryTypeSlotType::Fuel { .. } => f.write_str("FUEL"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for InventoryTypeSlotType<'mc> {
+    type Target = InventoryTypeSlotTypeStruct<'mc>;
+    fn deref(&self) -> &<InventoryTypeSlotType<'mc> as std::ops::Deref>::Target {
+        match self {
+            InventoryTypeSlotType::Result { inner } => inner,
+            InventoryTypeSlotType::Crafting { inner } => inner,
+            InventoryTypeSlotType::Armor { inner } => inner,
+            InventoryTypeSlotType::Container { inner } => inner,
+            InventoryTypeSlotType::Quickbar { inner } => inner,
+            InventoryTypeSlotType::Outside { inner } => inner,
+            InventoryTypeSlotType::Fuel { inner } => inner,
+        }
     }
 }
 
@@ -191,6 +630,28 @@ impl<'mc> InventoryTypeSlotType<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "RESULT" => Ok(InventoryTypeSlotType::Result {
+                inner: InventoryTypeSlotTypeStruct::from_raw(env, obj)?,
+            }),
+            "CRAFTING" => Ok(InventoryTypeSlotType::Crafting {
+                inner: InventoryTypeSlotTypeStruct::from_raw(env, obj)?,
+            }),
+            "ARMOR" => Ok(InventoryTypeSlotType::Armor {
+                inner: InventoryTypeSlotTypeStruct::from_raw(env, obj)?,
+            }),
+            "CONTAINER" => Ok(InventoryTypeSlotType::Container {
+                inner: InventoryTypeSlotTypeStruct::from_raw(env, obj)?,
+            }),
+            "QUICKBAR" => Ok(InventoryTypeSlotType::Quickbar {
+                inner: InventoryTypeSlotTypeStruct::from_raw(env, obj)?,
+            }),
+            "OUTSIDE" => Ok(InventoryTypeSlotType::Outside {
+                inner: InventoryTypeSlotTypeStruct::from_raw(env, obj)?,
+            }),
+            "FUEL" => Ok(InventoryTypeSlotType::Fuel {
+                inner: InventoryTypeSlotTypeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -204,10 +665,28 @@ pub struct InventoryTypeSlotTypeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for InventoryTypeSlotType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Result { inner } => inner.0.clone(),
+            Self::Crafting { inner } => inner.0.clone(),
+            Self::Armor { inner } => inner.0.clone(),
+            Self::Container { inner } => inner.0.clone(),
+            Self::Quickbar { inner } => inner.0.clone(),
+            Self::Outside { inner } => inner.0.clone(),
+            Self::Fuel { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Result { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Crafting { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Armor { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Container { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Quickbar { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Outside { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Fuel { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for InventoryTypeSlotType<'mc> {
@@ -237,6 +716,27 @@ impl<'mc> JNIInstantiatable<'mc> for InventoryTypeSlotType<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "RESULT" => Ok(InventoryTypeSlotType::Result {
+                    inner: InventoryTypeSlotTypeStruct::from_raw(env, obj)?,
+                }),
+                "CRAFTING" => Ok(InventoryTypeSlotType::Crafting {
+                    inner: InventoryTypeSlotTypeStruct::from_raw(env, obj)?,
+                }),
+                "ARMOR" => Ok(InventoryTypeSlotType::Armor {
+                    inner: InventoryTypeSlotTypeStruct::from_raw(env, obj)?,
+                }),
+                "CONTAINER" => Ok(InventoryTypeSlotType::Container {
+                    inner: InventoryTypeSlotTypeStruct::from_raw(env, obj)?,
+                }),
+                "QUICKBAR" => Ok(InventoryTypeSlotType::Quickbar {
+                    inner: InventoryTypeSlotTypeStruct::from_raw(env, obj)?,
+                }),
+                "OUTSIDE" => Ok(InventoryTypeSlotType::Outside {
+                    inner: InventoryTypeSlotTypeStruct::from_raw(env, obj)?,
+                }),
+                "FUEL" => Ok(InventoryTypeSlotType::Fuel {
+                    inner: InventoryTypeSlotTypeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -293,6 +793,541 @@ impl<'mc> InventoryTypeSlotTypeStruct<'mc> {
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
         self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+#[repr(C)]
+pub struct InventoryClickEvent<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for InventoryClickEvent<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for InventoryClickEvent<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate InventoryClickEvent from null object.").into(),
+            );
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/inventory/InventoryClickEvent")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a InventoryClickEvent object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> InventoryClickEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        view: impl Into<crate::inventory::InventoryView<'mc>>,
+        val_type: impl Into<crate::event::inventory::InventoryTypeSlotType<'mc>>,
+        slot: i32,
+        click: impl Into<crate::event::inventory::ClickType<'mc>>,
+        action: impl Into<crate::event::inventory::InventoryAction<'mc>>,
+        key: std::option::Option<i32>,
+    ) -> Result<crate::event::inventory::InventoryClickEvent<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/InventoryView;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(view.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/event/inventory/InventoryType/SlotType;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(val_type.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += "I";
+        let val_3 = jni::objects::JValueGen::Int(slot);
+        args.push(val_3);
+        sig += "Lorg/bukkit/event/inventory/ClickType;";
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(click.into().jni_object().clone())
+        });
+        args.push(val_4);
+        sig += "Lorg/bukkit/event/inventory/InventoryAction;";
+        let val_5 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(action.into().jni_object().clone())
+        });
+        args.push(val_5);
+        if let Some(a) = key {
+            sig += "I";
+            let val_6 = jni::objects::JValueGen::Int(a);
+            args.push(val_6);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/event/inventory/InventoryClickEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::inventory::InventoryClickEvent::from_raw(&jni, res)
+    }
+    /// Gets the type of slot that was clicked.
+    pub fn slot_type(
+        &self,
+    ) -> Result<crate::event::inventory::InventoryTypeSlotType<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType/SlotType;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getSlotType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::inventory::InventoryTypeSlotType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the current ItemStack on the cursor.
+    pub fn cursor(
+        &self,
+    ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getCursor", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::inventory::ItemStack::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    /// Gets the ItemStack currently in the clicked slot.
+    pub fn current_item(
+        &self,
+    ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getCurrentItem", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::inventory::ItemStack::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    /// Gets whether or not the ClickType for this event represents a right
+    /// click.
+    pub fn is_right_click(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isRightClick", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets whether or not the ClickType for this event represents a left
+    /// click.
+    pub fn is_left_click(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isLeftClick", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    /// Gets whether the ClickType for this event indicates that the key was
+    /// pressed down when the click was made.
+    pub fn is_shift_click(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isShiftClick", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    #[deprecated]
+    /// Sets the item on the cursor.
+    pub fn set_cursor(
+        &self,
+        stack: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(stack.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCursor",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Sets the ItemStack currently in the clicked slot.
+    pub fn set_current_item(
+        &self,
+        stack: impl Into<crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(stack.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCurrentItem",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Gets the inventory corresponding to the clicked slot.
+    pub fn clicked_inventory(
+        &self,
+    ) -> Result<Option<crate::inventory::Inventory<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/Inventory;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getClickedInventory",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::inventory::Inventory::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
+    }
+    /// The slot number that was clicked, ready for passing to
+    /// {@link Inventory#getItem(int)}. Note that there may be two slots with
+    /// the same slot number, since a view links two different inventories.
+    pub fn slot(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getSlot", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// The raw slot number clicked, ready for passing to {@link InventoryView
+    /// #getItem(int)} This slot number is unique for the view.
+    pub fn raw_slot(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getRawSlot", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// If the ClickType is NUMBER_KEY, this method will return the index of
+    /// the pressed key (0-8).
+    pub fn hotbar_button(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHotbarButton", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Gets the InventoryAction that triggered this event.
+    ///
+    /// This action cannot be changed, and represents what the normal outcome
+    /// of the event will be. To change the behavior of this
+    /// InventoryClickEvent, changes must be manually applied.
+    pub fn action(
+        &self,
+    ) -> Result<crate::event::inventory::InventoryAction<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/inventory/InventoryAction;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getAction", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::inventory::InventoryAction::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the ClickType for this event.
+    ///
+    /// This is insulated against changes to the inventory by other plugins.
+    pub fn click(
+        &self,
+    ) -> Result<crate::event::inventory::ClickType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/inventory/ClickType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getClick", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::inventory::ClickType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let cls = jni.find_class("org/bukkit/event/inventory/InventoryClickEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::event::HandlerList::from_raw(&jni, obj)
+    }
+    // SUPER CLASS: org.bukkit.event.inventory.InventoryInteractEvent ( ['getSlotType', 'getCursor', 'getCurrentItem', 'isRightClick', 'isLeftClick', 'isShiftClick', 'setCursor', 'setCurrentItem', 'getClickedInventory', 'getSlot', 'getRawSlot', 'getHotbarButton', 'getAction', 'getClick', 'getHandlers', 'getHandlerList'])
+    /// Gets the player who performed the click.
+    pub fn who_clicked(
+        &self,
+    ) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::event::inventory::InventoryInteractEvent::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::event::inventory::InventoryInteractEvent = temp_clone.into();
+        real.who_clicked()
+    }
+    /// Sets the result of this event. This will change whether or not this
+    /// event is considered cancelled.
+    pub fn set_result(
+        &self,
+        new_result: impl Into<crate::event::EventResult<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::event::inventory::InventoryInteractEvent::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::event::inventory::InventoryInteractEvent = temp_clone.into();
+        real.set_result(new_result)
+    }
+    /// Gets the {@link org.bukkit.event.Event.Result} of this event. The Result describes the
+    /// behavior that will be applied to the inventory in relation to this
+    /// event.
+    pub fn result(&self) -> Result<crate::event::EventResult<'mc>, Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::event::inventory::InventoryInteractEvent::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::event::inventory::InventoryInteractEvent = temp_clone.into();
+        real.result()
+    }
+    /// Gets whether or not this event is cancelled. This is based off of the
+    /// Result value returned by {@link #getResult()}.Result.ALLOW and
+    /// Result.DEFAULT will result in a returned value of false, but
+    /// Result.DENY will result in a returned value of true.
+    ///
+    /// {@inheritDoc}
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::event::inventory::InventoryInteractEvent::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::event::inventory::InventoryInteractEvent = temp_clone.into();
+        real.is_cancelled()
+    }
+    /// Proxy method to {@link #setResult(org.bukkit.event.Event.Result)} for the Cancellable
+    /// interface. {@link #setResult(org.bukkit.event.Event.Result)} is preferred, as it allows
+    /// you to specify the Result beyond Result.DENY and Result.ALLOW.
+    ///
+    /// {@inheritDoc}
+    pub fn set_cancelled(&self, to_cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone =
+            crate::event::inventory::InventoryInteractEvent::from_raw(&self.0, unsafe {
+                jni::objects::JObject::from_raw(self.1.clone())
+            })?;
+        let real: crate::event::inventory::InventoryInteractEvent = temp_clone.into();
+        real.set_cancelled(to_cancel)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::event::inventory::InventoryInteractEvent<'mc>> for InventoryClickEvent<'mc> {
+    fn into(self) -> crate::event::inventory::InventoryInteractEvent<'mc> {
+        crate::event::inventory::InventoryInteractEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting InventoryClickEvent into crate::event::inventory::InventoryInteractEvent")
+    }
+}
+#[repr(C)]
+pub struct FurnaceExtractEvent<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for FurnaceExtractEvent<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JNIInstantiatable<'mc> for FurnaceExtractEvent<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate FurnaceExtractEvent from null object.").into(),
+            );
+        }
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/inventory/FurnaceExtractEvent")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a FurnaceExtractEvent object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
+impl<'mc> FurnaceExtractEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        player: impl Into<crate::entity::Player<'mc>>,
+        block: impl Into<crate::block::Block<'mc>>,
+        item_type: impl Into<crate::Material<'mc>>,
+        item_amount: i32,
+        exp: i32,
+    ) -> Result<crate::event::inventory::FurnaceExtractEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Lorg/bukkit/entity/Player;Lorg/bukkit/block/Block;Lorg/bukkit/Material;II)V",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(player.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(block.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(item_type.into().jni_object().clone())
+        });
+        let val_4 = jni::objects::JValueGen::Int(item_amount);
+        let val_5 = jni::objects::JValueGen::Int(exp);
+        let cls = jni.find_class("org/bukkit/event/inventory/FurnaceExtractEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+                jni::objects::JValueGen::from(val_5),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::inventory::FurnaceExtractEvent::from_raw(&jni, res)
+    }
+    /// Get the player that triggered the event
+    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/Player;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getPlayer", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::entity::Player::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Get the Material of the item being retrieved
+    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/Material;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Material::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Get the item count being retrieved
+    pub fn item_amount(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getItemAmount", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    // SUPER CLASS: org.bukkit.event.block.BlockExpEvent ( ['getPlayer', 'getItemType', 'getItemAmount'])
+    /// Get the experience dropped by the block after the event has processed
+    pub fn exp_to_drop(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::block::BlockExpEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::block::BlockExpEvent = temp_clone.into();
+        real.exp_to_drop()
+    }
+    /// Set the amount of experience dropped by the block after the event has
+    /// processed
+    pub fn set_exp_to_drop(&self, exp: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let temp_clone = crate::event::block::BlockExpEvent::from_raw(&self.0, unsafe {
+            jni::objects::JObject::from_raw(self.1.clone())
+        })?;
+        let real: crate::event::block::BlockExpEvent = temp_clone.into();
+        real.set_exp_to_drop(exp)
+    }
+
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        crate::event::block::BlockExpEvent::handler_list(jni)
+    }
+
+    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
+        let cls = &self.jni_ref().find_class(other.into().as_str())?;
+        self.jni_ref().is_instance_of(&self.jni_object(), cls)
+    }
+}
+impl<'mc> Into<crate::event::block::BlockExpEvent<'mc>> for FurnaceExtractEvent<'mc> {
+    fn into(self) -> crate::event::block::BlockExpEvent<'mc> {
+        crate::event::block::BlockExpEvent::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting FurnaceExtractEvent into crate::event::block::BlockExpEvent")
     }
 }
 #[repr(C)]
@@ -1564,10 +2599,25 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BrewingStandFuelEvent<'
             .expect("Error converting BrewingStandFuelEvent into crate::event::block::BlockEvent")
     }
 }
-pub enum DragType<'mc> {}
+pub enum DragType<'mc> {
+    Single { inner: DragTypeStruct<'mc> },
+    Even { inner: DragTypeStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for DragType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            DragType::Single { .. } => f.write_str("SINGLE"),
+            DragType::Even { .. } => f.write_str("EVEN"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for DragType<'mc> {
+    type Target = DragTypeStruct<'mc>;
+    fn deref(&self) -> &<DragType<'mc> as std::ops::Deref>::Target {
+        match self {
+            DragType::Single { inner } => inner,
+            DragType::Even { inner } => inner,
+        }
     }
 }
 
@@ -1594,6 +2644,13 @@ impl<'mc> DragType<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "SINGLE" => Ok(DragType::Single {
+                inner: DragTypeStruct::from_raw(env, obj)?,
+            }),
+            "EVEN" => Ok(DragType::Even {
+                inner: DragTypeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -1607,10 +2664,16 @@ pub struct DragTypeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for DragType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Single { inner } => inner.0.clone(),
+            Self::Even { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Single { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Even { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for DragType<'mc> {
@@ -1636,6 +2699,12 @@ impl<'mc> JNIInstantiatable<'mc> for DragType<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "SINGLE" => Ok(DragType::Single {
+                    inner: DragTypeStruct::from_raw(env, obj)?,
+                }),
+                "EVEN" => Ok(DragType::Even {
+                    inner: DragTypeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -2486,10 +3555,31 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for HopperInventorySearchEv
         )
     }
 }
-pub enum HopperInventorySearchEventContainerType<'mc> {}
+pub enum HopperInventorySearchEventContainerType<'mc> {
+    Source {
+        inner: HopperInventorySearchEventContainerTypeStruct<'mc>,
+    },
+    Destination {
+        inner: HopperInventorySearchEventContainerTypeStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for HopperInventorySearchEventContainerType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            HopperInventorySearchEventContainerType::Source { .. } => f.write_str("SOURCE"),
+            HopperInventorySearchEventContainerType::Destination { .. } => {
+                f.write_str("DESTINATION")
+            }
+        }
+    }
+}
+impl<'mc> std::ops::Deref for HopperInventorySearchEventContainerType<'mc> {
+    type Target = HopperInventorySearchEventContainerTypeStruct<'mc>;
+    fn deref(&self) -> &<HopperInventorySearchEventContainerType<'mc> as std::ops::Deref>::Target {
+        match self {
+            HopperInventorySearchEventContainerType::Source { inner } => inner,
+            HopperInventorySearchEventContainerType::Destination { inner } => inner,
+        }
     }
 }
 
@@ -2517,6 +3607,13 @@ impl<'mc> HopperInventorySearchEventContainerType<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "SOURCE" => Ok(HopperInventorySearchEventContainerType::Source {
+                inner: HopperInventorySearchEventContainerTypeStruct::from_raw(env, obj)?,
+            }),
+            "DESTINATION" => Ok(HopperInventorySearchEventContainerType::Destination {
+                inner: HopperInventorySearchEventContainerTypeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -2530,10 +3627,18 @@ pub struct HopperInventorySearchEventContainerTypeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for HopperInventorySearchEventContainerType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Source { inner } => inner.0.clone(),
+            Self::Destination { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Source { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Destination { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for HopperInventorySearchEventContainerType<'mc> {
@@ -2565,6 +3670,12 @@ impl<'mc> JNIInstantiatable<'mc> for HopperInventorySearchEventContainerType<'mc
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "SOURCE" => Ok(HopperInventorySearchEventContainerType::Source {
+                    inner: HopperInventorySearchEventContainerTypeStruct::from_raw(env, obj)?,
+                }),
+                "DESTINATION" => Ok(HopperInventorySearchEventContainerType::Destination {
+                    inner: HopperInventorySearchEventContainerTypeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -3189,10 +4300,76 @@ impl<'mc> Into<crate::event::inventory::PrepareInventoryResultEvent<'mc>>
         crate::event::inventory::PrepareInventoryResultEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting PrepareGrindstoneEvent into crate::event::inventory::PrepareInventoryResultEvent")
     }
 }
-pub enum InventoryAction<'mc> {}
+pub enum InventoryAction<'mc> {
+    Nothing { inner: InventoryActionStruct<'mc> },
+    PickupAll { inner: InventoryActionStruct<'mc> },
+    PickupSome { inner: InventoryActionStruct<'mc> },
+    PickupHalf { inner: InventoryActionStruct<'mc> },
+    PickupOne { inner: InventoryActionStruct<'mc> },
+    PlaceAll { inner: InventoryActionStruct<'mc> },
+    PlaceSome { inner: InventoryActionStruct<'mc> },
+    PlaceOne { inner: InventoryActionStruct<'mc> },
+    SwapWithCursor { inner: InventoryActionStruct<'mc> },
+    DropAllCursor { inner: InventoryActionStruct<'mc> },
+    DropOneCursor { inner: InventoryActionStruct<'mc> },
+    DropAllSlot { inner: InventoryActionStruct<'mc> },
+    DropOneSlot { inner: InventoryActionStruct<'mc> },
+    MoveToOtherInventory { inner: InventoryActionStruct<'mc> },
+    HotbarMoveAndReadd { inner: InventoryActionStruct<'mc> },
+    HotbarSwap { inner: InventoryActionStruct<'mc> },
+    CloneStack { inner: InventoryActionStruct<'mc> },
+    CollectToCursor { inner: InventoryActionStruct<'mc> },
+    Unknown { inner: InventoryActionStruct<'mc> },
+}
 impl<'mc> std::fmt::Display for InventoryAction<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            InventoryAction::Nothing { .. } => f.write_str("NOTHING"),
+            InventoryAction::PickupAll { .. } => f.write_str("PICKUP_ALL"),
+            InventoryAction::PickupSome { .. } => f.write_str("PICKUP_SOME"),
+            InventoryAction::PickupHalf { .. } => f.write_str("PICKUP_HALF"),
+            InventoryAction::PickupOne { .. } => f.write_str("PICKUP_ONE"),
+            InventoryAction::PlaceAll { .. } => f.write_str("PLACE_ALL"),
+            InventoryAction::PlaceSome { .. } => f.write_str("PLACE_SOME"),
+            InventoryAction::PlaceOne { .. } => f.write_str("PLACE_ONE"),
+            InventoryAction::SwapWithCursor { .. } => f.write_str("SWAP_WITH_CURSOR"),
+            InventoryAction::DropAllCursor { .. } => f.write_str("DROP_ALL_CURSOR"),
+            InventoryAction::DropOneCursor { .. } => f.write_str("DROP_ONE_CURSOR"),
+            InventoryAction::DropAllSlot { .. } => f.write_str("DROP_ALL_SLOT"),
+            InventoryAction::DropOneSlot { .. } => f.write_str("DROP_ONE_SLOT"),
+            InventoryAction::MoveToOtherInventory { .. } => f.write_str("MOVE_TO_OTHER_INVENTORY"),
+            InventoryAction::HotbarMoveAndReadd { .. } => f.write_str("HOTBAR_MOVE_AND_READD"),
+            InventoryAction::HotbarSwap { .. } => f.write_str("HOTBAR_SWAP"),
+            InventoryAction::CloneStack { .. } => f.write_str("CLONE_STACK"),
+            InventoryAction::CollectToCursor { .. } => f.write_str("COLLECT_TO_CURSOR"),
+            InventoryAction::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for InventoryAction<'mc> {
+    type Target = InventoryActionStruct<'mc>;
+    fn deref(&self) -> &<InventoryAction<'mc> as std::ops::Deref>::Target {
+        match self {
+            InventoryAction::Nothing { inner } => inner,
+            InventoryAction::PickupAll { inner } => inner,
+            InventoryAction::PickupSome { inner } => inner,
+            InventoryAction::PickupHalf { inner } => inner,
+            InventoryAction::PickupOne { inner } => inner,
+            InventoryAction::PlaceAll { inner } => inner,
+            InventoryAction::PlaceSome { inner } => inner,
+            InventoryAction::PlaceOne { inner } => inner,
+            InventoryAction::SwapWithCursor { inner } => inner,
+            InventoryAction::DropAllCursor { inner } => inner,
+            InventoryAction::DropOneCursor { inner } => inner,
+            InventoryAction::DropAllSlot { inner } => inner,
+            InventoryAction::DropOneSlot { inner } => inner,
+            InventoryAction::MoveToOtherInventory { inner } => inner,
+            InventoryAction::HotbarMoveAndReadd { inner } => inner,
+            InventoryAction::HotbarSwap { inner } => inner,
+            InventoryAction::CloneStack { inner } => inner,
+            InventoryAction::CollectToCursor { inner } => inner,
+            InventoryAction::Unknown { inner } => inner,
+        }
     }
 }
 
@@ -3219,6 +4396,64 @@ impl<'mc> InventoryAction<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "NOTHING" => Ok(InventoryAction::Nothing {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "PICKUP_ALL" => Ok(InventoryAction::PickupAll {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "PICKUP_SOME" => Ok(InventoryAction::PickupSome {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "PICKUP_HALF" => Ok(InventoryAction::PickupHalf {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "PICKUP_ONE" => Ok(InventoryAction::PickupOne {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "PLACE_ALL" => Ok(InventoryAction::PlaceAll {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "PLACE_SOME" => Ok(InventoryAction::PlaceSome {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "PLACE_ONE" => Ok(InventoryAction::PlaceOne {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "SWAP_WITH_CURSOR" => Ok(InventoryAction::SwapWithCursor {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "DROP_ALL_CURSOR" => Ok(InventoryAction::DropAllCursor {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "DROP_ONE_CURSOR" => Ok(InventoryAction::DropOneCursor {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "DROP_ALL_SLOT" => Ok(InventoryAction::DropAllSlot {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "DROP_ONE_SLOT" => Ok(InventoryAction::DropOneSlot {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "MOVE_TO_OTHER_INVENTORY" => Ok(InventoryAction::MoveToOtherInventory {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "HOTBAR_MOVE_AND_READD" => Ok(InventoryAction::HotbarMoveAndReadd {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "HOTBAR_SWAP" => Ok(InventoryAction::HotbarSwap {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "CLONE_STACK" => Ok(InventoryAction::CloneStack {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "COLLECT_TO_CURSOR" => Ok(InventoryAction::CollectToCursor {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(InventoryAction::Unknown {
+                inner: InventoryActionStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -3232,10 +4467,80 @@ pub struct InventoryActionStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for InventoryAction<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Nothing { inner } => inner.0.clone(),
+            Self::PickupAll { inner } => inner.0.clone(),
+            Self::PickupSome { inner } => inner.0.clone(),
+            Self::PickupHalf { inner } => inner.0.clone(),
+            Self::PickupOne { inner } => inner.0.clone(),
+            Self::PlaceAll { inner } => inner.0.clone(),
+            Self::PlaceSome { inner } => inner.0.clone(),
+            Self::PlaceOne { inner } => inner.0.clone(),
+            Self::SwapWithCursor { inner } => inner.0.clone(),
+            Self::DropAllCursor { inner } => inner.0.clone(),
+            Self::DropOneCursor { inner } => inner.0.clone(),
+            Self::DropAllSlot { inner } => inner.0.clone(),
+            Self::DropOneSlot { inner } => inner.0.clone(),
+            Self::MoveToOtherInventory { inner } => inner.0.clone(),
+            Self::HotbarMoveAndReadd { inner } => inner.0.clone(),
+            Self::HotbarSwap { inner } => inner.0.clone(),
+            Self::CloneStack { inner } => inner.0.clone(),
+            Self::CollectToCursor { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Nothing { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::PickupAll { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::PickupSome { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::PickupHalf { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::PickupOne { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::PlaceAll { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::PlaceSome { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::PlaceOne { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SwapWithCursor { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DropAllCursor { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DropOneCursor { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DropAllSlot { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DropOneSlot { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::MoveToOtherInventory { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HotbarMoveAndReadd { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::HotbarSwap { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CloneStack { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::CollectToCursor { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for InventoryAction<'mc> {
@@ -3264,6 +4569,63 @@ impl<'mc> JNIInstantiatable<'mc> for InventoryAction<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "NOTHING" => Ok(InventoryAction::Nothing {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "PICKUP_ALL" => Ok(InventoryAction::PickupAll {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "PICKUP_SOME" => Ok(InventoryAction::PickupSome {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "PICKUP_HALF" => Ok(InventoryAction::PickupHalf {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "PICKUP_ONE" => Ok(InventoryAction::PickupOne {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "PLACE_ALL" => Ok(InventoryAction::PlaceAll {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "PLACE_SOME" => Ok(InventoryAction::PlaceSome {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "PLACE_ONE" => Ok(InventoryAction::PlaceOne {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "SWAP_WITH_CURSOR" => Ok(InventoryAction::SwapWithCursor {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "DROP_ALL_CURSOR" => Ok(InventoryAction::DropAllCursor {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "DROP_ONE_CURSOR" => Ok(InventoryAction::DropOneCursor {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "DROP_ALL_SLOT" => Ok(InventoryAction::DropAllSlot {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "DROP_ONE_SLOT" => Ok(InventoryAction::DropOneSlot {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "MOVE_TO_OTHER_INVENTORY" => Ok(InventoryAction::MoveToOtherInventory {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "HOTBAR_MOVE_AND_READD" => Ok(InventoryAction::HotbarMoveAndReadd {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "HOTBAR_SWAP" => Ok(InventoryAction::HotbarSwap {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "CLONE_STACK" => Ok(InventoryAction::CloneStack {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "COLLECT_TO_CURSOR" => Ok(InventoryAction::CollectToCursor {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(InventoryAction::Unknown {
+                    inner: InventoryActionStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -3903,11 +5265,12 @@ impl<'mc> JNIInstantiatable<'mc> for PrepareAnvilEvent<'mc> {
 impl<'mc> PrepareAnvilEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        inventory: impl Into<crate::inventory::InventoryView<'mc>>,
+        inventory: impl Into<crate::inventory::view::AnvilView<'mc>>,
         result: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<crate::event::inventory::PrepareAnvilEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig =
-            String::from("(Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/inventory/ItemStack;)V");
+        let sig = String::from(
+            "(Lorg/bukkit/inventory/view/AnvilView;Lorg/bukkit/inventory/ItemStack;)V",
+        );
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(inventory.into().jni_object().clone())
         });
@@ -3941,6 +5304,19 @@ impl<'mc> PrepareAnvilEvent<'mc> {
         })
     }
 
+    pub fn view(
+        &self,
+    ) -> Result<crate::inventory::view::AnvilView<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/view/AnvilView;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getView", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::view::AnvilView::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
@@ -3963,7 +5339,7 @@ impl<'mc> PrepareAnvilEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    // SUPER CLASS: org.bukkit.event.inventory.PrepareInventoryResultEvent ( ['getInventory', 'getHandlers', 'getHandlerList'])
+    // SUPER CLASS: org.bukkit.event.inventory.PrepareInventoryResultEvent ( ['getInventory', 'getView', 'getHandlers', 'getHandlerList'])
     /// Get result item, may be null.
     pub fn result(
         &self,
@@ -4433,390 +5809,61 @@ impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for InventoryOpenEv
         )
     }
 }
-#[repr(C)]
-pub struct InventoryClickEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for InventoryClickEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
+pub enum ClickType<'mc> {
+    Left { inner: ClickTypeStruct<'mc> },
+    ShiftLeft { inner: ClickTypeStruct<'mc> },
+    Right { inner: ClickTypeStruct<'mc> },
+    ShiftRight { inner: ClickTypeStruct<'mc> },
+    WindowBorderLeft { inner: ClickTypeStruct<'mc> },
+    WindowBorderRight { inner: ClickTypeStruct<'mc> },
+    Middle { inner: ClickTypeStruct<'mc> },
+    NumberKey { inner: ClickTypeStruct<'mc> },
+    DoubleClick { inner: ClickTypeStruct<'mc> },
+    Drop { inner: ClickTypeStruct<'mc> },
+    ControlDrop { inner: ClickTypeStruct<'mc> },
+    Creative { inner: ClickTypeStruct<'mc> },
+    SwapOffhand { inner: ClickTypeStruct<'mc> },
+    Unknown { inner: ClickTypeStruct<'mc> },
 }
-impl<'mc> JNIInstantiatable<'mc> for InventoryClickEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate InventoryClickEvent from null object.").into(),
-            );
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/inventory/InventoryClickEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a InventoryClickEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> InventoryClickEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        view: impl Into<crate::inventory::InventoryView<'mc>>,
-        val_type: impl Into<crate::event::inventory::InventoryTypeSlotType<'mc>>,
-        slot: i32,
-        click: impl Into<crate::event::inventory::ClickType<'mc>>,
-        action: impl Into<crate::event::inventory::InventoryAction<'mc>>,
-        key: std::option::Option<i32>,
-    ) -> Result<crate::event::inventory::InventoryClickEvent<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/inventory/InventoryView;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(view.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Lorg/bukkit/event/inventory/InventoryType/SlotType;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(val_type.into().jni_object().clone())
-        });
-        args.push(val_2);
-        sig += "I";
-        let val_3 = jni::objects::JValueGen::Int(slot);
-        args.push(val_3);
-        sig += "Lorg/bukkit/event/inventory/ClickType;";
-        let val_4 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(click.into().jni_object().clone())
-        });
-        args.push(val_4);
-        sig += "Lorg/bukkit/event/inventory/InventoryAction;";
-        let val_5 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(action.into().jni_object().clone())
-        });
-        args.push(val_5);
-        if let Some(a) = key {
-            sig += "I";
-            let val_6 = jni::objects::JValueGen::Int(a);
-            args.push(val_6);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/event/inventory/InventoryClickEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::inventory::InventoryClickEvent::from_raw(&jni, res)
-    }
-    /// Gets the type of slot that was clicked.
-    pub fn slot_type(
-        &self,
-    ) -> Result<crate::event::inventory::InventoryTypeSlotType<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType/SlotType;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getSlotType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::inventory::InventoryTypeSlotType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets the current ItemStack on the cursor.
-    pub fn cursor(
-        &self,
-    ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getCursor", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::inventory::ItemStack::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-    /// Gets the ItemStack currently in the clicked slot.
-    pub fn current_item(
-        &self,
-    ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getCurrentItem", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::inventory::ItemStack::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-    /// Gets whether or not the ClickType for this event represents a right
-    /// click.
-    pub fn is_right_click(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isRightClick", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Gets whether or not the ClickType for this event represents a left
-    /// click.
-    pub fn is_left_click(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isLeftClick", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    /// Gets whether the ClickType for this event indicates that the key was
-    /// pressed down when the click was made.
-    pub fn is_shift_click(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isShiftClick", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    #[deprecated]
-    /// Sets the item on the cursor.
-    pub fn set_cursor(
-        &self,
-        stack: impl Into<crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(stack.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCursor",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Sets the ItemStack currently in the clicked slot.
-    pub fn set_current_item(
-        &self,
-        stack: impl Into<crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(stack.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCurrentItem",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the inventory corresponding to the clicked slot.
-    pub fn clicked_inventory(
-        &self,
-    ) -> Result<Option<crate::inventory::Inventory<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/Inventory;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClickedInventory",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::inventory::Inventory::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )?))
-    }
-    /// The slot number that was clicked, ready for passing to
-    /// {@link Inventory#getItem(int)}. Note that there may be two slots with
-    /// the same slot number, since a view links two different inventories.
-    pub fn slot(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getSlot", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// The raw slot number clicked, ready for passing to {@link InventoryView
-    /// #getItem(int)} This slot number is unique for the view.
-    pub fn raw_slot(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getRawSlot", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// If the ClickType is NUMBER_KEY, this method will return the index of
-    /// the pressed key (0-8).
-    pub fn hotbar_button(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHotbarButton", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    /// Gets the InventoryAction that triggered this event.
-    ///
-    /// This action cannot be changed, and represents what the normal outcome
-    /// of the event will be. To change the behavior of this
-    /// InventoryClickEvent, changes must be manually applied.
-    pub fn action(
-        &self,
-    ) -> Result<crate::event::inventory::InventoryAction<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/inventory/InventoryAction;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getAction", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::inventory::InventoryAction::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets the ClickType for this event.
-    ///
-    /// This is insulated against changes to the inventory by other plugins.
-    pub fn click(
-        &self,
-    ) -> Result<crate::event::inventory::ClickType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/inventory/ClickType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getClick", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::inventory::ClickType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/inventory/InventoryClickEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    // SUPER CLASS: org.bukkit.event.inventory.InventoryInteractEvent ( ['getSlotType', 'getCursor', 'getCurrentItem', 'isRightClick', 'isLeftClick', 'isShiftClick', 'setCursor', 'setCurrentItem', 'getClickedInventory', 'getSlot', 'getRawSlot', 'getHotbarButton', 'getAction', 'getClick', 'getHandlers', 'getHandlerList'])
-    /// Gets the player who performed the click.
-    pub fn who_clicked(
-        &self,
-    ) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone =
-            crate::event::inventory::InventoryInteractEvent::from_raw(&self.0, unsafe {
-                jni::objects::JObject::from_raw(self.1.clone())
-            })?;
-        let real: crate::event::inventory::InventoryInteractEvent = temp_clone.into();
-        real.who_clicked()
-    }
-    /// Sets the result of this event. This will change whether or not this
-    /// event is considered cancelled.
-    pub fn set_result(
-        &self,
-        new_result: impl Into<crate::event::EventResult<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone =
-            crate::event::inventory::InventoryInteractEvent::from_raw(&self.0, unsafe {
-                jni::objects::JObject::from_raw(self.1.clone())
-            })?;
-        let real: crate::event::inventory::InventoryInteractEvent = temp_clone.into();
-        real.set_result(new_result)
-    }
-    /// Gets the {@link org.bukkit.event.Event.Result} of this event. The Result describes the
-    /// behavior that will be applied to the inventory in relation to this
-    /// event.
-    pub fn result(&self) -> Result<crate::event::EventResult<'mc>, Box<dyn std::error::Error>> {
-        let temp_clone =
-            crate::event::inventory::InventoryInteractEvent::from_raw(&self.0, unsafe {
-                jni::objects::JObject::from_raw(self.1.clone())
-            })?;
-        let real: crate::event::inventory::InventoryInteractEvent = temp_clone.into();
-        real.result()
-    }
-    /// Gets whether or not this event is cancelled. This is based off of the
-    /// Result value returned by {@link #getResult()}.Result.ALLOW and
-    /// Result.DEFAULT will result in a returned value of false, but
-    /// Result.DENY will result in a returned value of true.
-    ///
-    /// {@inheritDoc}
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let temp_clone =
-            crate::event::inventory::InventoryInteractEvent::from_raw(&self.0, unsafe {
-                jni::objects::JObject::from_raw(self.1.clone())
-            })?;
-        let real: crate::event::inventory::InventoryInteractEvent = temp_clone.into();
-        real.is_cancelled()
-    }
-    /// Proxy method to {@link #setResult(org.bukkit.event.Event.Result)} for the Cancellable
-    /// interface. {@link #setResult(org.bukkit.event.Event.Result)} is preferred, as it allows
-    /// you to specify the Result beyond Result.DENY and Result.ALLOW.
-    ///
-    /// {@inheritDoc}
-    pub fn set_cancelled(&self, to_cancel: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone =
-            crate::event::inventory::InventoryInteractEvent::from_raw(&self.0, unsafe {
-                jni::objects::JObject::from_raw(self.1.clone())
-            })?;
-        let real: crate::event::inventory::InventoryInteractEvent = temp_clone.into();
-        real.set_cancelled(to_cancel)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::event::inventory::InventoryInteractEvent<'mc>> for InventoryClickEvent<'mc> {
-    fn into(self) -> crate::event::inventory::InventoryInteractEvent<'mc> {
-        crate::event::inventory::InventoryInteractEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting InventoryClickEvent into crate::event::inventory::InventoryInteractEvent")
-    }
-}
-pub enum ClickType<'mc> {}
 impl<'mc> std::fmt::Display for ClickType<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            ClickType::Left { .. } => f.write_str("LEFT"),
+            ClickType::ShiftLeft { .. } => f.write_str("SHIFT_LEFT"),
+            ClickType::Right { .. } => f.write_str("RIGHT"),
+            ClickType::ShiftRight { .. } => f.write_str("SHIFT_RIGHT"),
+            ClickType::WindowBorderLeft { .. } => f.write_str("WINDOW_BORDER_LEFT"),
+            ClickType::WindowBorderRight { .. } => f.write_str("WINDOW_BORDER_RIGHT"),
+            ClickType::Middle { .. } => f.write_str("MIDDLE"),
+            ClickType::NumberKey { .. } => f.write_str("NUMBER_KEY"),
+            ClickType::DoubleClick { .. } => f.write_str("DOUBLE_CLICK"),
+            ClickType::Drop { .. } => f.write_str("DROP"),
+            ClickType::ControlDrop { .. } => f.write_str("CONTROL_DROP"),
+            ClickType::Creative { .. } => f.write_str("CREATIVE"),
+            ClickType::SwapOffhand { .. } => f.write_str("SWAP_OFFHAND"),
+            ClickType::Unknown { .. } => f.write_str("UNKNOWN"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for ClickType<'mc> {
+    type Target = ClickTypeStruct<'mc>;
+    fn deref(&self) -> &<ClickType<'mc> as std::ops::Deref>::Target {
+        match self {
+            ClickType::Left { inner } => inner,
+            ClickType::ShiftLeft { inner } => inner,
+            ClickType::Right { inner } => inner,
+            ClickType::ShiftRight { inner } => inner,
+            ClickType::WindowBorderLeft { inner } => inner,
+            ClickType::WindowBorderRight { inner } => inner,
+            ClickType::Middle { inner } => inner,
+            ClickType::NumberKey { inner } => inner,
+            ClickType::DoubleClick { inner } => inner,
+            ClickType::Drop { inner } => inner,
+            ClickType::ControlDrop { inner } => inner,
+            ClickType::Creative { inner } => inner,
+            ClickType::SwapOffhand { inner } => inner,
+            ClickType::Unknown { inner } => inner,
+        }
     }
 }
 
@@ -4843,6 +5890,49 @@ impl<'mc> ClickType<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "LEFT" => Ok(ClickType::Left {
+                inner: ClickTypeStruct::from_raw(env, obj)?,
+            }),
+            "SHIFT_LEFT" => Ok(ClickType::ShiftLeft {
+                inner: ClickTypeStruct::from_raw(env, obj)?,
+            }),
+            "RIGHT" => Ok(ClickType::Right {
+                inner: ClickTypeStruct::from_raw(env, obj)?,
+            }),
+            "SHIFT_RIGHT" => Ok(ClickType::ShiftRight {
+                inner: ClickTypeStruct::from_raw(env, obj)?,
+            }),
+            "WINDOW_BORDER_LEFT" => Ok(ClickType::WindowBorderLeft {
+                inner: ClickTypeStruct::from_raw(env, obj)?,
+            }),
+            "WINDOW_BORDER_RIGHT" => Ok(ClickType::WindowBorderRight {
+                inner: ClickTypeStruct::from_raw(env, obj)?,
+            }),
+            "MIDDLE" => Ok(ClickType::Middle {
+                inner: ClickTypeStruct::from_raw(env, obj)?,
+            }),
+            "NUMBER_KEY" => Ok(ClickType::NumberKey {
+                inner: ClickTypeStruct::from_raw(env, obj)?,
+            }),
+            "DOUBLE_CLICK" => Ok(ClickType::DoubleClick {
+                inner: ClickTypeStruct::from_raw(env, obj)?,
+            }),
+            "DROP" => Ok(ClickType::Drop {
+                inner: ClickTypeStruct::from_raw(env, obj)?,
+            }),
+            "CONTROL_DROP" => Ok(ClickType::ControlDrop {
+                inner: ClickTypeStruct::from_raw(env, obj)?,
+            }),
+            "CREATIVE" => Ok(ClickType::Creative {
+                inner: ClickTypeStruct::from_raw(env, obj)?,
+            }),
+            "SWAP_OFFHAND" => Ok(ClickType::SwapOffhand {
+                inner: ClickTypeStruct::from_raw(env, obj)?,
+            }),
+            "UNKNOWN" => Ok(ClickType::Unknown {
+                inner: ClickTypeStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -4856,10 +5946,56 @@ pub struct ClickTypeStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for ClickType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Left { inner } => inner.0.clone(),
+            Self::ShiftLeft { inner } => inner.0.clone(),
+            Self::Right { inner } => inner.0.clone(),
+            Self::ShiftRight { inner } => inner.0.clone(),
+            Self::WindowBorderLeft { inner } => inner.0.clone(),
+            Self::WindowBorderRight { inner } => inner.0.clone(),
+            Self::Middle { inner } => inner.0.clone(),
+            Self::NumberKey { inner } => inner.0.clone(),
+            Self::DoubleClick { inner } => inner.0.clone(),
+            Self::Drop { inner } => inner.0.clone(),
+            Self::ControlDrop { inner } => inner.0.clone(),
+            Self::Creative { inner } => inner.0.clone(),
+            Self::SwapOffhand { inner } => inner.0.clone(),
+            Self::Unknown { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Left { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ShiftLeft { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Right { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ShiftRight { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WindowBorderLeft { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::WindowBorderRight { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Middle { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::NumberKey { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::DoubleClick { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Drop { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::ControlDrop { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Creative { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::SwapOffhand { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::Unknown { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for ClickType<'mc> {
@@ -4885,6 +6021,48 @@ impl<'mc> JNIInstantiatable<'mc> for ClickType<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "LEFT" => Ok(ClickType::Left {
+                    inner: ClickTypeStruct::from_raw(env, obj)?,
+                }),
+                "SHIFT_LEFT" => Ok(ClickType::ShiftLeft {
+                    inner: ClickTypeStruct::from_raw(env, obj)?,
+                }),
+                "RIGHT" => Ok(ClickType::Right {
+                    inner: ClickTypeStruct::from_raw(env, obj)?,
+                }),
+                "SHIFT_RIGHT" => Ok(ClickType::ShiftRight {
+                    inner: ClickTypeStruct::from_raw(env, obj)?,
+                }),
+                "WINDOW_BORDER_LEFT" => Ok(ClickType::WindowBorderLeft {
+                    inner: ClickTypeStruct::from_raw(env, obj)?,
+                }),
+                "WINDOW_BORDER_RIGHT" => Ok(ClickType::WindowBorderRight {
+                    inner: ClickTypeStruct::from_raw(env, obj)?,
+                }),
+                "MIDDLE" => Ok(ClickType::Middle {
+                    inner: ClickTypeStruct::from_raw(env, obj)?,
+                }),
+                "NUMBER_KEY" => Ok(ClickType::NumberKey {
+                    inner: ClickTypeStruct::from_raw(env, obj)?,
+                }),
+                "DOUBLE_CLICK" => Ok(ClickType::DoubleClick {
+                    inner: ClickTypeStruct::from_raw(env, obj)?,
+                }),
+                "DROP" => Ok(ClickType::Drop {
+                    inner: ClickTypeStruct::from_raw(env, obj)?,
+                }),
+                "CONTROL_DROP" => Ok(ClickType::ControlDrop {
+                    inner: ClickTypeStruct::from_raw(env, obj)?,
+                }),
+                "CREATIVE" => Ok(ClickType::Creative {
+                    inner: ClickTypeStruct::from_raw(env, obj)?,
+                }),
+                "SWAP_OFFHAND" => Ok(ClickType::SwapOffhand {
+                    inner: ClickTypeStruct::from_raw(env, obj)?,
+                }),
+                "UNKNOWN" => Ok(ClickType::Unknown {
+                    inner: ClickTypeStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }
@@ -5374,10 +6552,10 @@ impl<'mc> JNIInstantiatable<'mc> for TradeSelectEvent<'mc> {
 impl<'mc> TradeSelectEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        transaction: impl Into<crate::inventory::InventoryView<'mc>>,
+        transaction: impl Into<crate::inventory::view::MerchantView<'mc>>,
         new_index: i32,
     ) -> Result<crate::event::inventory::TradeSelectEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/InventoryView;I)V");
+        let sig = String::from("(Lorg/bukkit/inventory/view/MerchantView;I)V");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(transaction.into().jni_object().clone())
         });
@@ -5429,6 +6607,19 @@ impl<'mc> TradeSelectEvent<'mc> {
         })
     }
 
+    pub fn view(
+        &self,
+    ) -> Result<crate::inventory::view::MerchantView<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/view/MerchantView;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getView", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::view::MerchantView::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
@@ -5451,7 +6642,7 @@ impl<'mc> TradeSelectEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    // SUPER CLASS: org.bukkit.event.inventory.InventoryInteractEvent ( ['getIndex', 'getInventory', 'getMerchant', 'getHandlers', 'getHandlerList'])
+    // SUPER CLASS: org.bukkit.event.inventory.InventoryInteractEvent ( ['getIndex', 'getInventory', 'getMerchant', 'getView', 'getHandlers', 'getHandlerList'])
     /// Gets the player who performed the click.
     pub fn who_clicked(
         &self,
@@ -5523,160 +6714,5 @@ impl<'mc> TradeSelectEvent<'mc> {
 impl<'mc> Into<crate::event::inventory::InventoryInteractEvent<'mc>> for TradeSelectEvent<'mc> {
     fn into(self) -> crate::event::inventory::InventoryInteractEvent<'mc> {
         crate::event::inventory::InventoryInteractEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting TradeSelectEvent into crate::event::inventory::InventoryInteractEvent")
-    }
-}
-#[repr(C)]
-pub struct FurnaceExtractEvent<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-
-impl<'mc> JNIRaw<'mc> for FurnaceExtractEvent<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JNIInstantiatable<'mc> for FurnaceExtractEvent<'mc> {
-    fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate FurnaceExtractEvent from null object.").into(),
-            );
-        }
-        let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/event/inventory/FurnaceExtractEvent")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a FurnaceExtractEvent object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-}
-
-impl<'mc> FurnaceExtractEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        player: impl Into<crate::entity::Player<'mc>>,
-        block: impl Into<crate::block::Block<'mc>>,
-        item_type: impl Into<crate::Material<'mc>>,
-        item_amount: i32,
-        exp: i32,
-    ) -> Result<crate::event::inventory::FurnaceExtractEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Lorg/bukkit/entity/Player;Lorg/bukkit/block/Block;Lorg/bukkit/Material;II)V",
-        );
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(player.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(block.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(item_type.into().jni_object().clone())
-        });
-        let val_4 = jni::objects::JValueGen::Int(item_amount);
-        let val_5 = jni::objects::JValueGen::Int(exp);
-        let cls = jni.find_class("org/bukkit/event/inventory/FurnaceExtractEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-                jni::objects::JValueGen::from(val_5),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::inventory::FurnaceExtractEvent::from_raw(&jni, res)
-    }
-    /// Get the player that triggered the event
-    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/Player;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getPlayer", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Player::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Get the Material of the item being retrieved
-    pub fn item_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Material;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getItemType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Material::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Get the item count being retrieved
-    pub fn item_amount(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getItemAmount", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    // SUPER CLASS: org.bukkit.event.block.BlockExpEvent ( ['getPlayer', 'getItemType', 'getItemAmount'])
-    /// Get the experience dropped by the block after the event has processed
-    pub fn exp_to_drop(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::block::BlockExpEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::block::BlockExpEvent = temp_clone.into();
-        real.exp_to_drop()
-    }
-    /// Set the amount of experience dropped by the block after the event has
-    /// processed
-    pub fn set_exp_to_drop(&self, exp: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let temp_clone = crate::event::block::BlockExpEvent::from_raw(&self.0, unsafe {
-            jni::objects::JObject::from_raw(self.1.clone())
-        })?;
-        let real: crate::event::block::BlockExpEvent = temp_clone.into();
-        real.set_exp_to_drop(exp)
-    }
-
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        crate::event::block::BlockExpEvent::handler_list(jni)
-    }
-
-    pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
-        let cls = &self.jni_ref().find_class(other.into().as_str())?;
-        self.jni_ref().is_instance_of(&self.jni_object(), cls)
-    }
-}
-impl<'mc> Into<crate::event::block::BlockExpEvent<'mc>> for FurnaceExtractEvent<'mc> {
-    fn into(self) -> crate::event::block::BlockExpEvent<'mc> {
-        crate::event::block::BlockExpEvent::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting FurnaceExtractEvent into crate::event::block::BlockExpEvent")
     }
 }

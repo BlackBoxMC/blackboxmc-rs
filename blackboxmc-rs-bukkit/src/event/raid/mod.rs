@@ -127,10 +127,44 @@ impl<'mc> Into<crate::event::raid::RaidEvent<'mc>> for RaidStopEvent<'mc> {
             .expect("Error converting RaidStopEvent into crate::event::raid::RaidEvent")
     }
 }
-pub enum RaidStopEventReason<'mc> {}
+pub enum RaidStopEventReason<'mc> {
+    Peace {
+        inner: RaidStopEventReasonStruct<'mc>,
+    },
+    Timeout {
+        inner: RaidStopEventReasonStruct<'mc>,
+    },
+    Finished {
+        inner: RaidStopEventReasonStruct<'mc>,
+    },
+    Unspawnable {
+        inner: RaidStopEventReasonStruct<'mc>,
+    },
+    NotInVillage {
+        inner: RaidStopEventReasonStruct<'mc>,
+    },
+}
 impl<'mc> std::fmt::Display for RaidStopEventReason<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {}
+        match self {
+            RaidStopEventReason::Peace { .. } => f.write_str("PEACE"),
+            RaidStopEventReason::Timeout { .. } => f.write_str("TIMEOUT"),
+            RaidStopEventReason::Finished { .. } => f.write_str("FINISHED"),
+            RaidStopEventReason::Unspawnable { .. } => f.write_str("UNSPAWNABLE"),
+            RaidStopEventReason::NotInVillage { .. } => f.write_str("NOT_IN_VILLAGE"),
+        }
+    }
+}
+impl<'mc> std::ops::Deref for RaidStopEventReason<'mc> {
+    type Target = RaidStopEventReasonStruct<'mc>;
+    fn deref(&self) -> &<RaidStopEventReason<'mc> as std::ops::Deref>::Target {
+        match self {
+            RaidStopEventReason::Peace { inner } => inner,
+            RaidStopEventReason::Timeout { inner } => inner,
+            RaidStopEventReason::Finished { inner } => inner,
+            RaidStopEventReason::Unspawnable { inner } => inner,
+            RaidStopEventReason::NotInVillage { inner } => inner,
+        }
     }
 }
 
@@ -157,6 +191,22 @@ impl<'mc> RaidStopEventReason<'mc> {
             .to_string_lossy()
             .to_string();
         match variant_str.as_str() {
+            "PEACE" => Ok(RaidStopEventReason::Peace {
+                inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+            }),
+            "TIMEOUT" => Ok(RaidStopEventReason::Timeout {
+                inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+            }),
+            "FINISHED" => Ok(RaidStopEventReason::Finished {
+                inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+            }),
+            "UNSPAWNABLE" => Ok(RaidStopEventReason::Unspawnable {
+                inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+            }),
+            "NOT_IN_VILLAGE" => Ok(RaidStopEventReason::NotInVillage {
+                inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+            }),
+
             _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
         }
     }
@@ -170,10 +220,26 @@ pub struct RaidStopEventReasonStruct<'mc>(
 
 impl<'mc> JNIRaw<'mc> for RaidStopEventReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        match self {}
+        match self {
+            Self::Peace { inner } => inner.0.clone(),
+            Self::Timeout { inner } => inner.0.clone(),
+            Self::Finished { inner } => inner.0.clone(),
+            Self::Unspawnable { inner } => inner.0.clone(),
+            Self::NotInVillage { inner } => inner.0.clone(),
+        }
     }
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        match self {}
+        match self {
+            Self::Peace { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Timeout { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Finished { inner } => unsafe { jni::objects::JObject::from_raw(inner.1.clone()) },
+            Self::Unspawnable { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+            Self::NotInVillage { inner } => unsafe {
+                jni::objects::JObject::from_raw(inner.1.clone())
+            },
+        }
     }
 }
 impl<'mc> JNIInstantiatable<'mc> for RaidStopEventReason<'mc> {
@@ -202,6 +268,21 @@ impl<'mc> JNIInstantiatable<'mc> for RaidStopEventReason<'mc> {
                 .to_string_lossy()
                 .to_string();
             match variant_str.as_str() {
+                "PEACE" => Ok(RaidStopEventReason::Peace {
+                    inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+                }),
+                "TIMEOUT" => Ok(RaidStopEventReason::Timeout {
+                    inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+                }),
+                "FINISHED" => Ok(RaidStopEventReason::Finished {
+                    inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+                }),
+                "UNSPAWNABLE" => Ok(RaidStopEventReason::Unspawnable {
+                    inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+                }),
+                "NOT_IN_VILLAGE" => Ok(RaidStopEventReason::NotInVillage {
+                    inner: RaidStopEventReasonStruct::from_raw(env, obj)?,
+                }),
                 _ => Err(eyre::eyre!("String gaven for variant was invalid").into()),
             }
         }

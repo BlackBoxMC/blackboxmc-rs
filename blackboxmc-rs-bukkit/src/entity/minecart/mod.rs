@@ -3510,6 +3510,151 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// {@inheritDoc}
+    ///
+    /// If set to -1, the spawn delay will be reset to a random value between
+    /// {@link #getMinSpawnDelay} and {@link #getMaxSpawnDelay()}.
+    pub fn set_delay(&self, delay: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(delay);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setDelay",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// The minimum spawn delay amount (in ticks).
+    ///
+    /// This value is used when the spawner resets its delay (for any reason).
+    /// It will choose a random number between {@link #getMinSpawnDelay()}
+    /// and {@link #getMaxSpawnDelay()} for its next {@link #getDelay()}.
+    ///
+    /// Default value is 200 ticks.
+    pub fn min_spawn_delay(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMinSpawnDelay",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Set the minimum spawn delay amount (in ticks).
+    pub fn set_min_spawn_delay(&self, delay: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(delay);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setMinSpawnDelay",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// The maximum spawn delay amount (in ticks).
+    ///
+    /// This value is used when the spawner resets its delay (for any reason).
+    /// It will choose a random number between {@link #getMinSpawnDelay()}
+    /// and {@link #getMaxSpawnDelay()} for its next {@link #getDelay()}.
+    ///
+    /// This value <b>must</b> be greater than 0 and less than or equal to
+    /// {@link #getMaxSpawnDelay()}.
+    ///
+    /// Default value is 800 ticks.
+    pub fn max_spawn_delay(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxSpawnDelay",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Set the maximum spawn delay amount (in ticks).
+    ///
+    /// This value <b>must</b> be greater than 0, as well as greater than or
+    /// equal to {@link #getMinSpawnDelay()}
+    pub fn set_max_spawn_delay(&self, delay: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(delay);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setMaxSpawnDelay",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Get how many mobs attempt to spawn.
+    ///
+    /// Default value is 4.
+    pub fn spawn_count(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getSpawnCount", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Set how many mobs attempt to spawn.
+    pub fn set_spawn_count(&self, spawn_count: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(spawn_count);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setSpawnCount",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// Set the new maximum amount of similar entities that are allowed to be
+    /// within spawning range of this spawner.
+    ///
+    /// If more than the maximum number of entities are within range, the spawner
+    /// will not spawn and try again with a new {@link #getDelay()}.
+    ///
+    /// Default value is 16.
+    pub fn max_nearby_entities(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaxNearbyEntities",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    /// Set the maximum number of similar entities that are allowed to be within
+    /// spawning range of this spawner.
+    ///
+    /// Similar entities are entities that are of the same {@link EntityType}
+    pub fn set_max_nearby_entities(
+        &self,
+        max_nearby_entities: i32,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(max_nearby_entities);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setMaxNearbyEntities",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
 
     pub fn instance_of(&self, other: impl Into<String>) -> Result<bool, jni::errors::Error> {
         let cls = &self.jni_ref().find_class(other.into().as_str())?;
@@ -3520,6 +3665,12 @@ impl<'mc> Into<crate::entity::Minecart<'mc>> for SpawnerMinecart<'mc> {
     fn into(self) -> crate::entity::Minecart<'mc> {
         crate::entity::Minecart::from_raw(&self.jni_ref(), self.1)
             .expect("Error converting SpawnerMinecart into crate::entity::Minecart")
+    }
+}
+impl<'mc> Into<crate::spawner::Spawner<'mc>> for SpawnerMinecart<'mc> {
+    fn into(self) -> crate::spawner::Spawner<'mc> {
+        crate::spawner::Spawner::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting SpawnerMinecart into crate::spawner::Spawner")
     }
 }
 #[repr(C)]
