@@ -10,6 +10,7 @@ import copy
 f = open("./spigot.json")
 libraries = json.loads(f.read())
 
+
 # files to write to disk
 file_cache = {}
 
@@ -1494,6 +1495,14 @@ def parse_methods(library,name,val,mod_path,is_trait,is_trait_decl,is_constructo
             "\tpub fn "+name+generic_letters_str+"("+func_signature_resolved+") "
         )
 
+
+        # C exports
+        extern_rs = crate_dir+os.path.sep+"extern.rs"
+        if extern_rs not in file_cache:
+            file_cache[extern_rs] = []
+        file_cache[extern_rs].append("""
+extern \"C"\" fn """+name+"""("""+func_signature_resolved+""");""")
+
         if nullable:
             return_ty["result"] = "Option<"+return_ty["result"]+">"
 
@@ -2084,3 +2093,4 @@ for i in range(0,4):
         os.system("rustfmt  ./"+resolved+"/*"+wildcard+".rs")
 
 os.system("cargo fix --allow-dirty --allow-staged --broken-code --jobs "+str(multiprocessing.cpu_count()))
+
